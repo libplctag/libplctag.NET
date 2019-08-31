@@ -114,7 +114,7 @@ namespace libplctag
 
         public void Dispose()
         {
-            var result = plc_tag_destroy(_pointer);
+            var result = (StatusCode)plc_tag_destroy(_pointer);
             //TODO handle result
             registeredTagKeys.Remove(UniqueKey);
         }
@@ -126,7 +126,7 @@ namespace libplctag
 
         public void Read(TimeSpan timeout)
         {
-            var result = plc_tag_read(_pointer, (int)timeout.TotalMilliseconds);
+            var result = (StatusCode)plc_tag_read(_pointer, (int)timeout.TotalMilliseconds);
             if(result == StatusCode.PLCTAG_ERR_TIMEOUT)
             {
                 throw new TimeoutException();
@@ -140,7 +140,7 @@ namespace libplctag
 
         public void Write(TimeSpan timeout)
         {
-            var result = plc_tag_write(_pointer, (int)timeout.TotalMilliseconds);
+            var result = (StatusCode)plc_tag_write(_pointer, (int)timeout.TotalMilliseconds);
             if (result == StatusCode.PLCTAG_ERR_TIMEOUT)
             {
                 throw new TimeoutException();
@@ -154,9 +154,7 @@ namespace libplctag
 
         public int GetSize() => plc_tag_get_size(_pointer);
 
-
-        // TODO make StatusCode an enum
-        public int GetStatus() => plc_tag_status(_pointer);
+        public StatusCode GetStatus() => (StatusCode)plc_tag_status(_pointer);
 
         public ulong GetUInt64(int offset) => plc_tag_get_uint64(_pointer, offset);
         public void SetUInt64(int offset, ulong value) => plc_tag_set_uint64(_pointer, offset, value);
