@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 
 namespace libplctag
@@ -6,7 +7,7 @@ namespace libplctag
 
     public class Tag
     {
-        public string IpAddress { get; }
+        public IPAddress IPAddress { get; }
 
         public CpuType Cpu { get; }
 
@@ -17,21 +18,6 @@ namespace libplctag
         public int ElementCount { get; }
 
         public string UniqueKey { get; }
-
-        /// <summary>
-        /// Creates a tag for PLC5 / SLC / MicroLogix processor types (the path is not specified)
-        /// </summary>
-        /// <param name="ipAddress">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
-        /// <param name="cpuType">AB CPU models</param>
-        /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
-        /// <param name="elementCount">elements count: 1- single, n-array.</param>
-        /// <param name="debugLevel"></param>
-        public Tag(string ipAddress, CpuType cpuType, string name, int elementSize, int elementCount, int debugLevel = 0)
-            : this(ipAddress, string.Empty, cpuType, name, elementSize, elementCount, debugLevel)
-        {
-
-        }
 
         /// <summary>
         /// Creates a tag. If the CPU type is LGX, the port type and slot has to be specified.
@@ -46,7 +32,7 @@ namespace libplctag
         /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
         /// <param name="debugLevel"></param>
-        public Tag(string ipAddress, string path, CpuType cpuType, string name, int elementSize, int elementCount, int debugLevel = 0)
+        public Tag(IPAddress ipAddress, string path, CpuType cpuType, string name, int elementSize, int elementCount, int debugLevel = 0)
         {
 
             if (cpuType == CpuType.LGX && string.IsNullOrEmpty(path))
@@ -54,12 +40,12 @@ namespace libplctag
                 throw new ArgumentException("PortType and Slot must be specified for Controllogix / Compactlogix processors");
             }
 
-            IpAddress = ipAddress;
+            IPAddress = ipAddress;
             Cpu = cpuType;
             Name = name;
             ElementSize = elementSize;
             ElementCount = elementCount;
-            UniqueKey = GetUniqueKey(ipAddress, path, cpuType, name, elementSize, elementCount, debugLevel);
+            UniqueKey = GetUniqueKey(IPAddress.ToString(), path, cpuType, name, elementSize, elementCount, debugLevel);
             
         }
 
