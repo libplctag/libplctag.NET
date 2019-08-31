@@ -121,7 +121,8 @@ namespace libplctag
 
         public void Abort()
         {
-            throw new NotImplementedException();
+            var result = (StatusCode)plc_tag_abort(_pointer);
+            // TODO deal with result
         }
 
         public void Read(TimeSpan timeout)
@@ -215,6 +216,9 @@ namespace libplctag
 
         [DllImport("plctag.dll", EntryPoint = "plc_tag_get_size", CallingConvention = CallingConvention.Cdecl)]
         static extern int plc_tag_get_size(Int32 tag);
+
+        [DllImport("plctag.dll", EntryPoint = "plc_tag_abort", CallingConvention = CallingConvention.Cdecl)]
+        static extern int plc_tag_abort(Int32 tag);
 
         /* 64-bit types */
 
