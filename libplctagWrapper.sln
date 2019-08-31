@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libplctagWrapper", "libplctagWrapper.csproj", "{5D3BE75F-9CE1-421A-9D61-99BE3FFE2C95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libplctag", "libplctag.csproj", "{5D3BE75F-9CE1-421A-9D61-99BE3FFE2C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
