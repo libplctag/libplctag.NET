@@ -74,6 +74,8 @@ namespace libplctag
 
             var tagPointer = plc_tag_create(key, (int)defaultTimeout.TotalMilliseconds);
             var newTag = new Tag(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, defaultTimeout, tagPointer);
+            registeredTagKeys.Add(newTag.UniqueKey);
+
             return newTag;
             
         }
