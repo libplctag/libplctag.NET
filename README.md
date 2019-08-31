@@ -10,5 +10,5 @@ It was forked from on [libplctag-csharp](https://github.com/mesta1/libplctag-csh
 
 * Expose the API available in libplctag
 * Package this functionality in a way that is convenient to consume for .NET projects (i.e. publish on nuget.org).
-* Use idiomatic .NET concepts (Exceptions, IDisposable, etc) so long as it does not prevent downstream libraries from creating advanced functionality based on the original libplctag
+* Use idiomatic .NET concepts (Exceptions, IDisposable, Strongly-Typed variables, etc) so long as it does not prevent downstream libraries from creating advanced functionality based on the original libplctag
 * Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard
