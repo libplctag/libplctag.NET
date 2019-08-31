@@ -3,7 +3,7 @@ using System.Text;
 
 namespace libplctag
 {
-    //$"protocol=ab_eip&gateway=192.168.0.100&cpu=SLC&elem_size={ELEM_SIZE}&elem_count={ELEM_COUNT}&name=F8:0&debug=1";
+
     public class Tag
     {
         public string IpAddress { get; }
@@ -48,27 +48,48 @@ namespace libplctag
         /// <param name="debugLevel"></param>
         public Tag(string ipAddress, string path, CpuType cpuType, string name, int elementSize, int elementCount, int debugLevel = 0)
         {
+
             if (cpuType == CpuType.LGX && string.IsNullOrEmpty(path))
             {
                 throw new ArgumentException("PortType and Slot must be specified for Controllogix / Compactlogix processors");
             }
+
             IpAddress = ipAddress;
             Cpu = cpuType;
             Name = name;
             ElementSize = elementSize;
             ElementCount = elementCount;
+            UniqueKey = GetUniqueKey(ipAddress, path, cpuType, name, elementSize, elementCount, debugLevel);
+            
+        }
+
+        private string GetUniqueKey(string ipAddress, string path, CpuType cpuType, string name, int elementSize, int elementCount, int debugLevel)
+        {
+
             var sb = new StringBuilder();
-            sb.Append($"protocol=ab_eip&gateway={ipAddress}");
+
+            var protocol = "ab_eip";
+            sb.Append($"protocol={protocol}");
+            sb.Append($"gateway={ipAddress}");
+
             if (!string.IsNullOrEmpty(path))
             {
                 sb.Append($"&path={path}");
             }
-            sb.Append($"&cpu={cpuType}&elem_size={ElementSize}&elem_count={elementCount}&name={name}");
+
+            sb.Append($"&cpu={cpuType}");
+            sb.Append($"&elem_size={elementSize}");
+            sb.Append($"&elem_count={elementCount}");
+            sb.Append($"&name={name}");
+
             if (debugLevel > 0)
             {
                 sb.Append($"&debug={debugLevel}");
             }
-            UniqueKey = sb.ToString();
+
+            return sb.ToString();
+
         }
     }
+
 }
