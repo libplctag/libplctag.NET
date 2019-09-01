@@ -13,7 +13,7 @@ It was forked from [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 ## Example Usage
 
 ```csharp
-var myTag = Tag.Create(IPAddress.Parse("192.168.1.42"), "1,0", CpuType.LGX, DataType.DINT, 1, "MY_DINT", 0, TimeSpan.Zero)
+var myTag = new Tag(IPAddress.Parse("192.168.1.42"), "1,0", CpuType.LGX, DataType.DINT, "MY_DINT");
 
 while(myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
 {
