@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -87,27 +88,25 @@ namespace libplctag
         private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, int debugLevel)
         {
 
-            var sb = new StringBuilder();
+            var attributes = new Dictionary<string, string>();
 
-            sb.Append($"protocol={protocol}");
-            sb.Append($"&gateway={gateway}");
+            attributes.Add("protocol", protocol);
+            attributes.Add("gateway", gateway.ToString());
 
             if (!string.IsNullOrEmpty(path))
-            {
-                sb.Append($"&path={path}");
-            }
+                attributes.Add("path", path);
 
-            sb.Append($"&cpu={CPU}");
-            sb.Append($"&elem_size={elementSize}");
-            sb.Append($"&elem_count={elementCount}");
-            sb.Append($"&name={name}");
+            attributes.Add("cpu", CPU.ToString());
+            attributes.Add("elem_size", elementSize.ToString());
+            attributes.Add("elem_count", elementCount.ToString());
+            attributes.Add("name", name);
 
             if (debugLevel > 0)
-            {
-                sb.Append($"&debug={debugLevel}");
-            }
+                attributes.Add("debug", debugLevel.ToString());
 
-            return sb.ToString();
+            string separator = "&";
+
+            return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
 
         }
 
