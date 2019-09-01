@@ -1,4 +1,4 @@
-﻿# libplctag
+﻿# libplctag .NET
 
 This repository is a .NET wrapper around [libplctag](https://github.com/kyle-github/libplctag).
 
