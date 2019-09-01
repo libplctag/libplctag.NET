@@ -24,7 +24,6 @@ namespace libplctag
         /// <summary>
         /// Factory method to create a tag. If the CPU type is LGX, the port type and slot has to be specified.
         /// </summary>
-        /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
         /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
         /// <param name="cpuType">Allen-Bradley CPU model</param>
@@ -33,7 +32,8 @@ namespace libplctag
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
         /// <param name="debugLevel"></param>
         /// <param name="defaultTimeout"></param>
-        public Tag(string protocol, IPAddress gateway, string path, CpuType cpuType, int elementSize,  string name, int elementCount = 1, int debugLevel = 0, TimeSpan defaultTimeout = default)
+        /// <param name="protocol">Currently only ab_eip supported.</param>
+        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize,  string name, int elementCount = 1, int debugLevel = 0, TimeSpan defaultTimeout = default, string protocol = "ab_eip")
         {
 
             Protocol = protocol;
