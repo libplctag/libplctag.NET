@@ -20,18 +20,22 @@ namespace libplctag
         public int DebugLevel { get; }
         public TimeSpan DefaultTimeout { get; }
 
-        private string AttributeString => GetAttributeString(Protocol, Gateway, Path, CPU, ElementSize, ElementCount, Name, DebugLevel);
-
         private int _pointer;
 
-
-        private Tag(string protocol, IPAddress gateway, string path, CpuType cpuType, int elementSize, int elementCount, string name, int debugLevel, TimeSpan defaultTimeout, int pointer)
+        /// <summary>
+        /// Factory method to create a tag. If the CPU type is LGX, the port type and slot has to be specified.
+        /// </summary>
+        /// <param name="protocol">Currently only ab_eip supported.</param>
+        /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
+        /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
+        /// <param name="cpuType">Allen-Bradley CPU model</param>
+        /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
+        /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
+        /// <param name="elementCount">elements count: 1- single, n-array.</param>
+        /// <param name="debugLevel"></param>
+        /// <param name="defaultTimeout"></param>
+        public Tag(string protocol, IPAddress gateway, string path, CpuType cpuType, int elementSize,  string name, int elementCount = 1, int debugLevel = 0, TimeSpan defaultTimeout = default)
         {
-
-            if (cpuType == CpuType.LGX && string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentException("PortType and Slot must be specified for Controllogix / Compactlogix processors");
-            }
 
             Protocol = protocol;
             Gateway = gateway;
@@ -42,41 +46,10 @@ namespace libplctag
             Name = name;
             DebugLevel = debugLevel;
             DefaultTimeout = defaultTimeout;
-            _pointer = pointer;
-
-        }
-
-        static HashSet<string> registeredAttributeStrings = new HashSet<string>();
-
-
-        /// <summary>
-        /// Factory method to create a tag. If the CPU type is LGX, the port type and slot has to be specified.
-        /// </summary>
-        /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
-        /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
-        /// <param name="cpuType">AB CPU models</param>
-        /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
-        /// <param name="elementCount">elements count: 1- single, n-array.</param>
-        /// <param name="debugLevel"></param>
-        /// <param name="defaultTimeout"></param>
-        public static Tag Create(IPAddress gateway, string path, CpuType cpuType, int elementSize, int elementCount, string name, int debugLevel, TimeSpan defaultTimeout)
-        {
-
-            var protocol = "ab_eip";
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
-            if (registeredAttributeStrings.Contains(attributeString))
-            {
-                throw new Exception("Duplicate tag created");
-            }
-
-            var tagPointer = Dll.plc_tag_create(attributeString, (int)defaultTimeout.TotalMilliseconds);
-            var newTag = new Tag(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, defaultTimeout, tagPointer);
-            registeredAttributeStrings.Add(newTag.AttributeString);
-
-            return newTag;
+            _pointer = Dll.plc_tag_create(attributeString, (int)defaultTimeout.TotalMilliseconds); ;
 
         }
 
@@ -110,12 +83,7 @@ namespace libplctag
 
         }
 
-        public void Dispose()
-        {
-            var result = (StatusCode)Dll.plc_tag_destroy(_pointer);
-            //TODO handle result
-            registeredAttributeStrings.Remove(AttributeString);
-        }
+        public void Dispose() => Dll.plc_tag_destroy(_pointer);
 
         public void Abort() => Dll.plc_tag_abort(_pointer);
 
