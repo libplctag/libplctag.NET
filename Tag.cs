@@ -45,7 +45,7 @@ namespace libplctag
 
         }
 
-        static HashSet<string> registeredTagKeys = new HashSet<string>();
+        static HashSet<string> registeredAttributeStrings = new HashSet<string>();
 
 
         /// <summary>
@@ -64,16 +64,16 @@ namespace libplctag
 
             var protocol = "ab_eip";
 
-            var key = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
-            if (registeredTagKeys.Contains(key))
+            if (registeredAttributeStrings.Contains(attributeString))
             {
                 throw new Exception("Duplicate tag created");
             }
 
-            var tagPointer = Dll.plc_tag_create(key, (int)defaultTimeout.TotalMilliseconds);
+            var tagPointer = Dll.plc_tag_create(attributeString, (int)defaultTimeout.TotalMilliseconds);
             var newTag = new Tag(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, defaultTimeout, tagPointer);
-            registeredTagKeys.Add(newTag.AttributeString);
+            registeredAttributeStrings.Add(newTag.AttributeString);
 
             return newTag;
 
@@ -90,7 +90,7 @@ namespace libplctag
             var sb = new StringBuilder();
 
             sb.Append($"protocol={protocol}");
-            sb.Append($"gateway={gateway}");
+            sb.Append($"&gateway={gateway}");
 
             if (!string.IsNullOrEmpty(path))
             {
@@ -115,42 +115,14 @@ namespace libplctag
         {
             var result = (StatusCode)Dll.plc_tag_destroy(_pointer);
             //TODO handle result
-            registeredTagKeys.Remove(AttributeString);
+            registeredAttributeStrings.Remove(AttributeString);
         }
 
-        public void Abort()
-        {
-            var result = (StatusCode)Dll.plc_tag_abort(_pointer);
-            // TODO deal with result
-        }
+        public void Abort() => Dll.plc_tag_abort(_pointer);
 
-        public void Read(TimeSpan timeout)
-        {
-            var result = (StatusCode)Dll.plc_tag_read(_pointer, (int)timeout.TotalMilliseconds);
-            if (result == StatusCode.PLCTAG_ERR_TIMEOUT)
-            {
-                throw new TimeoutException();
-            }
-            if (result != StatusCode.PLCTAG_STATUS_OK)
-            {
-                throw new Exception("Read Failed");
-                //TODO make custom exception type for this
-            }
-        }
+        public void Read(TimeSpan timeout) => Dll.plc_tag_read(_pointer, (int)timeout.TotalMilliseconds);
 
-        public void Write(TimeSpan timeout)
-        {
-            var result = (StatusCode)Dll.plc_tag_write(_pointer, (int)timeout.TotalMilliseconds);
-            if (result == StatusCode.PLCTAG_ERR_TIMEOUT)
-            {
-                throw new TimeoutException();
-            }
-            if (result != StatusCode.PLCTAG_STATUS_OK)
-            {
-                throw new Exception("Write Failed");
-                //TODO make custom exception type for this
-            }
-        }
+        public void Write(TimeSpan timeout) => Dll.plc_tag_write(_pointer, (int)timeout.TotalMilliseconds);
 
         public int GetSize() => Dll.plc_tag_get_size(_pointer);
 
