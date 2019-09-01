@@ -19,7 +19,7 @@ namespace libplctag
         public int DebugLevel { get; }
         public TimeSpan DefaultTimeout { get; }
 
-        private string UniqueKey => GetUniqueKey(Protocol, Gateway, Path, CPU, ElementSize, ElementCount, Name, DebugLevel);
+        private string AttributeString => GetAttributeString(Protocol, Gateway, Path, CPU, ElementSize, ElementCount, Name, DebugLevel);
 
         private int _pointer;
 
@@ -64,7 +64,7 @@ namespace libplctag
 
             var protocol = "ab_eip";
 
-            var key = GetUniqueKey(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
+            var key = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
             if (registeredTagKeys.Contains(key))
             {
@@ -73,7 +73,7 @@ namespace libplctag
 
             var tagPointer = Dll.plc_tag_create(key, (int)defaultTimeout.TotalMilliseconds);
             var newTag = new Tag(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, defaultTimeout, tagPointer);
-            registeredTagKeys.Add(newTag.UniqueKey);
+            registeredTagKeys.Add(newTag.AttributeString);
 
             return newTag;
 
@@ -84,7 +84,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetUniqueKey(string protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, int debugLevel)
+        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, int debugLevel)
         {
 
             var sb = new StringBuilder();
@@ -115,7 +115,7 @@ namespace libplctag
         {
             var result = (StatusCode)Dll.plc_tag_destroy(_pointer);
             //TODO handle result
-            registeredTagKeys.Remove(UniqueKey);
+            registeredTagKeys.Remove(AttributeString);
         }
 
         public void Abort()
