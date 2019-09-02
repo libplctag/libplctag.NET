@@ -6,38 +6,8 @@ It was forked from [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 ## Goals
 
-* Make the libplctag API available in a way that is idomatic to .NET (Exceptions, IDisposable, Strong-Typing, Object-Oriented, etc)
-* Package this functionality in a way that is convenient to use for .NET projects (i.e. publish on nuget.org).
+* Package the libplctag functionality in a way that is convenient to use for .NET projects (i.e. publish on nuget.org).
 * Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard
-
-## Example Usage
-
-```csharp
-var myTag = new Tag(IPAddress.Parse("192.168.1.42"), "1,0", CpuType.LGX, DataType.DINT, "MY_DINT");
-
-while(myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
-{
-    Thread.Sleep(100);
-}
-if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-{
-    Console.WriteLine("Something went wrong");
-}
-
-myTag.Read(TimeSpan.Zero);
-while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
-{
-    Thread.Sleep(100);
-}
-if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-{
-    Console.WriteLine("Something else went wrong");
-}
-
-int myDint = myTag.GetInt32(0);
-
-Console.WriteLine(myDint);
-```
 
 ## Notes
 
