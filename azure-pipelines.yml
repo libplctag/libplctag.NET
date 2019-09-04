@@ -11,6 +11,10 @@ pool:
 
 steps:
 
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: 5.1
+    
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
