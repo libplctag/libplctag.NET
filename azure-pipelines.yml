@@ -9,7 +9,7 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-tasks:
+steps:
 
 - task: DotNetCoreCLI@2
   inputs:
