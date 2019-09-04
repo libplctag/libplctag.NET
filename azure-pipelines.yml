@@ -14,6 +14,11 @@ steps:
   displayName: 'Run a one-line script'
 
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+
+
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
