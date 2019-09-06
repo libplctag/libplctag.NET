@@ -1,18 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-    <ItemGroup Condition=" '$(Platform)' == 'x64' ">
-        <Content Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x64\native\plctag.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>plctag.dll</Link>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(Platform)' == 'x86' OR '$(Platform)' == 'AnyCPU' ">
-        <Content Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x86\native\plctag.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>plctag.dll</Link>
-        </Content>
-    </ItemGroup>
-
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Target Name="plctag.dll" AfterTargets="AfterBuild">
+      <Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
+    </Target>
+  </ItemGroup>
 </Project>
