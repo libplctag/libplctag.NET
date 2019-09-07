@@ -19,4 +19,7 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 ## How to Build
 
-`>dotnet build`
+```
+>dotnet build
+>dotnet pack -o .
+```
