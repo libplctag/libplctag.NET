@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>libplctag</AssemblyName>
-    <RootNamespace>libplctag.Dll</RootNamespace>
-    <PackageId>libplctag.Dll</PackageId>
-    <Version>0.0.5-alpha</Version>
+    <AssemblyName>libplctag.NativeImport</AssemblyName>
+    <RootNamespace>libplctag.NativeImport</RootNamespace>
+    <PackageId>libplctag.NativeImport</PackageId>
+    <Version>0.0.1-alpha</Version>
     <Authors>timyhac</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
