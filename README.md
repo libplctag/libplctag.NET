@@ -2,7 +2,9 @@
 
 This is a .NET wrapper around [libplctag](https://github.com/kyle-github/libplctag).
 
-It was forked from [libplctag-csharp](https://github.com/mesta1/libplctag-csharp).
+Download from [nuget.org](https://www.nuget.org/packages/libplctag/).
+
+It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp).
 
 ## Goals
 
@@ -12,5 +14,4 @@ It was forked from [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 ## Notes
 
-* Nothing has been tested
-* Currently you need to supply a copy of the library yourself. It's filename should be plctag.dll / plctag.so / plctag.dylib
+* Nothing has been tested, it probably doesn't work on your platform.
