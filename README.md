@@ -1,8 +1,6 @@
-﻿# libplctag .NET
+This is a bare-bones wrapper around [libplctag](https://github.com/kyle-github/libplctag) for .NET.
 
-This is a .NET wrapper around [libplctag](https://github.com/kyle-github/libplctag).
-
-Download from [nuget.org](https://www.nuget.org/packages/libplctag/).
+Download from [nuget.org](https://www.nuget.org/packages/libplctag.NativeImport/).
 
 It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp).
 
