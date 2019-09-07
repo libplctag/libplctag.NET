@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>libplctag</AssemblyName>
+    <RootNamespace>libplctag</RootNamespace>
+    <PackageId>libplctag</PackageId>
+    <Version>0.0.7-alpha</Version>
+    <Authors>timyhac</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="libplctag.NativeImport" Version="0.0.1-alpha" />
+  </ItemGroup>
+
+</Project>
