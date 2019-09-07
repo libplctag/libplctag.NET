@@ -18,7 +18,6 @@ namespace libplctag
         public int ElementCount { get; }
         public string Name { get; }
         public int DebugLevel { get; }
-        public TimeSpan DefaultTimeout { get; }
 
         private int pointer;
 
@@ -31,10 +30,10 @@ namespace libplctag
         /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
+        /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
-        /// <param name="defaultTimeout"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int elementCount = 1, int debugLevel = 0, TimeSpan defaultTimeout = default, string protocol = "ab_eip")
+        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
         {
 
             Protocol = protocol;
@@ -45,11 +44,10 @@ namespace libplctag
             ElementCount = elementCount;
             Name = name;
             DebugLevel = debugLevel;
-            DefaultTimeout = defaultTimeout;
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
-            pointer = plctag.create(attributeString, (int)defaultTimeout.TotalMilliseconds); ;
+            pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds); ;
 
         }
 
