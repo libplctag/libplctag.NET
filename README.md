@@ -32,32 +32,32 @@ namespace ExampleConsoleApp
         static void Main(string[] args)
         {
 
-            var x = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var handle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
-            while (plctag.status(x) == 1)
+            while (plctag.status(handle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(x);
+            var statusBeforeRead = plctag.status(handle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            plctag.read(x, 1000);
-            while (plctag.status(x) == 1)
+            plctag.read(handle, 1000);
+            while (plctag.status(handle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(x);
+            var statusAfterRead = plctag.status(handle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var y = plctag.get_uint32(x, 0);
+            var theValue = plctag.get_uint32(handle, 0);
 
-            Console.WriteLine(y);
+            Console.WriteLine(theValue);
             Console.Read();
         }
     }
