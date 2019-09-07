@@ -15,3 +15,8 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 ## Notes
 
 * Nothing has been tested, it probably doesn't work on your platform.
+
+
+## How to Build
+
+`>dotnet build`
