@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
+    <PackageId>libplctag</PackageId>
+    <Version>0.0.26-alpha</Version>
+    <Authors>timyhac</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+		<Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/plctag.dll" Link="plctag.dll" Pack="true" PackagePath="runtimes/win-x64/native/plctag.dll" />
+		<Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x86/native/plctag.dll" Link="plctag.dll" Pack="true" PackagePath="runtimes/win-x86/native/plctag.dll" />
+		<Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/linux-x64/native/plctag.so" Link="plctag.so" Pack="true" PackagePath="runtimes/linux-x64/native/plctag.so" />
+		<Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/linux-x86/native/plctag.so" Link="plctag.so" Pack="true" PackagePath="runtimes/linux-x86/native/plctag.so" />
+	</ItemGroup>
 
 </Project>
