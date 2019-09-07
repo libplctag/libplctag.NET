@@ -1,5 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <None Include="plctag.dll" PackagePath="runtimes\win-x64\native" Pack="true"  />
-  </ItemGroup>
-</Project>
