@@ -21,7 +21,7 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 The below example connects to a CompactLogix PLC with the IP Address 192.168.0.10 with a DINT tag named "MY_DINT" and display it's value.
 
 ```csharp
-using libplctag.Dll;
+using libplctag.NativeImport;
 using System;
 using System.Threading;
 
