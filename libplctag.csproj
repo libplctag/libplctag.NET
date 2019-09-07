@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>libplctag</AssemblyName>
-    <RootNamespace>libplctag</RootNamespace>
-    <PackageId>libplctag</PackageId>
+    <RootNamespace>libplctag.Dll</RootNamespace>
+    <PackageId>libplctag.Dll</PackageId>
     <Version>0.0.5-alpha</Version>
     <Authors>timyhac</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
