@@ -18,7 +18,9 @@ namespace libplctag.NativeImport
         public static extern int status(Int32 tag);
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_decode_error", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr decode_error(int error);
+        static extern IntPtr plc_tag_decode_error(int error);
+
+        public string decode_error(int error) => Marshal.PtrToStringAnsi(plc_tag_decode_error(error));
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_read", CallingConvention = CallingConvention.Cdecl)]
         public static extern int read(Int32 tag, int timeout);
