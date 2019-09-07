@@ -1,7 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Target Name="plctag.dll" AfterTargets="AfterBuild">
-      <Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
-    </Target>
+    <None Include="$(MSBuildThisFileDirectory)..\build\win-x86\native\plctag.dll" Link="plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="true" />
   </ItemGroup>
 </Project>
