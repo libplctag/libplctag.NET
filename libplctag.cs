@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace libplctag
+namespace libplctag.Dll
 {
     public class plctag
     {
