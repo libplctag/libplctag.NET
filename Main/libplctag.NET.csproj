@@ -5,14 +5,14 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.8-alpha</Version>
+    <Version>0.0.9-alpha</Version>
     <Authors>timyhac</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="0.0.2-alpha" />
+    <PackageReference Include="libplctag.NativeImport" Version="0.0.3-alpha" />
   </ItemGroup>
 
 </Project>
