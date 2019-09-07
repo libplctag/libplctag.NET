@@ -10,7 +10,7 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 * Package the libplctag functionality in a way that is convenient to use for .NET projects (i.e. publish on nuget.org).
 * Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard
-* Make it easy for package consumers to comply with libplctag project's licensing model.
+* Make it easy for package consumers to comply with libplctag's [licensing model](https://github.com/kyle-github/libplctag/blob/master/LICENSE)
 
 ## Notes
 
