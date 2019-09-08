@@ -15,4 +15,5 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: 'NativeImport/**/*.csproj'
+    packDirectory: '$(Build.ArtifactStagingDirectory)'
     versioningScheme: 'off'
