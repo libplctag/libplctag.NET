@@ -7,11 +7,6 @@ pool:
 steps:
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'build'
-    workingDirectory: 'NativeImport/src'
-
-- task: DotNetCoreCLI@2
-  inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: 'NativeImport/src/*.csproj'
     versioningScheme: 'off'
