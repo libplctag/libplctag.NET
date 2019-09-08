@@ -8,6 +8,11 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'build'
+    projects: 'NativeImport/**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: 'NativeImport/**/*.csproj'
     versioningScheme: 'off'
