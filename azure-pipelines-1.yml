@@ -6,6 +6,11 @@ pool:
 
 steps:
 
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.x'
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
