@@ -5,8 +5,9 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
-    packagesToPack: 'NativeImport/src/*.csproj'
+    packagesToPack: '**/*.csproj'
     versioningScheme: 'off'
