@@ -32,6 +32,9 @@ namespace ExampleConsoleApp
         static void Main(string[] args)
         {
 
+            // Load a special version of the dll
+            plctag.LoadDll("My_plctag.dll");
+
             var handle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
             while (plctag.status(handle) == 1)

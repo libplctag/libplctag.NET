@@ -8,6 +8,16 @@ namespace libplctag.NativeImport
 
         const string DLL_NAME = "plctag";
 
+        static plctag()
+        {
+            LoadDll();
+        }
+
+        public static void LoadDll(string DllFileName = null)
+        {
+            Loader.Init(DllFileName);
+        }
+
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_create", CallingConvention = CallingConvention.Cdecl)]
         public static extern Int32 create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
