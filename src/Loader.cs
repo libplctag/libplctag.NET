@@ -47,11 +47,11 @@ namespace libplctag.NativeImport
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return ("libplctagwrapper.lib.win", "plctag.dll");
+                return ("libplctag.runtime.win", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return ("libplctagwrapper.lib.linux", "plctag.so");
+                return ("libplctag.runtime.linux", "plctag.so");
             }
             else
             {
