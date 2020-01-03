@@ -12,7 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="0.0.3-alpha" />
+    <None Remove="runtime\linux\plctag.so" />
+    <None Remove="runtime\win\plctag.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="runtime\linux\plctag.so" />
+    <EmbeddedResource Include="runtime\win\plctag.dll" />
   </ItemGroup>
 
 </Project>
