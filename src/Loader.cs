@@ -10,7 +10,8 @@ namespace libplctag.NativeImport
         public static void Init(string libraryFileName = null)
         {
 
-            var tempFolderName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            //var tempFolderName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var tempFolderName = ".";
             Directory.CreateDirectory(tempFolderName);
 
             string newFileName;
