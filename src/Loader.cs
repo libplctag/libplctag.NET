@@ -35,7 +35,7 @@ namespace libplctag.NativeImport
             IntPtr h = LoadLibrary(newFileName);
             if (h == IntPtr.Zero)
             {
-                throw new NotSupportedException();
+                throw new TypeLoadException();
             }
 
         }
@@ -56,7 +56,7 @@ namespace libplctag.NativeImport
             }
             else
             {
-                throw new NotSupportedException("Platform not supported");
+                throw new TypeLoadException("This platform is not supported, could not load appropriate runtime");
             }
 
         }
