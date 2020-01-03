@@ -9,12 +9,12 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: 'NativeImport/**/*.csproj'
+    projects: 'src/**/*.csproj'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
-    packagesToPack: 'NativeImport/**/*.csproj'
+    packagesToPack: 'src/**/*.csproj'
     versioningScheme: 'off'
 - task: PublishBuildArtifacts@1
   inputs:
