@@ -12,13 +12,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="runtime\linux\plctag.so" />
-    <None Remove="runtime\win\plctag.dll" />
+    <Compile Remove="runtime\linux\**" />
+    <EmbeddedResource Remove="runtime\linux\**" />
+    <None Remove="runtime\linux\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="runtime\linux\plctag.so" />
-    <EmbeddedResource Include="runtime\win\plctag.dll" />
+    <None Remove="runtime\linux_x64\plctag.so" />
+    <None Remove="runtime\linux_x86\plctag.so" />
+    <None Remove="runtime\win_x64\plctag.dll" />
+    <None Remove="runtime\win_x86\plctag.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="runtime\linux_x64\plctag.so" />
+    <EmbeddedResource Include="runtime\linux_x86\plctag.so" />
+    <EmbeddedResource Include="runtime\win_x64\plctag.dll" />
+    <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
   </ItemGroup>
 
 </Project>

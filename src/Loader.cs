@@ -7,19 +7,19 @@ namespace libplctag.NativeImport
 {
     class Loader
     {
-        public static void Init(string libraryFileName = null)
+
+        public static void Init(string customLibrary = null)
         {
 
-            //var tempFolderName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var tempFolderName = ".";
+            var tempFolderName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempFolderName);
 
             string newFileName;
 
-            if (libraryFileName != null)
+            if (customLibrary != null)
             {
-                newFileName = Path.Combine(tempFolderName, "plctag." + Path.GetExtension(libraryFileName));
-                File.Copy(libraryFileName, newFileName);
+                newFileName = Path.Combine(tempFolderName, "plctag." + Path.GetExtension(customLibrary));
+                File.Copy(customLibrary, newFileName);
             }
             else
             {
@@ -35,7 +35,8 @@ namespace libplctag.NativeImport
             IntPtr h = LoadLibrary(newFileName);
             if (h == IntPtr.Zero)
             {
-                throw new TypeLoadException("Was unable to load unmanaged library");
+                var x = GetLastError();
+                throw new TypeLoadException("Unable to load unmanaged library");
             }
 
         }
@@ -43,16 +44,32 @@ namespace libplctag.NativeImport
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern IntPtr LoadLibrary(string lpFileName);
 
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+        static extern IntPtr GetLastError();
+
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+        static extern IntPtr FormatMessage();
+
+
+
         static (string, string) GetResourceName()
         {
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return ("libplctag.runtime.win", "plctag.dll");
+                return ("libplctag.runtime.win_x86", "plctag.dll");
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return ("libplctag.runtime.linux", "plctag.so");
+                return ("libplctag.runtime.win_x86", "plctag.dll");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
+            {
+                return ("libplctag.runtime.linux_86", "plctag.so");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+            {
+                return ("libplctag.runtime.linux_x64", "plctag.so");
             }
             else
             {
