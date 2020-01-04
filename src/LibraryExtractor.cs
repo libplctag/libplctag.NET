@@ -11,6 +11,11 @@ namespace libplctag.NativeImport
         public static void Init()
         {
 
+            Console.WriteLine(RuntimeInformation.ProcessArchitecture);
+            Console.WriteLine(RuntimeInformation.OSDescription);
+            Console.WriteLine(RuntimeInformation.OSArchitecture);
+            Console.WriteLine(RuntimeInformation.FrameworkDescription);
+
             var libraryDirectory = Directory.GetCurrentDirectory();
 
             if (!LibraryExists(libraryDirectory))
@@ -33,6 +38,7 @@ namespace libplctag.NativeImport
 
         public static bool LibraryExists(string folder)
         {
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return File.Exists(Path.Combine(folder, "plctag.dll"));
