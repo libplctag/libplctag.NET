@@ -11,11 +11,6 @@ namespace libplctag.NativeImport
         public static void Init()
         {
 
-            Console.WriteLine(RuntimeInformation.ProcessArchitecture);
-            Console.WriteLine(RuntimeInformation.OSDescription);
-            Console.WriteLine(RuntimeInformation.OSArchitecture);
-            Console.WriteLine(RuntimeInformation.FrameworkDescription);
-
             var libraryDirectory = Directory.GetCurrentDirectory();
 
             if (!LibraryExists(libraryDirectory))
@@ -62,7 +57,7 @@ namespace libplctag.NativeImport
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return ("libplctag.runtime.win_x86", "plctag.dll");
+                return ("libplctag.runtime.win_x64", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
