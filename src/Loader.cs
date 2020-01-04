@@ -35,7 +35,7 @@ namespace libplctag.NativeImport
             IntPtr h = LoadLibrary(newFileName);
             if (h == IntPtr.Zero)
             {
-                throw new TypeLoadException();
+                throw new TypeLoadException("Was unable to load unmanaged library");
             }
 
         }
@@ -56,7 +56,7 @@ namespace libplctag.NativeImport
             }
             else
             {
-                throw new TypeLoadException("This platform is not supported, could not load appropriate runtime");
+                throw new TypeLoadException("This platform is not supported, could not load appropriate unmanaged library");
             }
 
         }
