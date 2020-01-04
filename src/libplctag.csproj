@@ -5,17 +5,11 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.15-alpha</Version>
+    <Version>0.0.16-alpha</Version>
     <Authors>timyhac</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="runtime\linux\**" />
-    <EmbeddedResource Remove="runtime\linux\**" />
-    <None Remove="runtime\linux\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="runtime\linux_x64\plctag.so" />
