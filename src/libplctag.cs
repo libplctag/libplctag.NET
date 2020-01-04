@@ -10,12 +10,7 @@ namespace libplctag.NativeImport
 
         static plctag()
         {
-            LoadDll();
-        }
-
-        public static void LoadDll(string DllFileName = null)
-        {
-            Loader.Init(DllFileName);
+            LibraryExtractor.Init();
         }
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_create", CallingConvention = CallingConvention.Cdecl)]

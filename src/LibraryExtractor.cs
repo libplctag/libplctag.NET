@@ -5,52 +5,47 @@ using System.Runtime.InteropServices;
 
 namespace libplctag.NativeImport
 {
-    class Loader
+    class LibraryExtractor
     {
 
-        public static void Init(string customLibrary = null)
+        public static void Init()
         {
 
-            var tempFolderName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempFolderName);
+            var libraryDirectory = Directory.GetCurrentDirectory();
 
-            string newFileName;
-
-            if (customLibrary != null)
+            if (!LibraryExists(libraryDirectory))
             {
-                newFileName = Path.Combine(tempFolderName, "plctag." + Path.GetExtension(customLibrary));
-                File.Copy(customLibrary, newFileName);
-            }
-            else
-            {
-                var embeddedResourceName = GetResourceName();
-                var embeddedResourceFileName = embeddedResourceName.Item2;
-
-                var embeddedResource = GetEmbeddedResource(embeddedResourceName.Item1 + "." + embeddedResourceName.Item2);
-                newFileName = Path.Combine(tempFolderName, embeddedResourceFileName);
-
-                File.WriteAllBytes(newFileName, embeddedResource);
-            }
-
-            IntPtr h = LoadLibrary(newFileName);
-            if (h == IntPtr.Zero)
-            {
-                var x = GetLastError();
-                throw new TypeLoadException("Unable to load unmanaged library");
+                ExtractAppropriateLibrary(libraryDirectory);
             }
 
         }
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern IntPtr LoadLibrary(string lpFileName);
+        static void ExtractAppropriateLibrary(string folder)
+        {
+            var embeddedResourceName = GetResourceName();
+            var embeddedResourceFileName = embeddedResourceName.Item2;
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern IntPtr GetLastError();
+            var embeddedResource = GetEmbeddedResource(embeddedResourceName.Item1 + "." + embeddedResourceName.Item2);
+            var newFileName = Path.Combine(folder, embeddedResourceFileName);
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern IntPtr FormatMessage();
+            File.WriteAllBytes(newFileName, embeddedResource);
+        }
 
-
+        public static bool LibraryExists(string folder)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return File.Exists(Path.Combine(folder, "plctag.dll"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return File.Exists(Path.Combine(folder, "plctag.so"));
+            }
+            else
+            {
+                throw new TypeLoadException("Platform not supported");
+            }
+        }
 
         static (string, string) GetResourceName()
         {
@@ -88,12 +83,6 @@ namespace libplctag.NativeImport
                 stream.Read(resource, 0, resource.Length);
                 return resource;
             }
-        }
-
-        public static string[] GetEmbeddedLibaries()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            return assembly.GetManifestResourceNames();
         }
 
     }
