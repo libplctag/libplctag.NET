@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace libplctag.NativeImport
 {
-    public class plctag
+    public static class plctag
     {
 
         const string DLL_NAME = "plctag";
