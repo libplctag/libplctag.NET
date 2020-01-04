@@ -19,6 +19,48 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 ## Example Usage
 
+### Tag
+
+```csharp
+
+using libplctag;
+using System;
+using System.Net;
+using System.Threading;
+
+namespace ExampleConsoleApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.LGX, DataType.DINT, "MY_DINT");
+            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
+            {
+                Thread.Sleep(100);
+            }
+            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
+            {
+                Console.WriteLine("Something went wrong");
+            }
+            myTag.Read(TimeSpan.Zero);
+            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
+            {
+                Thread.Sleep(100);
+            }
+            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
+            {
+                Console.WriteLine("Something else went wrong");
+            }
+            int myDint = myTag.GetInt32(0);
+            Console.WriteLine(myDint);
+
+        }
+    }
+}
+```
+
 ### Native Dll Importer
 
 The below example connects to a CompactLogix PLC with the IP Address 192.168.0.10 with a DINT tag named "MY_DINT" and display it's value.
@@ -69,49 +111,6 @@ namespace ExampleConsoleApp
     }
 }
 ```
-
-### Tag
-
-```csharp
-
-using libplctag;
-using System;
-using System.Net;
-using System.Threading;
-
-namespace ExampleConsoleApp
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-
-            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.LGX, DataType.DINT, "MY_DINT");
-            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
-            {
-                Thread.Sleep(100);
-            }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-            {
-                Console.WriteLine("Something went wrong");
-            }
-            myTag.Read(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
-            {
-                Thread.Sleep(100);
-            }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-            {
-                Console.WriteLine("Something else went wrong");
-            }
-            int myDint = myTag.GetInt32(0);
-            Console.WriteLine(myDint);
-
-        }
-    }
-}
-```
-
 
 
 
