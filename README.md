@@ -1,10 +1,10 @@
 ﻿# libplctag .NET
 
 This is a .NET wrapper around [libplctag](https://github.com/kyle-github/libplctag).
-
 Download from [nuget.org](https://www.nuget.org/packages/libplctag/).
-
 It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp).
+
+This wrapper simply embeds all the runtimes for each possible platform. On startup of an application, it checks if the runtime is present on the filesystem, and if it isn't it extracts the appropriate one.
 
 ## Goals
 
@@ -15,7 +15,7 @@ It was inspired by [libplctag-csharp](https://github.com/mesta1/libplctag-csharp
 
 ## Notes
 
-* Nothing has been tested, it probably doesn't work on your platform.
+* Almost nothing has been tested, it probably won't work for you. Please let me know if you use this library and whether it works for you or not (including the platform you are using).
 
 ## Example Usage
 
