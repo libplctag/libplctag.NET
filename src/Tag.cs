@@ -22,7 +22,7 @@ namespace libplctag
         private int pointer;
 
         /// <summary>
-        /// Factory method to create a tag. If the CPU type is LGX, the port type and slot has to be specified.
+        /// Provides a new tag. If the CPU type is LGX, the port type and slot has to be specified.
         /// </summary>
         /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
         /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
@@ -47,7 +47,7 @@ namespace libplctag
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
-            pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds); ;
+            pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
         }
 
