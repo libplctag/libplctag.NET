@@ -81,6 +81,133 @@ namespace libplctag
 
         }
 
+        public void ThrowIfError()
+        {
+            var status = GetStatus();
+
+            switch (status)
+            {
+                case StatusCode.PLCTAG_STATUS_PENDING:
+                    break;
+                case StatusCode.PLCTAG_STATUS_OK:
+                    break;
+                case StatusCode.PLCTAG_ERR_ABORT:
+                    throw new AbortException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_CONFIG:
+                    throw new BadConfigException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_CONNECTION:
+                    throw new BadConnectionException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_DATA:
+                    throw new BadDataException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_DEVICE:
+                    throw new BadDeviceException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_GATEWAY:
+                    throw new BadGatewayException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_PARAM:
+                    throw new BadParameterException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_REPLY:
+                    throw new BadReplyException();
+                    break;
+                case StatusCode.PLCTAG_ERR_BAD_STATUS:
+                    throw new BadStatusException();
+                    break;
+                case StatusCode.PLCTAG_ERR_CLOSE:
+                    throw new CloseException();
+                    break;
+                case StatusCode.PLCTAG_ERR_CREATE:
+                    throw new CreateException();
+                    break;
+                case StatusCode.PLCTAG_ERR_DUPLICATE:
+                    throw new DuplicateException();
+                    break;
+                case StatusCode.PLCTAG_ERR_ENCODE:
+                    throw new EncodeException();
+                    break;
+                case StatusCode.PLCTAG_ERR_MUTEX_DESTROY:
+                    throw new MutexDestroyException();
+                    break;
+                case StatusCode.PLCTAG_ERR_MUTEX_INIT:
+                    throw new MutexInitException();
+                    break;
+                case StatusCode.PLCTAG_ERR_MUTEX_LOCK:
+                    throw new MutexLockException();
+                    break;
+                case StatusCode.PLCTAG_ERR_MUTEX_UNLOCK:
+                    throw new MutexUnlockException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NOT_ALLOWED:
+                    throw new NotAllowedException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NOT_FOUND:
+                    throw new NotFoundException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NOT_IMPLEMENTED:
+                    throw new NotImplementedException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NO_DATA:
+                    throw new NoDataException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NO_MATCH:
+                    throw new NoMatchException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NO_MEM:
+                    throw new NoMemoryException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NO_RESOURCES:
+                    throw new NoResourcesException();
+                    break;
+                case StatusCode.PLCTAG_ERR_NULL_PTR:
+                    throw new NullPointerException();
+                    break;
+                case StatusCode.PLCTAG_ERR_OPEN:
+                    throw new OpenException();
+                    break;
+                case StatusCode.PLCTAG_ERR_OUT_OF_BOUNDS:
+                    throw new OutOfBoundsException();
+                    break;
+                case StatusCode.PLCTAG_ERR_READ:
+                    throw new ReadException();
+                    break;
+                case StatusCode.PLCTAG_ERR_REMOTE_ERR:
+                    throw new RemoteErrorException();
+                    break;
+                case StatusCode.PLCTAG_ERR_THREAD_CREATE:
+                    throw new ThreadCreateException();
+                    break;
+                case StatusCode.PLCTAG_ERR_THREAD_JOIN:
+                    throw new ThreadJoinException();
+                    break;
+                case StatusCode.PLCTAG_ERR_TIMEOUT:
+                    throw new TimeoutException();
+                    break;
+                case StatusCode.PLCTAG_ERR_TOO_LARGE:
+                    throw new TooLargeException();
+                    break;
+                case StatusCode.PLCTAG_ERR_TOO_SMALL:
+                    throw new TooSmallException();
+                    break;
+                case StatusCode.PLCTAG_ERR_UNSUPPORTED:
+                    throw new UnsupportedException();
+                    break;
+                case StatusCode.PLCTAG_ERR_WINSOCK:
+                    throw new WinsockException();
+                    break;
+                case StatusCode.PLCTAG_ERR_WRITE:
+                    throw new WriteException();
+                    break;
+                default:
+                    throw new System.NotImplementedException();
+                    break;
+            }
+        }
+
         public void Dispose() => plctag.destroy(pointer);
 
         public void Abort() => plctag.abort(pointer);
