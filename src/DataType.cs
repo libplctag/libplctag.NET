@@ -1,5 +1,8 @@
-﻿namespace libplctag
+﻿using System;
+
+namespace libplctag
 {
+
     public static class DataType
     {
         /* 1-byte / 8-bit types */
@@ -23,5 +26,16 @@
         // Not sure what AB calls 64-bit floats
 
         public const int String = 88;
+
+        public static int Parse(string type)
+        {
+            foreach (var f in typeof(DataType).GetFields())
+            {
+                if (type == f.Name)
+                    return (int)f.GetValue(null);
+            }
+
+            throw new ArgumentException(nameof(type));
+        }
     }
 }
