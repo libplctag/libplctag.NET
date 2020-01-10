@@ -41,22 +41,17 @@ namespace ExampleConsoleApp
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-            {
-                Console.WriteLine("Something went wrong");
-            }
+            myTag.ThrowIfError();
             myTag.Read(TimeSpan.Zero);
             while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
-            {
-                Console.WriteLine("Something else went wrong");
-            }
+            myTag.ThrowIfError();
+            
             int myDint = myTag.GetInt32(0);
             Console.WriteLine(myDint);
-
+            
         }
     }
 }
