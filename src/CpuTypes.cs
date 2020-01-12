@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum CpuType
+    public enum CpuTypes
     {
         COMPACTLOGIX,
         CLGX,

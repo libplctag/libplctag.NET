@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public static class DataType
+    public static class DataTypes
     {
         /* 1-byte / 8-bit types */
         public const int Int8 = 1;
@@ -29,7 +29,7 @@ namespace libplctag
 
         public static int Parse(string type)
         {
-            foreach (var f in typeof(DataType).GetFields())
+            foreach (var f in typeof(DataTypes).GetFields())
             {
                 if (type == f.Name)
                     return (int)f.GetValue(null);
