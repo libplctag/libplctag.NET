@@ -13,7 +13,7 @@ namespace libplctag
         public string Protocol { get; }
         public IPAddress Gateway { get; }
         public string Path { get; }
-        public CpuType CPU { get; }
+        public CpuTypes CPU { get; }
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
@@ -33,7 +33,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
         {
 
             Protocol = protocol;
@@ -56,7 +56,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, int debugLevel)
+        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -92,31 +92,31 @@ namespace libplctag
                 case StatusCode.PLCTAG_STATUS_OK:
                     break;
                 case StatusCode.PLCTAG_ERR_ABORT:
-                    throw new AbortException();
+                    throw new LibPlcTagAbortException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_CONFIG:
-                    throw new BadConfigException();
+                    throw new LibPlcTagBadConfigException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_CONNECTION:
-                    throw new BadConnectionException();
+                    throw new LibPlcTagBadConnectionException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_DATA:
-                    throw new BadDataException();
+                    throw new LibPlcTagBadDataException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_DEVICE:
-                    throw new BadDeviceException();
+                    throw new LibPlcTagBadDeviceException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_GATEWAY:
-                    throw new BadGatewayException();
+                    throw new LibPlcTagBadGatewayException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_PARAM:
-                    throw new BadParameterException();
+                    throw new LibPlcTagBadParameterException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_REPLY:
-                    throw new BadReplyException();
+                    throw new LibPlcTagBadReplyException();
                     break;
                 case StatusCode.PLCTAG_ERR_BAD_STATUS:
-                    throw new BadStatusException();
+                    throw new LibPlcTagBadStatusException();
                     break;
                 case StatusCode.PLCTAG_ERR_CLOSE:
                     throw new CloseException();
