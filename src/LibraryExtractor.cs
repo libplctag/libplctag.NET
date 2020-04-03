@@ -8,16 +8,27 @@ namespace libplctag.NativeImport
     class LibraryExtractor
     {
 
-        public static void Init()
+        public static void Init(string extractDirectory = null)
         {
 
-            var libraryDirectory = Directory.GetCurrentDirectory();
-
-            if (!LibraryExists(libraryDirectory))
+            if (extractDirectory == null)
             {
-                ExtractAppropriateLibrary(libraryDirectory);
+                extractDirectory = GetCallingAssemblyDirectory();
             }
 
+            if (!LibraryExists(extractDirectory))
+            {
+                ExtractAppropriateLibrary(extractDirectory);
+            }
+
+        }
+
+        public static string GetCallingAssemblyDirectory()
+        {
+            string codeBase = Assembly.GetCallingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
         }
 
         static void ExtractAppropriateLibrary(string folder)
@@ -48,24 +59,24 @@ namespace libplctag.NativeImport
             }
         }
 
-        static (string, string) GetResourceName()
+        static Tuple<string, string> GetResourceName()
         {
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return ("libplctag.runtime.win_x86", "plctag.dll");
+                return new Tuple<string, string>("libplctag.runtime.win_x86", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return ("libplctag.runtime.win_x64", "plctag.dll");
+                return new Tuple<string, string>("libplctag.runtime.win_x64", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return ("libplctag.runtime.linux_86", "plctag.so");
+                return new Tuple<string, string>("libplctag.runtime.linux_86", "plctag.so");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return ("libplctag.runtime.linux_x64", "plctag.so");
+                return new Tuple<string, string>("libplctag.runtime.linux_x64", "plctag.so");
             }
             else
             {
