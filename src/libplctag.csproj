@@ -26,4 +26,8 @@
     <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+  </ItemGroup>
+
 </Project>

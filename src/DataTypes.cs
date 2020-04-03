@@ -29,10 +29,26 @@ namespace libplctag
 
         public static int Parse(string type)
         {
-            foreach (var f in typeof(DataTypes).GetFields())
+            switch (type)
             {
-                if (type == f.Name)
-                    return (int)f.GetValue(null);
+                case nameof(Int8):  return Int8;
+                case nameof(SINT):  return SINT;
+
+                case nameof(Int16): return Int16;
+                case nameof(INT):   return INT;
+
+                case nameof(Int32): return Int32;
+                case nameof(DINT): return DINT;
+                case nameof(Float32): return Float32;
+                case nameof(REAL): return REAL;
+
+                case nameof(Int64): return Int64;
+                case nameof(LINT): return LINT;
+                case nameof(Float64): return Float64;
+
+                case nameof(String): return String;
+
+                default: break;
             }
 
             throw new ArgumentException(nameof(type));
