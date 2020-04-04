@@ -36,7 +36,7 @@ namespace ExampleConsoleApp
         static void Main(string[] args)
         {
 
-            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.LGX, DataType.DINT, "MY_DINT");
+            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuTypes.LGX, DataTypes.DINT, "MY_DINT");
             while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
                 Thread.Sleep(100);
