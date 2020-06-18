@@ -51,7 +51,7 @@ namespace libplctag.NativeImport
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return File.Exists(Path.Combine(folder, "plctag.so"));
+                return File.Exists(Path.Combine(folder, "libplctag.so"));
             }
             else
             {
@@ -72,11 +72,11 @@ namespace libplctag.NativeImport
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return new Tuple<string, string>("libplctag.runtime.linux_86", "plctag.so");
+                return new Tuple<string, string>("libplctag.runtime.linux_86", "libplctag.so");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.runtime.linux_x64", "plctag.so");
+                return new Tuple<string, string>("libplctag.runtime.linux_x64", "libplctag.so");
             }
             else
             {
