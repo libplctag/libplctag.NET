@@ -5,9 +5,10 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.25</Version>
+    <Version>0.0.25-alpha01</Version>
     <Authors>timyhac</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageDescription></PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
   </PropertyGroup>
