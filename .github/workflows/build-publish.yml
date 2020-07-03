@@ -14,14 +14,14 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 3.1.101  
     # Publish
     - name: publish on version change
       id: publish_nuget
       uses: rohith/publish-nuget@v2
       with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: 'src/**/*.csproj'
+          PROJECT_FILE_PATH: './src/libplctag/libplctag.csproj'
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: libplctag
