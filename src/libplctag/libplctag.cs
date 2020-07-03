@@ -13,6 +13,10 @@ namespace libplctag.NativeImport
             LibraryExtractor.Init();
         }
 
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_check_lib_version", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int check_lib_version(int req_major, int req_minor, int req_patch);
+
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_create", CallingConvention = CallingConvention.Cdecl)]
         public static extern Int32 create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
