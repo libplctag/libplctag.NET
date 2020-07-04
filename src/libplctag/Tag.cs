@@ -86,45 +86,45 @@ namespace libplctag
 
             switch (status)
             {
-                case StatusCode.PLCTAG_STATUS_PENDING:      break;
-                case StatusCode.PLCTAG_STATUS_OK:           break;
-                case StatusCode.PLCTAG_ERR_ABORT:           throw new libplctag.AbortException();
-                case StatusCode.PLCTAG_ERR_BAD_CONFIG:      throw new libplctag.BadConfigException();
-                case StatusCode.PLCTAG_ERR_BAD_CONNECTION:  throw new libplctag.BadConnectionException();
-                case StatusCode.PLCTAG_ERR_BAD_DATA:        throw new libplctag.BadDataException();
-                case StatusCode.PLCTAG_ERR_BAD_DEVICE:      throw new libplctag.BadDeviceException();
-                case StatusCode.PLCTAG_ERR_BAD_GATEWAY:     throw new libplctag.BadGatewayException();
-                case StatusCode.PLCTAG_ERR_BAD_PARAM:       throw new libplctag.BadParameterException();
-                case StatusCode.PLCTAG_ERR_BAD_REPLY:       throw new libplctag.BadReplyException();
-                case StatusCode.PLCTAG_ERR_BAD_STATUS:      throw new libplctag.BadStatusException();
-                case StatusCode.PLCTAG_ERR_CLOSE:           throw new libplctag.CloseException();
-                case StatusCode.PLCTAG_ERR_CREATE:          throw new libplctag.CreateException();
-                case StatusCode.PLCTAG_ERR_DUPLICATE:       throw new libplctag.DuplicateException();
-                case StatusCode.PLCTAG_ERR_ENCODE:          throw new libplctag.EncodeException();
-                case StatusCode.PLCTAG_ERR_MUTEX_DESTROY:   throw new libplctag.MutexDestroyException();
-                case StatusCode.PLCTAG_ERR_MUTEX_INIT:      throw new libplctag.MutexInitException();
-                case StatusCode.PLCTAG_ERR_MUTEX_LOCK:      throw new libplctag.MutexLockException();
-                case StatusCode.PLCTAG_ERR_MUTEX_UNLOCK:    throw new libplctag.MutexUnlockException();
-                case StatusCode.PLCTAG_ERR_NOT_ALLOWED:     throw new libplctag.NotAllowedException();
-                case StatusCode.PLCTAG_ERR_NOT_FOUND:       throw new libplctag.NotFoundException();
-                case StatusCode.PLCTAG_ERR_NOT_IMPLEMENTED: throw new libplctag.NotImplementedException();
-                case StatusCode.PLCTAG_ERR_NO_DATA:         throw new libplctag.NoDataException();
-                case StatusCode.PLCTAG_ERR_NO_MATCH:        throw new libplctag.NoMatchException();
-                case StatusCode.PLCTAG_ERR_NO_MEM:          throw new libplctag.NoMemoryException();
-                case StatusCode.PLCTAG_ERR_NO_RESOURCES:    throw new libplctag.NoResourcesException();
-                case StatusCode.PLCTAG_ERR_NULL_PTR:        throw new libplctag.NullPointerException();
-                case StatusCode.PLCTAG_ERR_OPEN:            throw new libplctag.OpenException();
-                case StatusCode.PLCTAG_ERR_OUT_OF_BOUNDS:   throw new libplctag.OutOfBoundsException();
-                case StatusCode.PLCTAG_ERR_READ:            throw new libplctag.ReadException();
-                case StatusCode.PLCTAG_ERR_REMOTE_ERR:      throw new libplctag.RemoteErrorException();
-                case StatusCode.PLCTAG_ERR_THREAD_CREATE:   throw new libplctag.ThreadCreateException();
-                case StatusCode.PLCTAG_ERR_THREAD_JOIN:     throw new libplctag.ThreadJoinException();
-                case StatusCode.PLCTAG_ERR_TIMEOUT:         throw new libplctag.TimeoutException();
-                case StatusCode.PLCTAG_ERR_TOO_LARGE:       throw new libplctag.TooLargeException();
-                case StatusCode.PLCTAG_ERR_TOO_SMALL:       throw new libplctag.TooSmallException();
-                case StatusCode.PLCTAG_ERR_UNSUPPORTED:     throw new libplctag.UnsupportedException();
-                case StatusCode.PLCTAG_ERR_WINSOCK:         throw new libplctag.WinsockException();
-                case StatusCode.PLCTAG_ERR_WRITE:           throw new libplctag.WriteException();
+                case StatusCodes.STATUS_PENDING:      break;
+                case StatusCodes.STATUS_OK:           break;
+                case StatusCodes.ERROR_ABORT:           throw new libplctag.AbortException();
+                case StatusCodes.ERROR_BAD_CONFIG:      throw new libplctag.BadConfigException();
+                case StatusCodes.ERROR_BAD_CONNECTION:  throw new libplctag.BadConnectionException();
+                case StatusCodes.ERROR_BAD_DATA:        throw new libplctag.BadDataException();
+                case StatusCodes.ERROR_BAD_DEVICE:      throw new libplctag.BadDeviceException();
+                case StatusCodes.ERROR_BAD_GATEWAY:     throw new libplctag.BadGatewayException();
+                case StatusCodes.ERROR_BAD_PARAM:       throw new libplctag.BadParameterException();
+                case StatusCodes.ERROR_BAD_REPLY:       throw new libplctag.BadReplyException();
+                case StatusCodes.ERROR_BAD_STATUS:      throw new libplctag.BadStatusException();
+                case StatusCodes.ERROR_CLOSE:           throw new libplctag.CloseException();
+                case StatusCodes.ERROR_CREATE:          throw new libplctag.CreateException();
+                case StatusCodes.ERROR_DUPLICATE:       throw new libplctag.DuplicateException();
+                case StatusCodes.ERROR_ENCODE:          throw new libplctag.EncodeException();
+                case StatusCodes.ERROR_MUTEX_DESTROY:   throw new libplctag.MutexDestroyException();
+                case StatusCodes.ERROR_MUTEX_INIT:      throw new libplctag.MutexInitException();
+                case StatusCodes.ERROR_MUTEX_LOCK:      throw new libplctag.MutexLockException();
+                case StatusCodes.ERROR_MUTEX_UNLOCK:    throw new libplctag.MutexUnlockException();
+                case StatusCodes.ERROR_NOT_ALLOWED:     throw new libplctag.NotAllowedException();
+                case StatusCodes.ERROR_NOT_FOUND:       throw new libplctag.NotFoundException();
+                case StatusCodes.ERROR_NOT_IMPLEMENTED: throw new libplctag.NotImplementedException();
+                case StatusCodes.ERROR_NO_DATA:         throw new libplctag.NoDataException();
+                case StatusCodes.ERROR_NO_MATCH:        throw new libplctag.NoMatchException();
+                case StatusCodes.ERROR_NO_MEM:          throw new libplctag.NoMemoryException();
+                case StatusCodes.ERROR_NO_RESOURCES:    throw new libplctag.NoResourcesException();
+                case StatusCodes.ERROR_NULL_PTR:        throw new libplctag.NullPointerException();
+                case StatusCodes.ERROR_OPEN:            throw new libplctag.OpenException();
+                case StatusCodes.ERROR_OUT_OF_BOUNDS:   throw new libplctag.OutOfBoundsException();
+                case StatusCodes.ERROR_READ:            throw new libplctag.ReadException();
+                case StatusCodes.ERROR_REMOTE_ERR:      throw new libplctag.RemoteErrorException();
+                case StatusCodes.ERROR_THREAD_CREATE:   throw new libplctag.ThreadCreateException();
+                case StatusCodes.ERROR_THREAD_JOIN:     throw new libplctag.ThreadJoinException();
+                case StatusCodes.ERROR_TIMEOUT:         throw new libplctag.TimeoutException();
+                case StatusCodes.ERROR_TOO_LARGE:       throw new libplctag.TooLargeException();
+                case StatusCodes.ERROR_TOO_SMALL:       throw new libplctag.TooSmallException();
+                case StatusCodes.ERROR_UNSUPPORTED:     throw new libplctag.UnsupportedException();
+                case StatusCodes.ERROR_WINSOCK:         throw new libplctag.WinsockException();
+                case StatusCodes.ERROR_WRITE:           throw new libplctag.WriteException();
                 default:                                    throw new System.NotImplementedException();
             }
         }
@@ -139,7 +139,7 @@ namespace libplctag
 
         public int GetSize() => plctag.get_size(pointer);
 
-        public StatusCode GetStatus() => (StatusCode)plctag.status(pointer);
+        public StatusCodes GetStatus() => (StatusCodes)plctag.status(pointer);
 
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
