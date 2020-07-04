@@ -7,9 +7,9 @@ namespace ExampleConsoleApp
     {
         static void Main(string[] args)
         {
-            //Example.Run();
-            //NativeImportExample.Run();
-            //NativeImportExample.RunCallbackExample();
+            Example.Run();
+            NativeImportExample.Run();
+            NativeImportExample.RunCallbackExample();
             NativeImportExample.RunLoggerExample();
 
             Console.Read();

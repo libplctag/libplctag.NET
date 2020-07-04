@@ -9,30 +9,32 @@ namespace ConsoleTest
         public static void Run()
         {
 
-            var handle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
-            while (plctag.status(handle) == 1)
+            while (plctag.status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(handle);
+            var statusBeforeRead = plctag.status(tagHandle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            plctag.read(handle, 1000);
-            while (plctag.status(handle) == 1)
+            plctag.read(tagHandle, 1000);
+            while (plctag.status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(handle);
+            var statusAfterRead = plctag.status(tagHandle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var theValue = plctag.get_uint32(handle, 0);
+            var theValue = plctag.get_uint32(tagHandle, 0);
+
+            plctag.destroy(tagHandle);
 
             Console.WriteLine(theValue);
         }
@@ -72,6 +74,8 @@ namespace ConsoleTest
 
             var theValue = plctag.get_uint32(tagHandle, 0);
 
+            plctag.destroy(tagHandle);
+
             Console.WriteLine(theValue);
         }
 
@@ -89,30 +93,32 @@ namespace ConsoleTest
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            var handle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
+            var tagHandle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
 
-            while (plctag.status(handle) == 1)
+            while (plctag.status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(handle);
+            var statusBeforeRead = plctag.status(tagHandle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            plctag.read(handle, 1000);
-            while (plctag.status(handle) == 1)
+            plctag.read(tagHandle, 1000);
+            while (plctag.status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(handle);
+            var statusAfterRead = plctag.status(tagHandle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var theValue = plctag.get_uint32(handle, 0);
+            var theValue = plctag.get_uint32(tagHandle, 0);
+
+            plctag.destroy(tagHandle);
 
             Console.WriteLine(theValue);
 
