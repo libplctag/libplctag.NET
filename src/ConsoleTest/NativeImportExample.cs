@@ -89,8 +89,33 @@ namespace ConsoleTest
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            for (int ii = 0; ii < 100; ii++)
-                Run();
+            var handle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
+
+            while (plctag.status(handle) == 1)
+            {
+                Thread.Sleep(100);
+            }
+            var statusBeforeRead = plctag.status(handle);
+            if (statusBeforeRead != 0)
+            {
+                Console.WriteLine($"Something went wrong {statusBeforeRead}");
+            }
+
+            plctag.read(handle, 1000);
+            while (plctag.status(handle) == 1)
+            {
+                Thread.Sleep(100);
+            }
+            var statusAfterRead = plctag.status(handle);
+            if (statusAfterRead != 0)
+            {
+                Console.WriteLine($"Something went wrong {statusAfterRead}");
+            }
+
+            var theValue = plctag.get_uint32(handle, 0);
+
+            Console.WriteLine(theValue);
+
         }
 
         public static void MyLogger(int tag_id, int debug_level, string message)
