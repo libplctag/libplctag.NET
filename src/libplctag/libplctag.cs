@@ -28,23 +28,23 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_register_callback", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int register_callback(Int32 tag_id, IntPtr tag_callback_func);
+        public static extern int register_callback(Int32 tag_id, callback_func func);
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_unregister_callback", CallingConvention = CallingConvention.Cdecl)]
         public static extern int unregister_callback(Int32 tag_id);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate double callback_func(Int32 tag_id, Int32 event_id, Int32 status);
+        public delegate void callback_func(Int32 tag_id, Int32 event_id, Int32 status);
 
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_register_logger", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int register_logger(IntPtr log_callback_func);
+        public static extern int register_logger(log_callback_func func);
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_unregister_logger", CallingConvention = CallingConvention.Cdecl)]
         public static extern int unregister_logger(Int32 tag_id);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate double log_callback_func(Int32 tag_id, int debug_level, [MarshalAs(UnmanagedType.LPStr)] string message);
+        public delegate void log_callback_func(Int32 tag_id, int debug_level, [MarshalAs(UnmanagedType.LPStr)] string message);
 
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_lock", CallingConvention = CallingConvention.Cdecl)]
