@@ -10,7 +10,7 @@ namespace libplctag
     public sealed class Tag : IDisposable
     {
 
-        public string Protocol { get; }
+        public Protocols Protocol { get; }
         public IPAddress Gateway { get; }
         public string Path { get; }
         public CpuTypes CPU { get; }
@@ -33,7 +33,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevels debugLevel = DebugLevels.None, string protocol = "ab_eip")
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevels debugLevel = DebugLevels.None, Protocols protocol = Protocols.ab_eip)
         {
 
             Protocol = protocol;
@@ -56,12 +56,12 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevels debugLevel)
+        private static string GetAttributeString(Protocols protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevels debugLevel)
         {
 
             var attributes = new Dictionary<string, string>();
 
-            attributes.Add("protocol", protocol);
+            attributes.Add("protocol", protocol.ToString());
             attributes.Add("gateway", gateway.ToString());
 
             if (!string.IsNullOrEmpty(path))
