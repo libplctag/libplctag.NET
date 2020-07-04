@@ -1,5 +1,4 @@
-﻿using ConsoleTest;
-using System;
+﻿using System;
 
 namespace ExampleConsoleApp
 {

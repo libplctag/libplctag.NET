@@ -2,7 +2,7 @@
 using System.Threading;
 using libplctag.NativeImport;
 
-namespace ConsoleTest
+namespace ExampleConsoleApp
 {
     class NativeImportExample
     {
