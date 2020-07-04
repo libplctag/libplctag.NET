@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class BusyException : Exception
+    public class BusyException : LibPlcTagException
     {
         public BusyException()
         {

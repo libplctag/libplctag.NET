@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class OutOfBoundsException : Exception
+    public class OutOfBoundsException : LibPlcTagException
     {
         public OutOfBoundsException()
         {

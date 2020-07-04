@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class CloseException : Exception
+    public class CloseException : LibPlcTagException
     {
         public CloseException()
         {

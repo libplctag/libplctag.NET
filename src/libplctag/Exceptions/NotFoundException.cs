@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NotFoundException : Exception
+    public class NotFoundException : LibPlcTagException
     {
         public NotFoundException()
         {

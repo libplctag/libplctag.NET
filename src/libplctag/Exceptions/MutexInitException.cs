@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class MutexInitException : Exception
+    public class MutexInitException : LibPlcTagException
     {
         public MutexInitException()
         {

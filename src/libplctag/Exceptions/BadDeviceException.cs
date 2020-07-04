@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class BadDeviceException : Exception
+    public class BadDeviceException : LibPlcTagException
     {
         public BadDeviceException()
         {

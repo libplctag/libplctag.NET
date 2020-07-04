@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NoMatchException : Exception
+    public class NoMatchException : LibPlcTagException
     {
         public NoMatchException()
         {

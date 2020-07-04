@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class BadConnectionException : Exception
+    public class BadConnectionException : LibPlcTagException
     {
         public BadConnectionException()
         {

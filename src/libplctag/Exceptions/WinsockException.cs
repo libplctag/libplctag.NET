@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class WinsockException : Exception
+    public class WinsockException : LibPlcTagException
     {
         public WinsockException()
         {

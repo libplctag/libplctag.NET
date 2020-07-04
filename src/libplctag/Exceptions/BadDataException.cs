@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class BadDataException : Exception
+    public class BadDataException : LibPlcTagException
     {
         public BadDataException()
         {

@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class AbortException : Exception
+    public class AbortException : LibPlcTagException
     {
         public AbortException()
         {

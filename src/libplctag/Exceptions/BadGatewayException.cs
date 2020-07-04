@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class BadGatewayException : Exception
+    public class BadGatewayException : LibPlcTagException
     {
         public BadGatewayException()
         {

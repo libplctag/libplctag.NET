@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class TooSmallException : Exception
+    public class TooSmallException : LibPlcTagException
     {
         public TooSmallException()
         {

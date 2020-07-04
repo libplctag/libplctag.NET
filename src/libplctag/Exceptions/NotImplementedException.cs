@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NotImplementedException : Exception
+    public class NotImplementedException : LibPlcTagException
     {
         public NotImplementedException()
         {
