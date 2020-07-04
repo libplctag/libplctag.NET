@@ -11,7 +11,7 @@ namespace ExampleConsoleApp
         {
 
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.LGX, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
-            while (myTag.GetStatus() == StatusCodes.STATUS_PENDING)
+            while (myTag.GetStatus() == StatusCodes.StatusPending)
             {
                 Thread.Sleep(100);
             }
@@ -19,7 +19,7 @@ namespace ExampleConsoleApp
 
             myTag.SetInt32(0, 3737);
             myTag.Write(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCodes.STATUS_PENDING)
+            while (myTag.GetStatus() == StatusCodes.StatusPending)
             {
                 Thread.Sleep(100);
             }
@@ -27,7 +27,7 @@ namespace ExampleConsoleApp
 
 
             myTag.Read(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCodes.STATUS_PENDING)
+            while (myTag.GetStatus() == StatusCodes.StatusPending)
             {
                 Thread.Sleep(100);
             }
