@@ -2,14 +2,25 @@
 {
     public enum CpuTypes
     {
-        COMPACTLOGIX,
-        CLGX,
-        LGX,
-        CONTROLLOGIX,
-        CONTROLOGIX,
-        FLEXLOGIX,
-        FLGX,
-        SLC,
-        PLC5
+        lgx,
+        logix,
+        controllogix,
+        compactlogix,
+        clogix,
+        plc5,
+        plc,
+        slc500,
+        slc,
+        lgxpccc,
+        logixpccc,
+        lgxplc5,
+        lgx_pccc,
+        logix_pccc,
+        lgx_plc5,
+        micrologix800,
+        mlgx800,
+        micro800,
+        micrologix,
+        mlgx
     }
 }
