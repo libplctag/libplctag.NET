@@ -17,7 +17,7 @@ namespace libplctag
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
-        public int DebugLevel { get; }
+        public DebugLevels DebugLevel { get; }
 
         private readonly int pointer;
 
@@ -33,7 +33,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevels debugLevel = DebugLevels.None, string protocol = "ab_eip")
         {
 
             Protocol = protocol;
@@ -56,7 +56,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel)
+        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevels debugLevel)
         {
 
             var attributes = new Dictionary<string, string>();
