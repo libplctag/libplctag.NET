@@ -40,6 +40,8 @@
         ErrorTooSmall = -34,
         ErrorUnsupported = -35,
         ErrorWinsock = -36,
-        ErrorWrite = -37
+        ErrorWrite = -37,
+        ErrorPartial = -38,
+        ErrorBusy = -39
     }
 }
