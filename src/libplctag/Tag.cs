@@ -38,7 +38,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip", TimeSpan readCacheDuration = default)
         {
 
             Protocol = protocol;
@@ -49,9 +49,9 @@ namespace libplctag
             ElementCount = elementCount;
             Name = name;
             DebugLevel = debugLevel;
-            ReadCacheDuration = TimeSpan.FromMilliseconds(0);
+            ReadCacheDuration = readCacheDuration;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration);
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
@@ -62,7 +62,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel)
+        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel, TimeSpan readCacheDuration)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -80,6 +80,9 @@ namespace libplctag
 
             if (debugLevel > 0)
                 attributes.Add("debug", debugLevel.ToString());
+
+            if (readCacheDuration > TimeSpan.Zero)
+                attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
