@@ -40,6 +40,8 @@
         PLCTAG_ERR_TOO_SMALL = -34,
         PLCTAG_ERR_UNSUPPORTED = -35,
         PLCTAG_ERR_WINSOCK = -36,
-        PLCTAG_ERR_WRITE = -37
+        PLCTAG_ERR_WRITE = -37,
+        PLCTAG_ERR_PARTIAL = -38,
+        PLCTAG_ERR_BUSY = -39,
     }
 }

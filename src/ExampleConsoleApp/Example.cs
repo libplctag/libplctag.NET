@@ -5,11 +5,10 @@ using System.Threading;
 
 namespace ExampleConsoleApp
 {
-    class Program
+    class Example
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.LGX, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
             while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
@@ -37,7 +36,6 @@ namespace ExampleConsoleApp
 
 
             Console.WriteLine(myDint);
-
         }
     }
 }

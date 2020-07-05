@@ -13,11 +13,45 @@ namespace libplctag.NativeImport
             LibraryExtractor.Init();
         }
 
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_check_lib_version", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int check_lib_version(int req_major, int req_minor, int req_patch);
+
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_create", CallingConvention = CallingConvention.Cdecl)]
         public static extern Int32 create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_destroy", CallingConvention = CallingConvention.Cdecl)]
         public static extern int destroy(Int32 tag);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_shutdown", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int shutdown();
+
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_register_callback", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int register_callback(Int32 tag_id, callback_func func);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_unregister_callback", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int unregister_callback(Int32 tag_id);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void callback_func(Int32 tag_id, Int32 event_id, Int32 status);
+
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_register_logger", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int register_logger(log_callback_func func);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_unregister_logger", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int unregister_logger(Int32 tag_id);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void log_callback_func(Int32 tag_id, int debug_level, [MarshalAs(UnmanagedType.LPStr)] string message);
+
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_lock", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int plc_tag_lock(Int32 tag);
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_unlock", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int plc_tag_unlock(Int32 tag);
+
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_status", CallingConvention = CallingConvention.Cdecl)]
         public static extern int status(Int32 tag);
@@ -38,6 +72,14 @@ namespace libplctag.NativeImport
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_abort", CallingConvention = CallingConvention.Cdecl)]
         public static extern int abort(Int32 tag);
+
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_get_int_attribute", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int get_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int default_value);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_set_int_attribute", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int set_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int new_value);
+
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_get_uint64", CallingConvention = CallingConvention.Cdecl)]
         public static extern UInt64 get_uint64(Int32 tag, int offset);
@@ -98,6 +140,12 @@ namespace libplctag.NativeImport
 
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_set_int8", CallingConvention = CallingConvention.Cdecl)]
         public static extern int set_int8(Int32 tag, int offset, sbyte val);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_get_bit", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int get_bit(Int32 tag, int offset_bit);
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_set_bit", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int set_bit(Int32 tag, int offset_bit, int val);
 
     }
 }
