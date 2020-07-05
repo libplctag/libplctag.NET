@@ -20,7 +20,7 @@ namespace libplctag
         public int DebugLevel
         {
             get => plctag.get_int_attribute(pointer, "debug", int.MinValue);
-            set => plctag.set_int_attribute(pointer, "debug", value);
+            set => plctag.set_debug_level(value);
         }
 
         private readonly int pointer;
