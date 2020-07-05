@@ -47,7 +47,6 @@ namespace libplctag
             ElementSize = elementSize;
             ElementCount = elementCount;
             Name = name;
-            DebugLevel = debugLevel;
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
