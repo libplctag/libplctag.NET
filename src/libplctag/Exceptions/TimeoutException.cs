@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class TimeoutException : LibPlcTagException
+    public class TimeoutException : Exception
     {
         public TimeoutException()
         {

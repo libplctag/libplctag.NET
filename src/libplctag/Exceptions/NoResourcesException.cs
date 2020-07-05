@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NoResourcesException : LibPlcTagException
+    public class NoResourcesException : Exception
     {
         public NoResourcesException()
         {

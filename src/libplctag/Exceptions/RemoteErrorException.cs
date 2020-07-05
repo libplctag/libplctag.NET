@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class RemoteErrorException : LibPlcTagException
+    public class RemoteErrorException : Exception
     {
         public RemoteErrorException()
         {

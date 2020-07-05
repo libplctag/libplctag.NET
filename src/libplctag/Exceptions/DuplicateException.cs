@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class DuplicateException : LibPlcTagException
+    public class DuplicateException : Exception
     {
         public DuplicateException()
         {

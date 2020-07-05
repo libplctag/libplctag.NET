@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class EncodeException : LibPlcTagException
+    public class EncodeException : Exception
     {
         public EncodeException()
         {

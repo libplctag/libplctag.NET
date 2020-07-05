@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NullPointerException : LibPlcTagException
+    public class NullPointerException : Exception
     {
         public NullPointerException()
         {

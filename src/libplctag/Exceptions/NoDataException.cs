@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NoDataException : LibPlcTagException
+    public class NoDataException : Exception
     {
         public NoDataException()
         {

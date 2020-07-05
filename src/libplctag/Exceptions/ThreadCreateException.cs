@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class ThreadCreateException : LibPlcTagException
+    public class ThreadCreateException : Exception
     {
         public ThreadCreateException()
         {

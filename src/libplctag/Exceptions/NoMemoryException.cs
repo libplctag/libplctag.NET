@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public class NoMemoryException : LibPlcTagException
+    public class NoMemoryException : Exception
     {
         public NoMemoryException()
         {
