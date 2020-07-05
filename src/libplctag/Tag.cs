@@ -17,7 +17,11 @@ namespace libplctag
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
-        public int DebugLevel { get; }
+        public int DebugLevel
+        {
+            get => plctag.get_int_attribute(pointer, "debug", int.MinValue);
+            set => plctag.set_int_attribute(pointer, "debug", value);
+        }
 
         private readonly int pointer;
 
