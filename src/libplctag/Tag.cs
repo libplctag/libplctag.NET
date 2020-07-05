@@ -18,6 +18,11 @@ namespace libplctag
         public int ElementCount { get; }
         public string Name { get; }
         public int DebugLevel { get; }
+        public TimeSpan ReadCacheDuration
+        {
+            get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
+            set => plctag.set_int_attribute(pointer, "read_cache_ms", Convert.ToInt32(value.TotalMilliseconds));
+        }
 
         private readonly int pointer;
 
@@ -44,6 +49,7 @@ namespace libplctag
             ElementCount = elementCount;
             Name = name;
             DebugLevel = debugLevel;
+            ReadCacheDuration = TimeSpan.FromMilliseconds(0);
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
 
