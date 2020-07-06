@@ -19,7 +19,7 @@ namespace libplctag
         public string Name { get; }
         public int DebugLevel
         {
-            get => plctag.get_int_attribute(pointer, "debug", int.MinValue);
+            get => plctag.get_int_attribute(0, "debug_level", int.MinValue);
             set => plctag.set_debug_level(value);
         }
 
