@@ -18,6 +18,7 @@ namespace libplctag
         public int ElementCount { get; }
         public string Name { get; }
         public int DebugLevel { get; }
+        public bool UseConnectedMessaging { get; }
 
         private readonly int pointer;
 
@@ -33,7 +34,8 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip")
+        /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip", bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -44,8 +46,9 @@ namespace libplctag
             ElementCount = elementCount;
             Name = name;
             DebugLevel = debugLevel;
+            UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, useConnectedMessaging);
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
@@ -56,7 +59,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel)
+        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -74,6 +77,8 @@ namespace libplctag
 
             if (debugLevel > 0)
                 attributes.Add("debug", debugLevel.ToString());
+
+            attributes.Add("use_connected_msg", useConnectedMessaging ? "1" : "0");
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
