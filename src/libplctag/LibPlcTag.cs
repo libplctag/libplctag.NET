@@ -5,7 +5,7 @@ namespace libplctag
     public static class LibPlcTag
     {
 
-        static int libraryAttributePointer = 0;
+        static readonly int libraryAttributePointer = 0;
 
         static public int VersionMajor => plctag.get_int_attribute(libraryAttributePointer, "version_major", int.MinValue);
         static public int VersionMinor => plctag.get_int_attribute(libraryAttributePointer, "version_minor", int.MinValue);
