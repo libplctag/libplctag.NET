@@ -125,6 +125,8 @@ namespace libplctag
                 case StatusCodes.ErrorUnsupported:      throw new libplctag.UnsupportedException();
                 case StatusCodes.ErrorWinsock:          throw new libplctag.WinsockException();
                 case StatusCodes.ErrorWrite:            throw new libplctag.WriteException();
+                case StatusCodes.ErrorPartial:          throw new libplctag.PartialException();
+                case StatusCodes.ErrorBusy:             throw new libplctag.BusyException();
                 default:                                throw new System.NotImplementedException();
             }
         }
