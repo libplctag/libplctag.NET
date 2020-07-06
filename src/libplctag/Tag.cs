@@ -18,6 +18,11 @@ namespace libplctag
         public int ElementCount { get; }
         public string Name { get; }
         public DebugLevels DebugLevel { get; }
+        public TimeSpan ReadCacheDuration
+        {
+            get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
+            set => plctag.set_int_attribute(pointer, "read_cache_ms", Convert.ToInt32(value.TotalMilliseconds));
+        }
 
         private readonly int pointer;
 
@@ -33,7 +38,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevels debugLevel = DebugLevels.None, Protocols protocol = Protocols.ab_eip)
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevels debugLevel = DebugLevels.None, Protocols protocol = Protocols.ab_eip, TimeSpan readCacheDuration = default)
         {
 
             Protocol = protocol;
@@ -45,7 +50,7 @@ namespace libplctag
             Name = name;
             DebugLevel = debugLevel;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration);
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
@@ -56,7 +61,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(Protocols protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevels debugLevel)
+        private static string GetAttributeString(Protocols protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevels debugLevel, TimeSpan readCacheDuration)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -74,6 +79,9 @@ namespace libplctag
 
             if (debugLevel > 0)
                 attributes.Add("debug", debugLevel.ToString());
+
+            if (readCacheDuration > TimeSpan.Zero)
+                attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
