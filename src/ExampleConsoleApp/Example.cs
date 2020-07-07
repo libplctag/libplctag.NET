@@ -14,7 +14,7 @@ namespace ExampleConsoleApp
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
+            if (myTag.GetStatus() != StatusCode.StatusOk)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             myTag.SetInt32(0, 3737);
@@ -23,7 +23,7 @@ namespace ExampleConsoleApp
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
+            if (myTag.GetStatus() != StatusCode.StatusOk)
                 throw new LibPlcTagException(myTag.GetStatus());
 
 
@@ -32,7 +32,7 @@ namespace ExampleConsoleApp
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.PLCTAG_STATUS_OK)
+            if (myTag.GetStatus() != StatusCode.StatusOk)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             int myDint = myTag.GetInt32(0);
