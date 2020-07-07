@@ -88,57 +88,6 @@ namespace libplctag
 
         }
 
-        public void ThrowIfError()
-        {
-            var status = GetStatus();
-
-            switch (status)
-            {
-                case StatusCode.StatusPending:         break;
-                case StatusCode.StatusOk:              break;
-                case StatusCode.ErrorAbort:            throw new libplctag.AbortException();
-                case StatusCode.ErrorBadConfig:        throw new libplctag.BadConfigException();
-                case StatusCode.ErrorBadConnection:    throw new libplctag.BadConnectionException();
-                case StatusCode.ErrorBadData:          throw new libplctag.BadDataException();
-                case StatusCode.ErrorBadDevice:        throw new libplctag.BadDeviceException();
-                case StatusCode.ErrorBadGateway:       throw new libplctag.BadGatewayException();
-                case StatusCode.ErrorBadParam:         throw new libplctag.BadParameterException();
-                case StatusCode.ErrorBadReply:         throw new libplctag.BadReplyException();
-                case StatusCode.ErrorBadStatus:        throw new libplctag.BadStatusException();
-                case StatusCode.ErrorClose:            throw new libplctag.CloseException();
-                case StatusCode.ErrorCreate:           throw new libplctag.CreateException();
-                case StatusCode.ErrorDuplicate:        throw new libplctag.DuplicateException();
-                case StatusCode.ErrorEncode:           throw new libplctag.EncodeException();
-                case StatusCode.ErrorMutexDestroy:     throw new libplctag.MutexDestroyException();
-                case StatusCode.ErrorMutexInit:        throw new libplctag.MutexInitException();
-                case StatusCode.ErrorMutexLock:        throw new libplctag.MutexLockException();
-                case StatusCode.ErrorMutexUnlock:      throw new libplctag.MutexUnlockException();
-                case StatusCode.ErrorNotAllowed:       throw new libplctag.NotAllowedException();
-                case StatusCode.ErrorNotFound:         throw new libplctag.NotFoundException();
-                case StatusCode.ErrorNotImplemented:   throw new libplctag.NotImplementedException();
-                case StatusCode.ErrorNoData:           throw new libplctag.NoDataException();
-                case StatusCode.ErrorNoMatch:          throw new libplctag.NoMatchException();
-                case StatusCode.ErrorNoMem:            throw new libplctag.NoMemoryException();
-                case StatusCode.ErrorNoResources:      throw new libplctag.NoResourcesException();
-                case StatusCode.ErrorNullPtr:          throw new libplctag.NullPointerException();
-                case StatusCode.ErrorOpen:             throw new libplctag.OpenException();
-                case StatusCode.ErrorOutOfBounds:      throw new libplctag.OutOfBoundsException();
-                case StatusCode.ErrorRead:             throw new libplctag.ReadException();
-                case StatusCode.ErrorRemoteErr:        throw new libplctag.RemoteErrorException();
-                case StatusCode.ErrorThreadCreate:     throw new libplctag.ThreadCreateException();
-                case StatusCode.ErrorThreadJoin:       throw new libplctag.ThreadJoinException();
-                case StatusCode.ErrorTimeout:          throw new libplctag.TimeoutException();
-                case StatusCode.ErrorTooLarge:         throw new libplctag.TooLargeException();
-                case StatusCode.ErrorTooSmall:         throw new libplctag.TooSmallException();
-                case StatusCode.ErrorUnsupported:      throw new libplctag.UnsupportedException();
-                case StatusCode.ErrorWinsock:          throw new libplctag.WinsockException();
-                case StatusCode.ErrorWrite:            throw new libplctag.WriteException();
-                case StatusCode.ErrorPartial:          throw new libplctag.PartialException();
-                case StatusCode.ErrorBusy:             throw new libplctag.BusyException();
-                default:                                throw new System.NotImplementedException();
-            }
-        }
-
         public void Dispose() => plctag.destroy(pointer);
 
         public void Abort() => plctag.abort(pointer);
