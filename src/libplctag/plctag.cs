@@ -147,5 +147,9 @@ namespace libplctag.NativeImport
         [DllImport(DLL_NAME, EntryPoint = "plc_tag_set_bit", CallingConvention = CallingConvention.Cdecl)]
         public static extern int set_bit(Int32 tag, int offset_bit, int val);
 
+
+        [DllImport(DLL_NAME, EntryPoint = "plc_tag_set_debug_level", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void set_debug_level(int debug_level);
+
     }
 }
