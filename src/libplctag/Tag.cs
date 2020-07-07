@@ -94,48 +94,11 @@ namespace libplctag
 
             switch (status)
             {
-                case StatusCode.PLCTAG_STATUS_PENDING:      break;
-                case StatusCode.PLCTAG_STATUS_OK:           break;
-                case StatusCode.PLCTAG_ERR_ABORT:           throw new LibPlcTagException("Abort");
-                case StatusCode.PLCTAG_ERR_BAD_CONFIG:      throw new LibPlcTagException("Bad config");
-                case StatusCode.PLCTAG_ERR_BAD_CONNECTION:  throw new LibPlcTagException("Bad connection");
-                case StatusCode.PLCTAG_ERR_BAD_DATA:        throw new LibPlcTagException("Bad data");
-                case StatusCode.PLCTAG_ERR_BAD_DEVICE:      throw new LibPlcTagException("Bad device");
-                case StatusCode.PLCTAG_ERR_BAD_GATEWAY:     throw new LibPlcTagException("Bad gateway");
-                case StatusCode.PLCTAG_ERR_BAD_PARAM:       throw new LibPlcTagException("Bad param");
-                case StatusCode.PLCTAG_ERR_BAD_REPLY:       throw new LibPlcTagException("Bad reply");
-                case StatusCode.PLCTAG_ERR_BAD_STATUS:      throw new LibPlcTagException("Bad status");
-                case StatusCode.PLCTAG_ERR_CLOSE:           throw new LibPlcTagException("Close");
-                case StatusCode.PLCTAG_ERR_CREATE:          throw new LibPlcTagException("Create");
-                case StatusCode.PLCTAG_ERR_DUPLICATE:       throw new LibPlcTagException("Duplicate");
-                case StatusCode.PLCTAG_ERR_ENCODE:          throw new LibPlcTagException("Encode");
-                case StatusCode.PLCTAG_ERR_MUTEX_DESTROY:   throw new LibPlcTagException("Mutex destroy");
-                case StatusCode.PLCTAG_ERR_MUTEX_INIT:      throw new LibPlcTagException("Mutex init");
-                case StatusCode.PLCTAG_ERR_MUTEX_LOCK:      throw new LibPlcTagException("Mutex lock");
-                case StatusCode.PLCTAG_ERR_MUTEX_UNLOCK:    throw new LibPlcTagException("Mutex unlock");
-                case StatusCode.PLCTAG_ERR_NOT_ALLOWED:     throw new LibPlcTagException("Not allowed");
-                case StatusCode.PLCTAG_ERR_NOT_FOUND:       throw new LibPlcTagException("Not found");
-                case StatusCode.PLCTAG_ERR_NOT_IMPLEMENTED: throw new LibPlcTagException("Not implemented");
-                case StatusCode.PLCTAG_ERR_NO_DATA:         throw new LibPlcTagException("No data");
-                case StatusCode.PLCTAG_ERR_NO_MATCH:        throw new LibPlcTagException("No match");
-                case StatusCode.PLCTAG_ERR_NO_MEM:          throw new LibPlcTagException("No mem");
-                case StatusCode.PLCTAG_ERR_NO_RESOURCES:    throw new LibPlcTagException("No resources");
-                case StatusCode.PLCTAG_ERR_NULL_PTR:        throw new LibPlcTagException("Null ptr");
-                case StatusCode.PLCTAG_ERR_OPEN:            throw new LibPlcTagException("Open");
-                case StatusCode.PLCTAG_ERR_OUT_OF_BOUNDS:   throw new LibPlcTagException("Out of bounds");
-                case StatusCode.PLCTAG_ERR_READ:            throw new LibPlcTagException("Read");
-                case StatusCode.PLCTAG_ERR_REMOTE_ERR:      throw new LibPlcTagException("Remote err");
-                case StatusCode.PLCTAG_ERR_THREAD_CREATE:   throw new LibPlcTagException("Thread create");
-                case StatusCode.PLCTAG_ERR_THREAD_JOIN:     throw new LibPlcTagException("Thread join");
-                case StatusCode.PLCTAG_ERR_TIMEOUT:         throw new LibPlcTagException("Timeout");
-                case StatusCode.PLCTAG_ERR_TOO_LARGE:       throw new LibPlcTagException("Too large");
-                case StatusCode.PLCTAG_ERR_TOO_SMALL:       throw new LibPlcTagException("Too small");
-                case StatusCode.PLCTAG_ERR_UNSUPPORTED:     throw new LibPlcTagException("Unsupported");
-                case StatusCode.PLCTAG_ERR_WINSOCK:         throw new LibPlcTagException("Winsock");
-                case StatusCode.PLCTAG_ERR_WRITE:           throw new LibPlcTagException("Write");
-                case StatusCode.PLCTAG_ERR_PARTIAL:         throw new LibPlcTagException("Partial");
-                case StatusCode.PLCTAG_ERR_BUSY:            throw new LibPlcTagException("Busy");
-                default:                                    throw new System.NotImplementedException();
+                case StatusCode.PLCTAG_STATUS_PENDING:
+                case StatusCode.PLCTAG_STATUS_OK:
+                    break;
+                default:
+                    throw new LibPlcTagException(status);
             }
         }
 
