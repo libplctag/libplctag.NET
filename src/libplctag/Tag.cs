@@ -88,20 +88,6 @@ namespace libplctag
 
         }
 
-        public void ThrowIfError()
-        {
-            var status = GetStatus();
-
-            switch (status)
-            {
-                case StatusCode.PLCTAG_STATUS_PENDING:
-                case StatusCode.PLCTAG_STATUS_OK:
-                    break;
-                default:
-                    throw new LibPlcTagException(status);
-            }
-        }
-
         public void Dispose() => plctag.destroy(pointer);
 
         public void Abort() => plctag.abort(pointer);
