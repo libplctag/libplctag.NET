@@ -1,4 +1,5 @@
 ﻿using libplctag.NativeImport;
+using System;
 
 namespace libplctag
 {
@@ -13,9 +14,9 @@ namespace libplctag
         {
             var result = (StatusCode)plctag.check_lib_version(requiredMajor, requiredMinor, requiredPatch);
 
-            if (result == StatusCode.PLCTAG_STATUS_OK)
+            if (result == StatusCode.StatusOk)
                 return true;
-            else if (result == StatusCode.PLCTAG_ERR_UNSUPPORTED)
+            else if (result == StatusCode.ErrorUnsupported)
                 return false;
             else
                 throw new NotImplementedException();
