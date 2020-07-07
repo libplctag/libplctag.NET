@@ -83,8 +83,8 @@ namespace libplctag
             attributes.Add("elem_count", elementCount.ToString());
             attributes.Add("name", name);
 
-            if (debugLevel > 0)
-                attributes.Add("debug", debugLevel.ToString());
+            if (debugLevel > DebugLevel.None)
+                attributes.Add("debug", ((int)debugLevel).ToString());
 
             if (readCacheDuration > TimeSpan.Zero)
                 attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
