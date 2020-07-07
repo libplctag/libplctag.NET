@@ -10,15 +10,24 @@ namespace libplctag
     public sealed class Tag : IDisposable
     {
 
-        public string Protocol { get; }
+        public Protocol Protocol { get; }
         public IPAddress Gateway { get; }
         public string Path { get; }
         public CpuTypes CPU { get; }
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
-        public int DebugLevel { get; }
         public bool UseConnectedMessaging { get; }
+        public DebugLevel DebugLevel
+        {
+            get => (DebugLevel)plctag.get_int_attribute(0, "debug_level", int.MinValue);
+            set => plctag.set_debug_level((int)value);
+        }
+        public TimeSpan ReadCacheDuration
+        {
+            get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
+            set => plctag.set_int_attribute(pointer, "read_cache_ms", Convert.ToInt32(value.TotalMilliseconds));
+        }
 
         private readonly int pointer;
 
@@ -35,7 +44,7 @@ namespace libplctag
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip", bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -45,10 +54,9 @@ namespace libplctag
             ElementSize = elementSize;
             ElementCount = elementCount;
             Name = name;
-            DebugLevel = debugLevel;
             UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, useConnectedMessaging);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration, useConnectedMessaging);
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
@@ -59,18 +67,18 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel, bool useConnectedMessaging)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
 
-            attributes.Add("protocol", protocol);
+            attributes.Add("protocol", protocol.ToString());
             attributes.Add("gateway", gateway.ToString());
 
             if (!string.IsNullOrEmpty(path))
                 attributes.Add("path", path);
 
-            attributes.Add("cpu", CPU.ToString());
+            attributes.Add("cpu", CPU.ToString().ToLower());
             attributes.Add("elem_size", elementSize.ToString());
             attributes.Add("elem_count", elementCount.ToString());
             attributes.Add("name", name);
@@ -78,62 +86,14 @@ namespace libplctag
             if (debugLevel > 0)
                 attributes.Add("debug", debugLevel.ToString());
 
+            if (readCacheDuration > TimeSpan.Zero)
+                attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
+
             attributes.Add("use_connected_msg", useConnectedMessaging ? "1" : "0");
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
 
-        }
-
-        public void ThrowIfError()
-        {
-            var status = GetStatus();
-
-            switch (status)
-            {
-                case StatusCode.PLCTAG_STATUS_PENDING:      break;
-                case StatusCode.PLCTAG_STATUS_OK:           break;
-                case StatusCode.PLCTAG_ERR_ABORT:           throw new libplctag.AbortException();
-                case StatusCode.PLCTAG_ERR_BAD_CONFIG:      throw new libplctag.BadConfigException();
-                case StatusCode.PLCTAG_ERR_BAD_CONNECTION:  throw new libplctag.BadConnectionException();
-                case StatusCode.PLCTAG_ERR_BAD_DATA:        throw new libplctag.BadDataException();
-                case StatusCode.PLCTAG_ERR_BAD_DEVICE:      throw new libplctag.BadDeviceException();
-                case StatusCode.PLCTAG_ERR_BAD_GATEWAY:     throw new libplctag.BadGatewayException();
-                case StatusCode.PLCTAG_ERR_BAD_PARAM:       throw new libplctag.BadParameterException();
-                case StatusCode.PLCTAG_ERR_BAD_REPLY:       throw new libplctag.BadReplyException();
-                case StatusCode.PLCTAG_ERR_BAD_STATUS:      throw new libplctag.BadStatusException();
-                case StatusCode.PLCTAG_ERR_CLOSE:           throw new libplctag.CloseException();
-                case StatusCode.PLCTAG_ERR_CREATE:          throw new libplctag.CreateException();
-                case StatusCode.PLCTAG_ERR_DUPLICATE:       throw new libplctag.DuplicateException();
-                case StatusCode.PLCTAG_ERR_ENCODE:          throw new libplctag.EncodeException();
-                case StatusCode.PLCTAG_ERR_MUTEX_DESTROY:   throw new libplctag.MutexDestroyException();
-                case StatusCode.PLCTAG_ERR_MUTEX_INIT:      throw new libplctag.MutexInitException();
-                case StatusCode.PLCTAG_ERR_MUTEX_LOCK:      throw new libplctag.MutexLockException();
-                case StatusCode.PLCTAG_ERR_MUTEX_UNLOCK:    throw new libplctag.MutexUnlockException();
-                case StatusCode.PLCTAG_ERR_NOT_ALLOWED:     throw new libplctag.NotAllowedException();
-                case StatusCode.PLCTAG_ERR_NOT_FOUND:       throw new libplctag.NotFoundException();
-                case StatusCode.PLCTAG_ERR_NOT_IMPLEMENTED: throw new libplctag.NotImplementedException();
-                case StatusCode.PLCTAG_ERR_NO_DATA:         throw new libplctag.NoDataException();
-                case StatusCode.PLCTAG_ERR_NO_MATCH:        throw new libplctag.NoMatchException();
-                case StatusCode.PLCTAG_ERR_NO_MEM:          throw new libplctag.NoMemoryException();
-                case StatusCode.PLCTAG_ERR_NO_RESOURCES:    throw new libplctag.NoResourcesException();
-                case StatusCode.PLCTAG_ERR_NULL_PTR:        throw new libplctag.NullPointerException();
-                case StatusCode.PLCTAG_ERR_OPEN:            throw new libplctag.OpenException();
-                case StatusCode.PLCTAG_ERR_OUT_OF_BOUNDS:   throw new libplctag.OutOfBoundsException();
-                case StatusCode.PLCTAG_ERR_READ:            throw new libplctag.ReadException();
-                case StatusCode.PLCTAG_ERR_REMOTE_ERR:      throw new libplctag.RemoteErrorException();
-                case StatusCode.PLCTAG_ERR_THREAD_CREATE:   throw new libplctag.ThreadCreateException();
-                case StatusCode.PLCTAG_ERR_THREAD_JOIN:     throw new libplctag.ThreadJoinException();
-                case StatusCode.PLCTAG_ERR_TIMEOUT:         throw new libplctag.TimeoutException();
-                case StatusCode.PLCTAG_ERR_TOO_LARGE:       throw new libplctag.TooLargeException();
-                case StatusCode.PLCTAG_ERR_TOO_SMALL:       throw new libplctag.TooSmallException();
-                case StatusCode.PLCTAG_ERR_UNSUPPORTED:     throw new libplctag.UnsupportedException();
-                case StatusCode.PLCTAG_ERR_WINSOCK:         throw new libplctag.WinsockException();
-                case StatusCode.PLCTAG_ERR_WRITE:           throw new libplctag.WriteException();
-                case StatusCode.PLCTAG_ERR_PARTIAL:         throw new libplctag.PartialException();
-                case StatusCode.PLCTAG_ERR_BUSY:            throw new libplctag.BusyException();
-                default:                                    throw new System.NotImplementedException();
-            }
         }
 
         public void Dispose() => plctag.destroy(pointer);
