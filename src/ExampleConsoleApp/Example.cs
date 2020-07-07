@@ -5,13 +5,13 @@ using System.Threading;
 
 namespace ExampleConsoleApp
 {
-    class Program
+    class Example
     {
-        static void Main(string[] args)
+        public static void Run()
         {
 
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.Logix, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
-            while (myTag.GetStatus() == StatusCodes.StatusPending)
+            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
                 Thread.Sleep(100);
             }
@@ -19,7 +19,7 @@ namespace ExampleConsoleApp
 
             myTag.SetInt32(0, 3737);
             myTag.Write(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCodes.StatusPending)
+            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
                 Thread.Sleep(100);
             }
@@ -27,7 +27,7 @@ namespace ExampleConsoleApp
 
 
             myTag.Read(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCodes.StatusPending)
+            while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
                 Thread.Sleep(100);
             }
@@ -37,7 +37,6 @@ namespace ExampleConsoleApp
 
 
             Console.WriteLine(myDint);
-
         }
     }
 }

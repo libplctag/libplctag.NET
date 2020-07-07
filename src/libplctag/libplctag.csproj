@@ -7,7 +7,7 @@
     <PackageId>libplctag</PackageId>
     <Version>0.0.27-alpha01</Version>
     <Authors>timyhac</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription></PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
