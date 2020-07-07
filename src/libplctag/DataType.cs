@@ -3,7 +3,7 @@
 namespace libplctag
 {
 
-    public static class DataTypes
+    public static class DataType
     {
         /* 1-byte / 8-bit types */
         public const int Int8 = 1;
