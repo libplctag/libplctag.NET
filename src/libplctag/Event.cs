@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum Events
+    public enum Event
     {
         ReadStarted = 1,
         ReadCompleted = 2,

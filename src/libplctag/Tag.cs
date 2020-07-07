@@ -13,7 +13,7 @@ namespace libplctag
         public Protocol Protocol { get; }
         public IPAddress Gateway { get; }
         public string Path { get; }
-        public CpuTypes CPU { get; }
+        public CpuType CPU { get; }
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
@@ -44,7 +44,7 @@ namespace libplctag
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -67,7 +67,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
