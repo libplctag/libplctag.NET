@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum StatusCodes
+    public enum StatusCode
     {
         StatusPending = 1,
         StatusOk = 0,
