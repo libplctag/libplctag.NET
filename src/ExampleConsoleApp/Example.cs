@@ -9,7 +9,6 @@ namespace ExampleConsoleApp
     {
         public static void Run()
         {
-
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.Logix, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
             while (myTag.GetStatus() == StatusCode.PLCTAG_STATUS_PENDING)
             {
