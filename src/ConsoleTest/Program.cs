@@ -10,7 +10,7 @@ namespace ExampleConsoleApp
         static void Main(string[] args)
         {
 
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.LGX, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuTypes.Logix, DataTypes.DINT, "PROGRAM:SomeProgram.SomeDINT");
             while (myTag.GetStatus() == StatusCodes.StatusPending)
             {
                 Thread.Sleep(100);
