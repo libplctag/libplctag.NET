@@ -10,14 +10,14 @@ namespace libplctag
     public sealed class Tag : IDisposable
     {
 
-        public string Protocol { get; }
+        public Protocol Protocol { get; }
         public IPAddress Gateway { get; }
         public string Path { get; }
         public CpuTypes CPU { get; }
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
-        public int DebugLevel { get; }
+        public DebugLevel DebugLevel { get; }
         public TimeSpan ReadCacheDuration
         {
             get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
@@ -38,7 +38,7 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, int debugLevel = 0, string protocol = "ab_eip", TimeSpan readCacheDuration = default)
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default)
         {
 
             Protocol = protocol;
@@ -61,18 +61,18 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(string protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, int debugLevel, TimeSpan readCacheDuration)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration)
         {
 
             var attributes = new Dictionary<string, string>();
 
-            attributes.Add("protocol", protocol);
+            attributes.Add("protocol", protocol.ToString());
             attributes.Add("gateway", gateway.ToString());
 
             if (!string.IsNullOrEmpty(path))
                 attributes.Add("path", path);
 
-            attributes.Add("cpu", CPU.ToString());
+            attributes.Add("cpu", CPU.ToString().ToLower());
             attributes.Add("elem_size", elementSize.ToString());
             attributes.Add("elem_count", elementCount.ToString());
             attributes.Add("name", name);
