@@ -4,12 +4,11 @@ namespace libplctag
 {
     public static class LibPlcTag
     {
+        private const int LIB_ATTRIBUTE_POINTER = 0;
 
-        static readonly int libraryAttributePointer = 0;
-
-        static public int VersionMajor => plctag.get_int_attribute(libraryAttributePointer, "version_major", int.MinValue);
-        static public int VersionMinor => plctag.get_int_attribute(libraryAttributePointer, "version_minor", int.MinValue);
-        static public int VersionPatch => plctag.get_int_attribute(libraryAttributePointer, "version_patch", int.MinValue);
+        static public int VersionMajor => plctag.get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_major", int.MinValue);
+        static public int VersionMinor => plctag.get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_minor", int.MinValue);
+        static public int VersionPatch => plctag.get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_patch", int.MinValue);
         static public bool IsRequiredVersion(int requiredMajor, int requiredMinor, int requiredPatch)
         {
             var result = (StatusCode)plctag.check_lib_version(requiredMajor, requiredMinor, requiredPatch);
