@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum DebugLevels
+    public enum DebugLevel
     {
         None = 0,
         Error = 1,

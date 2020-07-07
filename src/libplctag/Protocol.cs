@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum Protocols
+    public enum Protocol
     {
         ab_eip
     }
