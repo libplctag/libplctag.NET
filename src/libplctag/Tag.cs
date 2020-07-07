@@ -17,6 +17,7 @@ namespace libplctag
         public int ElementSize { get; }
         public int ElementCount { get; }
         public string Name { get; }
+        public bool UseConnectedMessaging { get; }
         public DebugLevel DebugLevel
         {
             get => (DebugLevel)plctag.get_int_attribute(0, "debug_level", int.MinValue);
@@ -42,7 +43,8 @@ namespace libplctag
         /// <param name="timeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
-        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default)
+        /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
+        public Tag(IPAddress gateway, string path, CpuTypes cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -52,8 +54,9 @@ namespace libplctag
             ElementSize = elementSize;
             ElementCount = elementCount;
             Name = name;
+            UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration, useConnectedMessaging);
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
@@ -64,7 +67,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuTypes CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -85,6 +88,8 @@ namespace libplctag
 
             if (readCacheDuration > TimeSpan.Zero)
                 attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
+
+            attributes.Add("use_connected_msg", useConnectedMessaging ? "1" : "0");
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
