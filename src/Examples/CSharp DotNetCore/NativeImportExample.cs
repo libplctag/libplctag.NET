@@ -2,7 +2,7 @@
 using System.Threading;
 using libplctag.NativeImport;
 
-namespace ExampleConsoleApp
+namespace CSharpDotNetCore
 {
     class NativeImportExample
     {
