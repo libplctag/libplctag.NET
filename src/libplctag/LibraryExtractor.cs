@@ -13,7 +13,7 @@ namespace libplctag.NativeImport
 
             if (extractDirectory == null)
             {
-                extractDirectory = GetCallingAssemblyDirectory();
+                extractDirectory = GetExecutingAssemblyDirectory();
             }
 
             if (!LibraryExists(extractDirectory))
@@ -23,9 +23,9 @@ namespace libplctag.NativeImport
 
         }
 
-        public static string GetCallingAssemblyDirectory()
+        public static string GetExecutingAssemblyDirectory()
         {
-            string codeBase = Assembly.GetCallingAssembly().CodeBase;
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(path);
