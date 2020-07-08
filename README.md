@@ -21,5 +21,5 @@ On startup of an application, it checks if the runtime is present on the filesys
 
 See the examples in the example project
 
-* [Basic usage](https://github.com/libplctag/libplctag.NET/blob/master/src/ExampleConsoleApp/Example.cs)
-* [Native Dll import](https://github.com/libplctag/libplctag.NET/blob/master/src/ExampleConsoleApp/NativeImportExample.cs)
+* [C#](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/Example.cs)
+* [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Example.cs)
