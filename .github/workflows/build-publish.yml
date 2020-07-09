@@ -14,7 +14,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 3.1.x
         
     - name: Install dependencies
       run: dotnet restore './src/'
@@ -32,4 +32,4 @@ jobs:
         path: './src/libplctag/bin/Release/libplctag.*.nupkg'
         
     - name: Publish
-      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'https://api.nuget.org/v3/index.json' --no-symbols
+      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'https://api.nuget.org/v3/index.json' --no-symbols true
