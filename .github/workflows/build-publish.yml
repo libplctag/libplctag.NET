@@ -11,10 +11,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+        source-url: https://api.nuget.org/v3/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
         
     - name: Install dependencies
       run: dotnet restore './src/'
@@ -23,7 +27,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore './src/'
       
     - name: Pack
-      run: dotnet pack './src/libplctag/libplctag.csproj' --configuration Release
+      run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
   
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -32,4 +36,4 @@ jobs:
         path: './src/libplctag/bin/Release/libplctag.*.nupkg'
         
     - name: Publish
-      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'https://api.nuget.org/v3/index.json' --no-symbols true
+      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' --no-symbols true
