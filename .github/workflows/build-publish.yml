@@ -29,8 +29,8 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore './src/'
       
-    - name: Pack
-      run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
+    #- name: Pack
+     # run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
   
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
