@@ -37,6 +37,7 @@ Module Module1
         Dim myDint = myTag.GetInt32(0)
 
         Console.WriteLine(myDint)
+        Console.ReadKey()
 
     End Sub
 

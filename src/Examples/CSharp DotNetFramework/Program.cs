@@ -10,7 +10,7 @@ namespace CSharpDotNetFramework
         static void Main(string[] args)
         {
 
-            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, "MY_DINT");
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT");
 
             while (myTag.GetStatus() == StatusCode.StatusPending)
                 Thread.Sleep(100);
@@ -34,7 +34,7 @@ namespace CSharpDotNetFramework
             int myDint = myTag.GetInt32(0);
 
             Console.WriteLine(myDint);
-
+            Console.ReadKey();
         }
     }
 }
