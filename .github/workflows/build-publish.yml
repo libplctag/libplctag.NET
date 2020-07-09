@@ -23,7 +23,7 @@ jobs:
     - name: Pack
       run: dotnet pack './src/libplctag/libplctag.csproj' --configuration Release
     - name: Publish
-      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' -k ${{secrets.NUGET_API_KEY}} --source "github"
+      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source "github"
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
