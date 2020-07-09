@@ -14,9 +14,6 @@ jobs:
       with:
         lfs: true 
     
-    - name: list files
-      run: ls -r './src/libplctag/runtime/'
-    
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
       
@@ -32,11 +29,8 @@ jobs:
       run: dotnet restore './src/'
       
     - name: Build
-      run: dotnet build --configuration Release --no-restore './src/' --verbosity detailed
+      run: dotnet build --configuration Release --no-restore './src/'
     
-    #- name: Pack
-     # run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
-  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -44,4 +38,4 @@ jobs:
         path: './src/libplctag/bin/Release/libplctag.*.nupkg'
         
     - name: Publish
-      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.1.0.0.nupkg' --no-symbols true
+      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' --no-symbols true
