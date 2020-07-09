@@ -18,14 +18,18 @@ jobs:
         
     - name: Install dependencies
       run: dotnet restore './src/'
+      
     - name: Build
       run: dotnet build --configuration Release --no-restore './src/'
+      
     - name: Pack
       run: dotnet pack './src/libplctag/libplctag.csproj' --configuration Release
-    - name: Publish
-      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github'
+  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: nupkg 
         path: '**.nupkg'
+        
+    - name: Publish
+      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github':  
