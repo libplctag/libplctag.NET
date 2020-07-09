@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore './src/'
       
     - name: Build
-      run: dotnet build --configuration Release --no-restore './src/'
+      run: dotnet build --configuration Release --no-restore './src/' --verbosity diag
       
     #- name: Pack
      # run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
