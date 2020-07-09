@@ -32,4 +32,4 @@ jobs:
         path: '**.nupkg'
         
     - name: Publish
-      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github':  
+      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github'
