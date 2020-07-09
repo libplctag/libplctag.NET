@@ -32,4 +32,4 @@ jobs:
         path: './src/libplctag/bin/Release/libplctag.*.nupkg'
         
     - name: Publish
-      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.1.0.0.nupkg' -k ${{secrets.NUGET_API_KEY}} --source "github"
+      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.*.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'https://api.nuget.org'
