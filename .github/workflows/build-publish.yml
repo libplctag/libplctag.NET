@@ -17,9 +17,9 @@ jobs:
         dotnet-version: 3.1.101
         
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore './src/'
     - name: Build
-      run: dotnet build --configuration Release --no-restore  './src/libplctag/libplctag.csproj'
+      run: dotnet build --configuration Release --no-restore './src/'
     - name: Pack
       run: dotnet pack './src/libplctag/libplctag.csproj' --configuration Release
     - name: Publish
