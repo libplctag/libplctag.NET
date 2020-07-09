@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkg 
-        path: '**.nupkg'
+        path: './src/libplctag/bin/Release/libplctag.*.nupkg'
         
     - name: Publish
-      run: dotnet nuget push '**.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github'
+      run: dotnet nuget push './src/libplctag/bin/Release/libplctag.0.0.27-alpha02.nupkg' -k ${{secrets.NUGET_API_KEY}} --source 'github'
