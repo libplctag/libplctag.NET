@@ -12,6 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    - name: list files
+      run: ls -r './src/runtime/'
+    
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
       
@@ -27,11 +30,8 @@ jobs:
       run: dotnet restore './src/'
       
     - name: Build
-      run: dotnet build --configuration Release --no-restore './src/' --verbosity det
+      run: dotnet build --configuration Release --no-restore './src/' --verbosity detailed
     
-    - name: list files
-      run: ls -r './src/runtime/'
-      
     #- name: Pack
      # run: dotnet pack --configuration Release --no-build './src/libplctag/libplctag.csproj'
   
