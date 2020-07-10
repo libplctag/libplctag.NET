@@ -23,10 +23,10 @@ namespace libplctag
             get => (DebugLevel)plctag.get_int_attribute(0, "debug_level", int.MinValue);
             set => plctag.set_debug_level((int)value);
         }
-        public TimeSpan ReadCacheDuration
+        public int ReadCacheMillisecondDuration
         {
-            get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
-            set => plctag.set_int_attribute(pointer, "read_cache_ms", Convert.ToInt32(value.TotalMilliseconds));
+            get => plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue);
+            set => plctag.set_int_attribute(pointer, "read_cache_ms", value);
         }
 
         private readonly int pointer;
@@ -43,8 +43,9 @@ namespace libplctag
         /// <param name="millisecondTimeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
+        /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int millisecondTimeout, int elementCount = 1, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int millisecondTimeout, int elementCount = 1, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, int readCacheMillisecondDuration = default, bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -56,7 +57,7 @@ namespace libplctag
             Name = name;
             UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration, useConnectedMessaging);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheMillisecondDuration, useConnectedMessaging);
 
             pointer = plctag.create(attributeString, millisecondTimeout);
 
@@ -67,7 +68,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, int readCacheMillisecondDuration, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -86,8 +87,8 @@ namespace libplctag
             if (debugLevel > DebugLevel.None)
                 attributes.Add("debug", ((int)debugLevel).ToString());
 
-            if (readCacheDuration > TimeSpan.Zero)
-                attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
+            if (readCacheMillisecondDuration > 0)
+                attributes.Add("read_cache_ms", readCacheMillisecondDuration.ToString());
 
             attributes.Add("use_connected_msg", useConnectedMessaging ? "1" : "0");
 
