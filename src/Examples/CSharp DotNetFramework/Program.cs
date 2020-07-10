@@ -12,23 +12,23 @@ namespace CSharpDotNetFramework
 
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT");
 
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             myTag.SetInt32(0, 3737);
             myTag.Write(TimeSpan.Zero);
 
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             myTag.Read(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             int myDint = myTag.GetInt32(0);

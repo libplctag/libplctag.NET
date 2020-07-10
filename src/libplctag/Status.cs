@@ -1,9 +1,9 @@
 ﻿namespace libplctag
 {
-    public enum StatusCode
+    public enum Status
     {
-        StatusPending = 1,
-        StatusOk = 0,
+        Pending = 1,
+        Ok = 0,
         ErrorAbort = -1,
         ErrorBadConfig = -2,
         ErrorBadConnection = -3,

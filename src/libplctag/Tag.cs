@@ -7,7 +7,7 @@ using libplctag.NativeImport;
 namespace libplctag
 {
 
-    public sealed class Tag : IDisposable
+    public class Tag : IDisposable
     {
 
         public Protocol Protocol { get; }
@@ -60,6 +60,8 @@ namespace libplctag
 
             pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
 
+            SetUpCallback();
+
         }
 
         ~Tag()
@@ -106,7 +108,7 @@ namespace libplctag
 
         public int GetSize() => plctag.get_size(pointer);
 
-        public StatusCode GetStatus() => (StatusCode)plctag.status(pointer);
+        public Status GetStatus() => (Status)plctag.status(pointer);
 
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
@@ -137,6 +139,85 @@ namespace libplctag
 
         public float GetFloat32(int offset) => plctag.get_float32(pointer, offset);
         public void SetFloat32(int offset, float value) => plctag.set_float32(pointer, offset, value);
+
+        public event EventHandler<LibPlcTagEventArgs> ReadStarted;
+        public event EventHandler<LibPlcTagEventArgs> ReadCompleted;
+        public event EventHandler<LibPlcTagEventArgs> WriteStarted;
+        public event EventHandler<LibPlcTagEventArgs> WriteCompleted;
+        public event EventHandler<LibPlcTagEventArgs> Aborted;
+        public event EventHandler<LibPlcTagEventArgs> Destroyed;
+
+        protected virtual void OnReadStarted(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = ReadStarted;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnReadCompleted(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = ReadCompleted;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnWriteStarted(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = WriteStarted;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnWriteCompleted(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = WriteCompleted;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnAborted(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = Aborted;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnDestroyed(LibPlcTagEventArgs e)
+        {
+            EventHandler<LibPlcTagEventArgs> handler = Destroyed;
+            handler?.Invoke(this, e);
+        }
+
+        void SetUpCallback()
+        {
+
+            Action<int, int, int> callback = delegate (int tagPointer, int eventCode, int statusCode)
+            {
+
+                switch ((Event)eventCode)
+                {
+                    case Event.ReadCompleted:
+                        OnReadCompleted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    case Event.ReadStarted:
+                        OnReadStarted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    case Event.WriteStarted:
+                        OnWriteStarted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    case Event.WriteCompleted:
+                        OnWriteCompleted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    case Event.Aborted:
+                        OnAborted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    case Event.Destroyed:
+                        OnDestroyed(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+
+            };
+
+            plctag.register_callback(pointer, new plctag.callback_func(callback));
+
+        }
 
     }
 
