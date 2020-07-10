@@ -6,10 +6,12 @@ namespace ExampleConsoleApp
     {
         static void Main(string[] args)
         {
-            Example.Run();
-            NativeImportExample.Run();
-            NativeImportExample.RunCallbackExample();
-            NativeImportExample.RunLoggerExample();
+            //Example.Run();
+            ExampleGenericTag.Run();
+
+            //NativeImportExample.Run();
+            //NativeImportExample.RunCallbackExample();
+            //NativeImportExample.RunLoggerExample();
 
             Console.Read();
         }

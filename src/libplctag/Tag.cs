@@ -7,7 +7,7 @@ using libplctag.NativeImport;
 namespace libplctag
 {
 
-    public sealed class Tag : IDisposable
+    public sealed class Tag : IDisposable, ITag
     {
 
         public Protocol Protocol { get; }
