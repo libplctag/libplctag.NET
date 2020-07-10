@@ -10,7 +10,7 @@ namespace CSharpDotNetFramework
         static void Main(string[] args)
         {
 
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT");
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000);
 
             while (myTag.GetStatus() == StatusCode.StatusPending)
                 Thread.Sleep(100);
@@ -18,14 +18,14 @@ namespace CSharpDotNetFramework
                 throw new LibPlcTagException(myTag.GetStatus());
 
             myTag.SetInt32(0, 3737);
-            myTag.Write(TimeSpan.Zero);
+            myTag.Write(0);
 
             while (myTag.GetStatus() == StatusCode.StatusPending)
                 Thread.Sleep(100);
             if (myTag.GetStatus() != StatusCode.StatusOk)
                 throw new LibPlcTagException(myTag.GetStatus());
 
-            myTag.Read(TimeSpan.Zero);
+            myTag.Read(0);
             while (myTag.GetStatus() == StatusCode.StatusPending)
                 Thread.Sleep(100);
             if (myTag.GetStatus() != StatusCode.StatusOk)

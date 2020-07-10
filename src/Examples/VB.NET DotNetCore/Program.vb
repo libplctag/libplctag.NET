@@ -6,7 +6,7 @@ Module Module1
 
     Sub Main()
 
-        Dim myTag = New Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT")
+        Dim myTag = New Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000)
 
         While (myTag.GetStatus() = StatusCode.StatusPending)
             Thread.Sleep(100)
@@ -16,7 +16,7 @@ Module Module1
         End If
 
         myTag.SetInt32(0, 3737)
-        myTag.Write(TimeSpan.Zero)
+        myTag.Write(0)
 
         While (myTag.GetStatus() = StatusCode.StatusPending)
             Thread.Sleep(100)
@@ -25,7 +25,7 @@ Module Module1
             Throw New LibPlcTagException(myTag.GetStatus())
         End If
 
-        myTag.Read(TimeSpan.Zero)
+        myTag.Read(0)
 
         While (myTag.GetStatus() = StatusCode.StatusPending)
             Thread.Sleep(100)
