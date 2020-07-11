@@ -19,7 +19,7 @@ namespace libplctag
         {
         }
 
-        public LibPlcTagException(Status status)
+        public LibPlcTagException(StatusCode status)
             : base(status.ToString())
         {
         }

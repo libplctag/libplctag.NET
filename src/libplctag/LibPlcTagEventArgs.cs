@@ -4,7 +4,7 @@ namespace libplctag
 {
     public class LibPlcTagEventArgs : EventArgs
     {
-        public Status Status { get; set; }
+        public StatusCode Status { get; set; }
     }
 
 }

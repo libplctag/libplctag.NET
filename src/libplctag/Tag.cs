@@ -108,7 +108,7 @@ namespace libplctag
 
         public int GetSize() => plctag.get_size(pointer);
 
-        public Status GetStatus() => (Status)plctag.status(pointer);
+        public StatusCode GetStatus() => (StatusCode)plctag.status(pointer);
 
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
@@ -192,22 +192,22 @@ namespace libplctag
                 switch ((Event)eventCode)
                 {
                     case Event.ReadCompleted:
-                        OnReadCompleted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnReadCompleted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     case Event.ReadStarted:
-                        OnReadStarted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnReadStarted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     case Event.WriteStarted:
-                        OnWriteStarted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnWriteStarted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     case Event.WriteCompleted:
-                        OnWriteCompleted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnWriteCompleted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     case Event.Aborted:
-                        OnAborted(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnAborted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     case Event.Destroyed:
-                        OnDestroyed(new LibPlcTagEventArgs() { Status = (Status)statusCode });
+                        OnDestroyed(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
                         break;
                     default:
                         throw new NotImplementedException();
