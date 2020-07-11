@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetFramework
 {
     class Program
     {
@@ -8,9 +8,6 @@ namespace CSharpDotNetCore
         {
             ExampleRW.Run();
             ExampleArray.Run();
-            //NativeImportExample.Run();
-            //NativeImportExample.RunCallbackExample();
-            //NativeImportExample.RunLoggerExample();
 
             Console.ReadKey();
         }

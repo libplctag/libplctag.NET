@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Threading;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetFramework
 {
     class ExampleRW
     {
