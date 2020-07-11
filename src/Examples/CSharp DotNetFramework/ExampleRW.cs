@@ -15,9 +15,9 @@ namespace CSharpDotNetFramework
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT");
 
             //Check that tag gets created properly
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag created and verified on PLC");
 
@@ -27,9 +27,9 @@ namespace CSharpDotNetFramework
             myTag.Read(TimeSpan.Zero);
 
             //Wait for Read to complete
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag read complete");
 
@@ -44,9 +44,9 @@ namespace CSharpDotNetFramework
             Console.WriteLine($"Starting tag write ({myDint})");
 
             //Wait for Write to complete
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag write complete");
 
@@ -55,7 +55,7 @@ namespace CSharpDotNetFramework
             myTag.Read(TimeSpan.FromMilliseconds(1000));
 
             //Check read success
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Synchronous tag read complete");
 

@@ -106,7 +106,7 @@ namespace libplctag
 
         public int GetSize() => plctag.get_size(pointer);
 
-        public StatusCode GetStatus() => (StatusCode)plctag.status(pointer);
+        public Status GetStatus() => (Status)plctag.status(pointer);
 
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);

@@ -12,11 +12,11 @@ namespace libplctag
         static public int VersionPatch => plctag.get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_patch", int.MinValue);
         static public bool IsRequiredVersion(int requiredMajor, int requiredMinor, int requiredPatch)
         {
-            var result = (StatusCode)plctag.check_lib_version(requiredMajor, requiredMinor, requiredPatch);
+            var result = (Status)plctag.check_lib_version(requiredMajor, requiredMinor, requiredPatch);
 
-            if (result == StatusCode.StatusOk)
+            if (result == Status.Ok)
                 return true;
-            else if (result == StatusCode.ErrorUnsupported)
+            else if (result == Status.ErrorUnsupported)
                 return false;
             else
                 throw new NotImplementedException();
