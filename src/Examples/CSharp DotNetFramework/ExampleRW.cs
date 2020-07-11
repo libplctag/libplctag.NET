@@ -12,7 +12,7 @@ namespace CSharpDotNetFramework
             Console.WriteLine($"\r\n*** ExampleRW ***");
 
             //DINT Test Read/Write
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT");
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000);
 
             //Check that tag gets created properly
             while (myTag.GetStatus() == StatusCode.StatusPending)
@@ -24,7 +24,7 @@ namespace CSharpDotNetFramework
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
-            myTag.Read(TimeSpan.Zero);
+            myTag.Read(0);
 
             //Wait for Read to complete
             while (myTag.GetStatus() == StatusCode.StatusPending)
@@ -40,7 +40,7 @@ namespace CSharpDotNetFramework
             //Set Tag Value
             myDint++;
             myTag.SetInt32(0, myDint);
-            myTag.Write(TimeSpan.Zero);
+            myTag.Write(0);
             Console.WriteLine($"Starting tag write ({myDint})");
 
             //Wait for Write to complete
@@ -52,7 +52,7 @@ namespace CSharpDotNetFramework
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting synchronous tag read");
-            myTag.Read(TimeSpan.FromMilliseconds(1000));
+            myTag.Read(1000);
 
             //Check read success
             if (myTag.GetStatus() != StatusCode.StatusOk)
