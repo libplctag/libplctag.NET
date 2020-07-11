@@ -192,22 +192,22 @@ namespace libplctag
                 switch ((Event)eventCode)
                 {
                     case Event.ReadCompleted:
-                        OnReadCompleted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnReadCompleted(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     case Event.ReadStarted:
-                        OnReadStarted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnReadStarted(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     case Event.WriteStarted:
-                        OnWriteStarted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnWriteStarted(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     case Event.WriteCompleted:
-                        OnWriteCompleted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnWriteCompleted(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     case Event.Aborted:
-                        OnAborted(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnAborted(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     case Event.Destroyed:
-                        OnDestroyed(new LibPlcTagEventArgs() { Status = (StatusCode)statusCode });
+                        OnDestroyed(new LibPlcTagEventArgs() { StatusCode = (StatusCode)statusCode });
                         break;
                     default:
                         throw new NotImplementedException();
