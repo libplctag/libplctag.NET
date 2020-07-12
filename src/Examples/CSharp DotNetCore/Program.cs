@@ -6,12 +6,13 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
-            Example.Run();
+            ExampleRW.Run();
+            ExampleArray.Run();
             //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
             //NativeImportExample.RunLoggerExample();
 
-            Console.Read();
+            Console.ReadKey();
         }
     }
 }

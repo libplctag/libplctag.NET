@@ -23,10 +23,10 @@ namespace libplctag
             get => (DebugLevel)plctag.get_int_attribute(0, "debug_level", int.MinValue);
             set => plctag.set_debug_level((int)value);
         }
-        public TimeSpan ReadCacheDuration
+        public int ReadCacheMillisecondDuration
         {
-            get => TimeSpan.FromMilliseconds(plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue));
-            set => plctag.set_int_attribute(pointer, "read_cache_ms", Convert.ToInt32(value.TotalMilliseconds));
+            get => plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue);
+            set => plctag.set_int_attribute(pointer, "read_cache_ms", value);
         }
 
         private readonly int pointer;
@@ -40,11 +40,12 @@ namespace libplctag
         /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
-        /// <param name="timeout"></param>
+        /// <param name="millisecondTimeout"></param>
         /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
+        /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int elementCount = 1, TimeSpan timeout = default, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, TimeSpan readCacheDuration = default, bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int millisecondTimeout, int elementCount = 1, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, int readCacheMillisecondDuration = default, bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -56,9 +57,9 @@ namespace libplctag
             Name = name;
             UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheDuration, useConnectedMessaging);
+            var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, debugLevel, readCacheMillisecondDuration, useConnectedMessaging);
 
-            pointer = plctag.create(attributeString, (int)timeout.TotalMilliseconds);
+            pointer = plctag.create(attributeString, millisecondTimeout);
 
             SetUpCallback();
 
@@ -69,7 +70,7 @@ namespace libplctag
             Dispose();
         }
 
-        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, TimeSpan readCacheDuration, bool useConnectedMessaging)
+        private static string GetAttributeString(Protocol protocol, IPAddress gateway, string path, CpuType CPU, int elementSize, int elementCount, string name, DebugLevel debugLevel, int readCacheMillisecondDuration, bool useConnectedMessaging)
         {
 
             var attributes = new Dictionary<string, string>();
@@ -88,8 +89,8 @@ namespace libplctag
             if (debugLevel > DebugLevel.None)
                 attributes.Add("debug", ((int)debugLevel).ToString());
 
-            if (readCacheDuration > TimeSpan.Zero)
-                attributes.Add("read_cache_ms", Convert.ToInt32(readCacheDuration.TotalMilliseconds).ToString());
+            if (readCacheMillisecondDuration > 0)
+                attributes.Add("read_cache_ms", readCacheMillisecondDuration.ToString());
 
             attributes.Add("use_connected_msg", useConnectedMessaging ? "1" : "0");
 
@@ -102,9 +103,9 @@ namespace libplctag
 
         public void Abort() => plctag.abort(pointer);
 
-        public void Read(TimeSpan timeout) => plctag.read(pointer, (int)timeout.TotalMilliseconds);
+        public void Read(int millisecondTimeout) => plctag.read(pointer, millisecondTimeout);
 
-        public void Write(TimeSpan timeout) => plctag.write(pointer, (int)timeout.TotalMilliseconds);
+        public void Write(int millisecondTimeout) => plctag.write(pointer, millisecondTimeout);
 
         public int GetSize() => plctag.get_size(pointer);
 
