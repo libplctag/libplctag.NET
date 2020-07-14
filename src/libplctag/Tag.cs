@@ -45,7 +45,17 @@ namespace libplctag
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int millisecondTimeout, int elementCount = 1, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, int readCacheMillisecondDuration = default, bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway,
+                   string path,
+                   CpuType cpuType,
+                   int elementSize,
+                   string name,
+                   int millisecondTimeout,
+                   int elementCount = 1,
+                   DebugLevel debugLevel = DebugLevel.None,
+                   Protocol protocol = Protocol.ab_eip,
+                   int readCacheMillisecondDuration = default,
+                   bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;

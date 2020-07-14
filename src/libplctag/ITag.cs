@@ -13,14 +13,14 @@ namespace libplctag
         string Name { get; }
         string Path { get; }
         Protocol Protocol { get; }
-        TimeSpan ReadCacheDuration { get; set; }
+        int ReadCacheMillisecondDuration { get; set; }
         bool UseConnectedMessaging { get; }
 
         void Abort();
         void Dispose();
         int GetSize();
-        StatusCode GetStatus();
-        void Read(TimeSpan timeout);
-        void Write(TimeSpan timeout);
+        Status GetStatus();
+        void Read(int timeout);
+        void Write(int timeout);
     }
 }

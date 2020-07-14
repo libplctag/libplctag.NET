@@ -1,39 +1,40 @@
 ﻿using libplctag;
 using libplctag.Generic;
+using libplctag.Generic.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
 
-namespace ExampleConsoleApp
+namespace CSharpDotNetCore
 {
     class ExampleGenericTag
     {
         public static void Run()
         {
-            var myTag = new GenericTag<PlcTypeDINT, int>(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, "PROGRAM:SomeProgram.SomeDINT");
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            var myTag = new GenericTag<PlcTypeDINT, int>(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, "PROGRAM:SomeProgram.SomeDINT", 1000);
+            while (myTag.GetStatus() == Status.Pending)
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             myTag.Value = 3737;
-            myTag.Write(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            myTag.Write(0);
+            while (myTag.GetStatus() == Status.Pending)
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
 
-            myTag.Read(TimeSpan.Zero);
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            myTag.Read(0);
+            while (myTag.GetStatus() == Status.Pending)
             {
                 Thread.Sleep(100);
             }
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
 
             int myDint = myTag.Value;
