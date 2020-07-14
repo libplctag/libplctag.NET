@@ -39,6 +39,9 @@ namespace libplctag.NativeImport
             var embeddedResource = GetEmbeddedResource(embeddedResourceName.Item1 + "." + embeddedResourceName.Item2);
             var newFileName = Path.Combine(folder, embeddedResourceFileName);
 
+            if (embeddedResource == null)
+                throw new TypeLoadException("Could not could not find appropriate unmanaged library");
+
             File.WriteAllBytes(newFileName, embeddedResource);
         }
 
