@@ -16,9 +16,9 @@ namespace CSharpDotNetFramework
             var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "TestArray", ARRAY_LENGTH);
 
             //Check that tag gets created properly
-            while (myArrayTag.GetStatus() == StatusCode.StatusPending)
+            while (myArrayTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myArrayTag.GetStatus() != StatusCode.StatusOk)
+            if (myArrayTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myArrayTag.GetStatus());
             Console.WriteLine($"Tag created and verified on PLC");
 
@@ -28,9 +28,9 @@ namespace CSharpDotNetFramework
             myArrayTag.Read(0);
 
             //Wait for Read to complete
-            while (myArrayTag.GetStatus() == StatusCode.StatusPending)
+            while (myArrayTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myArrayTag.GetStatus() != StatusCode.StatusOk)
+            if (myArrayTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myArrayTag.GetStatus());
             Console.WriteLine($"Tag read complete");
 

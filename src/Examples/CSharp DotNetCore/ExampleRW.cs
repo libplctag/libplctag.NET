@@ -15,9 +15,9 @@ namespace CSharpDotNetCore
             var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000);
 
             //Check that tag gets created properly
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag created and verified on PLC");
 
@@ -27,9 +27,9 @@ namespace CSharpDotNetCore
             myTag.Read(0);
 
             //Wait for Read to complete
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag read complete");
 
@@ -44,9 +44,9 @@ namespace CSharpDotNetCore
             Console.WriteLine($"Starting tag write ({myDint})");
 
             //Wait for Write to complete
-            while (myTag.GetStatus() == StatusCode.StatusPending)
+            while (myTag.GetStatus() == Status.Pending)
                 Thread.Sleep(100);
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Tag write complete");
 
@@ -55,7 +55,7 @@ namespace CSharpDotNetCore
             myTag.Read(1000);
 
             //Check read success
-            if (myTag.GetStatus() != StatusCode.StatusOk)
+            if (myTag.GetStatus() != Status.Ok)
                 throw new LibPlcTagException(myTag.GetStatus());
             Console.WriteLine($"Synchronous tag read complete");
 
