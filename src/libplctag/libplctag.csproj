@@ -5,30 +5,16 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.27-alpha03</Version>
-    <Authors>timyhac</Authors>
+    <Version>0.0.27-alpha04</Version>
+    <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <PackageDescription></PackageDescription>
+    <PackageDescription>A library for PLC communication</PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="runtime\linux_x64\libplctag.so" />
-    <None Remove="runtime\linux_x86\libplctag.so" />
-    <None Remove="runtime\win_x64\plctag.dll" />
-    <None Remove="runtime\win_x86\plctag.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="runtime\linux_x64\libplctag.so" />
-    <EmbeddedResource Include="runtime\linux_x86\libplctag.so" />
-    <EmbeddedResource Include="runtime\win_x64\plctag.dll" />
-    <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageReference Include="libplctag.NativeImport" Version="0.0.5-alpha" />
   </ItemGroup>
 
 </Project>
