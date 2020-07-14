@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="0.0.6-alpha" />
+    <PackageReference Include="libplctag.NativeImport" Version="0.0.5-alpha" />
   </ItemGroup>
 
 </Project>
