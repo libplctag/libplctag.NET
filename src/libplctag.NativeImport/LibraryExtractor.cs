@@ -64,19 +64,19 @@ namespace libplctag.NativeImport
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return new Tuple<string, string>("libplctag.runtime.win_x86", "plctag.dll");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.win_x86", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.runtime.win_x64", "plctag.dll");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.win_x64", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return new Tuple<string, string>("libplctag.runtime.linux_86", "libplctag.so");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.linux_86", "libplctag.so");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.runtime.linux_x64", "libplctag.so");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.linux_x64", "libplctag.so");
             }
             else
             {

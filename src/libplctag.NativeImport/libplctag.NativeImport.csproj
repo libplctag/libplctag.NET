@@ -5,7 +5,7 @@
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
     <PackageId>libplctag.NativeImport</PackageId>
-    <Version>0.0.5-alpha</Version>
+    <Version>0.0.6-alpha</Version>
     <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
