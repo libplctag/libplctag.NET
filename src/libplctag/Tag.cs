@@ -108,6 +108,9 @@ namespace libplctag
 
         public StatusCode GetStatus() => (StatusCode)plctag.status(pointer);
 
+        public int GetBit(int offset) => plctag.get_bit(pointer, offset);
+        public void SetBit(int offset, int value) => plctag.set_bit(pointer, offset, value);
+
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
 

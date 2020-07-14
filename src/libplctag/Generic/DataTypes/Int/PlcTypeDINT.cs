@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace libplctag.Generic
+namespace libplctag.Generic.DataTypes
 {
     public class PlcTypeDINT : IPlcType<int>
     {
