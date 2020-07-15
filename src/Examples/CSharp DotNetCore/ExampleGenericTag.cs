@@ -1,7 +1,9 @@
 ﻿using libplctag;
 using libplctag.Generic;
 using libplctag.Generic.DataTypes;
+using RandomTestValues;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 
@@ -9,37 +11,57 @@ namespace CSharpDotNetCore
 {
     class ExampleGenericTag
     {
+        private const int DEFAULT_TIMEOUT = 100;
+
         public static void Run()
         {
-            var myTag = new GenericTag<PlcTypeDINT, int>(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, "PROGRAM:SomeProgram.SomeDINT", 1000);
-            while (myTag.GetStatus() == Status.Pending)
-            {
-                Thread.Sleep(100);
-            }
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
+            Random rnd = new Random();
+            int testValue = rnd.Next();
 
-            myTag.Value = 3737;
-            myTag.Write(0);
-            while (myTag.GetStatus() == Status.Pending)
-            {
-                Thread.Sleep(100);
-            }
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
+            IPAddress gateway = IPAddress.Parse("10.10.10.10");
+            const string Path = "1,0";
+            const int timeout = 1000;
 
+            //Bool - Not a great test - 50% chance it passes without a write
+            //Maybe do this in a loop when we aren't spamming the console
+            TestTag(new GenericTag<PlcTypeBOOL, bool>(gateway, Path, CpuType.Logix, "TestBOOL", timeout));
 
-            myTag.Read(0);
-            while (myTag.GetStatus() == Status.Pending)
-            {
-                Thread.Sleep(100);
-            }
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
+            //Signed Numbers
+            TestTag(new GenericTag<PlcTypeSINT, sbyte>(gateway, Path, CpuType.Logix, "TestSINT", timeout));
+            TestTag(new GenericTag<PlcTypeINT, short>(gateway, Path, CpuType.Logix, "TestINT", timeout));
+            TestTag(new GenericTag<PlcTypeDINT, int>(gateway, Path, CpuType.Logix, "TestDINT", timeout));
+            TestTag(new GenericTag<PlcTypeLINT, long>(gateway, Path, CpuType.Logix, "TestLINT", timeout));
 
-            int myDint = myTag.Value;
+            //Logix doesn't support unsigned
 
-            Console.WriteLine(myDint);
+            //Foating Points
+            TestTag(new GenericTag<PlcTypeREAL, float>(gateway, Path, CpuType.Logix, "TestREAL", timeout));
+            //TestTag(new GenericTag<PlcTypeLREAL, double>(gateway, Path, CpuType.Logix, "TestLREAL", timeout));
+
         }
+
+        private static bool TestTag<T>(IGenericTag<T> tag) where T : struct
+        {
+            Console.WriteLine($"\r\n*** [0x{tag.CipCode:X2}] {typeof(T)} ***");
+
+            T testValue = RandomValue.Object<T>();
+
+            tag.Value = testValue;
+            Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
+            tag.Write(DEFAULT_TIMEOUT);
+            if (tag.GetStatus() != Status.Ok) throw new LibPlcTagException(tag.GetStatus());
+
+            Console.WriteLine($"Read Value from {tag.Name}");
+            tag.Read(100);
+            if (tag.GetStatus() != Status.Ok) throw new LibPlcTagException(tag.GetStatus());
+
+            T readback = tag.Value;
+
+            if (readback.Equals(testValue)) Console.WriteLine($"PASS: Read back matched test value");
+            else Console.WriteLine($"FAIL: Read back did not match test value - [{readback} != {testValue}]");
+
+            return readback.Equals(testValue);
+        }
+
     }
 }

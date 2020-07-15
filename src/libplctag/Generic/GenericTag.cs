@@ -5,7 +5,7 @@ using System.Text;
 
 namespace libplctag.Generic
 {
-    public class GenericTag<TPlcType, TDotNetType> : ITag where TPlcType : IPlcType<TDotNetType>, new()
+    public class GenericTag<TPlcType, TDotNetType> : ITag, IGenericTag<TDotNetType> where TPlcType : IPlcType<TDotNetType>, new()
     {
 
         private readonly TPlcType plcType;
@@ -55,6 +55,9 @@ namespace libplctag.Generic
                                useConnectedMessaging);
         }
 
+        public TDotNetType Value { get => plcType.Decode(tag); set => plcType.Encode(tag, value); }
+        public byte CipCode => plcType.CipCode;
+
         public void Read(int timeout)
         {
             ////HACK: To properly deal with zero timeout, this should be an async
@@ -91,8 +94,6 @@ namespace libplctag.Generic
             return ((ITag)tag).GetStatus();
         }
 
-        public TDotNetType Value { get => plcType.Decode(tag); set => plcType.Encode(tag, value); }
-
         public CpuType CPU => ((ITag)tag).CPU;
 
         public DebugLevel DebugLevel { get => ((ITag)tag).DebugLevel; set => ((ITag)tag).DebugLevel = value; }
@@ -112,6 +113,7 @@ namespace libplctag.Generic
         public int ReadCacheMillisecondDuration { get => ((ITag)tag).ReadCacheMillisecondDuration; set => ((ITag)tag).ReadCacheMillisecondDuration = value; }
 
         public bool UseConnectedMessaging => ((ITag)tag).UseConnectedMessaging;
+
     }
 
 }

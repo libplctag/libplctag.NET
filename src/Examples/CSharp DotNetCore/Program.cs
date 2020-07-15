@@ -6,8 +6,8 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
-            ExampleRW.Run();
             ExampleGenericTag.Run();
+            ExampleRW.Run();
             ExampleArray.Run();
             //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
