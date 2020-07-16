@@ -13,10 +13,6 @@
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="runtime\linux_x64\libplctag.so" />
     <EmbeddedResource Include="runtime\linux_x86\libplctag.so" />
