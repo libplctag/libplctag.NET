@@ -22,9 +22,11 @@ namespace CSharpDotNetCore
             const string Path = "1,0";
             const int timeout = 1000;
 
-            //Bool - Not a great test - 50% chance it passes without a write
-            //Maybe do this in a loop when we aren't spamming the console
-            TestTag(new GenericTag<PlcTypeBOOL, bool>(gateway, Path, CpuType.Logix, "TestBOOL", timeout));
+            //Bool - Test both cases
+            //Random value would look correct 50% of the time
+            var boolTag = new GenericTag<PlcTypeBOOL, bool>(gateway, Path, CpuType.Logix, "TestBOOL", timeout);
+            TestTag(boolTag, true);
+            TestTag(boolTag, false);
 
             //Signed Numbers
             TestTag(new GenericTag<PlcTypeSINT, sbyte>(gateway, Path, CpuType.Logix, "TestSINT", timeout));
@@ -40,11 +42,17 @@ namespace CSharpDotNetCore
 
         }
 
+
         private static bool TestTag<T>(IGenericTag<T> tag) where T : struct
         {
-            Console.WriteLine($"\r\n*** [0x{tag.CipCode:X2}] {typeof(T)} ***");
-
             T testValue = RandomValue.Object<T>();
+            return TestTag(tag, testValue);
+        }
+
+        private static bool TestTag<T>(IGenericTag<T> tag, T testValue) where T : struct
+        {
+            Console.WriteLine($"\r\n*** {tag.Name} [0x{tag.CipCode:X2}] {typeof(T)} ***");
+
 
             tag.Value = testValue;
             Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
