@@ -7,7 +7,7 @@ using libplctag.NativeImport;
 namespace libplctag
 {
 
-    public sealed class Tag : IDisposable
+    public sealed class Tag : IDisposable, ITag
     {
 
         public Protocol Protocol { get; }
@@ -45,7 +45,17 @@ namespace libplctag
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway, string path, CpuType cpuType, int elementSize, string name, int millisecondTimeout, int elementCount = 1, DebugLevel debugLevel = DebugLevel.None, Protocol protocol = Protocol.ab_eip, int readCacheMillisecondDuration = default, bool useConnectedMessaging = true)
+        public Tag(IPAddress gateway,
+                   string path,
+                   CpuType cpuType,
+                   int elementSize,
+                   string name,
+                   int millisecondTimeout,
+                   int elementCount = 1,
+                   DebugLevel debugLevel = DebugLevel.None,
+                   Protocol protocol = Protocol.ab_eip,
+                   int readCacheMillisecondDuration = default,
+                   bool useConnectedMessaging = true)
         {
 
             Protocol = protocol;
@@ -108,6 +118,9 @@ namespace libplctag
         public int GetSize() => plctag.get_size(pointer);
 
         public Status GetStatus() => (Status)plctag.status(pointer);
+
+        public int GetBit(int offset) => plctag.get_bit(pointer, offset);
+        public void SetBit(int offset, int value) => plctag.set_bit(pointer, offset, value);
 
         public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
         public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
