@@ -12,7 +12,7 @@ namespace libplctag
     public sealed class Tag : IDisposable, ITag
     {
 
-        private const int asyncStatusPollInterval = 2;
+        private const int ASYNC_STATUS_POLL_INTERVAL = 2;
 
         public Protocol Protocol { get; }
         public IPAddress Gateway { get; }
@@ -142,7 +142,7 @@ namespace libplctag
             do
             {
                 token.ThrowIfCancellationRequested();
-                await Task.Delay(asyncStatusPollInterval);
+                await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
                 status = GetStatus();
             }
             while (status == Status.Pending);
@@ -182,7 +182,7 @@ namespace libplctag
             {
                 token.ThrowIfCancellationRequested();
                 status = GetStatus();
-                await Task.Delay(asyncStatusPollInterval);
+                await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
             }
             while (status == Status.Pending);
 
