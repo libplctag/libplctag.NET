@@ -81,6 +81,10 @@ namespace libplctag.NativeImport
             {
                 return new Tuple<string, string>("libplctag.NativeImport.runtime.linux_x64", "libplctag.so");
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+            {
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.osx_x64", "libplctag.dylib");
+            }
             else
             {
                 throw new TypeLoadException("This platform is not supported, could not load appropriate unmanaged library");
