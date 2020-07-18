@@ -1,8 +1,11 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace libplctag
 {
-    public class Tag<Marshaller, T>
+    public class Tag<Marshaller, T> : IEnumerable<T>
         where Marshaller : IMarshaller<T>, new()
     {
 
@@ -61,6 +64,14 @@ namespace libplctag
         public void Read(int millisecondTimeout) => _tag.Read(millisecondTimeout);
         public void Write(int millisecondTimeout) => _tag.Write(millisecondTimeout);
         public Status GetStatus() => _tag.GetStatus();
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+                yield return this[i];
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public T this[int index]
         {

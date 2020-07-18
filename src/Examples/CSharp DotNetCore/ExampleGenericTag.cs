@@ -2,6 +2,7 @@
 using libplctag.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -19,6 +20,9 @@ namespace CSharpDotNetCore
 
             MyDintArray.Write(1000);
 
+            // Illustrate use of Linq
+            var myDintsAbove200 = MyDintArray.Where(x => x > 200).ToList();
+
 
 
 
@@ -32,7 +36,7 @@ namespace CSharpDotNetCore
 
 
 
-            var MyTimer = new Tag<TIMERTimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_TIMER", 1000);
+            var MyTimer = new Tag<TIMERTimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "T_MinorFaultCheck", 1000);
             MyTimer.Read(1000);
             Console.WriteLine(
                 $"Preset: {MyTimer[0].Preset}\n" +
