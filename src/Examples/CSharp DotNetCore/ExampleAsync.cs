@@ -192,5 +192,40 @@ namespace CSharpDotNetCore
             }
 
         }
+
+
+        public static void AsyncParallelCancellation(int maxTags = 20, int repetitions = 100)
+        {
+
+            var myTags = Enumerable.Range(0, maxTags)
+                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000, debugLevel: DebugLevel.None))
+                .ToList();
+
+
+            int cancelAfterSeconds = 5;
+            Console.WriteLine($"Starting parallel reads of {maxTags} tags. Will cancel in {cancelAfterSeconds} seconds");
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(cancelAfterSeconds * 1000);
+
+            Task.WaitAll(myTags.Select(tag =>
+            {
+                return Task.Run(async () =>
+                {
+                    try
+                    {
+                        for (int ii = 0; ii < repetitions; ii++)
+                        {
+                            await tag.ReadAsync(cts.Token);
+                        }
+                    }
+                    catch (OperationCanceledException e)
+                    {
+                        Console.WriteLine("Successfully Cancelled");
+                    }
+                });
+            }).ToArray());
+
+        }
     }
 }

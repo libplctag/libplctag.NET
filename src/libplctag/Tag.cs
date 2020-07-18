@@ -131,10 +131,10 @@ namespace libplctag
 
         public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
         {
-            using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(token))
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
-                tcs.CancelAfter(millisecondTimeout);
-                await ReadAsync(tcs.Token);
+                cts.CancelAfter(millisecondTimeout);
+                await ReadAsync(cts.Token);
             }
         }
 
@@ -143,22 +143,14 @@ namespace libplctag
 
             var status = (Status)plctag.read(pointer, 0);
 
-            if (status == Status.Ok)
-                return;
-            else if (status < 0)
-                throw new LibPlcTagException(status);
-
-            do
+            using (token.Register(() => Abort()))
             {
-                if(token.IsCancellationRequested)
+                while (status == Status.Pending)
                 {
-                    Abort();
-                    token.ThrowIfCancellationRequested();
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    status = GetStatus();
                 }
-                await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
-                status = GetStatus();
             }
-            while (status == Status.Pending);
 
             if (status == Status.Ok)
                 return;
@@ -183,10 +175,10 @@ namespace libplctag
 
         public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
         {
-            using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(token))
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
-                tcs.CancelAfter(millisecondTimeout);
-                await WriteAsync(tcs.Token);
+                cts.CancelAfter(millisecondTimeout);
+                await WriteAsync(cts.Token);
             }
         }
 
@@ -195,22 +187,14 @@ namespace libplctag
 
             var status = (Status)plctag.write(pointer, 0);
 
-            if (status == Status.Ok)
-                return;
-            else if (status < 0)
-                throw new LibPlcTagException(status);
-
-            do
+            using (token.Register(() => Abort()))
             {
-                if (token.IsCancellationRequested)
+                while (status == Status.Pending)
                 {
-                    Abort();
-                    token.ThrowIfCancellationRequested();
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    status = GetStatus();
                 }
-                status = GetStatus();
-                await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
             }
-            while (status == Status.Pending);
 
             if (status == Status.Ok)
                 return;
