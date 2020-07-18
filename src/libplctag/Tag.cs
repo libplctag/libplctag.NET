@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using libplctag.NativeImport;
 
 namespace libplctag
@@ -9,6 +11,8 @@ namespace libplctag
 
     public sealed class Tag : IDisposable, ITag
     {
+
+        private const int ASYNC_STATUS_POLL_INTERVAL = 2;
 
         public Protocol Protocol { get; }
         public IPAddress Gateway { get; }
@@ -101,9 +105,93 @@ namespace libplctag
 
         public void Abort() => plctag.abort(pointer);
 
-        public void Read(int millisecondTimeout) => plctag.read(pointer, millisecondTimeout);
+        public void Read(int millisecondTimeout)
+        {
 
-        public void Write(int millisecondTimeout) => plctag.write(pointer, millisecondTimeout);
+            if (millisecondTimeout <= 0)
+                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous read");
+
+            var status = (Status)plctag.read(pointer, millisecondTimeout);
+            if (status == Status.Ok)
+                return;
+            else
+                throw new LibPlcTagException(status);
+
+        }
+
+        public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(millisecondTimeout);
+                await ReadAsync(cts.Token);
+            }
+        }
+
+        public async Task ReadAsync(CancellationToken token = default)
+        {
+
+            var status = (Status)plctag.read(pointer, 0);
+
+            using (token.Register(() => Abort()))
+            {
+                while (status == Status.Pending)
+                {
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    status = GetStatus();
+                }
+            }
+
+            if (status == Status.Ok)
+                return;
+            else
+                throw new LibPlcTagException(status);
+
+        }
+
+        public void Write(int millisecondTimeout)
+        {
+
+            if (millisecondTimeout <= 0)
+                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous write");
+
+            var status = (Status)plctag.write(pointer, millisecondTimeout);
+            if (status == Status.Ok)
+                return;
+            else
+                throw new LibPlcTagException(status);
+
+        }
+
+        public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(millisecondTimeout);
+                await WriteAsync(cts.Token);
+            }
+        }
+
+        public async Task WriteAsync(CancellationToken token = default)
+        {
+
+            var status = (Status)plctag.write(pointer, 0);
+
+            using (token.Register(() => Abort()))
+            {
+                while (status == Status.Pending)
+                {
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    status = GetStatus();
+                }
+            }
+
+            if (status == Status.Ok)
+                return;
+            else
+                throw new LibPlcTagException(status);
+
+        }
 
         public int GetSize() => plctag.get_size(pointer);
 
