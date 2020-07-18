@@ -6,7 +6,6 @@ namespace libplctag
     public interface ITag
     {
         CpuType CPU { get; }
-        DebugLevel DebugLevel { get; set; }
         int ElementCount { get; }
         int ElementSize { get; }
         IPAddress Gateway { get; }

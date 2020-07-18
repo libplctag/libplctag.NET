@@ -20,7 +20,6 @@ namespace libplctag.Generic
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
         /// <param name="millisecondTimeout"></param>
-        /// <param name="debugLevel"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
@@ -30,7 +29,6 @@ namespace libplctag.Generic
                    string name,
                    int millisecondTimeout,
                    int elementCount = 1,
-                   DebugLevel debugLevel = DebugLevel.None,
                    Protocol protocol = Protocol.ab_eip,
                    int readCacheMillisecondDuration = default,
                    bool useConnectedMessaging = true)
@@ -49,7 +47,6 @@ namespace libplctag.Generic
                                name,
                                millisecondTimeout,
                                elementCount,
-                               debugLevel,
                                protocol,
                                readCacheMillisecondDuration,
                                useConnectedMessaging);
@@ -95,8 +92,6 @@ namespace libplctag.Generic
         }
 
         public CpuType CPU => ((ITag)tag).CPU;
-
-        public DebugLevel DebugLevel { get => ((ITag)tag).DebugLevel; set => ((ITag)tag).DebugLevel = value; }
 
         public int ElementCount => ((ITag)tag).ElementCount;
 

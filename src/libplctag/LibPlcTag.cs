@@ -22,5 +22,11 @@ namespace libplctag
                 throw new NotImplementedException();
         }
 
+        static public DebugLevel DebugLevel
+        {
+            get => (DebugLevel)plctag.get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
+            set => plctag.set_debug_level((int)value);
+        }
+
     }
 }
