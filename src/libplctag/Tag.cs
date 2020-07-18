@@ -150,7 +150,11 @@ namespace libplctag
 
             do
             {
-                token.ThrowIfCancellationRequested();
+                if(token.IsCancellationRequested)
+                {
+                    Abort();
+                    token.ThrowIfCancellationRequested();
+                }
                 await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
                 status = GetStatus();
             }
@@ -198,7 +202,11 @@ namespace libplctag
 
             do
             {
-                token.ThrowIfCancellationRequested();
+                if (token.IsCancellationRequested)
+                {
+                    Abort();
+                    token.ThrowIfCancellationRequested();
+                }
                 status = GetStatus();
                 await Task.Delay(ASYNC_STATUS_POLL_INTERVAL);
             }
