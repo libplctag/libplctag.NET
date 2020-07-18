@@ -7,7 +7,7 @@ using libplctag.NativeImport;
 namespace libplctag
 {
 
-    public sealed class Tag : IDisposable, ITag
+    public sealed class Tag : IDisposable
     {
 
         public Protocol Protocol { get; }
@@ -26,13 +26,13 @@ namespace libplctag
 
         private readonly int pointer;
 
+
         /// <summary>
         /// Provides a new tag. If the CPU type is LGX, the port type and slot has to be specified.
         /// </summary>
         /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
         /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
         /// <param name="cpuType">Allen-Bradley CPU model</param>
-        /// <param name="elementSize">The size of an element in bytes. The tag is assumed to be composed of elements of the same size. For structure tags, use the total size of the structure.</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
         /// <param name="millisecondTimeout"></param>
