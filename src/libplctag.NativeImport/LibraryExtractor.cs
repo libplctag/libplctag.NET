@@ -56,6 +56,10 @@ namespace libplctag.NativeImport
             {
                 return File.Exists(Path.Combine(folder, "libplctag.so"));
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return File.Exists(Path.Combine(folder, "libplctag.dylib"));
+            }
             else
             {
                 throw new TypeLoadException("Platform not supported");
