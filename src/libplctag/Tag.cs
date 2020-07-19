@@ -197,38 +197,159 @@ namespace libplctag
 
         public Status GetStatus() => (Status)plctag.status(pointer);
 
-        public int GetBit(int offset) => plctag.get_bit(pointer, offset);
-        public void SetBit(int offset, int value) => plctag.set_bit(pointer, offset, value);
+        public int GetBit(int offset)
+        {
+            var result = plctag.get_bit(pointer, offset);
+            if (result == int.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetBit(int offset, int value)
+        {
+            var result = (Status)plctag.set_bit(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public ulong GetUInt64(int offset) => plctag.get_uint64(pointer, offset);
-        public void SetUInt64(int offset, ulong value) => plctag.set_uint64(pointer, offset, value);
+        public ulong GetUInt64(int offset)
+        {
+            var result = plctag.get_uint64(pointer, offset);
+            if (result == ulong.MaxValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetUInt64(int offset, ulong value)
+        {
+            var result = (Status)plctag.set_uint64(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public long GetInt64(int offset) => plctag.get_int64(pointer, offset);
-        public void SetInt64(int offset, long value) => plctag.set_int64(pointer, offset, value);
+        public long GetInt64(int offset)
+        {
+            var result = plctag.get_int64(pointer, offset);
+            if (result == long.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetInt64(int offset, long value)
+        {
+            var result = (Status)plctag.set_int64(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public uint GetUInt32(int offset) => plctag.get_uint32(pointer, offset);
-        public void SetUInt32(int offset, uint value) => plctag.set_uint32(pointer, offset, value);
+        public uint GetUInt32(int offset)
+        {
+            var result = plctag.get_uint32(pointer, offset);
+            if (result == uint.MaxValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetUInt32(int offset, uint value)
+        {
+            var result = (Status)plctag.set_uint32(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public int GetInt32(int offset) => plctag.get_int32(pointer, offset);
-        public void SetInt32(int offset, int value) => plctag.set_int32(pointer, offset, value);
+        public int GetInt32(int offset)
+        {
+            var result = plctag.get_int32(pointer, offset);
+            if (result == int.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetInt32(int offset, int value)
+        {
+            var result = (Status)plctag.set_int32(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public ushort GetUInt16(int offset) => plctag.get_uint16(pointer, offset);
-        public void SetUInt16(int offset, ushort value) => plctag.set_uint16(pointer, offset, value);
+        public ushort GetUInt16(int offset)
+        {
+            var result = plctag.get_uint16(pointer, offset);
+            if (result == ushort.MaxValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetUInt16(int offset, ushort value)
+        {
+           var result = (Status)plctag.set_uint16(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public short GetInt16(int offset) => plctag.get_int16(pointer, offset);
-        public void SetInt16(int offset, short value) => plctag.set_int16(pointer, offset, value);
+        public short GetInt16(int offset)
+        {
+            var result = plctag.get_int16(pointer, offset);
+            if (result == short.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetInt16(int offset, short value)
+        {
+            var result = (Status)plctag.set_int16(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public byte GetUInt8(int offset) => plctag.get_uint8(pointer, offset);
-        public void SetUInt8(int offset, byte value) => plctag.set_uint8(pointer, offset, value);
+        public byte GetUInt8(int offset)
+        {
+            var result = plctag.get_uint8(pointer, offset);
+            if (result == byte.MaxValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetUInt8(int offset, byte value)
+        {
+            var result = (Status)plctag.set_uint8(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public sbyte GetInt8(int offset) => plctag.get_int8(pointer, offset);
-        public void SetInt8(int offset, sbyte value) => plctag.set_int8(pointer, offset, value);
+        public sbyte GetInt8(int offset)
+        {
+            var result = plctag.get_int8(pointer, offset);
+            if (result == sbyte.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetInt8(int offset, sbyte value)
+        {
+            var result = (Status)plctag.set_int8(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public double GetFloat64(int offset) => plctag.get_float64(pointer, offset);
-        public void SetFloat64(int offset, double value) => plctag.set_float64(pointer, offset, value);
+        public double GetFloat64(int offset)
+        {
+            var result = plctag.get_float64(pointer, offset);
+            if (result == double.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetFloat64(int offset, double value)
+        {
+            var result = (Status)plctag.set_float64(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public float GetFloat32(int offset) => plctag.get_float32(pointer, offset);
-        public void SetFloat32(int offset, float value) => plctag.set_float32(pointer, offset, value);
+        public float GetFloat32(int offset)
+        {
+            var result = plctag.get_float32(pointer, offset);
+            if (result == float.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+        public void SetFloat32(int offset, float value)
+        {
+            var result = (Status)plctag.set_float32(pointer, offset, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
     }
 
