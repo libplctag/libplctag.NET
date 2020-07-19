@@ -24,8 +24,19 @@ namespace libplctag
         public bool UseConnectedMessaging { get; }
         public int ReadCacheMillisecondDuration
         {
-            get => plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue);
-            set => plctag.set_int_attribute(pointer, "read_cache_ms", value);
+            get
+            {
+                var result = plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue);
+                if (result == int.MinValue)
+                    throw new Exception();
+                return result;
+            }
+            set
+            {
+                var result = (Status)plctag.set_int_attribute(pointer, "read_cache_ms", value);
+                if (result != Status.Ok)
+                    throw new LibPlcTagException(result);
+            }
         }
 
         private readonly int pointer;
@@ -66,7 +77,11 @@ namespace libplctag
 
             var attributeString = GetAttributeString(protocol, gateway, path, cpuType, elementSize, elementCount, name, readCacheMillisecondDuration, useConnectedMessaging);
 
-            pointer = plctag.create(attributeString, millisecondTimeout);
+            var result = plctag.create(attributeString, millisecondTimeout);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                pointer = result;
 
         }
 
@@ -101,9 +116,19 @@ namespace libplctag
 
         }
 
-        public void Dispose() => plctag.destroy(pointer);
+        public void Dispose()
+        {
+            var result = (Status)plctag.destroy(pointer);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
-        public void Abort() => plctag.abort(pointer);
+        public void Abort()
+        {
+            var result = (Status)plctag.abort(pointer);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
         public void Read(int millisecondTimeout)
         {
@@ -111,11 +136,9 @@ namespace libplctag
             if (millisecondTimeout <= 0)
                 throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous read");
 
-            var status = (Status)plctag.read(pointer, millisecondTimeout);
-            if (status == Status.Ok)
-                return;
-            else
-                throw new LibPlcTagException(status);
+            var result = (Status)plctag.read(pointer, millisecondTimeout);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
 
         }
 
@@ -142,9 +165,7 @@ namespace libplctag
                 }
             }
 
-            if (status == Status.Ok)
-                return;
-            else
+            if (status != Status.Ok)
                 throw new LibPlcTagException(status);
 
         }
@@ -155,11 +176,9 @@ namespace libplctag
             if (millisecondTimeout <= 0)
                 throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous write");
 
-            var status = (Status)plctag.write(pointer, millisecondTimeout);
-            if (status == Status.Ok)
-                return;
-            else
-                throw new LibPlcTagException(status);
+            var result = (Status)plctag.write(pointer, millisecondTimeout);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
 
         }
 
@@ -186,9 +205,7 @@ namespace libplctag
                 }
             }
 
-            if (status == Status.Ok)
-                return;
-            else
+            if (status != Status.Ok)
                 throw new LibPlcTagException(status);
 
         }
