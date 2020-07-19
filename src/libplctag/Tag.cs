@@ -210,7 +210,14 @@ namespace libplctag
 
         }
 
-        public int GetSize() => plctag.get_size(pointer);
+        public int GetSize()
+        {
+            var result = plctag.get_size(pointer);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                return result;
+        }
 
         public Status GetStatus() => (Status)plctag.status(pointer);
 
@@ -221,6 +228,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetBit(int offset, int value)
         {
             var result = (Status)plctag.set_bit(pointer, offset, value);
@@ -249,6 +257,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetInt64(int offset, long value)
         {
             var result = (Status)plctag.set_int64(pointer, offset, value);
@@ -263,6 +272,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetUInt32(int offset, uint value)
         {
             var result = (Status)plctag.set_uint32(pointer, offset, value);
@@ -277,6 +287,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetInt32(int offset, int value)
         {
             var result = (Status)plctag.set_int32(pointer, offset, value);
@@ -291,6 +302,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetUInt16(int offset, ushort value)
         {
            var result = (Status)plctag.set_uint16(pointer, offset, value);
@@ -319,6 +331,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetUInt8(int offset, byte value)
         {
             var result = (Status)plctag.set_uint8(pointer, offset, value);
@@ -333,6 +346,7 @@ namespace libplctag
                 throw new LibPlcTagException();
             return result;
         }
+
         public void SetInt8(int offset, sbyte value)
         {
             var result = (Status)plctag.set_int8(pointer, offset, value);
