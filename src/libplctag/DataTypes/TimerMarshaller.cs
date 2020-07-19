@@ -4,18 +4,18 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class TIMERTimerMarshaller: IMarshaller<AbTimer>
+    public class TimerMarshaller: IMarshaller<AbTimer>
     {
 
         public int ElementSize => 12;
 
-        public AbTimer Decode(Tag tag, int index)
+        public AbTimer Decode(Tag tag, int offset)
         {
 
             // Needed to look at RsLogix documentation for structure of TIMER
-            var DINT2 = tag.GetInt32(ElementSize * index);
-            var DINT1 = tag.GetInt32(ElementSize * index + 4);
-            var DINT0 = tag.GetInt32(ElementSize * index + 8);
+            var DINT2 = tag.GetInt32(offset);
+            var DINT1 = tag.GetInt32(offset + 4);
+            var DINT0 = tag.GetInt32(offset + 8);
 
             // The third DINT packs a few BOOLs into it
             var bitArray = new BitArray(new int[] { DINT2 });

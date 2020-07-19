@@ -13,7 +13,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var MyDintArray = new Tag<DINTIntMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
+            var MyDintArray = new Tag1d<DINTIntMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
 
             for (int ii = 0; ii < 1000; ii++)
                 MyDintArray[ii] = ii;
@@ -26,7 +26,7 @@ namespace CSharpDotNetCore
 
 
 
-            var MyStringArray = new Tag<STRINGStringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
+            var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
 
             for (int ii = 0; ii < 10; ii++)
                 MyStringArray[ii] = (ii * 1111).ToString();
@@ -36,14 +36,31 @@ namespace CSharpDotNetCore
 
 
 
-            var MyTimer = new Tag<TIMERTimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "T_MinorFaultCheck", 1000);
+            var MyTimer = new Tag<TimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "T_MinorFaultCheck", 1000);
             MyTimer.Read(1000);
             Console.WriteLine(
-                $"Preset: {MyTimer[0].Preset}\n" +
-                $"Accumulated: {MyTimer[0].Accumulated}\n" +
-                $"Enabled: {MyTimer[0].Enabled}\n" +
-                $"InProgress: {MyTimer[0].InProgress}\n" +
-                $"Done: {MyTimer[0].Done}"
+                $"Preset: {MyTimer.Value.Preset}\n" +
+                $"Accumulated: {MyTimer.Value.Accumulated}\n" +
+                $"Enabled: {MyTimer.Value.Enabled}\n" +
+                $"InProgress: {MyTimer.Value.InProgress}\n" +
+                $"Done: {MyTimer.Value.Done}"
+                );
+
+
+            var MySequence = new Tag<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "Seq_1", 1000);
+            MySequence.Read(1000);
+            Console.WriteLine(
+                $"Command: {MySequence.Value.Command}\n" +
+                $"Fault: {MySequence.Value.Fault}\n" +
+                $"Fault_Step: {MySequence.Value.Fault_Step}\n" +
+                $"Hold: {MySequence.Value.Hold}\n" +
+                $"Stop: {MySequence.Value.Stop}\n" +
+                $"Idle_Step: {MySequence.Value.Idle_Step}\n" +
+                $"Init_Step: {MySequence.Value.Init_Step}\n" +
+                $"Next_Step: {MySequence.Value.Next_Step}\n" +
+                $"Step_No: {MySequence.Value.Step_No}\n" +
+                $"Timer6.Preset: {MySequence.Value.Timer[6].Preset}\n" +
+                $"Timer7.Preset: {MySequence.Value.Timer[7].Preset}\n"
                 );
 
         }
