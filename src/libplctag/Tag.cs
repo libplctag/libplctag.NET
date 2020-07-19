@@ -221,17 +221,21 @@ namespace libplctag
 
         public Status GetStatus() => (Status)plctag.status(pointer);
 
-        public int GetBit(int offset)
+        public bool GetBit(int offset)
         {
             var result = plctag.get_bit(pointer, offset);
-            if (result == int.MinValue)
-                throw new LibPlcTagException();
-            return result;
+            if (result == 0)
+                return false;
+            else if (result == 1)
+                return true;
+            else
+                throw new LibPlcTagException((Status)result);
         }
 
-        public void SetBit(int offset, int value)
+        public void SetBit(int offset, bool value)
         {
-            var result = (Status)plctag.set_bit(pointer, offset, value);
+            int valueAsInteger = value == true ? 1 : 0;
+            var result = (Status)plctag.set_bit(pointer, offset, valueAsInteger);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
         }
