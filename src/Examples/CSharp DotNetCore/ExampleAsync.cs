@@ -46,7 +46,7 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 10; ii++)
             {
                 myTags = Enumerable.Range(0, 10)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000, debugLevel: DebugLevel.None))
+                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000 ))
                 .ToList();
 
                 int repetitions = 100;
@@ -167,7 +167,7 @@ namespace CSharpDotNetCore
             Console.Write($"Running {repetitions} ReadAsync() calls on {maxTags} tags simultaneously...");
 
             var myTags = Enumerable.Range(0, maxTags)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000, debugLevel: DebugLevel.None))
+                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000 ))
                 .ToList();
 
             var asyncStopWatch = Stopwatch.StartNew();
@@ -198,7 +198,7 @@ namespace CSharpDotNetCore
         {
 
             var myTags = Enumerable.Range(0, maxTags)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000, debugLevel: DebugLevel.None))
+                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, DataType.DINT, $"MY_DINT_ARRAY_1000[{i}]", 5000 ))
                 .ToList();
 
 
