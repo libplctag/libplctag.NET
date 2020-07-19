@@ -9,25 +9,16 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000);
+
+            const int TIMEOUT = 5000;
+
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
 
             myTag.SetInt32(0, 3737);
 
-            myTag.Write(0);
+            myTag.Write(TIMEOUT);
 
-            // Wait for Write to complete
-            while (myTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
-
-            myTag.Read(0);
-
-            // Wait for Read to complete
-            while (myTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
+            myTag.Read(TIMEOUT);
 
             int myDint = myTag.GetInt32(0);
 

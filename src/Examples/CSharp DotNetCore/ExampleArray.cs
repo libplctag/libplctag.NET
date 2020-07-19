@@ -19,14 +19,7 @@ namespace CSharpDotNetCore
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
-            myArrayTag.Read(0);
-
-            //Wait for Read to complete
-            while (myArrayTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myArrayTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myArrayTag.GetStatus());
-            Console.WriteLine($"Tag read complete");
+            myArrayTag.Read(TIMEOUT);
 
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
