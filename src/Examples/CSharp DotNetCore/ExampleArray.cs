@@ -13,15 +13,9 @@ namespace CSharpDotNetCore
 
             //DINT Test Read/Write
             const int ARRAY_LENGTH = 5;
-            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "TestArray", ARRAY_LENGTH);
+            const int TIMEOUT = 1000;
 
-            //Check that tag gets created properly
-            while (myArrayTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myArrayTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myArrayTag.GetStatus());
-            Console.WriteLine($"Tag created and verified on PLC");
-
+            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "TestArray", TIMEOUT, ARRAY_LENGTH);
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");

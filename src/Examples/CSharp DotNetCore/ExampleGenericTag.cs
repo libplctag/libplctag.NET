@@ -59,7 +59,7 @@ namespace CSharpDotNetCore
             tag.Write(DEFAULT_TIMEOUT);
 
             Console.WriteLine($"Read Value from {tag.Name}");
-            tag.Read(100);
+            tag.Read(DEFAULT_TIMEOUT);
 
             T readback = tag.Value;
 
