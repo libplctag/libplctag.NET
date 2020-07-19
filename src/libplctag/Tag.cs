@@ -28,7 +28,7 @@ namespace libplctag
             {
                 var result = plctag.get_int_attribute(pointer, "read_cache_ms", int.MinValue);
                 if (result == int.MinValue)
-                    throw new Exception();
+                    throw new LibPlcTagException();
                 return result;
             }
             set
