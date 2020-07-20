@@ -1,11 +1,12 @@
-﻿using System;
+﻿using libplctag;
+using libplctag.DataTypes;
+using System;
 using System.Collections;
-using System.Text;
 
-namespace libplctag.DataTypes
+namespace CSharpDotNetCore
 {
     /// <summary>
-    /// This is a User Defined Type and we shouldn't release.
+    /// This is a User Defined Type and is just included as an example of how to define a custom marshaller
     /// </summary>
     public class SequenceMarshaller: IMarshaller<Sequence>
     {
