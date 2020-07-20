@@ -6,7 +6,6 @@ namespace libplctag
 {
     public class Tag3d<Marshaller, T>
         where Marshaller : IMarshaller<T>, new()
-        where T : new()
     {
 
         Tag _tag;
@@ -57,10 +56,7 @@ namespace libplctag
                 useConnectedMessaging);
 
             Value = new T[Dimension1Length, Dimension2Length, Dimension3Length];
-            for (int ii = 0; ii < Dimension1Length; ii++)
-                for (int jj = 0; jj < Dimension2Length; jj++)
-                    for (int kk = 0; kk < Dimension3Length; kk++)
-                        Value[ii,jj,kk] = new T();
+            DecodeAll();
         }
 
         public Protocol Protocol => _tag.Protocol;
@@ -78,27 +74,34 @@ namespace libplctag
             set => _tag.ReadCacheMillisecondDuration = value;
         }
 
-        int GetUnderlyingArrayIndex(int i, int j, int k) => i * Dimension2Length * Dimension3Length + j * Dimension3Length + k;
 
         public void Read(int millisecondTimeout)
         {
             _tag.Read(millisecondTimeout);
+            DecodeAll();
+        }
 
+        public void Write(int millisecondTimeout)
+        {
+            EncodeAll();
+            _tag.Write(millisecondTimeout);
+        }
+
+        void DecodeAll()
+        {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
                     for (int kk = 0; kk < Dimension3Length; kk++)
                         Value[ii, jj, kk] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj, kk));
         }
-
-        public void Write(int millisecondTimeout)
+        void EncodeAll()
         {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
                     for (int kk = 0; kk < Dimension3Length; kk++)
-                        _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii,jj,kk), Value[ii, jj,kk]);
-
-            _tag.Write(millisecondTimeout);
+                        _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj, kk), Value[ii, jj, kk]);
         }
+        int GetUnderlyingArrayIndex(int i, int j, int k) => i * Dimension2Length * Dimension3Length + j * Dimension3Length + k;
         public Status GetStatus() => _tag.GetStatus();
 
         public T[,,] Value { get; set; }

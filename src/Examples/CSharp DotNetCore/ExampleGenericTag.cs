@@ -26,12 +26,10 @@ namespace CSharpDotNetCore
 
 
 
-            //var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
-
-            //for (int ii = 0; ii < 10; ii++)
-            //    MyStringArray.Value[ii] = (ii * 1111).ToString();
-
-            //MyStringArray.Write(1000);
+            var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
+            for (int ii = 0; ii < 10; ii++)
+                MyStringArray.Value[ii] = (ii * 111).ToString();
+            MyStringArray.Write(1000);
 
 
 

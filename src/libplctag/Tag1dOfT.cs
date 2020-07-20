@@ -6,7 +6,6 @@ namespace libplctag
 {
     public class Tag1d<Marshaller, T>
         where Marshaller : IMarshaller<T>, new()
-        where T : new()
     {
 
         Tag _tag;
@@ -48,8 +47,7 @@ namespace libplctag
                 useConnectedMessaging);
 
             Value = new T[elementCount];
-            for (int ii = 0; ii < elementCount; ii++)
-                    Value[ii] = new T();
+            DecodeAll();
         }
 
         public Protocol Protocol => _tag.Protocol;
@@ -68,17 +66,25 @@ namespace libplctag
         public void Read(int millisecondTimeout)
         {
             _tag.Read(millisecondTimeout);
-
-            for (int ii = 0; ii < Value.Length; ii++)
-                Value[ii] = _marshaller.Decode(_tag, _marshaller.ElementSize * ii);
+            DecodeAll();
         }
 
         public void Write(int millisecondTimeout)
         {
+            EncodeAll();
+            _tag.Write(millisecondTimeout);
+        }
+
+        void DecodeAll()
+        {
+            for (int ii = 0; ii < Value.Length; ii++)
+                Value[ii] = _marshaller.Decode(_tag, _marshaller.ElementSize * ii);
+        }
+
+        void EncodeAll()
+        {
             for (int ii = 0; ii < Value.Length; ii++)
                 _marshaller.Encode(_tag, _marshaller.ElementSize * ii, Value[ii]);
-
-            _tag.Write(millisecondTimeout);
         }
 
         public Status GetStatus() => _tag.GetStatus();

@@ -6,7 +6,6 @@ namespace libplctag
 {
     public class Tag2d<Marshaller, T>
         where Marshaller : IMarshaller<T>, new()
-        where T : new()
     {
 
         Tag _tag;
@@ -54,9 +53,7 @@ namespace libplctag
                 useConnectedMessaging);
 
             Value = new T[Dimension1Length, Dimension2Length];
-            for (int ii = 0; ii < Dimension1Length; ii++)
-                for (int jj = 0; jj < Dimension2Length; jj++)
-                        Value[ii, jj] = new T();
+            DecodeAll();
         }
 
         public Protocol Protocol => _tag.Protocol;
@@ -73,24 +70,33 @@ namespace libplctag
             set => _tag.ReadCacheMillisecondDuration = value;
         }
 
-        int GetUnderlyingArrayIndex(int i, int j) => i * Dimension2Length + j;
 
         public void Read(int millisecondTimeout)
         {
             _tag.Read(millisecondTimeout);
-
-            for (int ii = 0; ii < Dimension1Length; ii++)
-                for (int jj = 0; jj < Dimension2Length; jj++)
-                    Value[ii,jj] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii,jj));
+            DecodeAll();
         }
 
         public void Write(int millisecondTimeout)
         {
+            EncodeAll();
+            _tag.Write(millisecondTimeout);
+        }
+
+        int GetUnderlyingArrayIndex(int i, int j) => i * Dimension2Length + j;
+
+        void DecodeAll()
+        {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
-                     _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj), Value[ii,jj]);
+                    Value[ii, jj] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj));
+        }
 
-            _tag.Write(millisecondTimeout);
+        void EncodeAll()
+        {
+            for (int ii = 0; ii < Dimension1Length; ii++)
+                for (int jj = 0; jj < Dimension2Length; jj++)
+                    _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj), Value[ii, jj]);
         }
 
         public Status GetStatus() => _tag.GetStatus();
