@@ -80,6 +80,11 @@ namespace CSharpDotNetCore
                 $"Timer7.Preset: {MySequenceArray.Value[1, 0, 1].Timer[7].Preset}\n"
                 );
 
+            MySequenceArray.Value[0, 1, 1].Command = 123456;
+            MySequenceArray.Value[0, 1, 1].Fault = true;
+            MySequenceArray.Value[0, 1, 1].Idle_Step = 54321;
+            MySequenceArray.Write(1000);
+
         }
     }
 

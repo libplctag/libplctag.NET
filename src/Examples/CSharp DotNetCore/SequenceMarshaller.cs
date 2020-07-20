@@ -52,8 +52,50 @@ namespace CSharpDotNetCore
 
         public void Encode(Tag tag, int offset, Sequence value)
         {
-            throw new NotImplementedException();
+
+            var DINT0 = value.Step_No;
+            var DINT1 = value.Next_Step;
+            var DINT2 = value.Command;
+            var DINT3 = value.Idle_Step;
+            var DINT4 = value.Fault_Step;
+            var DINT5 = value.Init_Step;
+
+            var asdf = new BitArray(32);
+            asdf[0] = value.Stop;
+            asdf[1] = value.Hold;
+            asdf[2] = value.Fault;
+
+            var DINT6 = BitArrayToInt(asdf);
+
+            tag.SetInt32(offset + 0, DINT0);
+            tag.SetInt32(offset + 4, DINT1);
+            tag.SetInt32(offset + 8, DINT2);
+            tag.SetInt32(offset + 12, DINT3);
+            tag.SetInt32(offset + 16, DINT4);
+            tag.SetInt32(offset + 20, DINT5);
+            tag.SetInt32(offset + 24, DINT6);
+
+            var timerMarshaller = new TimerMarshaller();
+            for (int i = 0; i < 20; i++)
+            {
+                var timerOffset = offset + 28 + i * timerMarshaller.ElementSize;
+                timerMarshaller.Encode(tag, timerOffset, value.Timer[i]);
+            }
+
         }
+
+        static int BitArrayToInt(BitArray binary)
+        {
+            if (binary == null)
+                throw new ArgumentNullException("binary");
+            if (binary.Length > 32)
+                throw new ArgumentException("Must be at most 32 bits long");
+
+            var result = new int[1];
+            binary.CopyTo(result, 0);
+            return result[0];
+        }
+
     }
 
     public class Sequence

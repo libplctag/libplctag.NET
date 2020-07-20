@@ -33,9 +33,33 @@ namespace libplctag.DataTypes
 
         }
 
-        public void Encode(Tag tag, int index, AbTimer value)
+        public void Encode(Tag tag, int offset, AbTimer value)
         {
-            throw new NotImplementedException();
+            var DINT0 = value.Accumulated;
+            var DINT1 = value.Preset;
+
+            var asdf = new BitArray(32);
+            asdf[29] = value.Done;
+            asdf[30] = value.InProgress;
+            asdf[31] = value.Enabled;
+            var DINT2 = BitArrayToInt(asdf);
+
+            tag.SetInt32(offset, DINT2);
+            tag.SetInt32(offset + 4, DINT1);
+            tag.SetInt32(offset + 8, DINT0);
+
+        }
+
+        static int BitArrayToInt(BitArray binary)
+        {
+            if (binary == null)
+                throw new ArgumentNullException("binary");
+            if (binary.Length > 32)
+                throw new ArgumentException("Must be at most 32 bits long");
+
+            var result = new int[1];
+            binary.CopyTo(result, 0);
+            return result[0];
         }
     }
 
