@@ -16,22 +16,22 @@ namespace CSharpDotNetCore
             var MyDintArray = new Tag1d<DINTIntMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
 
             for (int ii = 0; ii < 1000; ii++)
-                MyDintArray[ii] = ii;
+                MyDintArray.Value[ii] = ii;
 
             MyDintArray.Write(1000);
 
             // Illustrate use of Linq
-            var myDintsAbove200 = MyDintArray.Where(x => x > 200).ToList();
+            var myDintsAbove200 = MyDintArray.Value.Where(x => x > 200).ToList();
 
 
 
 
-            var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
+            //var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
 
-            for (int ii = 0; ii < 10; ii++)
-                MyStringArray[ii] = (ii * 1111).ToString();
+            //for (int ii = 0; ii < 10; ii++)
+            //    MyStringArray.Value[ii] = (ii * 1111).ToString();
 
-            MyStringArray.Write(1000);
+            //MyStringArray.Write(1000);
 
 
 
@@ -61,6 +61,23 @@ namespace CSharpDotNetCore
                 $"Step_No: {MySequence.Value.Step_No}\n" +
                 $"Timer6.Preset: {MySequence.Value.Timer[6].Preset}\n" +
                 $"Timer7.Preset: {MySequence.Value.Timer[7].Preset}\n"
+                );
+
+            var MySequenceArray = new Tag3d<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "Seq_3dArray[0,0,0]", 2, 2, 2, 1000);
+            
+            MySequenceArray.Read(1000);
+            Console.WriteLine(
+                $"Command: {MySequenceArray.Value[1, 0, 1].Command}\n" +
+                $"Fault: {MySequenceArray.Value[1, 0, 1].Fault}\n" +
+                $"Fault_Step: {MySequenceArray.Value[1, 0, 1].Fault_Step}\n" +
+                $"Hold: {MySequenceArray.Value[1, 0, 1].Hold}\n" +
+                $"Stop: {MySequenceArray.Value[1, 0, 1].Stop}\n" +
+                $"Idle_Step: {MySequenceArray.Value[1, 0, 1].Idle_Step}\n" +
+                $"Init_Step: {MySequenceArray.Value[1, 0, 1].Init_Step}\n" +
+                $"Next_Step: {MySequenceArray.Value[1, 0, 1].Next_Step}\n" +
+                $"Step_No: {MySequenceArray.Value[1, 0, 1].Step_No}\n" +
+                $"Timer6.Preset: {MySequenceArray.Value[1, 0, 1].Timer[6].Preset}\n" +
+                $"Timer7.Preset: {MySequenceArray.Value[1, 0, 1].Timer[7].Preset}\n"
                 );
 
         }

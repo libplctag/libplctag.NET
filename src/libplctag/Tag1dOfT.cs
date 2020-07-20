@@ -4,8 +4,9 @@ using System.Net;
 
 namespace libplctag
 {
-    public class Tag1d<Marshaller, T> : IEnumerable<T>
+    public class Tag1d<Marshaller, T>
         where Marshaller : IMarshaller<T>, new()
+        where T : new()
     {
 
         Tag _tag;
@@ -45,6 +46,10 @@ namespace libplctag
                 protocol,
                 readCacheMillisecondDuration,
                 useConnectedMessaging);
+
+            Value = new T[elementCount];
+            for (int ii = 0; ii < elementCount; ii++)
+                    Value[ii] = new T();
         }
 
         public Protocol Protocol => _tag.Protocol;
@@ -60,23 +65,25 @@ namespace libplctag
             set => _tag.ReadCacheMillisecondDuration = value;
         }
 
-        public void Read(int millisecondTimeout) => _tag.Read(millisecondTimeout);
-        public void Write(int millisecondTimeout) => _tag.Write(millisecondTimeout);
+        public void Read(int millisecondTimeout)
+        {
+            _tag.Read(millisecondTimeout);
+
+            for (int ii = 0; ii < Value.Length; ii++)
+                Value[ii] = _marshaller.Decode(_tag, _marshaller.ElementSize * ii);
+        }
+
+        public void Write(int millisecondTimeout)
+        {
+            for (int ii = 0; ii < Value.Length; ii++)
+                _marshaller.Encode(_tag, _marshaller.ElementSize * ii, Value[ii]);
+
+            _tag.Write(millisecondTimeout);
+        }
+
         public Status GetStatus() => _tag.GetStatus();
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            for (int ii = 0; ii < Count; ii++)
-                yield return this[ii];
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public T this[int index]
-        {
-            get => _marshaller.Decode(_tag, index * _marshaller.ElementSize);
-            set => _marshaller.Encode(_tag, index * _marshaller.ElementSize, value);
-        }
+        public T[] Value { get; set; }
 
     }
 }

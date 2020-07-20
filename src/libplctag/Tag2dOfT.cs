@@ -4,8 +4,9 @@ using System.Net;
 
 namespace libplctag
 {
-    public class Tag2d<Marshaller, T> : IEnumerable<T>
+    public class Tag2d<Marshaller, T>
         where Marshaller : IMarshaller<T>, new()
+        where T : new()
     {
 
         Tag _tag;
@@ -51,6 +52,11 @@ namespace libplctag
                 protocol,
                 readCacheMillisecondDuration,
                 useConnectedMessaging);
+
+            Value = new T[Dimension1Length, Dimension2Length];
+            for (int ii = 0; ii < Dimension1Length; ii++)
+                for (int jj = 0; jj < Dimension2Length; jj++)
+                        Value[ii, jj] = new T();
         }
 
         public Protocol Protocol => _tag.Protocol;
@@ -67,24 +73,29 @@ namespace libplctag
             set => _tag.ReadCacheMillisecondDuration = value;
         }
 
-        public void Read(int millisecondTimeout) => _tag.Read(millisecondTimeout);
-        public void Write(int millisecondTimeout) => _tag.Write(millisecondTimeout);
-        public Status GetStatus() => _tag.GetStatus();
+        int GetUnderlyingArrayIndex(int i, int j) => i * Dimension2Length + j;
 
-        public IEnumerator<T> GetEnumerator()
+        public void Read(int millisecondTimeout)
+        {
+            _tag.Read(millisecondTimeout);
+
+            for (int ii = 0; ii < Dimension1Length; ii++)
+                for (int jj = 0; jj < Dimension2Length; jj++)
+                    Value[ii,jj] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii,jj));
+        }
+
+        public void Write(int millisecondTimeout)
         {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
-                    yield return this[ii, jj];
+                     _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj), Value[ii,jj]);
+
+            _tag.Write(millisecondTimeout);
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public Status GetStatus() => _tag.GetStatus();
 
-        public T this[int index1, int index2]
-        {
-            get => _marshaller.Decode(_tag, _marshaller.ElementSize * (index1 * Dimension1Length + index2));
-            set => _marshaller.Encode(_tag, _marshaller.ElementSize * (index1 * Dimension1Length + index2), value);
-        }
+        public T[,] Value { get; set; }
 
     }
 }
