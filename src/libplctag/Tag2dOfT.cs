@@ -20,8 +20,8 @@ namespace libplctag
         /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
         /// <param name="cpuType">Allen-Bradley CPU model</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        /// <param name="dimension1Length">elements count: 1- single, n-array.</param>
-        /// <param name="dimension2Length">elements count: 1- single, n-array.</param>
+        /// <param name="dimension1Length">Length of array dimension 1</param>
+        /// <param name="dimension2Length">Length of array dimension 2</param>
         /// <param name="millisecondTimeout"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
