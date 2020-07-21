@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp DotNetCore", "Exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libplctag.NativeImport", "libplctag.NativeImport\libplctag.NativeImport.csproj", "{1D976518-8766-44DF-8DF9-636C8BD6FA24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libplctag.NativeImport.Tests", "libplctag.NativeImport.Tests\libplctag.NativeImport.Tests.csproj", "{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,18 @@ Global
 		{1D976518-8766-44DF-8DF9-636C8BD6FA24}.Release|x64.Build.0 = Release|Any CPU
 		{1D976518-8766-44DF-8DF9-636C8BD6FA24}.Release|x86.ActiveCfg = Release|Any CPU
 		{1D976518-8766-44DF-8DF9-636C8BD6FA24}.Release|x86.Build.0 = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|x64.Build.0 = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Debug|x86.Build.0 = Debug|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|x64.ActiveCfg = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|x64.Build.0 = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|x86.ActiveCfg = Release|Any CPU
+		{59D7EBF0-6EBB-4D07-B136-8E80B018C81A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
