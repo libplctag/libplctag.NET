@@ -66,9 +66,8 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_status(Int32 tag);
 
 
-        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_decode_error), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        static extern IntPtr plc_tag_decode_error_raw(int error);
-        public static string plc_tag_decode_error(int error) => Marshal.PtrToStringAnsi(plc_tag_decode_error_raw(error));
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_decode_error), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern string plc_tag_decode_error(int err);
 
         
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_read), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
