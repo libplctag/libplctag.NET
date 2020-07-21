@@ -13,12 +13,12 @@ namespace libplctag.Generic.DataTypes
         public bool Decode(Tag tag)
         {
             //TODO: Check that this is the correct read/design
-            return tag.GetBit(0) == 1;
+            return tag.GetBit(0);
         }
 
         public void Encode(Tag tag, bool t)
         {
-            tag.SetBit(0, t ? (byte)1 : (byte)0);
+            tag.SetBit(0, t);
         }
     }
 }

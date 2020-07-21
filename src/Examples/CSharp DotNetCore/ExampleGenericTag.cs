@@ -57,11 +57,9 @@ namespace CSharpDotNetCore
             tag.Value = testValue;
             Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
             tag.Write(DEFAULT_TIMEOUT);
-            if (tag.GetStatus() != Status.Ok) throw new LibPlcTagException(tag.GetStatus());
 
             Console.WriteLine($"Read Value from {tag.Name}");
-            tag.Read(100);
-            if (tag.GetStatus() != Status.Ok) throw new LibPlcTagException(tag.GetStatus());
+            tag.Read(DEFAULT_TIMEOUT);
 
             T readback = tag.Value;
 
