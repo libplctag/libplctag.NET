@@ -9,6 +9,8 @@ namespace libplctag.DataTypes
 
         public int ElementSize => 12;
 
+        public CpuType CpuType { get; set; }
+
         public AbTimer Decode(Tag tag, int offset)
         {
 

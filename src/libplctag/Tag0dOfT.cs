@@ -11,7 +11,7 @@ namespace libplctag
 
         Tag _tag;
 
-        IMarshaller<T> _marshaller = new Marshaller();
+        IMarshaller<T> _marshaller;
 
         /// <summary>
         /// Provides a new tag. If the CPU type is LGX, the port type and slot has to be specified.
@@ -33,6 +33,12 @@ namespace libplctag
                    int readCacheMillisecondDuration = default,
                    bool useConnectedMessaging = true)
         {
+
+            _marshaller = new Marshaller()
+            {
+                CpuType = cpuType
+            };
+
             _tag = new Tag(
                 gateway,
                 path,

@@ -8,10 +8,12 @@ namespace CSharpDotNetCore
     /// <summary>
     /// This is a User Defined Type and is just included as an example of how to define a custom marshaller
     /// </summary>
-    public class SequenceMarshaller: IMarshaller<Sequence>
+    public class SequenceMarshaller : IMarshaller<Sequence>
     {
-
+        
         public int ElementSize => 268;
+
+        public CpuType CpuType { get; set; }
 
         public Sequence Decode(Tag tag, int offset)
         {
@@ -26,8 +28,10 @@ namespace CSharpDotNetCore
 
             var bitArray = new BitArray(new int[] { DINT6 });
 
+            var timerMarshaller = new TimerMarshaller()
+            { CpuType = this.CpuType };
+
             var TIMERS = new AbTimer[20];
-            var timerMarshaller = new TimerMarshaller();
             for (int i = 0; i < 20; i++)
             {
                 var timerOffset = offset + 28 + i * timerMarshaller.ElementSize;
