@@ -18,7 +18,7 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch);
 
 
-        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_create), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_create), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern Int32 plc_tag_create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
 
@@ -50,7 +50,7 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_unregister_logger(Int32 tag_id);
 
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate void log_callback_func(Int32 tag_id, int debug_level, [MarshalAs(UnmanagedType.LPStr)] string message);
 
 
@@ -87,11 +87,11 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_abort(Int32 tag);
 
 
-        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern int plc_tag_get_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int default_value);
 
         
-        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern int plc_tag_set_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int new_value);
 
         
