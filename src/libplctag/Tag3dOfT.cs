@@ -97,16 +97,17 @@ namespace libplctag
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
                     for (int kk = 0; kk < Dimension3Length; kk++)
-                        Value[ii, jj, kk] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj, kk));
+                        Value[ii, jj, kk] = _marshaller.Decode(_tag, GetOffset(ii, jj, kk));
         }
         void EncodeAll()
         {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
                     for (int kk = 0; kk < Dimension3Length; kk++)
-                        _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj, kk), Value[ii, jj, kk]);
+                        _marshaller.Encode(_tag, GetOffset(ii, jj, kk), Value[ii, jj, kk]);
         }
-        int GetUnderlyingArrayIndex(int i, int j, int k) => i * Dimension2Length * Dimension3Length + j * Dimension3Length + k;
+        int GetOffset(int i, int j, int k) => _marshaller.ElementSize * (i * Dimension2Length * Dimension3Length + j * Dimension3Length + k);
+
         public Status GetStatus() => _tag.GetStatus();
 
         public T[,,] Value { get; set; }

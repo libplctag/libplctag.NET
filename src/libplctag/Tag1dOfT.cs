@@ -82,16 +82,18 @@ namespace libplctag
             _tag.Write(millisecondTimeout);
         }
 
+        int GetOffset(int i) => _marshaller.ElementSize * i;
+
         void DecodeAll()
         {
             for (int ii = 0; ii < Value.Length; ii++)
-                Value[ii] = _marshaller.Decode(_tag, _marshaller.ElementSize * ii);
+                Value[ii] = _marshaller.Decode(_tag, GetOffset(ii));
         }
 
         void EncodeAll()
         {
             for (int ii = 0; ii < Value.Length; ii++)
-                _marshaller.Encode(_tag, _marshaller.ElementSize * ii, Value[ii]);
+                _marshaller.Encode(_tag, GetOffset(ii), Value[ii]);
         }
 
         public Status GetStatus() => _tag.GetStatus();

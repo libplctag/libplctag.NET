@@ -88,20 +88,20 @@ namespace libplctag
             _tag.Write(millisecondTimeout);
         }
 
-        int GetUnderlyingArrayIndex(int i, int j) => i * Dimension2Length + j;
+        int GetOffset(int i, int j) => _marshaller.ElementSize * (i * Dimension2Length + j);
 
         void DecodeAll()
         {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
-                    Value[ii, jj] = _marshaller.Decode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj));
+                    Value[ii, jj] = _marshaller.Decode(_tag,  GetOffset(ii, jj));
         }
 
         void EncodeAll()
         {
             for (int ii = 0; ii < Dimension1Length; ii++)
                 for (int jj = 0; jj < Dimension2Length; jj++)
-                    _marshaller.Encode(_tag, _marshaller.ElementSize * GetUnderlyingArrayIndex(ii, jj), Value[ii, jj]);
+                    _marshaller.Encode(_tag, GetOffset(ii, jj), Value[ii, jj]);
         }
 
         public Status GetStatus() => _tag.GetStatus();
