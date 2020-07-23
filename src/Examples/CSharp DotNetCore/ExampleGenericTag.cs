@@ -13,7 +13,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var MyDintArray = new Tag1d<DINTIntMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
+            var MyDintArray = new Tag1d<DintMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
 
             for (int ii = 0; ii < 1000; ii++)
                 MyDintArray.Value[ii] = ii;
@@ -33,16 +33,25 @@ namespace CSharpDotNetCore
 
 
 
+//<<<<<<< HEAD
 
-            var MyTimer = new Tag<TimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "T_MinorFaultCheck", 1000);
-            MyTimer.Read(1000);
-            Console.WriteLine(
-                $"Preset: {MyTimer.Value.Preset}\n" +
-                $"Accumulated: {MyTimer.Value.Accumulated}\n" +
-                $"Enabled: {MyTimer.Value.Enabled}\n" +
-                $"InProgress: {MyTimer.Value.InProgress}\n" +
-                $"Done: {MyTimer.Value.Done}"
-                );
+//            var MyTimer = new Tag<TimerMarshaller, AbTimer>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "T_MinorFaultCheck", 1000);
+//            MyTimer.Read(1000);
+//            Console.WriteLine(
+//                $"Preset: {MyTimer.Value.Preset}\n" +
+//                $"Accumulated: {MyTimer.Value.Accumulated}\n" +
+//                $"Enabled: {MyTimer.Value.Enabled}\n" +
+//                $"InProgress: {MyTimer.Value.InProgress}\n" +
+//                $"Done: {MyTimer.Value.Done}"
+//                );
+//=======
+//            tag.Value = testValue;
+//            Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
+//            tag.Write(DEFAULT_TIMEOUT);
+
+//            Console.WriteLine($"Read Value from {tag.Name}");
+//            tag.Read(DEFAULT_TIMEOUT);
+//>>>>>>> f300ab0b5437f4c23e31d718edeed4358f28b819
 
 
             var MySequence = new Tag<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "Seq_1", 1000);

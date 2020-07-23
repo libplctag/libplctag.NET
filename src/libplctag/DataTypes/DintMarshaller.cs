@@ -1,6 +1,6 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class DINTIntMarshaller : IMarshaller<int>
+    public class DintMarshaller : IMarshaller<int>
     {
         public int ElementSize => 4;
         public CpuType CpuType { get; set; }

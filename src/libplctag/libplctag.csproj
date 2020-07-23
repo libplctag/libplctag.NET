@@ -5,16 +5,16 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.27-alpha07</Version>
+    <Version>0.0.27-alpha09</Version>
     <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>A library for PLC communication</PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/libplctag/libplctag.plc_tag_NET</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="0.0.6-alpha" />
+    <PackageReference Include="libplctag.NativeImport" Version="0.0.8-alpha" />
   </ItemGroup>
 
 </Project>

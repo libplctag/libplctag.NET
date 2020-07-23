@@ -64,12 +64,12 @@ namespace CSharpDotNetCore
             var DINT4 = value.Fault_Step;
             var DINT5 = value.Init_Step;
 
-            var asdf = new BitArray(32);
-            asdf[0] = value.Stop;
-            asdf[1] = value.Hold;
-            asdf[2] = value.Fault;
+            var temp = new BitArray(32);
+            temp[0] = value.Stop;
+            temp[1] = value.Hold;
+            temp[2] = value.Fault;
 
-            var DINT6 = BitArrayToInt(asdf);
+            var DINT6 = BitArrayToInt(temp);
 
             tag.SetInt32(offset + 0, DINT0);
             tag.SetInt32(offset + 4, DINT1);
