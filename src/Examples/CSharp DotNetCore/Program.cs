@@ -12,6 +12,9 @@ namespace CSharpDotNetCore
             //ExampleGenericTag.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
+            //ExampleListTags.Run();
+            //ExampleRW.Run();
+            //ExampleArray.Run();
             //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
             //NativeImportExample.RunLoggerExample();

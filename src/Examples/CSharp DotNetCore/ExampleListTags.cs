@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConsoleTables;
-using libplctag;
 using libplctag.NativeImport;
 
 namespace CSharpDotNetCore
@@ -11,55 +10,36 @@ namespace CSharpDotNetCore
     static class ExampleListTags
     {
 
+
         static int TAG_STRING_SIZE = 200;
         static int TIMEOUT_MS = 5000;
 
-        static int setup_tag(string ipAddress, string path, string program)
+
+        static IEnumerable<TagInfo> GetTags(string ipAddress, string path)
         {
+            
 
-            int tag = (int)Status.ErrorCreate;
-            string tag_string;
-
-            if (string.IsNullOrEmpty(program))
-            {
-                tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&cpu=lgx&name=@tags";
-            }
-            else
-            {
-                tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&cpu=lgx&name={program}.@tags";
-            }
-
-            tag = plctag.plc_tag_create(tag_string, TIMEOUT_MS);
+            var tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&cpu=lgx&name=@tags";
+            var tag = plctag.plc_tag_create(tag_string, TIMEOUT_MS);
             if (tag < 0)
             {
-                Console.WriteLine($"Unable to open tag!  Return code {plctag.plc_tag_decode_error(tag)}\n");
-                return 0;
+                throw new Exception($"Unable to open tag!  Return code {plctag.plc_tag_decode_error(tag)}\n");
             }
 
-            return tag;
-
-        }
 
 
-        static IEnumerable<TagStructure> get_list(int tag, string prefix/*, tag_entry_s[][] tag_list, program_entry_s[][] prog_list*/)
-        {
-            int rc = (int)Status.Ok;
-            int offset = 0;
-
-            rc = plctag.plc_tag_read(tag, TIMEOUT_MS);
-            if (rc != (int)Status.Ok)
+            int resultCode = plctag.plc_tag_read(tag, TIMEOUT_MS);
+            if (resultCode != (int)STATUS_CODES.PLCTAG_STATUS_OK)
             {
                 throw new Exception($"Unable to read tag!  Return code {plctag.plc_tag_decode_error(tag)}");
             }
 
-            /* process each tag entry. */
+
+
+            int offset = 0;
+
             do
             {
-                uint tag_instance_id = 0;
-                ushort tag_type = 0;
-                ushort element_length = 0;
-                ushort[] array_dims = new ushort[3];
-                string tag_name = "";
 
                 /* each entry looks like this:
                 uint32_t instance_id    monotonically increasing but not contiguous
@@ -70,66 +50,48 @@ namespace CSharpDotNetCore
                 uint8_t string_data[]   string bytes (string_len of them)
                 */
 
-                tag_instance_id = plctag.plc_tag_get_uint32(tag, offset);
-                offset += 4;
-
-                tag_type = plctag.plc_tag_get_uint16(tag, offset);
-                offset += 2;
-
-                element_length = plctag.plc_tag_get_uint16(tag, offset);
-                offset += 2;
-
-                array_dims[0] = (ushort)plctag.plc_tag_get_uint32(tag, offset);
-                offset += 4;
-                array_dims[1] = (ushort)plctag.plc_tag_get_uint32(tag, offset);
-                offset += 4;
-                array_dims[2] = (ushort)plctag.plc_tag_get_uint32(tag, offset);
-                offset += 4;
-
-                var tag_name_len = plctag.plc_tag_get_uint16(tag, offset);
-                offset += 2;
-
-                int prefix_size;
-                if (!string.IsNullOrEmpty(prefix))
+                var tagInstanceId =     plctag.plc_tag_get_uint32(tag, offset);
+                var tagType =           plctag.plc_tag_get_uint16(tag, offset + 4);
+                var tagLength =         plctag.plc_tag_get_uint16(tag, offset + 6);
+                var tagArrayDims = new uint[]
                 {
-                    tag_name = $"{prefix}.";
-                    prefix_size = prefix.Length + 1;
-                }
-                else
-                {
-                    prefix_size = 0;
-                }
-
-                byte[] tagNameBytes = new byte[tag_name_len];
-                for (int ii = 0; (ii < tag_name_len) && (ii + prefix_size < TAG_STRING_SIZE * 2 - 1); ii++)
-                {
-                    var character = plctag.plc_tag_get_uint8(tag, offset);
-                    tagNameBytes[ii] = Convert.ToByte(character);
-                    offset++;
-                }
-
-                tag_name = Encoding.ASCII.GetString(tagNameBytes);
-
-                yield return new TagStructure()
-                {
-                    Id = tag_instance_id,
-                    Type = tag_type,
-                    Name = tag_name,
-                    Length = element_length,
-                    Dimensions = array_dims
+                    plctag.plc_tag_get_uint32(tag, offset + 8),
+                    plctag.plc_tag_get_uint32(tag, offset + 12),
+                    plctag.plc_tag_get_uint32(tag, offset + 16)
                 };
 
-            } while (rc == (int)Status.Ok && offset < plctag.plc_tag_get_size(tag));
+                var apparentTagNameLength = plctag.plc_tag_get_uint16(tag, offset + 20);
+                var actualTagNameLength = Math.Min(apparentTagNameLength, TAG_STRING_SIZE * 2 - 1);
+
+                var tagNameBytes = Enumerable.Range(offset + 22, actualTagNameLength)
+                    .Select(o => plctag.plc_tag_get_uint8(tag, o))
+                    .Select(Convert.ToByte)
+                    .ToArray();
+
+                var tagName = Encoding.ASCII.GetString(tagNameBytes);
+
+                yield return new TagInfo()
+                {
+                    Id = tagInstanceId,
+                    Type = tagType,
+                    Name = tagName,
+                    Length = tagLength,
+                    Dimensions = tagArrayDims
+                };
+
+                offset += 22 + actualTagNameLength;
+
+            } while (resultCode == (int)STATUS_CODES.PLCTAG_STATUS_OK && offset < plctag.plc_tag_get_size(tag));
 
         }
 
-        class TagStructure
+        class TagInfo
         {
             public uint Id { get; set; }
             public int Type { get; set; }
             public string Name { get; set; }
             public int Length { get; set; }
-            public ushort[] Dimensions { get; set; }
+            public uint[] Dimensions { get; set; }
         }
 
 
@@ -138,9 +100,7 @@ namespace CSharpDotNetCore
         {
             var host = "192.168.0.10";
             var path = "1,0";
-            var tag = setup_tag(host, path, null);
-
-            var tags = get_list(tag, null);
+            var tags = GetTags(host, path);
 
             ConsoleTable
                 .From(tags.Select(t => new { t.Id, t.Type, t.Name, t.Length, Dimensions = string.Join(',', t.Dimensions) }))
