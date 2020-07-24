@@ -6,9 +6,13 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
+            ExampleListTags.Run();
             //ExampleAsync.SyncAsyncMultipleTagComparison();
-            ExampleAsync.AsyncParallelCancellation();
+            //ExampleAsync.AsyncParallelCancellation();
             //ExampleGenericTag.Run();
+            //ExampleRW.Run();
+            //ExampleArray.Run();
+            //ExampleListTags.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
             //NativeImportExample.Run();
