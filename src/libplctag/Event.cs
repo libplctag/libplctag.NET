@@ -1,12 +1,14 @@
-﻿namespace libplctag
+﻿using libplctag.NativeImport;
+
+namespace libplctag
 {
     public enum Event
     {
-        ReadStarted = 1,
-        ReadCompleted = 2,
-        WriteStarted = 3,
-        WriteCompleted = 4,
-        Aborted = 5,
-        Destroyed = 6
+        ReadStarted =       EVENT_CODES.PLCTAG_EVENT_READ_STARTED,
+        ReadCompleted =     EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED,
+        WriteStarted =      EVENT_CODES.PLCTAG_EVENT_WRITE_STARTED,
+        WriteCompleted =    EVENT_CODES.PLCTAG_EVENT_WRITE_COMPLETED,
+        Aborted =           EVENT_CODES.PLCTAG_EVENT_ABORTED,
+        Destroyed =         EVENT_CODES.PLCTAG_EVENT_DESTROYED
     }
 }
