@@ -103,7 +103,7 @@ namespace CSharpDotNetCore
             var tags = GetTags(host, path);
 
             ConsoleTable
-                .From(tags.Select(t => new { t.Id, t.Type, t.Name, t.Length, Dimensions = string.Join(',', t.Dimensions) }))
+                .From(tags.Select(t => new { t.Id, Type = $"0x{t.Type:X}", t.Name, t.Length, Dimensions = string.Join(',', t.Dimensions) }))
                 .Configure(o => o.NumberAlignment = Alignment.Right)
                 .Write(Format.Default);
 
