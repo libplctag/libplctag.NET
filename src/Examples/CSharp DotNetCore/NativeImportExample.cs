@@ -9,32 +9,32 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var tagHandle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
-            while (plctag.status(tagHandle) == 1)
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(tagHandle);
+            var statusBeforeRead = plctag.plc_tag_status(tagHandle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            plctag.read(tagHandle, 1000);
-            while (plctag.status(tagHandle) == 1)
+            plctag.plc_tag_read(tagHandle, 1000);
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(tagHandle);
+            var statusAfterRead = plctag.plc_tag_status(tagHandle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var theValue = plctag.get_uint32(tagHandle, 0);
+            var theValue = plctag.plc_tag_get_uint32(tagHandle, 0);
 
-            plctag.destroy(tagHandle);
+            plctag.plc_tag_destroy(tagHandle);
 
             Console.WriteLine(theValue);
         }
@@ -42,39 +42,39 @@ namespace CSharpDotNetCore
         public static void RunCallbackExample()
         {
 
-            var tagHandle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
-            while (plctag.status(tagHandle) == 1)
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(tagHandle);
+            var statusBeforeRead = plctag.plc_tag_status(tagHandle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
             var myCallback = new plctag.callback_func(MyCallback);
-            var statusAfterRegistration = plctag.register_callback(tagHandle, myCallback);
+            var statusAfterRegistration = plctag.plc_tag_register_callback(tagHandle, myCallback);
             if (statusAfterRegistration != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            plctag.read(tagHandle, 1000);
-            while (plctag.status(tagHandle) == 1)
+            plctag.plc_tag_read(tagHandle, 1000);
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(tagHandle);
+            var statusAfterRead = plctag.plc_tag_status(tagHandle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var theValue = plctag.get_uint32(tagHandle, 0);
+            var theValue = plctag.plc_tag_get_uint32(tagHandle, 0);
 
-            plctag.destroy(tagHandle);
+            plctag.plc_tag_destroy(tagHandle);
 
             Console.WriteLine(theValue);
         }
@@ -87,38 +87,38 @@ namespace CSharpDotNetCore
         public static void RunLoggerExample()
         {
             var myLogger = new plctag.log_callback_func(MyLogger);
-            var statusAfterRegistration = plctag.register_logger(myLogger);
+            var statusAfterRegistration = plctag.plc_tag_register_logger(myLogger);
             if (statusAfterRegistration != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            var tagHandle = plctag.create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
 
-            while (plctag.status(tagHandle) == 1)
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusBeforeRead = plctag.status(tagHandle);
+            var statusBeforeRead = plctag.plc_tag_status(tagHandle);
             if (statusBeforeRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            plctag.read(tagHandle, 1000);
-            while (plctag.status(tagHandle) == 1)
+            plctag.plc_tag_read(tagHandle, 1000);
+            while (plctag.plc_tag_status(tagHandle) == 1)
             {
                 Thread.Sleep(100);
             }
-            var statusAfterRead = plctag.status(tagHandle);
+            var statusAfterRead = plctag.plc_tag_status(tagHandle);
             if (statusAfterRead != 0)
             {
                 Console.WriteLine($"Something went wrong {statusAfterRead}");
             }
 
-            var theValue = plctag.get_uint32(tagHandle, 0);
+            var theValue = plctag.plc_tag_get_uint32(tagHandle, 0);
 
-            plctag.destroy(tagHandle);
+            plctag.plc_tag_destroy(tagHandle);
 
             Console.WriteLine(theValue);
 
