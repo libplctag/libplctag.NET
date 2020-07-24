@@ -18,7 +18,7 @@ This is the package intended for use by application developers. It provides stro
 For usage, see the examples in the example projects:
 
 * [C#](https://github.com/libplctag/libplctag.NET/tree/master/src/Examples/CSharp%20DotNetCore)
-* [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Example.cs)
+* [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Program.vb)
 
 
 ## libplctag.NativeImport
