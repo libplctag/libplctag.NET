@@ -1,6 +1,6 @@
 ﻿# libplctag .NET
 
-This wrapper is still in alpha. If you have problems, please refer to the (project's contact information)[https://github.com/libplctag/libplctag#contact].
+This wrapper is still in alpha. If you have problems, please refer to the [project's contact information](https://github.com/libplctag/libplctag#contact).
 
 This repository contains two .NET wrappers for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
 * [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
