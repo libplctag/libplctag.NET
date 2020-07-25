@@ -5,7 +5,7 @@ namespace libplctag
 {
     public interface ITag
     {
-        CpuType CPU { get; }
+        PlcType PlcType { get; }
         int ElementCount { get; }
         int ElementSize { get; }
         IPAddress Gateway { get; }
