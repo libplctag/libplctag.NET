@@ -5,7 +5,7 @@
         /// <summary>
         /// Control Logix-class PLC. Synonym for lgx, logix, controllogix, contrologix, compactlogix, clgx.
         /// </summary>
-        Logix,
+        ControlLogix,
 
         /// <summary>
         /// PLC/5 PLC. Synonym for plc5, plc.

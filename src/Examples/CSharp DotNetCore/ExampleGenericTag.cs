@@ -24,20 +24,20 @@ namespace CSharpDotNetCore
 
             //Bool - Test both cases
             //Random value would look correct 50% of the time
-            var boolTag = new GenericTag<PlcTypeBOOL, bool>(gateway, Path, PlcType.Logix, "TestBOOL", timeout);
+            var boolTag = new GenericTag<PlcTypeBOOL, bool>(gateway, Path, PlcType.ControlLogix, "TestBOOL", timeout);
             TestTag(boolTag, true);
             TestTag(boolTag, false);
 
             //Signed Numbers
-            TestTag(new GenericTag<PlcTypeSINT, sbyte>(gateway, Path, PlcType.Logix, "TestSINT", timeout));
-            TestTag(new GenericTag<PlcTypeINT, short>(gateway, Path, PlcType.Logix, "TestINT", timeout));
-            TestTag(new GenericTag<PlcTypeDINT, int>(gateway, Path, PlcType.Logix, "TestDINT", timeout));
-            TestTag(new GenericTag<PlcTypeLINT, long>(gateway, Path, PlcType.Logix, "TestLINT", timeout));
+            TestTag(new GenericTag<PlcTypeSINT, sbyte>(gateway, Path, PlcType.ControlLogix, "TestSINT", timeout));
+            TestTag(new GenericTag<PlcTypeINT, short>(gateway, Path, PlcType.ControlLogix, "TestINT", timeout));
+            TestTag(new GenericTag<PlcTypeDINT, int>(gateway, Path, PlcType.ControlLogix, "TestDINT", timeout));
+            TestTag(new GenericTag<PlcTypeLINT, long>(gateway, Path, PlcType.ControlLogix, "TestLINT", timeout));
 
             //Logix doesn't support unsigned
 
             //Foating Points
-            TestTag(new GenericTag<PlcTypeREAL, float>(gateway, Path, PlcType.Logix, "TestREAL", timeout));
+            TestTag(new GenericTag<PlcTypeREAL, float>(gateway, Path, PlcType.ControlLogix, "TestREAL", timeout));
             //TestTag(new GenericTag<PlcTypeLREAL, double>(gateway, Path, PlcType.Logix, "TestLREAL", timeout));
 
         }
