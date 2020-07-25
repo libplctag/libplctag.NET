@@ -12,7 +12,7 @@ namespace CSharpDotNetCore
             //ExampleGenericTag.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
-            //ExampleListTags.Run();
+            ExampleListTags.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
             //NativeImportExample.Run();

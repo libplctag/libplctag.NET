@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using ConsoleTables;
+using libplctag;
 using libplctag.NativeImport;
 
 namespace CSharpDotNetCore
@@ -86,22 +88,15 @@ namespace CSharpDotNetCore
 
         }
 
-        class TagInfo
-        {
-            public uint Id { get; set; }
-            public int Type { get; set; }
-            public string Name { get; set; }
-            public int Length { get; set; }
-            public uint[] Dimensions { get; set; }
-        }
-
-
-
         public static void Run()
         {
             var host = "192.168.0.10";
             var path = "1,0";
-            var tags = GetTags(host, path);
+            //var tags = GetTags(host, path);
+
+            var tagList = new Tag<TagListingMarshaller, IEnumerable<TagInfo>>(IPAddress.Parse(host), path, CpuType.Logix, "@tags", 1000);
+
+            var tags = tagList.Value.ToList();
 
             ConsoleTable
                 .From(tags.Select(t => new { t.Id, Type = $"0x{t.Type:X}", t.Name, t.Length, Dimensions = string.Join(',', t.Dimensions) }))
@@ -110,5 +105,70 @@ namespace CSharpDotNetCore
 
         }
 
+    }
+
+    public class TagInfo
+    {
+        public uint Id { get; set; }
+        public int Type { get; set; }
+        public string Name { get; set; }
+        public int Length { get; set; }
+        public uint[] Dimensions { get; set; }
+    }
+
+    public class TagListingMarshaller : IMarshaller<IEnumerable<TagInfo>>
+    {
+
+        public int ElementSize => 0;
+
+        public CpuType CpuType { get; set; }
+
+        public IEnumerable<TagInfo> Decode(Tag tag, int offset)
+        {
+
+            var TAG_STRING_SIZE = 200;
+
+            do
+            {
+
+                var tagInstanceId = tag.GetUInt32(offset);
+                var tagType = tag.GetUInt16(offset+4);
+                var tagLength = tag.GetUInt16(offset + 6);
+                var tagArrayDims = new uint[]
+                {
+                    tag.GetUInt32(offset + 8),
+                    tag.GetUInt32(offset + 12),
+                    tag.GetUInt32(offset + 16)
+                };
+
+                var apparentTagNameLength = tag.GetUInt16(offset + 20);
+                var actualTagNameLength = (int)Math.Min(apparentTagNameLength, TAG_STRING_SIZE * 2 - 1);
+
+                var tagNameBytes = Enumerable.Range(offset + 22, actualTagNameLength)
+                    .Select(o => tag.GetUInt8(o))
+                    .Select(Convert.ToByte)
+                    .ToArray();
+
+                var tagName = Encoding.ASCII.GetString(tagNameBytes);
+
+                yield return new TagInfo()
+                {
+                    Id = tagInstanceId,
+                    Type = tagType,
+                    Name = tagName,
+                    Length = tagLength,
+                    Dimensions = tagArrayDims
+                };
+
+                offset += 22 + actualTagNameLength;
+
+            } while (tag.GetStatus() == Status.Ok && offset < tag.GetSize());
+
+        }
+
+        public void Encode(Tag tag, int offset, IEnumerable<TagInfo> t)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

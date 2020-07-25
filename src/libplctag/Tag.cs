@@ -102,7 +102,7 @@ namespace libplctag
                 attributes.Add("path", path);
 
             attributes.Add("cpu", CPU.ToString().ToLower());
-            attributes.Add("elem_size", elementSize.ToString());
+            //attributes.Add("elem_size", elementSize.ToString());
             attributes.Add("elem_count", elementCount.ToString());
             attributes.Add("name", name);
 
