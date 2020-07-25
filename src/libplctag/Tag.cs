@@ -39,7 +39,7 @@ namespace libplctag
             }
         }
 
-        private readonly int tagHandle;
+        private int tagHandle;
 
         /// <summary>
         /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
@@ -75,13 +75,7 @@ namespace libplctag
             Name = name;
             UseConnectedMessaging = useConnectedMessaging;
 
-            var attributeString = GetAttributeString(protocol, gateway, path, plcType, elementSize, elementCount, name, readCacheMillisecondDuration, useConnectedMessaging);
-
-            var result = plctag.plc_tag_create(attributeString, millisecondTimeout);
-            if (result < 0)
-                throw new LibPlcTagException((Status)result);
-            else
-                tagHandle = result;
+            Initialize(millisecondTimeout);
 
         }
 
@@ -113,6 +107,50 @@ namespace libplctag
 
             string separator = "&";
             return string.Join(separator, attributes.Select(attr => $"{attr.Key}={attr.Value}"));
+
+        }
+
+        public void Initialize(int millisecondTimeout)
+        {
+            var attributeString = GetAttributeString(Protocol, Gateway, Path, PlcType, ElementSize, ElementCount, Name, ReadCacheMillisecondDuration, UseConnectedMessaging);
+
+            var result = plctag.plc_tag_create(attributeString, millisecondTimeout);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                tagHandle = result;
+        }
+
+        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(millisecondTimeout);
+                await InitializeAsync(cts.Token);
+            }
+        }
+
+        public async Task InitializeAsync(CancellationToken token = default)
+        {
+            var attributeString = GetAttributeString(Protocol, Gateway, Path, PlcType, ElementSize, ElementCount, Name, ReadCacheMillisecondDuration, UseConnectedMessaging);
+
+            var result = plctag.plc_tag_create(attributeString, 0);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                tagHandle = result;
+
+            using (token.Register(() => Abort()))
+            {
+                while (GetStatus() == Status.Pending)
+                {
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                }
+            }
+
+            var status = GetStatus();
+            if (status != Status.Ok)
+                throw new LibPlcTagException(status);
 
         }
 
