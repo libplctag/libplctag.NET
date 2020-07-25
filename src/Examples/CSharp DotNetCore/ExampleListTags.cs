@@ -20,18 +20,19 @@ namespace CSharpDotNetCore
             
 
             var tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&cpu=lgx&name=@tags";
-            var tag = plctag.plc_tag_create(tag_string, TIMEOUT_MS);
-            if (tag < 0)
+            int resultCode = plctag.plc_tag_create(tag_string, TIMEOUT_MS);
+            if (resultCode < 0)
             {
-                throw new Exception($"Unable to open tag!  Return code {plctag.plc_tag_decode_error(tag)}\n");
+                throw new Exception($"Unable to open tag!  Return code {plctag.plc_tag_decode_error(resultCode)}\n");
             }
 
+            // Else since resultCode >= 0, it is our tag handle
+            var tagHandle = resultCode;
 
-
-            int resultCode = plctag.plc_tag_read(tag, TIMEOUT_MS);
+            resultCode = plctag.plc_tag_read(tagHandle, TIMEOUT_MS);
             if (resultCode != (int)STATUS_CODES.PLCTAG_STATUS_OK)
             {
-                throw new Exception($"Unable to read tag!  Return code {plctag.plc_tag_decode_error(tag)}");
+                throw new Exception($"Unable to read tag!  Return code {plctag.plc_tag_decode_error(resultCode)}");
             }
 
 
@@ -50,21 +51,21 @@ namespace CSharpDotNetCore
                 uint8_t string_data[]   string bytes (string_len of them)
                 */
 
-                var tagInstanceId =     plctag.plc_tag_get_uint32(tag, offset);
-                var tagType =           plctag.plc_tag_get_uint16(tag, offset + 4);
-                var tagLength =         plctag.plc_tag_get_uint16(tag, offset + 6);
+                var tagInstanceId =     plctag.plc_tag_get_uint32(tagHandle, offset);
+                var tagType =           plctag.plc_tag_get_uint16(tagHandle, offset + 4);
+                var tagLength =         plctag.plc_tag_get_uint16(tagHandle, offset + 6);
                 var tagArrayDims = new uint[]
                 {
-                    plctag.plc_tag_get_uint32(tag, offset + 8),
-                    plctag.plc_tag_get_uint32(tag, offset + 12),
-                    plctag.plc_tag_get_uint32(tag, offset + 16)
+                    plctag.plc_tag_get_uint32(tagHandle, offset + 8),
+                    plctag.plc_tag_get_uint32(tagHandle, offset + 12),
+                    plctag.plc_tag_get_uint32(tagHandle, offset + 16)
                 };
 
-                var apparentTagNameLength = plctag.plc_tag_get_uint16(tag, offset + 20);
+                var apparentTagNameLength = plctag.plc_tag_get_uint16(tagHandle, offset + 20);
                 var actualTagNameLength = Math.Min(apparentTagNameLength, TAG_STRING_SIZE * 2 - 1);
 
                 var tagNameBytes = Enumerable.Range(offset + 22, actualTagNameLength)
-                    .Select(o => plctag.plc_tag_get_uint8(tag, o))
+                    .Select(o => plctag.plc_tag_get_uint8(tagHandle, o))
                     .Select(Convert.ToByte)
                     .ToArray();
 
@@ -81,7 +82,7 @@ namespace CSharpDotNetCore
 
                 offset += 22 + actualTagNameLength;
 
-            } while (resultCode == (int)STATUS_CODES.PLCTAG_STATUS_OK && offset < plctag.plc_tag_get_size(tag));
+            } while (resultCode == (int)STATUS_CODES.PLCTAG_STATUS_OK && offset < plctag.plc_tag_get_size(tagHandle));
 
         }
 
