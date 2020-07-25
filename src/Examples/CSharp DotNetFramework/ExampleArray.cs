@@ -13,7 +13,7 @@ namespace CSharpDotNetFramework
 
             //DINT Test Read/Write
             const int ARRAY_LENGTH = 5;
-            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "TestArray", ARRAY_LENGTH);
+            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.Logix, DataType.DINT, "TestArray", ARRAY_LENGTH);
 
             //Check that tag gets created properly
             while (myArrayTag.GetStatus() == Status.Pending)

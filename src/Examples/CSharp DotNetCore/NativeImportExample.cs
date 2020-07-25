@@ -9,7 +9,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {
@@ -42,7 +42,7 @@ namespace CSharpDotNetCore
         public static void RunCallbackExample()
         {
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {
@@ -93,7 +93,7 @@ namespace CSharpDotNetCore
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&cpu=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT&debug=4", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {

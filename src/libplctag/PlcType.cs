@@ -1,6 +1,6 @@
 ﻿namespace libplctag
 {
-    public enum CpuType
+    public enum PlcType
     {
         /// <summary>
         /// Control Logix-class PLC. Synonym for lgx, logix, controllogix, contrologix, compactlogix, clgx.

@@ -8,15 +8,15 @@ namespace libplctag.Generic
     public class GenericTag<TPlcType, TDotNetType> : ITag, IGenericTag<TDotNetType> where TPlcType : IPlcType<TDotNetType>, new()
     {
 
-        private readonly TPlcType plcType;
+        private readonly TPlcType plcDataType;
         private readonly Tag tag;
 
         /// <summary>
-        /// Provides a new tag. If the CPU type is LGX, the port type and slot has to be specified.
+        /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
         /// </summary>
         /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
-        /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
-        /// <param name="cpuType">Allen-Bradley CPU model</param>
+        /// <param name="path">Path to access the PLC from the gateway. Required for Logix, optional for others. 
+        /// <param name="plcType">PLC model</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="elementCount">elements count: 1- single, n-array.</param>
         /// <param name="millisecondTimeout"></param>
@@ -25,7 +25,7 @@ namespace libplctag.Generic
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
         public GenericTag(IPAddress gateway,
                    string path,
-                   CpuType cpuType,
+                   PlcType plcType,
                    string name,
                    int millisecondTimeout,
                    int elementCount = 1,
@@ -36,13 +36,13 @@ namespace libplctag.Generic
             //Instantiate our definition
             //TODO: These could be singleton or a private static lookup for performance
 
-            plcType = new TPlcType();
-            var elementSize = plcType.ElementSize;
+            plcDataType = new TPlcType();
+            var elementSize = plcDataType.ElementSize;
 
 
             this.tag = new Tag(gateway,
                                path,
-                               cpuType,
+                               plcType,
                                elementSize,
                                name,
                                millisecondTimeout,
@@ -52,8 +52,8 @@ namespace libplctag.Generic
                                useConnectedMessaging);
         }
 
-        public TDotNetType Value { get => plcType.Decode(tag); set => plcType.Encode(tag, value); }
-        public byte CipCode => plcType.CipCode;
+        public TDotNetType Value { get => plcDataType.Decode(tag); set => plcDataType.Encode(tag, value); }
+        public byte CipCode => plcDataType.CipCode;
 
         public void Read(int timeout)
         {
@@ -91,7 +91,7 @@ namespace libplctag.Generic
             return ((ITag)tag).GetStatus();
         }
 
-        public CpuType CPU => ((ITag)tag).CPU;
+        public PlcType PlcType => ((ITag)tag).PlcType;
 
         public int ElementCount => ((ITag)tag).ElementCount;
 

@@ -6,7 +6,7 @@ Module Module1
 
     Sub Main()
 
-        Dim myTag = New Tag(IPAddress.Parse("10.10.10.10"), "1,0", CpuType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000)
+        Dim myTag = New Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.Logix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000)
 
         While (myTag.GetStatus() = Status.Pending)
             Thread.Sleep(100)
