@@ -12,12 +12,24 @@ namespace libplctag.NativeImport
         static public bool ForceExtractLibrary { get; set; } = true;
         
         static private bool libraryAlreadyExtracted = false;
+        static object _libraryExtractLocker = new object();
         private static void ExtractLibraryIfRequired()
         {
+            // Non-blocking check
+            // This will be hit almost 100% of the time except for startup
             if(!libraryAlreadyExtracted)
             {
-                LibraryExtractor.Init(ForceExtractLibrary);
-                libraryAlreadyExtracted = true;
+
+                // blocking check
+                // This is hit if multiple threads simultaneously try to initialize the library
+                lock (_libraryExtractLocker)
+                {
+                    if (!libraryAlreadyExtracted)
+                    {
+                        LibraryExtractor.Init(ForceExtractLibrary);
+                        libraryAlreadyExtracted = true;
+                    }
+                }
             }
         }
 
