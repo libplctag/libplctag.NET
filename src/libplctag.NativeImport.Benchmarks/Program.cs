@@ -23,19 +23,7 @@ namespace libplctag.NativeImport.Benchmarks
         }
 
         [Benchmark]
-        public void Raw()
-        {
-            for (int ii = 0; ii < N; ii++)
-            {
-                // In order for this to compile you need to make this function public, it is normally a private method.
-                // And of course you need to reference the project rather than the package.
-                //plctag.plc_tag_status_raw(tagHandles[ii]);
-                throw new NotImplementedException();
-            }
-        }
-
-        [Benchmark]
-        public void ExtractFirst()
+        public void plc_tag_status()
         {
             for (int ii = 0; ii < N; ii++)
             {
