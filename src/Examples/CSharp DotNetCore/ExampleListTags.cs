@@ -21,7 +21,7 @@ namespace CSharpDotNetCore
         {
             
 
-            var tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&cpu=lgx&name=@tags";
+            var tag_string = $"protocol=ab-eip&gateway={ipAddress}&path={path}&plc=lgx&name=@tags";
             int resultCode = plctag.plc_tag_create(tag_string, TIMEOUT_MS);
             if (resultCode < 0)
             {

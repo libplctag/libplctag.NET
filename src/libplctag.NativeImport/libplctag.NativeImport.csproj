@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>libplctag.plc_tag_NativeImport</AssemblyName>
-    <RootNamespace>libplctag.plc_tag_NativeImport</RootNamespace>
-    <PackageId>libplctag.plc_tag_NativeImport</PackageId>
-    <Version>0.0.8-alpha</Version>
+    <AssemblyName>libplctag.NativeImport</AssemblyName>
+    <RootNamespace>libplctag.NativeImport</RootNamespace>
+    <PackageId>libplctag.NativeImport</PackageId>
+    <Version>0.0.9-alpha</Version>
     <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
