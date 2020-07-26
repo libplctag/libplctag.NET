@@ -9,25 +9,35 @@ namespace libplctag.NativeImport
         const string DLL_NAME = "plctag";
 
 
-        static public bool ForceExtractLibrary { get; set; } = true;
+        static public bool _forceExtractLibrary = true;
+        static public bool ForceExtractLibrary
+        {
+            get => _forceExtractLibrary;
+            set
+            {
+                if (libraryAlreadyInitialized)
+                    throw new InvalidOperationException("Library already initialized");
+                _forceExtractLibrary = value;
+            }
+        }
         
-        static private bool libraryAlreadyExtracted = false;
+        static private bool libraryAlreadyInitialized = false;
         static object _libraryExtractLocker = new object();
         private static void ExtractLibraryIfRequired()
         {
             // Non-blocking check
-            // This will be hit almost 100% of the time except for startup
-            if(!libraryAlreadyExtracted)
+            // Except during startup, this will be hit 100% of the time
+            if(!libraryAlreadyInitialized)
             {
 
-                // blocking check
+                // Blocking check
                 // This is hit if multiple threads simultaneously try to initialize the library
                 lock (_libraryExtractLocker)
                 {
-                    if (!libraryAlreadyExtracted)
+                    if (!libraryAlreadyInitialized)
                     {
                         LibraryExtractor.Init(ForceExtractLibrary);
-                        libraryAlreadyExtracted = true;
+                        libraryAlreadyInitialized = true;
                     }
                 }
             }
