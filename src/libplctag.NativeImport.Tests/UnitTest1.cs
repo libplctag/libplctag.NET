@@ -1,3 +1,4 @@
+using libplctag.NativeImport;
 using System;
 using Xunit;
 

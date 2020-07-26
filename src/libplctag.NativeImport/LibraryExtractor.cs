@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace libplctag.plc_tag_NativeImport
+namespace libplctag.NativeImport
 {
     class LibraryExtractor
     {

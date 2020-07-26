@@ -13,7 +13,7 @@ namespace CSharpDotNetCore
         
         public int ElementSize => 268;
 
-        public CpuType CpuType { get; set; }
+        public PlcType PlcType { get; set; }
 
         public Sequence Decode(Tag tag, int offset)
         {
@@ -29,7 +29,7 @@ namespace CSharpDotNetCore
             var bitArray = new BitArray(new int[] { DINT6 });
 
             var timerMarshaller = new TimerMarshaller()
-            { CpuType = this.CpuType };
+            { PlcType = this.PlcType };
 
             var TIMERS = new AbTimer[20];
             for (int i = 0; i < 20; i++)

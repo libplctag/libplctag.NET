@@ -94,7 +94,7 @@ namespace CSharpDotNetCore
             var path = "1,0";
             //var tags = GetTags(host, path);
 
-            var tagList = new Tag<TagListingMarshaller, IEnumerable<TagInfo>>(IPAddress.Parse(host), path, CpuType.Logix, "@tags", 1000);
+            var tagList = new Tag<TagListingMarshaller, IEnumerable<TagInfo>>(IPAddress.Parse(host), path, PlcType.ControlLogix, "@tags", 1000);
 
             var tags = tagList.Value.ToList();
 
@@ -121,7 +121,7 @@ namespace CSharpDotNetCore
 
         public int ElementSize => 0;
 
-        public CpuType CpuType { get; set; }
+        public PlcType PlcType { get; set; }
 
         public IEnumerable<TagInfo> Decode(Tag tag, int offset)
         {

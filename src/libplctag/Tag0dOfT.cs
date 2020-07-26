@@ -18,7 +18,7 @@ namespace libplctag
         /// </summary>
         /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
         /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
-        /// <param name="cpuType">Allen-Bradley CPU model</param>
+        /// <param name="plcType">Allen-Bradley CPU model</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
         /// <param name="millisecondTimeout"></param>
         /// <param name="protocol">Currently only ab_eip supported.</param>
@@ -26,7 +26,7 @@ namespace libplctag
         /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
         public Tag(IPAddress gateway,
                    string path,
-                   CpuType cpuType,
+                   PlcType plcType,
                    string name,
                    int millisecondTimeout,
                    Protocol protocol = Protocol.ab_eip,
@@ -36,13 +36,13 @@ namespace libplctag
 
             _marshaller = new Marshaller()
             {
-                CpuType = cpuType
+                PlcType = plcType
             };
 
             _tag = new Tag(
                 gateway,
                 path,
-                cpuType,
+                plcType,
                 _marshaller.ElementSize,
                 name,
                 millisecondTimeout,
@@ -57,7 +57,7 @@ namespace libplctag
         public Protocol Protocol => _tag.Protocol;
         public IPAddress Gateway => _tag.Gateway;
         public string Path => _tag.Path;
-        public CpuType CPU => _tag.CPU;
+        public PlcType PlcType => _tag.PlcType;
         public int Count => _tag.ElementCount;
         public string Name => _tag.Name;
         public bool UseConnectedMessaging => _tag.UseConnectedMessaging;

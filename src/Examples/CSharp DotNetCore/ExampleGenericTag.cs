@@ -13,7 +13,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var MyDintArray = new Tag1d<DintMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
+            var MyDintArray = new Tag1d<DintMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
 
             for (int ii = 0; ii < 1000; ii++)
                 MyDintArray.Value[ii] = ii;
@@ -26,7 +26,7 @@ namespace CSharpDotNetCore
 
 
 
-            var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "MY_STRING_ARRAY_10[0]", 1000, 10);
+            var MyStringArray = new Tag1d<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "MY_STRING_ARRAY_10[0]", 1000, 10);
             for (int ii = 0; ii < 10; ii++)
                 MyStringArray.Value[ii] = (ii * 111).ToString();
             MyStringArray.Write(1000);
@@ -54,7 +54,7 @@ namespace CSharpDotNetCore
 //>>>>>>> f300ab0b5437f4c23e31d718edeed4358f28b819
 
 
-            var MySequence = new Tag<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "Seq_1", 1000);
+            var MySequence = new Tag<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "Seq_1", 1000);
             MySequence.Read(1000);
             Console.WriteLine(
                 $"Command: {MySequence.Value.Command}\n" +
@@ -70,7 +70,7 @@ namespace CSharpDotNetCore
                 $"Timer7.Preset: {MySequence.Value.Timer[7].Preset}\n"
                 );
 
-            var MySequenceArray = new Tag3d<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", CpuType.Logix, "Seq_3dArray[0,0,0]", 2, 2, 2, 1000);
+            var MySequenceArray = new Tag3d<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "Seq_3dArray[0,0,0]", 2, 2, 2, 1000);
             
             MySequenceArray.Read(1000);
             Console.WriteLine(

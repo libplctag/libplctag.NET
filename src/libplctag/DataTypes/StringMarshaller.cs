@@ -12,20 +12,20 @@ namespace libplctag.DataTypes
         const int MAX_LOGIX_STRING_LENGTH = 82;
         const int MAX_PCCC_STRING_LENGTH = 80;
 
-        public CpuType CpuType { get; set; }
+        public PlcType PlcType { get; set; }
 
         public int ElementSize
         {
             get
             {
-                switch (CpuType)
+                switch (PlcType)
                 {
-                    case CpuType.Logix: return 88;
-                    case CpuType.Plc5: return 88;
-                    case CpuType.Slc500: return 25;
-                    case CpuType.LogixPccc: return 84;
-                    case CpuType.Micro800: return 256;
-                    case CpuType.MicroLogix: return 256;
+                    case PlcType.ControlLogix: return 88;
+                    case PlcType.Plc5: return 88;
+                    case PlcType.Slc500: return 25;
+                    case PlcType.LogixPccc: return 84;
+                    case PlcType.Micro800: return 256;
+                    case PlcType.MicroLogix: return 256;
                     default: throw new NotImplementedException();
                 }
             }
@@ -34,28 +34,28 @@ namespace libplctag.DataTypes
 
         public string Decode(Tag tag, int offset)
         {
-            switch (CpuType)
+            switch (PlcType)
             {
-                case CpuType.Logix: return LogixDecode(tag, offset);
-                case CpuType.Plc5: throw new NotImplementedException();
-                case CpuType.Slc500: throw new NotImplementedException();
-                case CpuType.LogixPccc: return PcccDecode(tag, offset);
-                case CpuType.Micro800: throw new NotImplementedException();
-                case CpuType.MicroLogix: throw new NotImplementedException();
+                case PlcType.ControlLogix: return LogixDecode(tag, offset);
+                case PlcType.Plc5: throw new NotImplementedException();
+                case PlcType.Slc500: throw new NotImplementedException();
+                case PlcType.LogixPccc: return PcccDecode(tag, offset);
+                case PlcType.Micro800: throw new NotImplementedException();
+                case PlcType.MicroLogix: throw new NotImplementedException();
                 default: throw new NotImplementedException();
             }
         }
 
         public void Encode(Tag tag, int offset, string value)
         {
-            switch (CpuType)
+            switch (PlcType)
             {
-                case CpuType.Logix: LogixEncode(tag, offset, value); break;
-                case CpuType.Plc5: throw new NotImplementedException();
-                case CpuType.Slc500: throw new NotImplementedException();
-                case CpuType.LogixPccc: PcccEncode(tag, offset, value); break;
-                case CpuType.Micro800: throw new NotImplementedException();
-                case CpuType.MicroLogix: throw new NotImplementedException();
+                case PlcType.ControlLogix: LogixEncode(tag, offset, value); break;
+                case PlcType.Plc5: throw new NotImplementedException();
+                case PlcType.Slc500: throw new NotImplementedException();
+                case PlcType.LogixPccc: PcccEncode(tag, offset, value); break;
+                case PlcType.Micro800: throw new NotImplementedException();
+                case PlcType.MicroLogix: throw new NotImplementedException();
                 default: break;
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace libplctag.plc_tag_NativeImport
+﻿namespace libplctag.NativeImport
 {
     public enum DEBUG_LEVELS
     {
