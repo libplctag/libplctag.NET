@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System;
+using System.Runtime.InteropServices;
 
 namespace libplctag.NativeImport.Benchmarks
 {
@@ -8,39 +9,27 @@ namespace libplctag.NativeImport.Benchmarks
     public class GetStatusRawVsExtractFirst
     {
 
-        private const int N = 1000;
-
-        private readonly int[] tagHandles;
-
         public GetStatusRawVsExtractFirst()
         {
-
-            tagHandles = new int[N];
-            for (int ii = 0; ii < N; ii++)
-            {
-                tagHandles[ii] = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
-            }
+            // In order for this to compile you need to make this function public, it is normally a private method.
+            // And of course you need to reference the project rather than the package.
+            //LibraryExtractor.Init();
+            throw new NotImplementedException();
         }
 
         [Benchmark]
-        public void Raw()
+        public int Raw()
         {
-            for (int ii = 0; ii < N; ii++)
-            {
-                // In order for this to compile you need to make this function public, it is normally a private method.
-                // And of course you need to reference the project rather than the package.
-                //plctag.plc_tag_get_int32_raw(tagHandles[ii], 0);
-                throw new NotImplementedException();
-            }
+            // In order for this to compile you need to make this function public, it is normally a private method.
+            // And of course you need to reference the project rather than the package.
+            //return plctag.plc_tag_check_lib_version_raw(0, 0, 0);
+            throw new NotImplementedException();
         }
 
         [Benchmark]
-        public void ExtractFirst()
+        public int ExtractFirst()
         {
-            for (int ii = 0; ii < N; ii++)
-            {
-                plctag.plc_tag_get_int32(tagHandles[ii], 0);
-            }
+            return plctag.plc_tag_check_lib_version(0, 0, 0);
         }
 
     }
