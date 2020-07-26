@@ -29,7 +29,7 @@ namespace libplctag.NativeImport.Benchmarks
             {
                 // In order for this to compile you need to make this function public, it is normally a private method.
                 // And of course you need to reference the project rather than the package.
-                //plctag.plc_tag_status_raw(tagHandles[ii]);
+                //plctag.plc_tag_get_int32_raw(tagHandles[ii], 0);
                 throw new NotImplementedException();
             }
         }
@@ -39,7 +39,7 @@ namespace libplctag.NativeImport.Benchmarks
         {
             for (int ii = 0; ii < N; ii++)
             {
-                plctag.plc_tag_status(tagHandles[ii]);
+                plctag.plc_tag_get_int32(tagHandles[ii], 0);
             }
         }
 
