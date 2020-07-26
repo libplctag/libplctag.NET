@@ -12,7 +12,13 @@ namespace CSharpDotNetFramework
             Console.WriteLine($"\r\n*** ExampleRW ***");
 
             //DINT Test Read/Write
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000);
+            var myTag = new Tag("PROGRAM:SomeProgram.SomeDINT")
+            {
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
+            };
 
             //Check that tag gets created properly
             while (myTag.GetStatus() == Status.Pending)

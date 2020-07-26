@@ -14,15 +14,15 @@ namespace libplctag
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
 
-        public Protocol Protocol { get; }
-        public string Gateway { get; }
-        public PlcType PlcType { get; }
         public string Name { get; }
 
-        public string Path { get; }
-        public int? ElementSize { get; }
-        public int? ElementCount { get; }
-        public bool? UseConnectedMessaging { get; }
+        public Protocol? Protocol { get; set; }
+        public string Gateway { get; set; }
+        public PlcType? PlcType { get; set; }
+        public string Path { get; set; }
+        public int? ElementSize { get; set; }
+        public int? ElementCount { get; set; }
+        public bool? UseConnectedMessaging { get; set; }
 
         private int? _readCacheMillisecondDuration;
         public int? ReadCacheMillisecondDuration
@@ -57,21 +57,10 @@ namespace libplctag
         /// <summary>
         /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
         /// </summary>
-        /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
-        /// <param name="plcType">PLC type</param>
-        /// <param name="protocol">Currently only ab_eip supported.</param>
         /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        public Tag(string gateway,
-                   PlcType plcType,
-                   Protocol protocol,
-                   string name)
+        public Tag(string name)
         {
-
-            Protocol = protocol;
-            Gateway = gateway;
-            PlcType = plcType;
             Name = name;
-
         }
 
         ~Tag()
