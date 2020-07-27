@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using ConsoleTables;
 using libplctag;
-using libplctag.NativeImport;
 
 namespace CSharpDotNetCore
 {
@@ -17,9 +15,9 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            // The current constructor forces us to choose the element count, but @tags is special
-            // so ideally we don't supply elem_count in the attribute string
-            // For now, this works as long as there are at least 5 tags in the controller
+            // The current constructor forces us to choose the element count, but @tags is special in that
+            // if you don't supply elem_count, it returns all tags
+            // For now, this works as long as there are at least 5 tags in the controller but only returns 5 tags
             var elementCount = 5;
 
             var tags = new Tag<TagListingMarshaller, TagInfo>(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, "@tags", TIMEOUT_MS, elementCount);
