@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -15,7 +16,7 @@ namespace CSharpDotNetCore
             const int ARRAY_LENGTH = 5;
             const int TIMEOUT = 1000;
 
-            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "TestArray", TIMEOUT, ARRAY_LENGTH);
+            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "TestArray", TIMEOUT, ARRAY_LENGTH);
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
@@ -24,7 +25,7 @@ namespace CSharpDotNetCore
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
             {
-                int arrayDint = myArrayTag.GetInt32(i* DataType.DINT);
+                int arrayDint = myArrayTag.GetInt32(i* DintMarshaller.ElementSize);
                 Console.WriteLine($"Value[{i}]: {arrayDint}");
             }
 

@@ -2,7 +2,7 @@
 {
     public class DintMarshaller : IMarshaller<int>
     {
-        private const int ElementSize = 4;
+        public static int ElementSize => 4;
         public PlcType PlcType { get; set; }
         public int Decode(Tag tag, int offset, out int elementSize)
         {

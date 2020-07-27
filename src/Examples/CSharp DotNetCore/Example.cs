@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace CSharpDotNetCore
 
             const int TIMEOUT = 5000;
 
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
 
             myTag.SetInt32(0, 3737);
 

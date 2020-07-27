@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace CSharpDotNetCore
             const int TIMEOUT = 5000;
 
             //DINT Test Read/Write
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
+            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");

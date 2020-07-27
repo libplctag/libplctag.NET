@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -13,7 +14,7 @@ namespace CSharpDotNetFramework
 
             //DINT Test Read/Write
             const int ARRAY_LENGTH = 5;
-            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "TestArray", ARRAY_LENGTH);
+            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "TestArray", ARRAY_LENGTH);
 
             //Check that tag gets created properly
             while (myArrayTag.GetStatus() == Status.Pending)
@@ -37,7 +38,7 @@ namespace CSharpDotNetFramework
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
             {
-                int arrayDint = myArrayTag.GetInt32(i* DataType.DINT);
+                int arrayDint = myArrayTag.GetInt32(i* DintMarshaller.ElementSize);
                 Console.WriteLine($"Value[{i}]: {arrayDint}");
             }
 
