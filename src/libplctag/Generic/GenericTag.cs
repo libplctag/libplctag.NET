@@ -11,9 +11,6 @@ namespace libplctag.Generic
         private readonly TPlcType plcDataType;
         private readonly Tag tag;
 
-        /// <summary>
-        /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
-        /// </summary>
         public GenericTag()
         {
             //Instantiate our definition

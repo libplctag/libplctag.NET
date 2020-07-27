@@ -13,18 +13,103 @@ namespace libplctag
     {
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
+        
 
-        private bool _isDisposed = false;
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _name = value;
+            }
+        }
 
-        public string Name { get; set; }
+        private Protocol? _protocol;
+        public Protocol? Protocol
+        {
+            get => _protocol;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _protocol = value;
+            }
+        }
 
-        public Protocol? Protocol { get; set; }
-        public string Gateway { get; set; }
-        public PlcType? PlcType { get; set; }
-        public string Path { get; set; }
-        public int? ElementSize { get; set; }
-        public int? ElementCount { get; set; }
-        public bool? UseConnectedMessaging { get; set; }
+        private string _gateway;
+        public string Gateway
+        {
+            get => _gateway;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _gateway = value;
+            }
+        }
+
+        private PlcType? _plcType;
+        public PlcType? PlcType
+        {
+            get => _plcType;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _plcType = value;
+            }
+        }
+
+        private string _path;
+        public string Path
+        {
+            get => _path;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _path = value;
+            }
+        }
+
+        private int? _elementSize;
+        public int? ElementSize
+        {
+            get => _elementSize;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _elementSize = value;
+            }
+        }
+
+        private int? _elementCount;
+        public int? ElementCount
+        {
+            get => _elementCount;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _elementCount = value;
+            }
+        }
+
+        private bool? _useConnectedMessaging;
+        public bool? UseConnectedMessaging
+        {
+            get => _useConnectedMessaging;
+            set
+            {
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+                _useConnectedMessaging = value;
+            }
+        }
 
         private int? _readCacheMillisecondDuration;
         public int? ReadCacheMillisecondDuration
@@ -55,14 +140,6 @@ namespace libplctag
         }
 
         private int tagHandle;
-
-        /// <summary>
-        /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
-        /// </summary>
-        public Tag()
-        {
-
-        }
 
         ~Tag()
         {
@@ -96,7 +173,7 @@ namespace libplctag
         {
 
             if (!IsInitialized)
-                throw new LibPlcTagException("Already initialized");
+                throw new InvalidOperationException("Already initialized");
 
             if (millisecondTimeout <= 0)
                 throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
@@ -125,7 +202,7 @@ namespace libplctag
         {
 
             if (!IsInitialized)
-                throw new LibPlcTagException("Already initialized");
+                throw new InvalidOperationException("Already initialized");
 
             var attributeString = GetAttributeString();
 
@@ -151,6 +228,7 @@ namespace libplctag
 
         }
 
+        private bool _isDisposed = false;
         public void Dispose()
         {
             if (_isDisposed)
