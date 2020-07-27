@@ -13,8 +13,9 @@ namespace CSharpDotNetFramework
 
             //DINT Test Read/Write
             const int ARRAY_LENGTH = 5;
-            var myArrayTag = new Tag("TestArray")
+            var myArrayTag = new Tag()
             {
+                Name = "TestArray",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,

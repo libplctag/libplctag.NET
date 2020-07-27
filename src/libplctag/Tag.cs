@@ -14,7 +14,9 @@ namespace libplctag
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
 
-        public string Name { get; }
+        private bool _isDisposed = false;
+
+        public string Name { get; set; }
 
         public Protocol? Protocol { get; set; }
         public string Gateway { get; set; }
@@ -57,10 +59,9 @@ namespace libplctag
         /// <summary>
         /// Provides a new tag. If the PLC type is Logix, the port type and slot has to be specified.
         /// </summary>
-        /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        public Tag(string name)
+        public Tag()
         {
-            Name = name;
+
         }
 
         ~Tag()
@@ -96,6 +97,9 @@ namespace libplctag
 
             if (!IsInitialized)
                 throw new LibPlcTagException("Already initialized");
+
+            if (millisecondTimeout <= 0)
+                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
 
             var attributeString = GetAttributeString();
 
@@ -149,9 +153,14 @@ namespace libplctag
 
         public void Dispose()
         {
+            if (_isDisposed)
+                return;
+
             var result = (Status)plctag.plc_tag_destroy(tagHandle);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
+
+            _isDisposed = true;
         }
 
         public void Abort()

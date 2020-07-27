@@ -5,15 +5,15 @@ namespace libplctag
 {
     public interface ITag
     {
-        PlcType? PlcType { get; }
-        int? ElementCount { get; }
-        int? ElementSize { get; }
-        string Gateway { get; }
-        string Name { get; }
-        string Path { get; }
-        Protocol? Protocol { get; }
+        PlcType? PlcType { get; set; }
+        int? ElementCount { get; set; }
+        int? ElementSize { get; set; }
+        string Gateway { get; set; }
+        string Name { get; set; }
+        string Path { get; set; }
+        Protocol? Protocol { get; set; }
         int? ReadCacheMillisecondDuration { get; set; }
-        bool? UseConnectedMessaging { get; }
+        bool? UseConnectedMessaging { get; set; }
 
         void Abort();
         void Dispose();
@@ -21,5 +21,6 @@ namespace libplctag
         Status GetStatus();
         void Read(int timeout);
         void Write(int timeout);
+        void Initialize(int timeout);
     }
 }

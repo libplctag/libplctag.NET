@@ -12,8 +12,9 @@ namespace CSharpDotNetFramework
             Console.WriteLine($"\r\n*** ExampleRW ***");
 
             //DINT Test Read/Write
-            var myTag = new Tag("PROGRAM:SomeProgram.SomeDINT")
+            var myTag = new Tag()
             {
+                Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
