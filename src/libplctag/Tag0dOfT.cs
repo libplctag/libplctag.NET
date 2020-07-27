@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace libplctag
 {
@@ -67,9 +69,33 @@ namespace libplctag
             set => _tag.ReadCacheMillisecondDuration = value;
         }
 
+        public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            await _tag.ReadAsync(millisecondTimeout, token);
+            DecodeAll();
+        }
+
+        public async Task ReadAsync(CancellationToken token = default)
+        {
+            await _tag.ReadAsync(token);
+            DecodeAll();
+        }
+
         public void Read(int millisecondTimeout)
         {
             _tag.Read(millisecondTimeout);
+            DecodeAll();
+        }
+
+        public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            await _tag.ReadAsync(millisecondTimeout, token);
+            DecodeAll();
+        }
+
+        public async Task WriteAsync(CancellationToken token = default)
+        {
+            await _tag.ReadAsync(token);
             DecodeAll();
         }
 
