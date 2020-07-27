@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System;
-using System.Runtime.InteropServices;
 
 namespace libplctag.NativeImport.Benchmarks
 {
