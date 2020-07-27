@@ -7,12 +7,14 @@ namespace libplctag.DataTypes
     public class TimerMarshaller: IMarshaller<AbTimer>
     {
 
-        public int ElementSize => 12;
+        private const int ElementSize = 12;
 
         public PlcType PlcType { get; set; }
 
-        public AbTimer Decode(Tag tag, int offset)
+        public AbTimer Decode(Tag tag, int offset, out int elementSize)
         {
+
+            elementSize = ElementSize;
 
             // Needed to look at RsLogix documentation for structure of TIMER
             var DINT2 = tag.GetInt32(offset);
@@ -35,8 +37,11 @@ namespace libplctag.DataTypes
 
         }
 
-        public void Encode(Tag tag, int offset, AbTimer value)
+        public void Encode(Tag tag, int offset, out int elementSize, AbTimer value)
         {
+
+            elementSize = ElementSize;
+
             var DINT0 = value.Accumulated;
             var DINT1 = value.Preset;
 

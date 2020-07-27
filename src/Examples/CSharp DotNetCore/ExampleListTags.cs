@@ -94,7 +94,7 @@ namespace CSharpDotNetCore
             var path = "1,0";
             //var tags = GetTags(host, path);
 
-            var tagList = new Tag<TagListingMarshaller, IEnumerable<TagInfo>>(IPAddress.Parse(host), path, PlcType.ControlLogix, "@tags", 1000);
+            var tagList = new Tag<TagListingMarshaller, TagInfo>(IPAddress.Parse(host), path, PlcType.ControlLogix, "@tags", 1000, 5);
 
             var tags = tagList.Value.ToList();
 
@@ -116,57 +116,52 @@ namespace CSharpDotNetCore
         public uint[] Dimensions { get; set; }
     }
 
-    public class TagListingMarshaller : IMarshaller<IEnumerable<TagInfo>>
+    public class TagListingMarshaller : IMarshaller<TagInfo>
     {
 
         public int ElementSize => 0;
 
         public PlcType PlcType { get; set; }
 
-        public IEnumerable<TagInfo> Decode(Tag tag, int offset)
+        public TagInfo Decode(Tag tag, int offset, out int elementSize)
         {
 
             var TAG_STRING_SIZE = 200;
 
-            do
+            var tagInstanceId = tag.GetUInt32(offset);
+            var tagType = tag.GetUInt16(offset+4);
+            var tagLength = tag.GetUInt16(offset + 6);
+            var tagArrayDims = new uint[]
             {
+                tag.GetUInt32(offset + 8),
+                tag.GetUInt32(offset + 12),
+                tag.GetUInt32(offset + 16)
+            };
 
-                var tagInstanceId = tag.GetUInt32(offset);
-                var tagType = tag.GetUInt16(offset+4);
-                var tagLength = tag.GetUInt16(offset + 6);
-                var tagArrayDims = new uint[]
-                {
-                    tag.GetUInt32(offset + 8),
-                    tag.GetUInt32(offset + 12),
-                    tag.GetUInt32(offset + 16)
-                };
+            var apparentTagNameLength = tag.GetUInt16(offset + 20);
+            var actualTagNameLength = (int)Math.Min(apparentTagNameLength, TAG_STRING_SIZE * 2 - 1);
 
-                var apparentTagNameLength = tag.GetUInt16(offset + 20);
-                var actualTagNameLength = (int)Math.Min(apparentTagNameLength, TAG_STRING_SIZE * 2 - 1);
+            var tagNameBytes = Enumerable.Range(offset + 22, actualTagNameLength)
+                .Select(o => tag.GetUInt8(o))
+                .Select(Convert.ToByte)
+                .ToArray();
 
-                var tagNameBytes = Enumerable.Range(offset + 22, actualTagNameLength)
-                    .Select(o => tag.GetUInt8(o))
-                    .Select(Convert.ToByte)
-                    .ToArray();
+            var tagName = Encoding.ASCII.GetString(tagNameBytes);
 
-                var tagName = Encoding.ASCII.GetString(tagNameBytes);
+            elementSize = 22 + actualTagNameLength;
 
-                yield return new TagInfo()
-                {
-                    Id = tagInstanceId,
-                    Type = tagType,
-                    Name = tagName,
-                    Length = tagLength,
-                    Dimensions = tagArrayDims
-                };
-
-                offset += 22 + actualTagNameLength;
-
-            } while (tag.GetStatus() == Status.Ok && offset < tag.GetSize());
+            return new TagInfo()
+            {
+                Id = tagInstanceId,
+                Type = tagType,
+                Name = tagName,
+                Length = tagLength,
+                Dimensions = tagArrayDims
+            };
 
         }
 
-        public void Encode(Tag tag, int offset, IEnumerable<TagInfo> t)
+        public void Encode(Tag tag, int offset, out int elementSize, TagInfo t)
         {
             throw new NotImplementedException();
         }

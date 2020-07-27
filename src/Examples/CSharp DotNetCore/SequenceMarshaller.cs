@@ -15,7 +15,7 @@ namespace CSharpDotNetCore
 
         public PlcType PlcType { get; set; }
 
-        public Sequence Decode(Tag tag, int offset)
+        public Sequence Decode(Tag tag, int offset, out int elementSize)
         {
 
             var DINT0 = tag.GetInt32(offset + 0);
@@ -32,11 +32,14 @@ namespace CSharpDotNetCore
             { PlcType = this.PlcType };
 
             var TIMERS = new AbTimer[20];
+            var timerOffset = offset + 28;
             for (int i = 0; i < 20; i++)
             {
-                var timerOffset = offset + 28 + i * timerMarshaller.ElementSize;
-                TIMERS[i] = timerMarshaller.Decode(tag, timerOffset);
+                TIMERS[i] = timerMarshaller.Decode(tag, offset, out int timerSize);
+                timerOffset += timerSize;
             }
+
+            elementSize = 28 + timerOffset;
 
             return new Sequence()
             {
@@ -54,7 +57,7 @@ namespace CSharpDotNetCore
 
         }
 
-        public void Encode(Tag tag, int offset, Sequence value)
+        public void Encode(Tag tag, int offset, out int elementSize, Sequence value)
         {
 
             var DINT0 = value.Step_No;
@@ -80,11 +83,15 @@ namespace CSharpDotNetCore
             tag.SetInt32(offset + 24, DINT6);
 
             var timerMarshaller = new TimerMarshaller();
+
+            var timerOffset = offset + 28;
             for (int i = 0; i < 20; i++)
             {
-                var timerOffset = offset + 28 + i * timerMarshaller.ElementSize;
-                timerMarshaller.Encode(tag, timerOffset, value.Timer[i]);
+                timerMarshaller.Encode(tag, offset, out int timerSize, value.Timer[i]);
+                timerOffset += timerSize;
             }
+
+            elementSize = 28 + timerOffset;
 
         }
 
