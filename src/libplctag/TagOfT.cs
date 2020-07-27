@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace libplctag
 {
-    public class Tag<Marshaller, T>
+    public class Tag<Marshaller, T> : IDisposable
         where Marshaller : IMarshaller<T>, new()
     {
 
@@ -129,6 +130,13 @@ namespace libplctag
         }
 
         public Status GetStatus() => _tag.GetStatus();
+
+        public void Dispose() => _tag.Dispose();
+
+        ~Tag()
+        {
+            Dispose();
+        }
 
         public T[] Value { get; set; }
 
