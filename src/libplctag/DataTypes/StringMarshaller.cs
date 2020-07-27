@@ -3,9 +3,6 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class StringMarshaller : IMarshaller<string>
     {
 
