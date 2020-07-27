@@ -8,15 +8,12 @@ namespace libplctag.NativeImport
     class LibraryExtractor
     {
 
-        public static void Init(string extractDirectory = null)
+        public static void Init(bool forceExtract = false)
         {
 
-            if (extractDirectory == null)
-            {
-                extractDirectory = GetExecutingAssemblyDirectory();
-            }
+            var extractDirectory = GetExecutingAssemblyDirectory();
 
-            if (!LibraryExists(extractDirectory))
+            if (forceExtract || !LibraryExists(extractDirectory))
             {
                 ExtractAppropriateLibrary(extractDirectory);
             }
