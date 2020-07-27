@@ -9,7 +9,7 @@ namespace libplctag.NativeImport
         const string DLL_NAME = "plctag";
 
 
-        static public bool _forceExtractLibrary = true;
+        static private bool _forceExtractLibrary = true;
         static public bool ForceExtractLibrary
         {
             get => _forceExtractLibrary;
