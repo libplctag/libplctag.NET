@@ -18,9 +18,6 @@ namespace libplctag
         {
             _marshaller = new Marshaller();
             _tag = new Tag();
-            
-            //Value = new T[elementCount];
-            //DecodeAll();
         }
 
         public Protocol? Protocol
