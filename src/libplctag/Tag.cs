@@ -172,7 +172,7 @@ namespace libplctag
         public void Initialize(int millisecondTimeout)
         {
 
-            if (!IsInitialized)
+            if (IsInitialized)
                 throw new InvalidOperationException("Already initialized");
 
             if (millisecondTimeout <= 0)
@@ -201,7 +201,7 @@ namespace libplctag
         public async Task InitializeAsync(CancellationToken token = default)
         {
 
-            if (!IsInitialized)
+            if (IsInitialized)
                 throw new InvalidOperationException("Already initialized");
 
             var attributeString = GetAttributeString();
