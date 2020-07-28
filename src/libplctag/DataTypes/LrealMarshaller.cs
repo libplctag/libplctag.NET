@@ -2,7 +2,7 @@
 {
     public class LrealMarshaller : IMarshaller<double>
     {
-        private const int ElementSize = 4;
+        private const int ElementSize = 8;
         public PlcType PlcType { get; set; }
         public double Decode(Tag tag, int offset, out int elementSize)
         {
