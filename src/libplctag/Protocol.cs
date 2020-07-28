@@ -2,6 +2,7 @@
 {
     public enum Protocol
     {
-        ab_eip
+        ab_eip,
+        modbus_tcp
     }
 }

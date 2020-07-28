@@ -11,67 +11,63 @@ namespace libplctag
         where Marshaller : IMarshaller<T>, new()
     {
 
-        Tag _tag;
+        private readonly Tag _tag;
+        private readonly IMarshaller<T> _marshaller;
 
-        IMarshaller<T> _marshaller;
-
-        /// <summary>
-        /// Provides a new tag. If the CPU type is LGX, the port type and slot has to be specified.
-        /// </summary>
-        /// <param name="gateway">IP address of the gateway for this protocol. Could be the IP address of the PLC you want to access.</param>
-        /// <param name="path">Required for LGX, Optional for PLC/SLC/MLGX IOI path to access the PLC from the gateway.
-        /// <param name="plcType">Allen-Bradley CPU model</param>
-        /// <param name="name">The textual name of the tag to access. The name is anything allowed by the protocol. E.g. myDataStruct.rotationTimer.ACC, myDINTArray[42] etc.</param>
-        /// <param name="elementCount">elements count: 1- single, n-array.</param>
-        /// <param name="millisecondTimeout"></param>
-        /// <param name="protocol">Currently only ab_eip supported.</param>
-        /// <param name="readCacheMillisecondDuration">Set the amount of time to cache read results</param>
-        /// <param name="useConnectedMessaging">Control whether to use connected or unconnected messaging.</param>
-        public Tag(IPAddress gateway,
-                   string path,
-                   PlcType plcType,
-                   string name,
-                   int millisecondTimeout,
-                   int elementCount,
-                   Protocol protocol = Protocol.ab_eip,
-                   int readCacheMillisecondDuration = default,
-                   bool useConnectedMessaging = true)
+        public Tag()
         {
-
-            _marshaller = new Marshaller()
-            {
-                PlcType = plcType
-            };
-
-            _tag = new Tag(
-                gateway,
-                path,
-                plcType,
-                _marshaller.ElementSize,
-                name,
-                millisecondTimeout,
-                elementCount,
-                protocol,
-                readCacheMillisecondDuration,
-                useConnectedMessaging);
-
-
-            Value = new T[elementCount];
-            DecodeAll();
+            _marshaller = new Marshaller();
+            _tag = new Tag();
+            
+            //Value = new T[elementCount];
+            //DecodeAll();
         }
 
-        public Protocol Protocol => _tag.Protocol;
-        public IPAddress Gateway => _tag.Gateway;
-        public string Path => _tag.Path;
-        public PlcType PlcType => _tag.PlcType;
-        public int Count => _tag.ElementCount;
-        public string Name => _tag.Name;
-        public bool UseConnectedMessaging => _tag.UseConnectedMessaging;
-        public int ReadCacheMillisecondDuration
+        public Protocol? Protocol
+        {
+            get => _tag.Protocol;
+            set => _tag.Protocol = value;
+        }
+        public string Gateway
+        {
+            get => _tag.Gateway;
+            set => _tag.Gateway = value;
+        }
+        public string Path
+        {
+            get => _tag.Path;
+            set => _tag.Path = value;
+        }
+        public PlcType? PlcType
+        {
+            get => _tag.PlcType;
+            set => _tag.PlcType = value;
+        }
+        public int? ElementCount
+        {
+            get => _tag.ElementCount;
+            set => _tag.ElementCount = value;
+        }
+        public string Name
+        {
+            get => _tag.Name;
+            set => _tag.Name = value;
+        }
+        public bool? UseConnectedMessaging
+        {
+            get => _tag.UseConnectedMessaging;
+            set => _tag.UseConnectedMessaging = value;
+        }
+        public int? ReadCacheMillisecondDuration
         {
             get => _tag.ReadCacheMillisecondDuration;
             set => _tag.ReadCacheMillisecondDuration = value;
         }
+
+
+        public void Initialize(int millisecondTimeout) => _tag.Initialize(millisecondTimeout);
+        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default) => await _tag.InitializeAsync(millisecondTimeout, token);
+        public async Task InitializeAsync(CancellationToken token = default) => await _tag.InitializeAsync(token);
 
         public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
         {
@@ -111,18 +107,25 @@ namespace libplctag
 
         void DecodeAll()
         {
+
+            var tempArray = new List<T>();
+
+            var tagSize = _tag.GetSize();
+
             int offset = 0;
-            for (int ii = 0; ii < Value.Length; ii++)
+            while(offset < tagSize)
             {
-                Value[ii] = _marshaller.Decode(_tag, offset, out int elementSize);
+                tempArray.Add(_marshaller.Decode(_tag, offset, out int elementSize));
                 offset += elementSize;
             }
+
+            Value = tempArray.ToArray();
         }
 
         void EncodeAll()
         {
             int offset = 0;
-            for (int ii = 0; ii < Value.Length; ii++)
+            for (int ii = 0; ii < ElementCount; ii++)
             {
                 _marshaller.Encode(_tag, offset, out int elementSize, Value[ii]);
                 offset += elementSize;

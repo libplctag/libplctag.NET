@@ -15,7 +15,16 @@ namespace CSharpDotNetCore
             const int TIMEOUT = 5000;
 
             //DINT Test Read/Write
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
+            var myTag = new Tag()
+            {
+                Name = "PROGRAM:SomeProgram.SomeDINT",
+                ElementSize = DintMarshaller.ElementSize,
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
+            };
+            myTag.Initialize(TIMEOUT);
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");

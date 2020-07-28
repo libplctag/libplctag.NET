@@ -10,47 +10,85 @@ namespace CSharpDotNetCore
 {
     class ExampleGenericTag
     {
+
+        const int timeout = 1000;
+        const string gateway = "10.10.10.10";
+        const string path = "1,0";
+
+
         public static void Run()
         {
 
-            var MyDintArray = new Tag<DintMarshaller, int>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "MY_DINT_ARRAY_1000[0]", 1000, 1000);
+            //Bool - Test both cases
+            var boolTag = new Tag<BoolMarshaller, bool>()
+            {
+                Name = "TestBOOL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            //Signed Numbers
+            var sintTag = new Tag<SintMarshaller, sbyte>()
+            {
+                Name = "TestSINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var intTag = new Tag<IntMarshaller, short>()
+            {
+                Name = "TestINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var dintTag = new Tag<DintMarshaller, int>()
+            {
+                Name = "TestBOOL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var lintTag = new Tag<LintMarshaller, long>()
+            {
+                Name = "TestLINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
 
-            for (int ii = 0; ii < 1000; ii++)
-                MyDintArray.Value[ii] = ii;
-
-            MyDintArray.Write(1000);
-
-            // Illustrate use of Linq
-            var myDintsAbove200 = MyDintArray.Value.Where(x => x > 200).ToList();
-
-
-
-
-            var MyStringArray = new Tag<StringMarshaller, string>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "MY_STRING_ARRAY_10[0]", 1000, 10);
-            for (int ii = 0; ii < 10; ii++)
-                MyStringArray.Value[ii] = (ii * 111).ToString();
-            MyStringArray.Write(1000);
+            //Floating Points
+            var realTag = new Tag<RealMarshaller, float>()
+            {
+                Name = "TestREAL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
 
 
+            boolTag.Initialize(timeout);
+            boolTag.Read(timeout);
 
-            var MySequence = new Tag<SequenceMarshaller, Sequence>(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, "Seq_1", 1000, 1);
-            MySequence.Read(1000);
-            Console.WriteLine(
-                $"Command: {MySequence.Value[0].Command}\n" +
-                $"Fault: {MySequence.Value[0].Fault}\n" +
-                $"Fault_Step: {MySequence.Value[0].Fault_Step}\n" +
-                $"Hold: {MySequence.Value[0].Hold}\n" +
-                $"Stop: {MySequence.Value[0].Stop}\n" +
-                $"Idle_Step: {MySequence.Value[0].Idle_Step}\n" +
-                $"Init_Step: {MySequence.Value[0].Init_Step}\n" +
-                $"Next_Step: {MySequence.Value[0].Next_Step}\n" +
-                $"Step_No: {MySequence.Value[0].Step_No}\n" +
-                $"Timer6.Preset: {MySequence.Value[0].Timer[6].Preset}\n" +
-                $"Timer7.Preset: {MySequence.Value[0].Timer[7].Preset}\n"
-                );
+            sintTag.Initialize(timeout);
+            sintTag.Read(timeout);
+
+            intTag.Initialize(timeout);
+            intTag.Read(timeout);
+
+            dintTag.Initialize(timeout);
+            dintTag.Read(timeout);
+
+            lintTag.Initialize(timeout);
+            lintTag.Read(timeout);
+
+            realTag.Initialize(timeout);
+            realTag.Read(timeout);
+
+
 
         }
+
     }
 
-    
 }

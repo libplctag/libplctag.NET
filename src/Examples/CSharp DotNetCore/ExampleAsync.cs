@@ -14,7 +14,16 @@ namespace CSharpDotNetCore
     {
         public static async Task Run()
         {
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "PROGRAM:SomeProgram.SomeDINT", 5000);
+            var myTag = new Tag()
+            {
+                Name = "PROGRAM:SomeProgram.SomeDINT",
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                ElementSize = DintMarshaller.ElementSize,
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
+            };
+            myTag.Initialize(5000);
 
             myTag.SetInt32(0, 3737);
 
@@ -38,7 +47,19 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 10; ii++)
             {
                 myTags = Enumerable.Range(0, 10)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, $"MY_DINT_ARRAY_1000[{i}]", 5000 ))
+                .Select(i => {
+                    var myTag = new Tag()
+                    {
+                        Name = $"MY_DINT_ARRAY_1000[{i}]",
+                        Gateway = "10.10.10.10",
+                        Path = "1,0",
+                        PlcType = PlcType.ControlLogix,
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = DintMarshaller.ElementSize
+                    };
+                    myTag.Initialize(5000);
+                    return myTag;
+                    })
                 .ToList();
 
                 int repetitions = 100;
@@ -83,7 +104,16 @@ namespace CSharpDotNetCore
         {
 
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
-            var myTag = new Tag(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "Dummy", 5000);
+            var myTag = new Tag()
+            {
+                Name = "PROGRAM:SomeProgram.SomeDINT",
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip,
+                ElementSize = DintMarshaller.ElementSize
+            };
+            myTag.Initialize(5000);
 
             int repetitions = 100;
 
@@ -154,7 +184,19 @@ namespace CSharpDotNetCore
             Console.Write($"Running {repetitions} ReadAsync() calls on {maxTags} tags simultaneously...");
 
             var myTags = Enumerable.Range(0, maxTags)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, $"MY_DINT_ARRAY_1000[{i}]", 5000 ))
+                .Select(i => {
+                    var myTag = new Tag()
+                    {
+                        Name = "PROGRAM:SomeProgram.SomeDINT",
+                        Gateway = "10.10.10.10",
+                        Path = "1,0",
+                        PlcType = PlcType.ControlLogix,
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = DintMarshaller.ElementSize
+                    };
+                    myTag.Initialize(5000);
+                    return myTag; 
+                })
                 .ToList();
 
             var asyncStopWatch = Stopwatch.StartNew();
@@ -185,7 +227,19 @@ namespace CSharpDotNetCore
         {
 
             var myTags = Enumerable.Range(0, maxTags)
-                .Select(i => new Tag(IPAddress.Parse("192.168.0.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, $"MY_DINT_ARRAY_1000[{i}]", 5000))
+                .Select(i => {
+                    var myTag = new Tag()
+                    {
+                        Name = "MY_DINT_ARRAY_1000[{i}]",
+                        Gateway = "10.10.10.10",
+                        Path = "1,0",
+                        PlcType = PlcType.ControlLogix,
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = DintMarshaller.ElementSize
+                    };
+                    myTag.Initialize(5000);
+                    return myTag;
+                })
                 .ToList();
 
 

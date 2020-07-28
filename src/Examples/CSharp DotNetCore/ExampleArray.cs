@@ -16,7 +16,17 @@ namespace CSharpDotNetCore
             const int ARRAY_LENGTH = 5;
             const int TIMEOUT = 1000;
 
-            var myArrayTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DintMarshaller.ElementSize, "TestArray", TIMEOUT, ARRAY_LENGTH);
+            var myArrayTag = new Tag()
+            {
+                Name = "TestArray",
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                ElementSize = DintMarshaller.ElementSize,
+                ElementCount = ARRAY_LENGTH
+            };
+
+            myArrayTag.Initialize(TIMEOUT);
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");

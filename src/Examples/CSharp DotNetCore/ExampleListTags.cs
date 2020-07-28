@@ -15,12 +15,17 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            // The current constructor forces us to choose the element count, but @tags is special in that
-            // if you don't supply elem_count, it returns all tags
-            // For now, this works as long as there are at least 5 tags in the controller but only returns 5 tags
-            var elementCount = 5;
+            var tags = new Tag<TagListingMarshaller, TagInfo>()
+            {
+                Gateway = "192.168.0.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip,
+                Name = "@tags"
+            };
 
-            var tags = new Tag<TagListingMarshaller, TagInfo>(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, "@tags", TIMEOUT_MS, elementCount);
+            tags.Initialize(TIMEOUT_MS);
+            tags.Read(TIMEOUT_MS);
 
             ConsoleTable
                 .From(tags.Value.Select(t => new { t.Id, Type = $"0x{t.Type:X}", t.Name, t.Length, Dimensions = string.Join(',', t.Dimensions) }))
