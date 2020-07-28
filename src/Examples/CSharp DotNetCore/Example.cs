@@ -12,7 +12,16 @@ namespace CSharpDotNetCore
 
             const int TIMEOUT = 5000;
 
-            var myTag = new Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", TIMEOUT);
+            var myTag = new Tag()
+            {
+                Name = "PROGRAM:SomeProgram.SomeDINT",
+                Gateway = "10.10.10.10",
+                Path = "1,0",
+                PlcType = PlcType.ControlLogix,
+                ElementSize = DataType.DINT
+            };
+
+            myTag.Initialize(TIMEOUT);
 
             myTag.SetInt32(0, 3737);
 

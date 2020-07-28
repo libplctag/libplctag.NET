@@ -6,7 +6,15 @@ Module Module1
 
     Sub Main()
 
-        Dim myTag = New Tag(IPAddress.Parse("10.10.10.10"), "1,0", PlcType.ControlLogix, DataType.DINT, "PROGRAM:SomeProgram.SomeDINT", 5000)
+        Dim myTag = New Tag() With
+        {
+            .Name = "PROGRAM:SomeProgram.SomeDINT",
+            .Gateway = "10.10.10.10",
+            .PlcType = PlcType.ControlLogix,
+            .ElementSize = DataType.DINT,
+            .Path = "1,0"
+        }
+        myTag.Initialize(5000)
 
         While (myTag.GetStatus() = Status.Pending)
             Thread.Sleep(100)

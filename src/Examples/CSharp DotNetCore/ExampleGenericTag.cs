@@ -4,44 +4,84 @@ using libplctag.Generic.DataTypes;
 using RandomTestValues;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using System.Threading;
+using System.Text;
 
 namespace CSharpDotNetCore
 {
     class ExampleGenericTag
     {
-        private const int DEFAULT_TIMEOUT = 100;
+
+        const int timeout = 1000;
+        const string gateway = "10.10.10.10";
+        const string path = "1,0";
+
 
         public static void Run()
         {
-            Random rnd = new Random();
-            int testValue = rnd.Next();
-
-            IPAddress gateway = IPAddress.Parse("10.10.10.10");
-            const string Path = "1,0";
-            const int timeout = 1000;
 
             //Bool - Test both cases
+            var boolTag = new GenericTag<PlcTypeBOOL, bool>()
+            {
+                Name = "TestBOOL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            //Signed Numbers
+            var sintTag = new GenericTag<PlcTypeSINT, sbyte>()
+            {
+                Name = "TestSINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var intTag = new GenericTag<PlcTypeINT, short>()
+            {
+                Name = "TestINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var dintTag = new GenericTag<PlcTypeDINT, int>()
+            {
+                Name = "TestBOOL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+            var lintTag = new GenericTag<PlcTypeLINT, long>()
+            {
+                Name = "TestLINT",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+
+            //Floating Points
+            var realTag = new GenericTag<PlcTypeREAL, float>()
+            {
+                Name = "TestREAL",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix
+            };
+
+
+            boolTag.Initialize(timeout);
+            sintTag.Initialize(timeout);
+            intTag.Initialize(timeout);
+            dintTag.Initialize(timeout);
+            lintTag.Initialize(timeout);
+            realTag.Initialize(timeout);
+
+
             //Random value would look correct 50% of the time
-            var boolTag = new GenericTag<PlcTypeBOOL, bool>(gateway, Path, PlcType.ControlLogix, "TestBOOL", timeout);
             TestTag(boolTag, true);
             TestTag(boolTag, false);
 
-            //Signed Numbers
-            TestTag(new GenericTag<PlcTypeSINT, sbyte>(gateway, Path, PlcType.ControlLogix, "TestSINT", timeout));
-            TestTag(new GenericTag<PlcTypeINT, short>(gateway, Path, PlcType.ControlLogix, "TestINT", timeout));
-            TestTag(new GenericTag<PlcTypeDINT, int>(gateway, Path, PlcType.ControlLogix, "TestDINT", timeout));
-            TestTag(new GenericTag<PlcTypeLINT, long>(gateway, Path, PlcType.ControlLogix, "TestLINT", timeout));
-
-            //Logix doesn't support unsigned
-
-            //Foating Points
-            TestTag(new GenericTag<PlcTypeREAL, float>(gateway, Path, PlcType.ControlLogix, "TestREAL", timeout));
-            //TestTag(new GenericTag<PlcTypeLREAL, double>(gateway, Path, PlcType.Logix, "TestLREAL", timeout));
-
         }
-
 
         private static bool TestTag<T>(IGenericTag<T> tag) where T : struct
         {
@@ -56,10 +96,10 @@ namespace CSharpDotNetCore
 
             tag.Value = testValue;
             Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
-            tag.Write(DEFAULT_TIMEOUT);
+            tag.Write(timeout);
 
             Console.WriteLine($"Read Value from {tag.Name}");
-            tag.Read(DEFAULT_TIMEOUT);
+            tag.Read(timeout);
 
             T readback = tag.Value;
 
@@ -68,6 +108,6 @@ namespace CSharpDotNetCore
 
             return readback.Equals(testValue);
         }
-
     }
+    
 }
