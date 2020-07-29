@@ -207,7 +207,7 @@ namespace libplctag.NativeImport
         public static int plc_tag_set_int32(Int32 tag, int offset, Int32 val)
         {
             ExtractLibraryIfRequired();
-            return plc_tag_get_int32_raw(tag, offset);
+            return plc_tag_set_int32_raw(tag, offset, val);
         }
 
         public static float plc_tag_get_float32(Int32 tag, int offset)
