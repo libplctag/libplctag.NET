@@ -14,6 +14,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="runtime\linux_x64\libplctag.so" />
+    <EmbeddedResource Include="runtime\linux_x86\libplctag.so" />
+    <EmbeddedResource Include="runtime\osx_x64\libplctag.dylib" />
+    <EmbeddedResource Include="runtime\win_x64\plctag.dll" />
+    <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
   </ItemGroup>
 

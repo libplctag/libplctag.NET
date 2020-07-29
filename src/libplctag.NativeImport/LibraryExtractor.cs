@@ -47,15 +47,15 @@ namespace libplctag.NativeImport
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return File.Exists(Path.Combine(folder, "plctag.plc_tag_dll"));
+                return File.Exists(Path.Combine(folder, "plctag.dll"));
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return File.Exists(Path.Combine(folder, "libplctag.plc_tag_so"));
+                return File.Exists(Path.Combine(folder, "libplctag.so"));
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return File.Exists(Path.Combine(folder, "libplctag.plc_tag_dylib"));
+                return File.Exists(Path.Combine(folder, "libplctag.dylib"));
             }
             else
             {
@@ -68,23 +68,23 @@ namespace libplctag.NativeImport
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return new Tuple<string, string>("libplctag.plc_tag_NativeImport.runtime.win_x86", "plctag.plc_tag_dll");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.win_x86", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.plc_tag_NativeImport.runtime.win_x64", "plctag.plc_tag_dll");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.win_x64", "plctag.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
             {
-                return new Tuple<string, string>("libplctag.plc_tag_NativeImport.runtime.linux_86", "libplctag.plc_tag_so");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.linux_86", "libplctag.so");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.plc_tag_NativeImport.runtime.linux_x64", "libplctag.plc_tag_so");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.linux_x64", "libplctag.so");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
             {
-                return new Tuple<string, string>("libplctag.plc_tag_NativeImport.runtime.osx_x64", "libplctag.plc_tag_dylib");
+                return new Tuple<string, string>("libplctag.NativeImport.runtime.osx_x64", "libplctag.dylib");
             }
             else
             {
@@ -96,6 +96,13 @@ namespace libplctag.NativeImport
         static byte[] GetEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
+
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            foreach (string f in resourceNames)
+            {
+                System.Diagnostics.Trace.WriteLine(f);
+            }
+
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null) return null;
