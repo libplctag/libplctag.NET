@@ -12,7 +12,7 @@ Module Module1
             .Name = "PROGRAM:SomeProgram.SomeDINT",
             .Gateway = "10.10.10.10",
             .PlcType = PlcType.ControlLogix,
-            .ElementSize = DintMarshaller.ElementSize,
+            .ElementSize = 4,
             .Path = "1,0"
         }
         myTag.Initialize(5000)
