@@ -62,9 +62,23 @@ namespace libplctag
         }
 
 
-        public void Initialize(int millisecondTimeout) => _tag.Initialize(millisecondTimeout);
-        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default) => await _tag.InitializeAsync(millisecondTimeout, token);
-        public async Task InitializeAsync(CancellationToken token = default) => await _tag.InitializeAsync(token);
+        public void Initialize(int millisecondTimeout)
+        {
+            _tag.Initialize(millisecondTimeout);
+            DecodeAll();
+        }
+
+        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default)
+        {
+            await _tag.InitializeAsync(millisecondTimeout, token);
+            DecodeAll();
+        }
+
+        public async Task InitializeAsync(CancellationToken token = default)
+        {
+            await _tag.InitializeAsync(token);
+            DecodeAll();
+        }
 
         public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
         {
@@ -86,14 +100,14 @@ namespace libplctag
 
         public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
         {
-            await _tag.ReadAsync(millisecondTimeout, token);
-            DecodeAll();
+            EncodeAll();
+            await _tag.WriteAsync(millisecondTimeout, token);
         }
 
         public async Task WriteAsync(CancellationToken token = default)
         {
+            EncodeAll();
             await _tag.ReadAsync(token);
-            DecodeAll();
         }
 
         public void Write(int millisecondTimeout)
@@ -107,10 +121,10 @@ namespace libplctag
 
             var tempArray = new List<T>();
 
-            var tagSize = _tag.GetSize();
+            var totalTagSize = _tag.GetSize();
 
             int offset = 0;
-            while(offset < tagSize)
+            while(offset < totalTagSize)
             {
                 tempArray.Add(_marshaller.Decode(_tag, offset, out int elementSize));
                 offset += elementSize;
