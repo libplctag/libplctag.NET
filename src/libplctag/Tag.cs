@@ -234,6 +234,9 @@ namespace libplctag
             if (_isDisposed)
                 return;
 
+            if (!IsInitialized)
+                return;
+
             var result = (Status)plctag.plc_tag_destroy(tagHandle);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
