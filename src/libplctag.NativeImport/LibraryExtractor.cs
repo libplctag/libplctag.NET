@@ -96,7 +96,6 @@ namespace libplctag.NativeImport
         static byte[] GetEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
-
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null) return null;

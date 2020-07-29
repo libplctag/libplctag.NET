@@ -1,10 +1,9 @@
-using libplctag.NativeImport;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace libplctag.plc_tag_NativeImport.Tests
+namespace libplctag.NativeImport.Tests
 {
     public class UnitTest1
     {
