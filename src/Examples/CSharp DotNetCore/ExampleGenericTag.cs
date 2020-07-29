@@ -130,17 +130,15 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ElementCount = 8
             };
-
             sequenceArray.Initialize(5000);
 
-            var r = new Random((int)DateTime.Now.ToBinary());
-
             for (int ii = 0; ii < 8; ii++)
-                sequenceArray.Value[ii].Command = ii*4;
+                sequenceArray.Value[ii].Command = ii * 4;
 
             sequenceArray.Write(5000);
 
-            Console.WriteLine("DONE");
+
+            Console.WriteLine("DONE! Check values in RsLogix");
 
 
         }

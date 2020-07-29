@@ -18,6 +18,8 @@ namespace CSharpDotNetCore
         public Sequence Decode(Tag tag, int offset, out int elementSize)
         {
 
+            elementSize = ElementSize.Value;
+
             var DINT0 = tag.GetInt32(offset + 0);
             var DINT1 = tag.GetInt32(offset + 4);
             var DINT2 = tag.GetInt32(offset + 8);
@@ -40,8 +42,6 @@ namespace CSharpDotNetCore
                 currentTimerOffset += timerSize;
             }
 
-            elementSize = 28 + currentTimerOffset;
-
             return new Sequence()
             {
                 Step_No = DINT0,
@@ -60,6 +60,8 @@ namespace CSharpDotNetCore
 
         public void Encode(Tag tag, int offset, out int elementSize, Sequence value)
         {
+
+            elementSize = ElementSize.Value;
 
             var DINT0 = value.Step_No;
             var DINT1 = value.Next_Step;
@@ -92,9 +94,6 @@ namespace CSharpDotNetCore
                 timerMarshaller.Encode(tag, timerOffset, out int timerSize, value.Timer[i]);
                 currentTimerOffset += timerSize;
             }
-
-            // This is highly convoluted. This tag has a static size so we could just return the known size.
-            elementSize = 28 + currentTimerOffset;
 
         }
 
