@@ -32,14 +32,15 @@ namespace CSharpDotNetCore
             { PlcType = this.PlcType };
 
             var TIMERS = new AbTimer[20];
-            var timerOffset = offset + 28;
+            int currentTimerOffset = 0;
             for (int i = 0; i < 20; i++)
             {
+                var timerOffset = offset + 28 + currentTimerOffset;
                 TIMERS[i] = timerMarshaller.Decode(tag, offset, out int timerSize);
-                timerOffset += timerSize;
+                currentTimerOffset += timerSize;
             }
 
-            elementSize = 28 + timerOffset;
+            elementSize = 28 + currentTimerOffset;
 
             return new Sequence()
             {
@@ -84,14 +85,16 @@ namespace CSharpDotNetCore
 
             var timerMarshaller = new TimerMarshaller();
 
-            var timerOffset = offset + 28;
+            int currentTimerOffset = 0;
             for (int i = 0; i < 20; i++)
             {
-                timerMarshaller.Encode(tag, offset, out int timerSize, value.Timer[i]);
-                timerOffset += timerSize;
+                var timerOffset = offset + 28 + currentTimerOffset;
+                timerMarshaller.Encode(tag, timerOffset, out int timerSize, value.Timer[i]);
+                currentTimerOffset += timerSize;
             }
 
-            elementSize = 28 + timerOffset;
+            // This is highly convoluted. This tag has a static size so we could just return the known size.
+            elementSize = 28 + currentTimerOffset;
 
         }
 
