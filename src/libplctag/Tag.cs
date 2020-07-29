@@ -342,6 +342,20 @@ namespace libplctag
 
         public Status GetStatus() => (Status)plctag.plc_tag_status(tagHandle);
 
+        public byte[] GetBuffer()
+        {
+
+            var tagSize = GetSize();
+            var temp = new byte[tagSize];
+
+            for (int ii = 0; ii < tagSize; ii++)
+                temp[ii] = GetUInt8(ii);
+
+            return temp;
+        }
+
+        public string GetBufferHex() => BitConverter.ToString(GetBuffer());
+
         public bool GetBit(int offset)
         {
             var result = plctag.plc_tag_get_bit(tagHandle, offset);
