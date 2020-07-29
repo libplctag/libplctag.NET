@@ -17,7 +17,10 @@ namespace libplctag
         public Tag()
         {
             _marshaller = new Marshaller();
-            _tag = new Tag();
+            _tag = new Tag()
+            {
+                ElementSize = _marshaller.ElementSize
+            };
         }
 
         public Protocol? Protocol
@@ -40,6 +43,13 @@ namespace libplctag
             get => _tag.PlcType;
             set => _tag.PlcType = value;
         }
+
+        public int? ElementSize
+        {
+            get => _tag.ElementSize;
+            set => _tag.ElementSize = value;
+        }
+
         public int? ElementCount
         {
             get => _tag.ElementCount;

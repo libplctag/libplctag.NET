@@ -11,7 +11,7 @@ namespace libplctag.DataTypes
 
         public PlcType PlcType { get; set; }
 
-        private int ElementSize
+        public int? ElementSize
         {
             get
             {
@@ -31,7 +31,7 @@ namespace libplctag.DataTypes
 
         public string Decode(Tag tag, int offset, out int elementSize)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             switch (PlcType)
             {
                 case PlcType.ControlLogix: return LogixDecode(tag, offset);
@@ -46,7 +46,7 @@ namespace libplctag.DataTypes
 
         public void Encode(Tag tag, int offset, out int elementSize, string value)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             switch (PlcType)
             {
                 case PlcType.ControlLogix: LogixEncode(tag, offset, value); break;

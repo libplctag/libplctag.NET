@@ -11,7 +11,7 @@ namespace CSharpDotNetCore
     public class SequenceMarshaller : IMarshaller<Sequence>
     {
         
-        public int ElementSize => 268;
+        public int? ElementSize => 268;
 
         public PlcType PlcType { get; set; }
 

@@ -3,18 +3,17 @@
     public class BoolMarshaller : IMarshaller<bool>
     {
 
-        private const int ElementSize = 1;
-
+        public int? ElementSize => 1;
         public PlcType PlcType { get; set; }
         public bool Decode(Tag tag, int offset, out int elementSize)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             return tag.GetBit(offset);
         }
 
         public void Encode(Tag tag, int offset, out int elementSize, bool value)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             tag.SetBit(offset, value);
         }
     }

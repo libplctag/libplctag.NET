@@ -19,7 +19,7 @@ namespace CSharpDotNetCore
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
-                ElementSize = DintMarshaller.ElementSize,
+                ElementSize = 4,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
@@ -55,7 +55,7 @@ namespace CSharpDotNetCore
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = DintMarshaller.ElementSize
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag;
@@ -111,7 +111,7 @@ namespace CSharpDotNetCore
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = DintMarshaller.ElementSize
+                ElementSize = 4
             };
             myTag.Initialize(5000);
 
@@ -192,7 +192,7 @@ namespace CSharpDotNetCore
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = DintMarshaller.ElementSize
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag; 
@@ -235,7 +235,7 @@ namespace CSharpDotNetCore
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = DintMarshaller.ElementSize
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag;

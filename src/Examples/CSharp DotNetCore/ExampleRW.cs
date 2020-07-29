@@ -18,7 +18,7 @@ namespace CSharpDotNetCore
             var myTag = new Tag()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
-                ElementSize = DintMarshaller.ElementSize,
+                ElementSize = 4,
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,

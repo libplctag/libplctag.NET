@@ -50,7 +50,7 @@ namespace CSharpDotNetCore
 
         const int TAG_STRING_SIZE = 200;
 
-        public int ElementSize => 0;
+        public int? ElementSize => 0;
 
         public PlcType PlcType { get; set; }
 

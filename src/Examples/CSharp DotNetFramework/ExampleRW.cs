@@ -20,7 +20,7 @@ namespace CSharpDotNetFramework
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = DintMarshaller.ElementSize
+                ElementSize = 4
             };
 
             //Check that tag gets created properly

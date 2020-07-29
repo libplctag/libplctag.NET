@@ -89,6 +89,34 @@ namespace CSharpDotNetCore
 
         }
 
+
+        public static void StringArray()
+        {
+
+            var stringTag = new Tag<StringMarshaller, string>()
+            {
+                Name = "MY_STRING_1D[0]",
+                Gateway = "192.168.0.10",
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ElementCount = 100
+            };
+
+            stringTag.Initialize(5000);
+
+            var r = new Random((int)DateTime.Now.ToBinary());
+
+            for (int ii = 0; ii < 100; ii++)
+                stringTag.Value[ii] = r.Next().ToString();
+            
+            stringTag.Write(5000);
+
+            Console.WriteLine("DONE");
+
+
+        }
+
     }
 
 }

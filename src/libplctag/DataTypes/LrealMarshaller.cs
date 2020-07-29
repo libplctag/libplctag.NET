@@ -2,17 +2,17 @@
 {
     public class LrealMarshaller : IMarshaller<double>
     {
-        private const int ElementSize = 8;
+        public int? ElementSize => 8;
         public PlcType PlcType { get; set; }
         public double Decode(Tag tag, int offset, out int elementSize)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             return tag.GetFloat64(offset);
         }
 
         public void Encode(Tag tag, int offset, out int elementSize, double value)
         {
-            elementSize = ElementSize;
+            elementSize = ElementSize.Value;
             tag.SetFloat64(offset, value);
         }
     }

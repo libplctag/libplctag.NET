@@ -21,7 +21,7 @@ namespace CSharpDotNetFramework
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = DintMarshaller.ElementSize,
+                ElementSize = 4,
                 ElementCount = ARRAY_LENGTH
             };
 
@@ -47,7 +47,7 @@ namespace CSharpDotNetFramework
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
             {
-                int arrayDint = myArrayTag.GetInt32(i* DintMarshaller.ElementSize);
+                int arrayDint = myArrayTag.GetInt32(i* 4);
                 Console.WriteLine($"Value[{i}]: {arrayDint}");
             }
 
