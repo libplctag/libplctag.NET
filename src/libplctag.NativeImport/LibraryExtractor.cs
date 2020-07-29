@@ -97,12 +97,6 @@ namespace libplctag.NativeImport
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            foreach (string f in resourceNames)
-            {
-                System.Diagnostics.Trace.WriteLine(f);
-            }
-
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null) return null;

@@ -1,7 +1,6 @@
 Imports System.Net
 Imports System.Threading
 Imports libplctag
-Imports libplctag.DataTypes
 
 Module Module1
 

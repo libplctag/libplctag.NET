@@ -10,7 +10,7 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/libplctag/libplctag.plc_tag_NET</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

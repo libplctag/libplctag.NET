@@ -1,5 +1,4 @@
 ﻿using libplctag;
-using libplctag.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
