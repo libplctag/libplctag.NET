@@ -1,4 +1,6 @@
-﻿namespace libplctag.DataTypes
+﻿using System;
+
+namespace libplctag.DataTypes
 {
 
     /// <summary>
@@ -7,7 +9,7 @@
     public class BoolMarshaller : Marshaller<bool>
     {
 
-        public override int? ElementCountFromArrayLength(int? elementCount) => elementCount.Value / 32;
+        public override int? ElementCountFromArrayLength(int? elementCount) => (int)Math.Ceiling((double)elementCount.Value / 32.0);
         public override int? ArrayLengthFromElementCount(int? arrayCount) => arrayCount.Value * 32;
 
         override public bool[] Decode(Tag tag)
