@@ -62,7 +62,7 @@ namespace libplctag.DataTypes
 
         public void Encode(Tag tag, int offset, out int elementSize, TagInfo t)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This marshaller can only be used to read Tag Information");
         }
     }
 
