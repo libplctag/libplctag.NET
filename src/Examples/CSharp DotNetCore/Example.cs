@@ -18,7 +18,8 @@ namespace CSharpDotNetCore
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                ElementSize = DataType.DINT
+                Protocol = Protocol.ab_eip,
+                ElementSize = 4
             };
 
             myTag.Initialize(TIMEOUT);

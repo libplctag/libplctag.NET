@@ -18,7 +18,8 @@ namespace CSharpDotNetFramework
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                Protocol = Protocol.ab_eip
+                Protocol = Protocol.ab_eip,
+                ElementSize = 4
             };
 
             //Check that tag gets created properly

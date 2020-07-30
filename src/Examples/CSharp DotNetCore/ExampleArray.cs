@@ -21,7 +21,7 @@ namespace CSharpDotNetCore
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                ElementSize = DataType.DINT,
+                ElementSize = 4,
                 ElementCount = ARRAY_LENGTH
             };
 
@@ -34,10 +34,11 @@ namespace CSharpDotNetCore
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
             {
-                int arrayDint = myArrayTag.GetInt32(i* DataType.DINT);
+                int arrayDint = myArrayTag.GetInt32(i* 4);
                 Console.WriteLine($"Value[{i}]: {arrayDint}");
             }
 
         }
+
     }
 }

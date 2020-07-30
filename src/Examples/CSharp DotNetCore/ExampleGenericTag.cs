@@ -1,7 +1,5 @@
 ﻿using libplctag;
-using libplctag.Generic;
-using libplctag.Generic.DataTypes;
-using RandomTestValues;
+using libplctag.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,92 +20,182 @@ namespace CSharpDotNetCore
         {
 
             //Bool - Test both cases
-            var boolTag = new GenericTag<PlcTypeBOOL, bool>()
+            var boolTag = new Tag<BoolMarshaller, bool>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
             //Signed Numbers
-            var sintTag = new GenericTag<PlcTypeSINT, sbyte>()
+            var sintTag = new Tag<SintMarshaller, sbyte>()
             {
                 Name = "TestSINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
-            var intTag = new GenericTag<PlcTypeINT, short>()
+            var intTag = new Tag<IntMarshaller, short>()
             {
                 Name = "TestINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
-            var dintTag = new GenericTag<PlcTypeDINT, int>()
+            var dintTag = new Tag<DintMarshaller, int>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
-            var lintTag = new GenericTag<PlcTypeLINT, long>()
+            var lintTag = new Tag<LintMarshaller, long>()
             {
                 Name = "TestLINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
 
             //Floating Points
-            var realTag = new GenericTag<PlcTypeREAL, float>()
+            var realTag = new Tag<RealMarshaller, float>()
             {
                 Name = "TestREAL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
 
 
             boolTag.Initialize(timeout);
+            boolTag.Read(timeout);
+
             sintTag.Initialize(timeout);
+            sintTag.Read(timeout);
+
             intTag.Initialize(timeout);
+            intTag.Read(timeout);
+
             dintTag.Initialize(timeout);
+            dintTag.Read(timeout);
+
             lintTag.Initialize(timeout);
+            lintTag.Read(timeout);
+
             realTag.Initialize(timeout);
+            realTag.Read(timeout);
 
 
-            //Random value would look correct 50% of the time
-            TestTag(boolTag, true);
-            TestTag(boolTag, false);
 
         }
 
-        private static bool TestTag<T>(IGenericTag<T> tag) where T : struct
+
+        public static void StringArray()
         {
-            T testValue = RandomValue.Object<T>();
-            return TestTag(tag, testValue);
+
+            var stringTag = new Tag<StringMarshaller, string>()
+            {
+                Name = "MY_STRING_1D[0]",
+                Gateway = gateway,
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 100
+            };
+
+            stringTag.Initialize(timeout);
+
+            var r = new Random((int)DateTime.Now.ToBinary());
+
+            for (int ii = 0; ii < 100; ii++)
+                stringTag.Value[ii] = r.Next().ToString();
+
+            stringTag.Write(timeout);
+
+            Console.WriteLine("DONE");
+
+
         }
 
-        private static bool TestTag<T>(IGenericTag<T> tag, T testValue) where T : struct
+
+        public static void UDT_Array()
         {
-            Console.WriteLine($"\r\n*** {tag.Name} [0x{tag.CipCode:X2}] {typeof(T)} ***");
+
+            var sequenceArray = new Tag<SequenceMarshaller, Sequence>()
+            {
+                Name = "MY_SEQUENCE_3D[0,0,0]",
+                Gateway = gateway,
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 8
+            };
+            sequenceArray.Initialize(timeout);
+
+            for (int ii = 0; ii < 8; ii++)
+                sequenceArray.Value[ii].Command = ii * 2;
+
+            sequenceArray.Write(timeout);
 
 
-            tag.Value = testValue;
-            Console.WriteLine($"Write Value <{typeof(T)}> {testValue} to '{tag.Name}'");
-            tag.Write(timeout);
+            Console.WriteLine("DONE! Check values in RsLogix");
 
-            Console.WriteLine($"Read Value from {tag.Name}");
-            tag.Read(timeout);
-
-            T readback = tag.Value;
-
-            if (readback.Equals(testValue)) Console.WriteLine($"PASS: Read back matched test value");
-            else Console.WriteLine($"FAIL: Read back did not match test value - [{readback} != {testValue}]");
-
-            return readback.Equals(testValue);
         }
+
+
+        public static void MyBool()
+        {
+
+            var myBool = new Tag<BoolMarshaller, bool>()
+            {
+                Name = "MY_BOOL",
+                Gateway = gateway,
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 1
+            };
+            myBool.Initialize(timeout);
+
+            myBool.Value[0] = true;
+
+            myBool.Write(timeout);
+
+            Console.WriteLine("DONE! Check values in RsLogix");
+
+        }
+
+        public static void MyBoolArray()
+        {
+
+            var myBools = new Tag<BoolMarshaller, bool>()
+            {
+                Name = "MY_BOOL_1D[0]",
+                Gateway = gateway,
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 30
+            };
+            myBools.Initialize(timeout);
+
+            for (int ii = 0; ii < 30; ii++)
+            {
+                myBools.Value[ii] = !myBools.Value[ii];
+            }
+
+            myBools.Write(timeout);
+
+            Console.WriteLine("DONE! Check values in RsLogix");
+
+        }
+
     }
-    
+
 }

@@ -18,6 +18,7 @@ namespace CSharpDotNetCore
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
+                ElementSize = 4,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
@@ -52,7 +53,8 @@ namespace CSharpDotNetCore
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
-                        Protocol = Protocol.ab_eip
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag;
@@ -103,11 +105,12 @@ namespace CSharpDotNetCore
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
             var myTag = new Tag()
             {
-                Name = "Dummy",
+                Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                Protocol = Protocol.ab_eip
+                Protocol = Protocol.ab_eip,
+                ElementSize = 4
             };
             myTag.Initialize(5000);
 
@@ -183,11 +186,12 @@ namespace CSharpDotNetCore
                 .Select(i => {
                     var myTag = new Tag()
                     {
-                        Name = $"MY_DINT_ARRAY_1000[{i}]",
+                        Name = "PROGRAM:SomeProgram.SomeDINT",
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
-                        Protocol = Protocol.ab_eip
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag; 
@@ -229,7 +233,8 @@ namespace CSharpDotNetCore
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
-                        Protocol = Protocol.ab_eip
+                        Protocol = Protocol.ab_eip,
+                        ElementSize = 4
                     };
                     myTag.Initialize(5000);
                     return myTag;
