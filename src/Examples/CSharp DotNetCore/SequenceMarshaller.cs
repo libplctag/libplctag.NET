@@ -54,13 +54,6 @@ namespace CSharpDotNetCore
 
 
 
-        // You can define different marshalling behaviour for different types
-        // The PlcType is injected during Marshaller instantiation, and
-        // will be available to you in your marshalling logic
-        //public PlcType PlcType { get; set; }
-
-
-
         // This function is used to decode the binary buffer
         // into a CLR data transfer object
         // The function is called once per array element, so we only 
@@ -70,10 +63,11 @@ namespace CSharpDotNetCore
 
 
 
-            // If our UDT has a size that does not change, we can set this here.
+            // If our UDT has a size that does not change, we can set this based on ElementSize
             // Some types have an ElementSize that varies with it's contents (e.g. STRING on some controllers)
             // Those types must wait until they know the actual elementSize before returning it
             elementSize = ElementSize.Value;
+
 
 
             // Plain DINT objects
@@ -100,7 +94,6 @@ namespace CSharpDotNetCore
 
             // We can make use of other Marshallers!
             // This means that if our UDT contains other structures (or UDTs)
-            // We can develop a marshaller 
             var timerMarshaller = new TimerMarshaller()
             { PlcType = this.PlcType };                     // Pass the PlcType through to this Marshaller just in case it's behaviour depends on PlcType
 
