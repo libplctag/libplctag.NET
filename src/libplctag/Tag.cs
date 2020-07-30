@@ -119,11 +119,8 @@ namespace libplctag
 
                 if (!IsInitialized)
                     return _readCacheMillisecondDuration;
-
-                var result = plctag.plc_tag_get_int_attribute(tagHandle, "read_cache_ms", int.MinValue);
-                if (result == int.MinValue)
-                    throw new LibPlcTagException();
-                return result;
+                
+                return GetIntAttribute("read_cache_ms");
             }
             set
             {
@@ -132,10 +129,8 @@ namespace libplctag
                     _readCacheMillisecondDuration = value;
                     return;
                 }
-
-                var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, "read_cache_ms", value.Value);
-                if (result != Status.Ok)
-                    throw new LibPlcTagException(result);
+                
+                SetIntAttribute("read_cache_ms", value.Value);
             }
         }
 
@@ -344,7 +339,6 @@ namespace libplctag
 
         public byte[] GetBuffer()
         {
-
             var tagSize = GetSize();
             var temp = new byte[tagSize];
 
@@ -355,6 +349,21 @@ namespace libplctag
         }
 
         public string GetBufferHex() => BitConverter.ToString(GetBuffer());
+
+        private int GetIntAttribute(string attributeName)
+        {
+            var result = plctag.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
+            if (result == int.MinValue)
+                throw new LibPlcTagException();
+            return result;
+        }
+
+        private void SetIntAttribute(string attributeName, int value)
+        {
+            var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, attributeName, value);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
 
         public bool GetBit(int offset)
         {
