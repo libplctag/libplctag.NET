@@ -6,8 +6,8 @@ namespace libplctag.DataTypes
     public class StringMarshaller : IMarshaller<string>
     {
 
-        const int MAX_LOGIX_STRING_LENGTH = 82;
-        const int MAX_PCCC_STRING_LENGTH = 80;
+        const int MAX_CONTROLLOGIX_STRING_LENGTH = 82;
+        const int MAX_LOGIXPCCC_STRING_LENGTH = 80;
 
         public PlcType PlcType { get; set; }
 
@@ -34,10 +34,10 @@ namespace libplctag.DataTypes
             elementSize = ElementSize.Value;
             switch (PlcType)
             {
-                case PlcType.ControlLogix: return LogixDecode(tag, offset);
+                case PlcType.ControlLogix: return ControlLogixDecode(tag, offset);
                 case PlcType.Plc5: throw new NotImplementedException();
                 case PlcType.Slc500: throw new NotImplementedException();
-                case PlcType.LogixPccc: return PcccDecode(tag, offset);
+                case PlcType.LogixPccc: return LogixPcccDecode(tag, offset);
                 case PlcType.Micro800: throw new NotImplementedException();
                 case PlcType.MicroLogix: throw new NotImplementedException();
                 default: throw new NotImplementedException();
@@ -49,10 +49,10 @@ namespace libplctag.DataTypes
             elementSize = ElementSize.Value;
             switch (PlcType)
             {
-                case PlcType.ControlLogix: LogixEncode(tag, offset, value); break;
+                case PlcType.ControlLogix: ControlLogixEncode(tag, offset, value); break;
                 case PlcType.Plc5: throw new NotImplementedException();
                 case PlcType.Slc500: throw new NotImplementedException();
-                case PlcType.LogixPccc: PcccEncode(tag, offset, value); break;
+                case PlcType.LogixPccc: LogixPcccEncode(tag, offset, value); break;
                 case PlcType.Micro800: throw new NotImplementedException();
                 case PlcType.MicroLogix: throw new NotImplementedException();
                 default: break;
@@ -61,29 +61,14 @@ namespace libplctag.DataTypes
 
 
 
-        string PcccDecode(Tag tag, int offset)
-        {
-            var apparentStringLength = (int)tag.GetInt16(offset);
-
-            var actualStringLength = Math.Min(apparentStringLength, MAX_PCCC_STRING_LENGTH);
-
-            var asciiEncodedString = new byte[actualStringLength];
-
-            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
-            {
-                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + ii + 1);
-                asciiEncodedString[ii + 1] = tag.GetUInt8(offset + 4 + ii);
-            }
-
-            return Encoding.ASCII.GetString(asciiEncodedString);
-        }
+        
 
 
-        string LogixDecode(Tag tag, int offset)
+        string ControlLogixDecode(Tag tag, int offset)
         {
             var apparentStringLength = tag.GetInt32(offset);
 
-            var actualStringLength = Math.Min(apparentStringLength, MAX_LOGIX_STRING_LENGTH);
+            var actualStringLength = Math.Min(apparentStringLength, MAX_CONTROLLOGIX_STRING_LENGTH);
 
             var asciiEncodedString = new byte[actualStringLength];
             for (int ii = 0; ii < actualStringLength; ii++)
@@ -94,30 +79,9 @@ namespace libplctag.DataTypes
             return Encoding.ASCII.GetString(asciiEncodedString);
         }
 
-
-
-
-
-        void PcccEncode(Tag tag, int offset, string value)
+        void ControlLogixEncode(Tag tag, int offset, string value)
         {
-            if (value.Length > MAX_PCCC_STRING_LENGTH)
-                throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
-
-            var asciiEncodedString = Encoding.ASCII.GetBytes(value);
-
-            tag.SetInt16(offset, Convert.ToInt16(value.Length));
-
-            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
-            {
-                tag.SetUInt8(offset + ii + 4, Convert.ToByte(asciiEncodedString[ii]));
-                tag.SetUInt8(offset + ii + 4 + 1, Convert.ToByte(asciiEncodedString[ii+1]));
-            }
-        }
-
-
-        void LogixEncode(Tag tag, int offset, string value)
-        {
-            if (value.Length > MAX_LOGIX_STRING_LENGTH)
+            if (value.Length > MAX_CONTROLLOGIX_STRING_LENGTH)
                 throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
 
             var asciiEncodedString = Encoding.ASCII.GetBytes(value);
@@ -130,6 +94,40 @@ namespace libplctag.DataTypes
             }
         }
 
+
+
+        string LogixPcccDecode(Tag tag, int offset)
+        {
+            var apparentStringLength = (int)tag.GetInt16(offset);
+
+            var actualStringLength = Math.Min(apparentStringLength, MAX_LOGIXPCCC_STRING_LENGTH);
+
+            var asciiEncodedString = new byte[actualStringLength];
+
+            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
+            {
+                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + ii + 1);
+                asciiEncodedString[ii + 1] = tag.GetUInt8(offset + 4 + ii);
+            }
+
+            return Encoding.ASCII.GetString(asciiEncodedString);
+        }
+
+        void LogixPcccEncode(Tag tag, int offset, string value)
+        {
+            if (value.Length > MAX_LOGIXPCCC_STRING_LENGTH)
+                throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
+
+            var asciiEncodedString = Encoding.ASCII.GetBytes(value);
+
+            tag.SetInt16(offset, Convert.ToInt16(value.Length));
+
+            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
+            {
+                tag.SetUInt8(offset + ii + 4, Convert.ToByte(asciiEncodedString[ii]));
+                tag.SetUInt8(offset + ii + 4 + 1, Convert.ToByte(asciiEncodedString[ii+1]));
+            }
+        }
 
     }
 }
