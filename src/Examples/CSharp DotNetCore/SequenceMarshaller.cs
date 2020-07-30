@@ -50,14 +50,14 @@ namespace CSharpDotNetCore
         // provide the value so the tag constructor can use it
         // If ElementSize = null, this will not be passed to the
         // Tag constructor
-        public int? ElementSize => 268;
+        override public int? ElementSize => 268;
 
 
 
         // You can define different marshalling behaviour for different types
         // The PlcType is injected during Marshaller instantiation, and
         // will be available to you in your marshalling logic
-        public PlcType PlcType { get; set; }
+        //public PlcType PlcType { get; set; }
 
 
 
