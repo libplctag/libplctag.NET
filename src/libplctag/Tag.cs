@@ -348,7 +348,6 @@ namespace libplctag
             return temp;
         }
 
-        public string GetBufferHex() => BitConverter.ToString(GetBuffer());
 
         private int GetIntAttribute(string attributeName)
         {

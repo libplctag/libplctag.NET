@@ -31,11 +31,14 @@ namespace CSharpDotNetCore
     /// 
     /// In order to understand how the structure is encoded
     /// we need to inspect the underlying buffer.
-    /// Use GetBuffer() or GetBufferHex() from the tag object 
-    /// to get access to the raw bytes. Then, use your PLC
+    /// Use GetBuffer() from the tag object 
+    /// to access to the raw bytes. Then, use your PLC
     /// programming software to manually modify values and see
     /// how the raw bytes change.
     /// 
+    /// If you are accessing an array of your UDT, try starting
+    /// out by addressing only one element of this array (i.e.
+    /// set ElementCount = 1).
     /// 
     /// </remarks>
     public class SequenceMarshaller : IMarshaller<Sequence>
@@ -43,8 +46,10 @@ namespace CSharpDotNetCore
         
 
 
-        // Because our UDT has an unchanging ElementSize
-        // Provide the value so the tag constructor can use it
+        // Because our UDT has an unchanging ElementSize,
+        // provide the value so the tag constructor can use it
+        // If ElementSize = null, this will not be passed to the
+        // Tag constructor
         public int? ElementSize => 268;
 
 
@@ -56,9 +61,14 @@ namespace CSharpDotNetCore
 
 
 
-
+        // This function is used to decode the binary buffer
+        // into a CLR data transfer object
+        // The function is called once per array element, so we only 
+        // need to decode one array element at a time.
         public Sequence Decode(Tag tag, int offset, out int elementSize)
         {
+
+
 
             // If our UDT has a size that does not change, we can set this here.
             // Some types have an ElementSize that varies with it's contents (e.g. STRING on some controllers)
@@ -125,7 +135,6 @@ namespace CSharpDotNetCore
 
 
 
-
         public void Encode(Tag tag, int offset, out int elementSize, Sequence value)
         {
 
@@ -154,13 +163,10 @@ namespace CSharpDotNetCore
             tag.SetInt32(offset + 24, DINT6);
 
             var timerMarshaller = new TimerMarshaller();
-
-            int currentTimerOffset = 0;
-            for (int i = 0; i < 20; i++)
+            for (int ii = 0; ii < 20; ii++)
             {
-                var timerOffset = offset + 28 + currentTimerOffset;
-                timerMarshaller.Encode(tag, timerOffset, out int timerSize, value.Timer[i]);
-                currentTimerOffset += timerSize;
+                var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
+                timerMarshaller.Encode(tag, timerOffset, out int timerSize, value.Timer[ii]);
             }
 
         }
@@ -168,7 +174,7 @@ namespace CSharpDotNetCore
         static int BitArrayToInt(BitArray binary)
         {
             if (binary == null)
-                throw new ArgumentNullException("binary");
+                throw new ArgumentNullException(nameof(binary));
             if (binary.Length > 32)
                 throw new ArgumentException("Must be at most 32 bits long");
 
@@ -179,6 +185,19 @@ namespace CSharpDotNetCore
 
     }
 
+
+
+    /// <summary>
+    /// Data Transfer Object for the User Defined Type.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Although it is not absolutely required, it is best
+    /// practice to here use the same naming and casing as is used
+    /// in the User Defined Type in the PLC, and to keep these
+    /// classes as pure Data Transfer Objects.
+    /// </remarks>
+    /// 
     public class Sequence
     {
         public int Command { get; set; }
@@ -192,4 +211,6 @@ namespace CSharpDotNetCore
         public bool Stop { get; set; }
         public AbTimer[] Timer { get; set; }
     }
+
+
 }
