@@ -3,9 +3,6 @@
 namespace libplctag.DataTypes
 {
 
-    /// <summary>
-    /// ElementCount for BOOL arrays is Array Length divided by 32
-    /// </summary>
     public class BoolMarshaller : Marshaller<bool>
     {
 
