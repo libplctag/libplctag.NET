@@ -100,7 +100,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ElementCount = 100
+                ArrayLength = 100
             };
 
             stringTag.Initialize(5000);
@@ -109,7 +109,7 @@ namespace CSharpDotNetCore
 
             for (int ii = 0; ii < 100; ii++)
                 stringTag.Value[ii] = r.Next().ToString();
-            
+
             stringTag.Write(5000);
 
             Console.WriteLine("DONE");
@@ -128,18 +128,65 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ElementCount = 8
+                ArrayLength = 8
             };
             sequenceArray.Initialize(5000);
 
             for (int ii = 0; ii < 8; ii++)
-                sequenceArray.Value[ii].Command = ii * 4;
+                sequenceArray.Value[ii].Command = ii * 2;
 
             sequenceArray.Write(5000);
 
 
             Console.WriteLine("DONE! Check values in RsLogix");
 
+        }
+
+
+        public static void MyBool()
+        {
+
+            var myBool = new Tag<BoolMarshaller, bool>()
+            {
+                Name = "MY_BOOL",
+                Gateway = "192.168.0.10",
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 1
+            };
+            myBool.Initialize(5000);
+
+            myBool.Value[0] = true;
+
+            myBool.Write(5000);
+
+            Console.WriteLine("DONE! Check values in RsLogix");
+
+        }
+
+        public static void MyBoolArray()
+        {
+
+            var myBools = new Tag<BoolMarshaller, bool>()
+            {
+                Name = "MY_BOOL_1D[0]",
+                Gateway = "192.168.0.10",
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayLength = 30
+            };
+            myBools.Initialize(5000);
+
+            for (int ii = 0; ii < 30; ii++)
+            {
+                myBools.Value[ii] = !myBools.Value[ii];
+            }
+
+            myBools.Write(5000);
+
+            Console.WriteLine("DONE! Check values in RsLogix");
 
         }
 

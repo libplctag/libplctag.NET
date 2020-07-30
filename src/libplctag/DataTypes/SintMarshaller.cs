@@ -1,19 +1,21 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class SintMarshaller : IMarshaller<sbyte>
+    public class SintMarshaller : Marshaller<sbyte>
     {
-        public int? ElementSize => 1;
-        public PlcType PlcType { get; set; }
-        public sbyte Decode(Tag tag, int offset, out int elementSize)
+
+        override public int? ElementSize => 1;
+
+        override public sbyte DecodeOne(Tag tag, int offset, out int elementSize)
         {
             elementSize = ElementSize.Value;
-            return tag.GetInt8(offset);
+            return tag.GetInt8(offset * ElementSize.Value);
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, sbyte value)
+        override public void EncodeOne(Tag tag, int offset, out int elementSize, sbyte value)
         {
             elementSize = ElementSize.Value;
             tag.SetInt8(offset, value);
         }
+
     }
 }

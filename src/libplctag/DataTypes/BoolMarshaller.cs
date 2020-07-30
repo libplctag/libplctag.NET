@@ -1,20 +1,48 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class BoolMarshaller : IMarshaller<bool>
+
+    /// <summary>
+    /// ElementCount for BOOL arrays is Array Length divided by 32
+    /// </summary>
+    public class BoolMarshaller : Marshaller<bool>
     {
 
-        public int? ElementSize => 1;
-        public PlcType PlcType { get; set; }
-        public bool Decode(Tag tag, int offset, out int elementSize)
+        public override int? ElementCountFromArrayLength(int? elementCount) => elementCount.Value / 32;
+        public override int? ArrayLengthFromElementCount(int? arrayCount) => arrayCount.Value * 32;
+
+        override public bool[] Decode(Tag tag)
         {
-            elementSize = ElementSize.Value;
-            return tag.GetBit(offset);
+
+            var buffer = new bool[tag.ElementCount.Value * 32];
+            for (int ii = 0; ii < tag.ElementCount.Value * 32; ii++)
+            {
+                buffer[ii] = tag.GetBit(ii);
+            }
+            return buffer;
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, bool value)
+
+
+        override public void Encode(Tag tag, bool[] value)
         {
-            elementSize = ElementSize.Value;
-            tag.SetBit(offset, value);
+            for (int ii = 0; ii < tag.ElementCount.Value * 32; ii++)
+            {
+                tag.SetBit(ii, value[ii]);
+            }
         }
+
+
+        public override bool DecodeOne(Tag tag, int offset, out int elementSize)
+        {
+            // This method is not used because we provided new implementations for Decode()
+            throw new System.NotImplementedException();
+        }
+
+        public override void EncodeOne(Tag tag, int offset, out int elementSize, bool value)
+        {
+            // This method is not used because we provided new implementations for Decode()
+            throw new System.NotImplementedException();
+        }
+
     }
 }

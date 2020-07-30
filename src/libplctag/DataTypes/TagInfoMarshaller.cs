@@ -15,16 +15,13 @@ namespace libplctag.DataTypes
         public uint[] Dimensions { get; set; }
     }
 
-    public class TagInfoMarshaller : IMarshaller<TagInfo>
+    public class TagInfoMarshaller : Marshaller<TagInfo>
     {
 
         const int TAG_STRING_SIZE = 200;
 
-        public int? ElementSize => null;
 
-        public PlcType PlcType { get; set; }
-
-        public TagInfo Decode(Tag tag, int offset, out int elementSize)
+        override public TagInfo DecodeOne(Tag tag, int offset, out int elementSize)
         {
 
             var tagInstanceId = tag.GetUInt32(offset);
@@ -60,10 +57,11 @@ namespace libplctag.DataTypes
 
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, TagInfo t)
+        public override void EncodeOne(Tag tag, int offset, out int elementSize, TagInfo value)
         {
             throw new NotImplementedException("This marshaller can only be used to read Tag Information");
         }
+
     }
 
 }

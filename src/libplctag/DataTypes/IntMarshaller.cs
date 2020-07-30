@@ -1,16 +1,16 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class IntMarshaller : IMarshaller<short>
+    public class IntMarshaller : Marshaller<short>
     {
-        public int? ElementSize => 8;
-        public PlcType PlcType { get; set; }
-        public short Decode(Tag tag, int offset, out int elementSize)
+        override public int? ElementSize => 2;
+
+        override public short DecodeOne(Tag tag, int offset, out int elementSize)
         {
             elementSize = ElementSize.Value;
-            return tag.GetInt16(offset);
+            return tag.GetInt16(offset * ElementSize.Value);
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, short value)
+        override public void EncodeOne(Tag tag, int offset, out int elementSize, short value)
         {
             elementSize = ElementSize.Value;
             tag.SetInt16(offset, value);

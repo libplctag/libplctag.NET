@@ -29,13 +29,14 @@ namespace CSharpDotNetCore
             tags.Read(TIMEOUT_MS);
 
             ConsoleTable
-                .From(tags.Value.Select(t => new {
-                        t.Id,
-                        Type = $"0x{t.Type:X}",
-                        t.Name,
-                        t.Length,
-                        Dimensions = string.Join(',', t.Dimensions)
-                    }))
+                .From(tags.Value.Select(t => new
+                {
+                    t.Id,
+                    Type = $"0x{t.Type:X}",
+                    t.Name,
+                    t.Length,
+                    Dimensions = string.Join(',', t.Dimensions)
+                }))
                 .Configure(o => o.NumberAlignment = Alignment.Right)
                 .Write(Format.Default);
 

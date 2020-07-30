@@ -1,17 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class StringMarshaller : IMarshaller<string>
+    public class StringMarshaller : Marshaller<string>
     {
 
         const int MAX_CONTROLLOGIX_STRING_LENGTH = 82;
         const int MAX_LOGIXPCCC_STRING_LENGTH = 80;
 
-        public PlcType PlcType { get; set; }
-
-        public int? ElementSize
+        override public int? ElementSize
         {
             get
             {
@@ -29,7 +28,7 @@ namespace libplctag.DataTypes
         }
 
 
-        public string Decode(Tag tag, int offset, out int elementSize)
+        override public string DecodeOne(Tag tag, int offset, out int elementSize)
         {
             elementSize = ElementSize.Value;
             switch (PlcType)
@@ -44,7 +43,7 @@ namespace libplctag.DataTypes
             }
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, string value)
+        override public void EncodeOne(Tag tag, int offset, out int elementSize, string value)
         {
             elementSize = ElementSize.Value;
             switch (PlcType)
@@ -61,7 +60,7 @@ namespace libplctag.DataTypes
 
 
 
-        
+
 
 
         string ControlLogixDecode(Tag tag, int offset)
@@ -185,8 +184,8 @@ namespace libplctag.DataTypes
 
             for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                asciiEncodedString[ii] = tag.GetUInt8(offset + 2 + ii+1);
-                asciiEncodedString[ii+1] = tag.GetUInt8(offset + 2 + ii);
+                asciiEncodedString[ii] = tag.GetUInt8(offset + 2 + ii + 1);
+                asciiEncodedString[ii + 1] = tag.GetUInt8(offset + 2 + ii);
             }
 
             return Encoding.ASCII.GetString(asciiEncodedString);
@@ -203,7 +202,7 @@ namespace libplctag.DataTypes
 
             for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                tag.SetUInt8(offset + 2 + ii, Convert.ToByte(asciiEncodedString[ii+1]));
+                tag.SetUInt8(offset + 2 + ii, Convert.ToByte(asciiEncodedString[ii + 1]));
                 tag.SetUInt8(offset + 2 + ii + 1, Convert.ToByte(asciiEncodedString[ii]));
             }
         }

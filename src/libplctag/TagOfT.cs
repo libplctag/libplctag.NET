@@ -1,4 +1,5 @@
-﻿using System;
+﻿using libplctag.DataTypes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -7,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace libplctag
 {
-    public class Tag<Marshaller, T> : IDisposable
-        where Marshaller : IMarshaller<T>, new()
+    public class Tag<M, T> : IDisposable
+        where M : Marshaller<T>, new()
     {
 
         private readonly Tag _tag;
-        private readonly IMarshaller<T> _marshaller;
+        private readonly Marshaller<T> _marshaller;
 
         public Tag()
         {
-            _marshaller = new Marshaller();
+            _marshaller = new M();
             _tag = new Tag()
             {
-                ElementSize = _marshaller.ElementSize
+                ElementSize = _marshaller.ElementSize,
             };
         }
 
@@ -43,10 +44,14 @@ namespace libplctag
             get => _tag.PlcType;
             set => _tag.PlcType = value;
         }
-        public int? ElementCount
+        public int? ArrayLength
         {
-            get => _tag.ElementCount;
-            set => _tag.ElementCount = value;
+            get => _marshaller.ArrayLengthFromElementCount(_tag.ElementCount);
+            set
+            {
+                var temp = _marshaller.ElementCountFromArrayLength(value);
+                _tag.ElementCount = temp;
+            }
         }
         public string Name
         {
@@ -121,29 +126,12 @@ namespace libplctag
 
         void DecodeAll()
         {
-
-            var tempArray = new List<T>();
-
-            var totalTagSize = _tag.GetSize();
-
-            int offset = 0;
-            while(offset < totalTagSize)
-            {
-                tempArray.Add(_marshaller.Decode(_tag, offset, out int elementSize));
-                offset += elementSize;
-            }
-
-            Value = tempArray.ToArray();
+            Value = _marshaller.Decode(_tag);
         }
 
         void EncodeAll()
         {
-            int offset = 0;
-            for (int ii = 0; ii < ElementCount; ii++)
-            {
-                _marshaller.Encode(_tag, offset, out int elementSize, Value[ii]);
-                offset += elementSize;
-            }
+            _marshaller.Encode(_tag, Value);
         }
 
         public Status GetStatus() => _tag.GetStatus();

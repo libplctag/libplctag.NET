@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class TimerMarshaller: IMarshaller<AbTimer>
+    public class TimerMarshaller : Marshaller<AbTimer>
     {
 
-        public int? ElementSize => 12;
+        override public int? ElementSize => 12;
 
-        public PlcType PlcType { get; set; }
-
-        public AbTimer Decode(Tag tag, int offset, out int elementSize)
+        override public AbTimer DecodeOne(Tag tag, int offset, out int elementSize)
         {
 
             elementSize = ElementSize.Value;
@@ -37,7 +36,7 @@ namespace libplctag.DataTypes
 
         }
 
-        public void Encode(Tag tag, int offset, out int elementSize, AbTimer value)
+        override public void EncodeOne(Tag tag, int offset, out int elementSize, AbTimer value)
         {
 
             elementSize = ElementSize.Value;
