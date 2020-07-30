@@ -25,7 +25,8 @@ namespace CSharpDotNetCore
                 Name = "TestBOOL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
             //Signed Numbers
             var sintTag = new Tag<SintMarshaller, sbyte>()
@@ -33,28 +34,32 @@ namespace CSharpDotNetCore
                 Name = "TestSINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
             var intTag = new Tag<IntMarshaller, short>()
             {
                 Name = "TestINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
             var dintTag = new Tag<DintMarshaller, int>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
             var lintTag = new Tag<LintMarshaller, long>()
             {
                 Name = "TestLINT",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
 
             //Floating Points
@@ -63,7 +68,8 @@ namespace CSharpDotNetCore
                 Name = "TestREAL",
                 Gateway = gateway,
                 Path = path,
-                PlcType = PlcType.ControlLogix
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip
             };
 
 
@@ -96,21 +102,21 @@ namespace CSharpDotNetCore
             var stringTag = new Tag<StringMarshaller, string>()
             {
                 Name = "MY_STRING_1D[0]",
-                Gateway = "192.168.0.10",
+                Gateway = gateway,
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 100
             };
 
-            stringTag.Initialize(5000);
+            stringTag.Initialize(timeout);
 
             var r = new Random((int)DateTime.Now.ToBinary());
 
             for (int ii = 0; ii < 100; ii++)
                 stringTag.Value[ii] = r.Next().ToString();
 
-            stringTag.Write(5000);
+            stringTag.Write(timeout);
 
             Console.WriteLine("DONE");
 
@@ -124,18 +130,18 @@ namespace CSharpDotNetCore
             var sequenceArray = new Tag<SequenceMarshaller, Sequence>()
             {
                 Name = "MY_SEQUENCE_3D[0,0,0]",
-                Gateway = "192.168.0.10",
+                Gateway = gateway,
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 8
             };
-            sequenceArray.Initialize(5000);
+            sequenceArray.Initialize(timeout);
 
             for (int ii = 0; ii < 8; ii++)
                 sequenceArray.Value[ii].Command = ii * 2;
 
-            sequenceArray.Write(5000);
+            sequenceArray.Write(timeout);
 
 
             Console.WriteLine("DONE! Check values in RsLogix");
@@ -149,17 +155,17 @@ namespace CSharpDotNetCore
             var myBool = new Tag<BoolMarshaller, bool>()
             {
                 Name = "MY_BOOL",
-                Gateway = "192.168.0.10",
+                Gateway = gateway,
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 1
             };
-            myBool.Initialize(5000);
+            myBool.Initialize(timeout);
 
             myBool.Value[0] = true;
 
-            myBool.Write(5000);
+            myBool.Write(timeout);
 
             Console.WriteLine("DONE! Check values in RsLogix");
 
@@ -171,20 +177,20 @@ namespace CSharpDotNetCore
             var myBools = new Tag<BoolMarshaller, bool>()
             {
                 Name = "MY_BOOL_1D[0]",
-                Gateway = "192.168.0.10",
+                Gateway = gateway,
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 30
             };
-            myBools.Initialize(5000);
+            myBools.Initialize(timeout);
 
             for (int ii = 0; ii < 30; ii++)
             {
                 myBools.Value[ii] = !myBools.Value[ii];
             }
 
-            myBools.Write(5000);
+            myBools.Write(timeout);
 
             Console.WriteLine("DONE! Check values in RsLogix");
 
