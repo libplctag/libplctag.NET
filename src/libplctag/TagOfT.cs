@@ -43,7 +43,6 @@ namespace libplctag
             get => _tag.PlcType;
             set => _tag.PlcType = value;
         }
-
         public int? ElementCount
         {
             get => _tag.ElementCount;
