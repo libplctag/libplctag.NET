@@ -88,9 +88,9 @@ namespace libplctag.DataTypes
 
             tag.SetInt16(offset, Convert.ToInt16(value.Length));
 
-            for (int i = 0; i < asciiEncodedString.Length; i++)
+            for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                tag.SetUInt8(offset + i + 2 + 2, Convert.ToByte(asciiEncodedString[i]));
+                tag.SetUInt8(offset + 4 + 2 + ii, Convert.ToByte(asciiEncodedString[ii]));
             }
         }
 
@@ -133,10 +133,9 @@ namespace libplctag.DataTypes
 
             var asciiEncodedString = new byte[actualStringLength];
 
-            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
+            for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + ii + 1);
-                asciiEncodedString[ii + 1] = tag.GetUInt8(offset + 4 + ii);
+                asciiEncodedString[ii] = tag.GetUInt8(offset + 2 + ii);
             }
 
             return Encoding.ASCII.GetString(asciiEncodedString);
@@ -151,10 +150,9 @@ namespace libplctag.DataTypes
 
             tag.SetInt16(offset, Convert.ToInt16(value.Length));
 
-            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
+            for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                tag.SetUInt8(offset + ii + 4, Convert.ToByte(asciiEncodedString[ii]));
-                tag.SetUInt8(offset + ii + 4 + 1, Convert.ToByte(asciiEncodedString[ii+1]));
+                tag.SetUInt8(offset + 2 + ii, Convert.ToByte(asciiEncodedString[ii]));
             }
         }
 
