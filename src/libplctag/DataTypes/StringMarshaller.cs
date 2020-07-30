@@ -179,12 +179,35 @@ namespace libplctag.DataTypes
 
         string MicroLogixDecode(Tag tag, int offset)
         {
-            throw new NotImplementedException();
+            var apparentStringLength = (int)tag.GetInt16(offset);
+
+            var actualStringLength = Math.Min(apparentStringLength, MAX_LOGIXPCCC_STRING_LENGTH);
+
+            var asciiEncodedString = new byte[actualStringLength];
+
+            for (int ii = 0; ii < asciiEncodedString.Length; ii++)
+            {
+                asciiEncodedString[ii] = tag.GetUInt8(offset + 2 + ii+1);
+                asciiEncodedString[ii+1] = tag.GetUInt8(offset + 2 + ii);
+            }
+
+            return Encoding.ASCII.GetString(asciiEncodedString);
         }
 
         void MicroLogixEncode(Tag tag, int offset, string value)
         {
-            throw new NotImplementedException();
+            if (value.Length > MAX_LOGIXPCCC_STRING_LENGTH)
+                throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
+
+            var asciiEncodedString = Encoding.ASCII.GetBytes(value);
+
+            tag.SetInt16(offset, Convert.ToInt16(value.Length));
+
+            for (int ii = 0; ii < asciiEncodedString.Length; ii++)
+            {
+                tag.SetUInt8(offset + 2 + ii, Convert.ToByte(asciiEncodedString[ii+1]));
+                tag.SetUInt8(offset + 2 + ii + 1, Convert.ToByte(asciiEncodedString[ii]));
+            }
         }
 
 
