@@ -35,11 +35,11 @@ namespace libplctag.DataTypes
             switch (PlcType)
             {
                 case PlcType.ControlLogix: return ControlLogixDecode(tag, offset);
-                case PlcType.Plc5: throw new NotImplementedException();
-                case PlcType.Slc500: throw new NotImplementedException();
+                case PlcType.Plc5: return Plc5Decode(tag, offset);
+                case PlcType.Slc500: return Slc500Decode(tag, offset);
                 case PlcType.LogixPccc: return LogixPcccDecode(tag, offset);
-                case PlcType.Micro800: throw new NotImplementedException();
-                case PlcType.MicroLogix: throw new NotImplementedException();
+                case PlcType.Micro800: return Micro800Decode(tag, offset);
+                case PlcType.MicroLogix: return MicroLogixDecode(tag, offset);
                 default: throw new NotImplementedException();
             }
         }
@@ -50,11 +50,11 @@ namespace libplctag.DataTypes
             switch (PlcType)
             {
                 case PlcType.ControlLogix: ControlLogixEncode(tag, offset, value); break;
-                case PlcType.Plc5: throw new NotImplementedException();
-                case PlcType.Slc500: throw new NotImplementedException();
+                case PlcType.Plc5: Plc5Encode(tag, offset, value); break;
+                case PlcType.Slc500: Slc500Encode(tag, offset, value); break;
                 case PlcType.LogixPccc: LogixPcccEncode(tag, offset, value); break;
-                case PlcType.Micro800: throw new NotImplementedException();
-                case PlcType.MicroLogix: throw new NotImplementedException();
+                case PlcType.Micro800: Micro800Encode(tag, offset, value); break;
+                case PlcType.MicroLogix: MicroLogixEncode(tag, offset, value); break;
                 default: break;
             }
         }
@@ -96,6 +96,35 @@ namespace libplctag.DataTypes
 
 
 
+
+
+        string Plc5Decode(Tag tag, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Plc5Encode(Tag tag, int offset, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+        string Slc500Decode(Tag tag, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Slc500Encode(Tag tag, int offset, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+
         string LogixPcccDecode(Tag tag, int offset)
         {
             var apparentStringLength = (int)tag.GetInt16(offset);
@@ -128,6 +157,38 @@ namespace libplctag.DataTypes
                 tag.SetUInt8(offset + ii + 4 + 1, Convert.ToByte(asciiEncodedString[ii+1]));
             }
         }
+
+
+
+
+        string Micro800Decode(Tag tag, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Micro800Encode(Tag tag, int offset, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+
+
+
+        string MicroLogixDecode(Tag tag, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        void MicroLogixEncode(Tag tag, int offset, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
 
     }
 }
