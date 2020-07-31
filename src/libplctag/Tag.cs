@@ -145,6 +145,29 @@ namespace libplctag
             Dispose();
         }
 
+        private bool _isDisposed = false;
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            if (!IsInitialized)
+                return;
+
+            var result = (Status)plctag.plc_tag_destroy(tagHandle);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+
+            _isDisposed = true;
+        }
+
+        public void Abort()
+        {
+            var result = (Status)plctag.plc_tag_abort(tagHandle);
+            if (result != Status.Ok)
+                throw new LibPlcTagException(result);
+        }
+
         private string GetAttributeString()
         {
 
@@ -238,28 +261,6 @@ namespace libplctag
 
         }
 
-        private bool _isDisposed = false;
-        public void Dispose()
-        {
-            if (_isDisposed)
-                return;
-
-            if (!IsInitialized)
-                return;
-
-            var result = (Status)plctag.plc_tag_destroy(tagHandle);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
-
-            _isDisposed = true;
-        }
-
-        public void Abort()
-        {
-            var result = (Status)plctag.plc_tag_abort(tagHandle);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
-        }
         public void Read() => Read((int)Timeout.TotalMilliseconds);
 
         public void Read(int millisecondTimeout)
