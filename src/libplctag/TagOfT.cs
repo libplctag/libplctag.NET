@@ -64,7 +64,18 @@ namespace libplctag
             get => _tag.ReadCacheMillisecondDuration;
             set => _tag.ReadCacheMillisecondDuration = value;
         }
+        public TimeSpan Timeout
+        {
+            get => _tag.Timeout;
+            set => _tag.Timeout = value;
+        }
 
+
+        public void Initialize()
+        {
+            _tag.Initialize();
+            DecodeAll();
+        }
 
         public void Initialize(int millisecondTimeout)
         {
@@ -101,6 +112,11 @@ namespace libplctag
             _tag.Read(millisecondTimeout);
             DecodeAll();
         }
+        public void Read()
+        {
+            _tag.Read();
+            DecodeAll();
+        }
 
         public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
         {
@@ -118,6 +134,12 @@ namespace libplctag
         {
             EncodeAll();
             _tag.Write(millisecondTimeout);
+        }
+
+        public void Write()
+        {
+            EncodeAll();
+            _tag.Write();
         }
 
         void DecodeAll()
