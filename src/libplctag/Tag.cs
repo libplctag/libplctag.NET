@@ -134,6 +134,10 @@ namespace libplctag
             }
         }
 
+
+        public TimeSpan Timeout { get; set; } = System.Threading.Timeout.InfiniteTimeSpan;
+
+
         private int tagHandle;
 
         ~Tag()
@@ -164,6 +168,8 @@ namespace libplctag
 
         public bool IsInitialized { get; private set; }
 
+        public void Initialize() => Initialize((int)Timeout.TotalMilliseconds);
+
         public void Initialize(int millisecondTimeout)
         {
 
@@ -189,11 +195,20 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(millisecondTimeout);
-                await InitializeAsync(cts.Token);
+                await InitializeAsyncInternal(cts.Token);
             }
         }
 
         public async Task InitializeAsync(CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(Timeout);
+                await InitializeAsyncInternal(cts.Token);
+            }
+        }
+
+        async Task InitializeAsyncInternal(CancellationToken token)
         {
 
             if (IsInitialized)
@@ -245,6 +260,7 @@ namespace libplctag
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
         }
+        public void Read() => Read((int)Timeout.TotalMilliseconds);
 
         public void Read(int millisecondTimeout)
         {
@@ -263,11 +279,20 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(millisecondTimeout);
-                await ReadAsync(cts.Token);
+                await ReadAsyncInternal(cts.Token);
             }
         }
 
         public async Task ReadAsync(CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(Timeout);
+                await ReadAsyncInternal(cts.Token);
+            }
+        }
+
+        async Task ReadAsyncInternal(CancellationToken token)
         {
 
             var status = (Status)plctag.plc_tag_read(tagHandle, 0);
@@ -286,6 +311,8 @@ namespace libplctag
 
         }
 
+        public void Write() => Write((int)Timeout.TotalMilliseconds);
+
         public void Write(int millisecondTimeout)
         {
 
@@ -303,11 +330,20 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(millisecondTimeout);
-                await WriteAsync(cts.Token);
+                await WriteAsyncInternal(cts.Token);
             }
         }
 
         public async Task WriteAsync(CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(Timeout);
+                await WriteAsyncInternal(cts.Token);
+            }
+        }
+
+        async Task WriteAsyncInternal(CancellationToken token)
         {
 
             var status = (Status)plctag.plc_tag_write(tagHandle, 0);
