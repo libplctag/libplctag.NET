@@ -135,7 +135,7 @@ namespace libplctag
         }
 
 
-        public TimeSpan Timeout { get; set; } = System.Threading.Timeout.InfiniteTimeSpan;
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 
 
         private int tagHandle;
