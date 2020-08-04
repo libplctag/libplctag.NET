@@ -3,8 +3,8 @@
 This wrapper project is still in alpha. If you have problems, please refer to the [project's contact information](https://github.com/libplctag/libplctag#contact).
 
 This repository contains two .NET wrappers for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
-* [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
-* [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport)
+* [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
+* [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag.NativeImport) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport)
 
 ## Goals
 
