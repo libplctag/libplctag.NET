@@ -22,14 +22,15 @@ namespace CSharpDotNetCore
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 ElementSize = 4,
-                ElementCount = ARRAY_LENGTH
+                ElementCount = ARRAY_LENGTH,
+                Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
 
-            myArrayTag.Initialize(TIMEOUT);
+            myArrayTag.Initialize();
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
-            myArrayTag.Read(TIMEOUT);
+            myArrayTag.Read();
 
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)

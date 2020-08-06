@@ -21,13 +21,14 @@ namespace CSharpDotNetCore
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                Protocol = Protocol.ab_eip
+                Protocol = Protocol.ab_eip,
+                Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
-            myTag.Initialize(TIMEOUT);
+            myTag.Initialize();
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
-            myTag.Read(TIMEOUT);
+            myTag.Read();
 
             //Read back value from local memory
             int myDint = myTag.GetInt32(0);
@@ -38,11 +39,11 @@ namespace CSharpDotNetCore
             myTag.SetInt32(0, myDint);
 
             Console.WriteLine($"Starting tag write ({myDint})");
-            myTag.Write(TIMEOUT);
+            myTag.Write();
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting synchronous tag read");
-            myTag.Read(TIMEOUT);
+            myTag.Read();
 
             //Read back value from local memory
             var myDintReadBack = myTag.GetInt32(0);
