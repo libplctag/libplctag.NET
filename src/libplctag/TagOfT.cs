@@ -77,27 +77,9 @@ namespace libplctag
             DecodeAll();
         }
 
-        public void Initialize(int millisecondTimeout)
-        {
-            _tag.Initialize(millisecondTimeout);
-            DecodeAll();
-        }
-
-        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default)
-        {
-            await _tag.InitializeAsync(millisecondTimeout, token);
-            DecodeAll();
-        }
-
         public async Task InitializeAsync(CancellationToken token = default)
         {
             await _tag.InitializeAsync(token);
-            DecodeAll();
-        }
-
-        public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
-        {
-            await _tag.ReadAsync(millisecondTimeout, token);
             DecodeAll();
         }
 
@@ -107,33 +89,16 @@ namespace libplctag
             DecodeAll();
         }
 
-        public void Read(int millisecondTimeout)
-        {
-            _tag.Read(millisecondTimeout);
-            DecodeAll();
-        }
         public void Read()
         {
             _tag.Read();
             DecodeAll();
         }
 
-        public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
-        {
-            EncodeAll();
-            await _tag.WriteAsync(millisecondTimeout, token);
-        }
-
         public async Task WriteAsync(CancellationToken token = default)
         {
             EncodeAll();
-            await _tag.ReadAsync(token);
-        }
-
-        public void Write(int millisecondTimeout)
-        {
-            EncodeAll();
-            _tag.Write(millisecondTimeout);
+            await _tag.WriteAsync(token);
         }
 
         public void Write()
