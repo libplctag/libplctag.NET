@@ -13,7 +13,8 @@ namespace libplctag
     {
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
-        
+        private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(100);
+        private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private string _name;
         public string Name
@@ -134,93 +135,25 @@ namespace libplctag
             }
         }
 
+        private TimeSpan timeout = defaultTimeout;
+        public TimeSpan Timeout
+        {
+            get { return timeout; }
+            set
+            {
+                if (value <= TimeSpan.Zero || value > maxTimeout)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+                timeout = value;
+            }
+        }
+
         private int tagHandle;
 
         ~Tag()
         {
             Dispose();
-        }
-
-        private string GetAttributeString()
-        {
-
-            var attributes = new Dictionary<string, string>();
-
-            attributes.Add("protocol", this.Protocol.ToString());
-            attributes.Add("gateway", this.Gateway);
-            attributes.Add("path", Path);
-            attributes.Add("plc", PlcType.ToString().ToLower());
-            attributes.Add("elem_size", ElementSize?.ToString());
-            attributes.Add("elem_count", ElementCount?.ToString());
-            attributes.Add("name", Name);
-            attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
-            if(UseConnectedMessaging.HasValue)
-                attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
-
-            string separator = "&";
-            return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
-
-        }
-
-        public bool IsInitialized { get; private set; }
-
-        public void Initialize(int millisecondTimeout)
-        {
-
-            if (IsInitialized)
-                throw new InvalidOperationException("Already initialized");
-
-            if (millisecondTimeout <= 0)
-                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
-
-            var attributeString = GetAttributeString();
-
-            var result = plctag.plc_tag_create(attributeString, millisecondTimeout);
-            if (result < 0)
-                throw new LibPlcTagException((Status)result);
-            else
-                tagHandle = result;
-
-            IsInitialized = true;
-        }
-
-        public async Task InitializeAsync(int millisecondTimeout, CancellationToken token = default)
-        {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
-            {
-                cts.CancelAfter(millisecondTimeout);
-                await InitializeAsync(cts.Token);
-            }
-        }
-
-        public async Task InitializeAsync(CancellationToken token = default)
-        {
-
-            if (IsInitialized)
-                throw new InvalidOperationException("Already initialized");
-
-            var attributeString = GetAttributeString();
-
-            var result = plctag.plc_tag_create(attributeString, 0);
-            if (result < 0)
-                throw new LibPlcTagException((Status)result);
-            else
-                tagHandle = result;
-
-            using (token.Register(() => Abort()))
-            {
-                while (GetStatus() == Status.Pending)
-                {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                }
-            }
-
-            var status = GetStatus();
-            if (status != Status.Ok)
-                throw new LibPlcTagException(status);
-
-            IsInitialized = true;
-
         }
 
         private bool _isDisposed = false;
@@ -246,51 +179,138 @@ namespace libplctag
                 throw new LibPlcTagException(result);
         }
 
-        public void Read(int millisecondTimeout)
+        private string GetAttributeString()
         {
 
+            var attributes = new Dictionary<string, string>();
+
+            attributes.Add("protocol", this.Protocol.ToString());
+            attributes.Add("gateway", this.Gateway);
+            attributes.Add("path", Path);
+            attributes.Add("plc", PlcType.ToString().ToLower());
+            attributes.Add("elem_size", ElementSize?.ToString());
+            attributes.Add("elem_count", ElementCount?.ToString());
+            attributes.Add("name", Name);
+            attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
+            if(UseConnectedMessaging.HasValue)
+                attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
+
+            string separator = "&";
+            return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
+
+        }
+
+        public bool IsInitialized { get; private set; }
+
+        /// <summary>
+        /// Initializes the tag by establishing necessary connections.
+        /// Can only be called once per instance.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Initialize()
+        {
+            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
+
+            if (IsInitialized)
+                throw new InvalidOperationException("Already initialized");
+
             if (millisecondTimeout <= 0)
-                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous read");
+                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
+
+            var attributeString = GetAttributeString();
+
+            var result = plctag.plc_tag_create(attributeString, millisecondTimeout);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                tagHandle = result;
+
+            IsInitialized = true;
+        }
+
+        /// <summary>
+        /// Initializes the tag by establishing necessary connections.
+        /// Can only be called once per instance.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public async Task InitializeAsync(CancellationToken token = default)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            {
+                cts.CancelAfter(Timeout);
+
+                if (IsInitialized)
+                    throw new InvalidOperationException("Already initialized");
+
+                var attributeString = GetAttributeString();
+
+                var result = plctag.plc_tag_create(attributeString, 0);
+                if (result < 0)
+                    throw new LibPlcTagException((Status)result);
+                else
+                    tagHandle = result;
+
+                using (token.Register(() => Abort()))
+                {
+                    while (GetStatus() == Status.Pending)
+                    {
+                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    }
+                }
+
+                var status = GetStatus();
+                if (status != Status.Ok)
+                    throw new LibPlcTagException(status);
+
+                IsInitialized = true;
+            }
+        }
+
+        /// <summary>
+        /// Executes a synchronous read on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Read()
+        {
+            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_read(tagHandle, millisecondTimeout);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
-
         }
 
-        public async Task ReadAsync(int millisecondTimeout, CancellationToken token = default)
+        /// <summary>
+        /// Executes an asynch read on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public async Task ReadAsync(CancellationToken token = default)
         {
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
-                cts.CancelAfter(millisecondTimeout);
-                await ReadAsync(cts.Token);
-            }
-        }
+                cts.CancelAfter(Timeout);
+                var status = (Status)plctag.plc_tag_read(tagHandle, 0);
 
-        public async Task ReadAsync(CancellationToken token = default)
-        {
-
-            var status = (Status)plctag.plc_tag_read(tagHandle, 0);
-
-            using (token.Register(() => Abort()))
-            {
-                while (status == Status.Pending)
+                using (token.Register(() => Abort()))
                 {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    status = GetStatus();
+                    while (status == Status.Pending)
+                    {
+                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                        status = GetStatus();
+                    }
                 }
+
+                if (status != Status.Ok)
+                    throw new LibPlcTagException(status);
             }
-
-            if (status != Status.Ok)
-                throw new LibPlcTagException(status);
-
         }
 
-        public void Write(int millisecondTimeout)
+        /// <summary>
+        /// Executes a synchronous write on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Write()
         {
-
-            if (millisecondTimeout <= 0)
-                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous write");
+            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_write(tagHandle, millisecondTimeout);
             if (result != Status.Ok)
@@ -298,32 +318,29 @@ namespace libplctag
 
         }
 
-        public async Task WriteAsync(int millisecondTimeout, CancellationToken token = default)
+        /// <summary>
+        /// Executes an asynch write on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public async Task WriteAsync(CancellationToken token = default)
         {
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
-                cts.CancelAfter(millisecondTimeout);
-                await WriteAsync(cts.Token);
-            }
-        }
+                cts.CancelAfter(Timeout);
+                var status = (Status)plctag.plc_tag_write(tagHandle, 0);
 
-        public async Task WriteAsync(CancellationToken token = default)
-        {
-
-            var status = (Status)plctag.plc_tag_write(tagHandle, 0);
-
-            using (token.Register(() => Abort()))
-            {
-                while (status == Status.Pending)
+                using (token.Register(() => Abort()))
                 {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    status = GetStatus();
+                    while (status == Status.Pending)
+                    {
+                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                        status = GetStatus();
+                    }
                 }
+
+                if (status != Status.Ok)
+                    throw new LibPlcTagException(status);
             }
-
-            if (status != Status.Ok)
-                throw new LibPlcTagException(status);
-
         }
 
         public int GetSize()

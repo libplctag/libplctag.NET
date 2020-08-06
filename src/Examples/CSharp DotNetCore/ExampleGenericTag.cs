@@ -73,23 +73,23 @@ namespace CSharpDotNetCore
             };
 
 
-            boolTag.Initialize(timeout);
-            boolTag.Read(timeout);
+            boolTag.Initialize();
+            boolTag.Read();
 
-            sintTag.Initialize(timeout);
-            sintTag.Read(timeout);
+            sintTag.Initialize();
+            sintTag.Read();
 
-            intTag.Initialize(timeout);
-            intTag.Read(timeout);
+            intTag.Initialize();
+            intTag.Read();
 
-            dintTag.Initialize(timeout);
-            dintTag.Read(timeout);
+            dintTag.Initialize();
+            dintTag.Read();
 
-            lintTag.Initialize(timeout);
-            lintTag.Read(timeout);
+            lintTag.Initialize();
+            lintTag.Read();
 
-            realTag.Initialize(timeout);
-            realTag.Read(timeout);
+            realTag.Initialize();
+            realTag.Read();
 
 
 
@@ -109,14 +109,14 @@ namespace CSharpDotNetCore
                 ArrayLength = 100
             };
 
-            stringTag.Initialize(timeout);
+            stringTag.Initialize();
 
             var r = new Random((int)DateTime.Now.ToBinary());
 
             for (int ii = 0; ii < 100; ii++)
                 stringTag.Value[ii] = r.Next().ToString();
 
-            stringTag.Write(timeout);
+            stringTag.Write();
 
             Console.WriteLine("DONE");
 
@@ -136,12 +136,12 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 8
             };
-            sequenceArray.Initialize(timeout);
+            sequenceArray.Initialize();
 
             for (int ii = 0; ii < 8; ii++)
                 sequenceArray.Value[ii].Command = ii * 2;
 
-            sequenceArray.Write(timeout);
+            sequenceArray.Write();
 
 
             Console.WriteLine("DONE! Check values in RsLogix");
@@ -161,11 +161,11 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 1
             };
-            myBool.Initialize(timeout);
+            myBool.Initialize();
 
             myBool.Value[0] = true;
 
-            myBool.Write(timeout);
+            myBool.Write();
 
             Console.WriteLine("DONE! Check values in RsLogix");
 
@@ -183,14 +183,14 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayLength = 30
             };
-            myBools.Initialize(timeout);
+            myBools.Initialize();
 
             for (int ii = 0; ii < 30; ii++)
             {
                 myBools.Value[ii] = !myBools.Value[ii];
             }
 
-            myBools.Write(timeout);
+            myBools.Write();
 
             Console.WriteLine("DONE! Check values in RsLogix");
 

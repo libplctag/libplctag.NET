@@ -10,8 +10,6 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            const int TIMEOUT = 5000;
-
             var myTag = new Tag()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
@@ -19,16 +17,17 @@ namespace CSharpDotNetCore
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = 4
+                ElementSize = 4,
+                Timeout = TimeSpan.FromSeconds(5)
             };
 
-            myTag.Initialize(TIMEOUT);
+            myTag.Initialize();
 
             myTag.SetInt32(0, 3737);
 
-            myTag.Write(TIMEOUT);
+            myTag.Write();
 
-            myTag.Read(TIMEOUT);
+            myTag.Read();
 
             int myDint = myTag.GetInt32(0);
 
