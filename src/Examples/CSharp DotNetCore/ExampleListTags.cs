@@ -25,8 +25,8 @@ namespace CSharpDotNetCore
                 Name = "@tags"
             };
 
-            tags.Initialize(TIMEOUT_MS);
-            tags.Read(TIMEOUT_MS);
+            tags.Initialize();
+            tags.Read();
 
             ConsoleTable
                 .From(tags.Value.Select(t => new

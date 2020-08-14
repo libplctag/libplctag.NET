@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace libplctag
 {
     public class Tag<M, T> : IDisposable
-        where M : Marshaller<T>, new()
+        where M : IMarshaller<T>, new()
     {
 
         private readonly Tag _tag;
-        private readonly Marshaller<T> _marshaller;
+        private readonly IMarshaller<T> _marshaller;
 
         public Tag()
         {
@@ -126,7 +126,7 @@ namespace libplctag
             Dispose();
         }
 
-        public T[] Value { get; set; }
+        public T Value { get; set; }
 
     }
 }

@@ -2,7 +2,7 @@
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T>
+    public abstract class Marshaller<T> : IMarshaller<T>
     {
 
 

@@ -1,6 +1,6 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class DintMarshaller : Marshaller<int>
+    public class DintMarshaller : Marshaller<int>, IMarshaller<int>, IMarshaller<int[]>
     {
 
         override public int? ElementSize => 4;
@@ -17,6 +17,15 @@
             tag.SetInt32(offset, value);
         }
 
+        int IMarshaller<int>.Decode(Tag tag)
+        {
+            return Decode(tag)[0];
+        }
 
+        void IMarshaller<int>.Encode(Tag tag, int value)
+        {
+            int[] arrayValue = { value };
+            Encode(tag, arrayValue);
+        }
     }
 }
