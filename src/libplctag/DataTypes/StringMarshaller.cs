@@ -28,7 +28,7 @@ namespace libplctag.DataTypes
         }
 
 
-        override public string DecodeOne(Tag tag, int offset, out int elementSize)
+        override public string Decode(Tag tag, int offset, out int elementSize)
         {
             elementSize = ElementSize.Value;
             switch (PlcType)
@@ -43,7 +43,7 @@ namespace libplctag.DataTypes
             }
         }
 
-        override public void EncodeOne(Tag tag, int offset, out int elementSize, string value)
+        override public void Encode(Tag tag, int offset, out int elementSize, string value)
         {
             elementSize = ElementSize.Value;
             switch (PlcType)

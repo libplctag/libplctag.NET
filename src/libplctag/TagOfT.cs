@@ -46,8 +46,8 @@ namespace libplctag
         }
         public int? ArrayLength
         {
-            get => _marshaller.ArrayLengthFromElementCount(_tag.ElementCount);
-            set => _tag.ElementCount = _marshaller.ElementCountFromArrayLength(value);
+            get => _marshaller.GetArrayLength(_tag);
+            set => _tag.ElementCount = _marshaller.SetArrayLength(value);
         }
         public string Name
         {

@@ -21,7 +21,7 @@ namespace libplctag.DataTypes
         const int TAG_STRING_SIZE = 200;
 
 
-        override public TagInfo DecodeOne(Tag tag, int offset, out int elementSize)
+        override public TagInfo Decode(Tag tag, int offset, out int elementSize)
         {
 
             var tagInstanceId = tag.GetUInt32(offset);
@@ -57,7 +57,7 @@ namespace libplctag.DataTypes
 
         }
 
-        public override void EncodeOne(Tag tag, int offset, out int elementSize, TagInfo value)
+        public override void Encode(Tag tag, int offset, out int elementSize, TagInfo value)
         {
             throw new NotImplementedException("This marshaller can only be used to read Tag Information");
         }

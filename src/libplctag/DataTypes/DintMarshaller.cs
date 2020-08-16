@@ -2,30 +2,14 @@
 {
     public class DintMarshaller : Marshaller<int>, IMarshaller<int>, IMarshaller<int[]>
     {
-
         override public int? ElementSize => 4;
 
-        override public int DecodeOne(Tag tag, int offset, out int elementSize)
-        {
-            elementSize = ElementSize.Value;
-            return tag.GetInt32(offset * ElementSize.Value);
-        }
+        override public int Decode(Tag tag, int offset) => tag.GetInt32(offset);
 
-        override public void EncodeOne(Tag tag, int offset, out int elementSize, int value)
-        {
-            elementSize = ElementSize.Value;
-            tag.SetInt32(offset, value);
-        }
+        override public void Encode(Tag tag, int offset, int value) => tag.SetInt32(offset, value);
 
-        int IMarshaller<int>.Decode(Tag tag)
-        {
-            return Decode(tag)[0];
-        }
+        int[] IMarshaller<int[]>.Decode(Tag tag)=> DecodeArray(tag, ElementSize.Value);
 
-        void IMarshaller<int>.Encode(Tag tag, int value)
-        {
-            int[] arrayValue = { value };
-            Encode(tag, arrayValue);
-        }
+        void IMarshaller<int[]>.Encode(Tag tag, int[] value) => EncodeArray(tag, value, ElementSize.Value);
     }
 }

@@ -10,7 +10,7 @@ namespace libplctag.DataTypes
 
         override public int? ElementSize => 12;
 
-        override public AbTimer DecodeOne(Tag tag, int offset, out int elementSize)
+        override public AbTimer Decode(Tag tag, int offset, out int elementSize)
         {
 
             elementSize = ElementSize.Value;
@@ -36,7 +36,7 @@ namespace libplctag.DataTypes
 
         }
 
-        override public void EncodeOne(Tag tag, int offset, out int elementSize, AbTimer value)
+        override public void Encode(Tag tag, int offset, out int elementSize, AbTimer value)
         {
 
             elementSize = ElementSize.Value;
