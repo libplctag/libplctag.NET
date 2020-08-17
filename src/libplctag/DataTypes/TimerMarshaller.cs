@@ -5,15 +5,13 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class TimerMarshaller : Marshaller<AbTimer>
+    public class TimerMarshaller : Marshaller<AbTimer>, IMarshaller<AbTimer>, IMarshaller<AbTimer[]>
     {
 
-        override public int? ElementSize => 12;
+        public override int? ElementSize => 12;
 
-        override public AbTimer Decode(Tag tag, int offset, out int elementSize)
+        public override AbTimer Decode(Tag tag, int offset)
         {
-
-            elementSize = ElementSize.Value;
 
             // Needed to look at RsLogix documentation for structure of TIMER
             var DINT2 = tag.GetInt32(offset);
@@ -36,11 +34,8 @@ namespace libplctag.DataTypes
 
         }
 
-        override public void Encode(Tag tag, int offset, out int elementSize, AbTimer value)
+        public override void Encode(Tag tag, int offset, AbTimer value)
         {
-
-            elementSize = ElementSize.Value;
-
             var DINT0 = value.Accumulated;
             var DINT1 = value.Preset;
 

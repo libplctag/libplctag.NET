@@ -4,7 +4,7 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class StringMarshaller : Marshaller<string>
+    public class StringMarshaller : Marshaller<string>, IMarshaller<string>, IMarshaller<string[]>
     {
 
         const int MAX_CONTROLLOGIX_STRING_LENGTH = 82;
@@ -27,10 +27,8 @@ namespace libplctag.DataTypes
             }
         }
 
-
-        override public string Decode(Tag tag, int offset, out int elementSize)
+        override public string Decode(Tag tag, int offset)
         {
-            elementSize = ElementSize.Value;
             switch (PlcType)
             {
                 case PlcType.ControlLogix: return ControlLogixDecode(tag, offset);
@@ -43,9 +41,8 @@ namespace libplctag.DataTypes
             }
         }
 
-        override public void Encode(Tag tag, int offset, out int elementSize, string value)
+        override public void Encode(Tag tag, int offset, string value)
         {
-            elementSize = ElementSize.Value;
             switch (PlcType)
             {
                 case PlcType.ControlLogix: ControlLogixEncode(tag, offset, value); break;
@@ -57,11 +54,6 @@ namespace libplctag.DataTypes
                 default: break;
             }
         }
-
-
-
-
-
 
         string ControlLogixDecode(Tag tag, int offset)
         {
@@ -93,10 +85,6 @@ namespace libplctag.DataTypes
             }
         }
 
-
-
-
-
         string Plc5Decode(Tag tag, int offset)
         {
             throw new NotImplementedException();
@@ -107,9 +95,6 @@ namespace libplctag.DataTypes
             throw new NotImplementedException();
         }
 
-
-
-
         string Slc500Decode(Tag tag, int offset)
         {
             throw new NotImplementedException();
@@ -119,10 +104,6 @@ namespace libplctag.DataTypes
         {
             throw new NotImplementedException();
         }
-
-
-
-
 
         string LogixPcccDecode(Tag tag, int offset)
         {
@@ -155,9 +136,6 @@ namespace libplctag.DataTypes
             }
         }
 
-
-
-
         string Micro800Decode(Tag tag, int offset)
         {
             throw new NotImplementedException();
@@ -167,12 +145,6 @@ namespace libplctag.DataTypes
         {
             throw new NotImplementedException();
         }
-
-
-
-
-
-
 
         string MicroLogixDecode(Tag tag, int offset)
         {
