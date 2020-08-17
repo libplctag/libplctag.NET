@@ -3,9 +3,11 @@
 namespace libplctag.DataTypes
 {
 
-    public class BoolMarshaller : /*Marshaller<bool>,*/ IMarshaller<bool>, IMarshaller<bool[]>
+    public class BoolMarshaller : IMarshaller<bool>, IMarshaller<bool[]>
     {
         public int? ElementSize => throw new NotImplementedException();
+
+        public PlcType PlcType { get; set; }
 
         public int? SetArrayLength(int? elementCount) => (int)Math.Ceiling((double)elementCount.Value / 32.0);
         public int? GetArrayLength(Tag tag) => tag.ElementCount.Value * 32;
