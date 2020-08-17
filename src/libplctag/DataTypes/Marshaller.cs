@@ -2,17 +2,9 @@
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T> /*: IMarshaller<T>*/
+    public abstract class Marshaller<T>
     {
-
-
-        /// <summary>
-        /// You can define different marshalling behaviour for different types
-        /// The PlcType is injected during Marshaller instantiation, and
-        /// will be available to you in your marshalling logic
-        /// </summary>
         public PlcType PlcType { get; set; }
-
 
         virtual public int? SetArrayLength(int? elementCount) => elementCount;
 

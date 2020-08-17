@@ -3,6 +3,14 @@
     public interface IMarshaller<T>
     {
         /// <summary>
+        /// You can define different marshalling behaviour for different types
+        /// The PlcType is injected during Marshaller instantiation, and
+        /// will be available to you in your marshalling logic
+        /// </summary>
+        PlcType PlcType { get; set; }
+
+
+        /// <summary>
         /// Provide an integer value for ElementSize if you
         /// want to pass this into the tag constructor
         /// </summary>
