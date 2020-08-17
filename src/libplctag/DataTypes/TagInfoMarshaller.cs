@@ -15,13 +15,17 @@ namespace libplctag.DataTypes
         public uint[] Dimensions { get; set; }
     }
 
-    public class TagInfoMarshaller : Marshaller<TagInfo>
+    public class TagInfoMarshaller : IMarshaller<TagInfo[]>
     {
 
         const int TAG_STRING_SIZE = 200;
 
+        public PlcType PlcType { get; set; }
 
-        override public TagInfo Decode(Tag tag, int offset, out int elementSize)
+        //TODO: Is null appropriate since it's unknown?
+        public int? ElementSize => null;
+
+        public TagInfo Decode(Tag tag, int offset, out int elementSize)
         {
 
             var tagInstanceId = tag.GetUInt32(offset);
@@ -57,11 +61,37 @@ namespace libplctag.DataTypes
 
         }
 
-        public override void Encode(Tag tag, int offset, out int elementSize, TagInfo value)
+        public TagInfo[] Decode(Tag tag)
+        {
+            var buffer = new List<TagInfo>();
+
+            var tagSize = tag.GetSize();
+
+            int offset = 0;
+            while (offset < tagSize)
+            {
+                buffer.Add(Decode(tag, offset, out int elementSize));
+                offset += elementSize;
+            }
+
+            return buffer.ToArray();
+        }
+
+        public void Encode(Tag tag, TagInfo[] value)
         {
             throw new NotImplementedException("This marshaller can only be used to read Tag Information");
         }
 
+        public int? GetArrayLength(Tag tag)
+        {
+            //TODO: We know this value after we decode once. SHould we trigger a decode or cache the value after first decode?
+            throw new NotImplementedException();
+        }
+
+        public int? SetArrayLength(int? elementCount)
+        {
+            throw new NotImplementedException("This marshaller can only be used to read Tag Information");
+        }
     }
 
 }
