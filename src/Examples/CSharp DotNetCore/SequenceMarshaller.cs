@@ -50,7 +50,7 @@ namespace CSharpDotNetCore
         // provide the value so the tag constructor can use it
         // If ElementSize = null, this will not be passed to the
         // Tag constructor
-        public int? ElementSize => 268;
+        public override int? ElementSize => 268;
 
 
 
@@ -102,7 +102,7 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 20; ii++)
             {
                 var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                TIMERS[ii] = timerMarshaller.Decode(tag, timerOffset, out int timerSize);   // Because TIMER has a static size, we can safely ignore the timerSize.
+                TIMERS[ii] = timerMarshaller.Decode(tag, timerOffset);
             }
 
 
@@ -157,7 +157,7 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 20; ii++)
             {
                 var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                timerMarshaller.Encode(tag, timerOffset, out int timerSize, value.Timer[ii]);
+                timerMarshaller.Encode(tag, timerOffset, value.Timer[ii]);
             }
 
         }
@@ -173,11 +173,6 @@ namespace CSharpDotNetCore
             binary.CopyTo(result, 0);
             return result[0];
         }
-
-
-        void IMarshaller<Sequence[]>.Encode(Tag tag, Sequence[] value) => EncodeArray(tag, value, ElementSize.Value);
-
-        Sequence[] IMarshaller<Sequence[]>.Decode(Tag tag) => DecodeArray(tag, ElementSize.Value);
     }
 
 
