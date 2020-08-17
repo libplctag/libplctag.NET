@@ -5,7 +5,7 @@ namespace libplctag.DataTypes
 
     public class BoolMarshaller : IMarshaller<bool>, IMarshaller<bool[]>
     {
-        public int? ElementSize => throw new NotImplementedException();
+        public int? ElementSize => 1;
 
         public PlcType PlcType { get; set; }
 
