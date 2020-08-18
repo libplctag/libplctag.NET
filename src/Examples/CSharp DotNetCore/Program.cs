@@ -6,7 +6,7 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
-
+            TestDatatypes.Run();
             //ExampleGenericTag.UDT_Array();
             //ExampleAsync.SyncAsyncMultipleTagComparison();
             //ExampleAsync.AsyncParallelCancellation();
