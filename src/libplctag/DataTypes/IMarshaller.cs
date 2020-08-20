@@ -20,7 +20,7 @@
     ///// <summary>
     ///// This will return the number of items defined in a tag 
     ///// </summary>
-    int? GetArrayLength(Tag tag);
+    int[] GetArrayLength(Tag tag);
 
     /// <summary>
     /// This is used to convert the number of array elements
@@ -28,7 +28,7 @@
     /// Most of the time, this will be the same value, but occasionally
     /// it is not (e.g. BOOL arrays).
     /// </summary>
-    int? SetArrayLength(int? elementCount);
+    int[] SetArrayLength(int[] elementCount);
 
     T Decode(Tag tag);
     //T DecodeOne(Tag tag, int offset, out int elementSize);

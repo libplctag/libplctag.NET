@@ -88,8 +88,8 @@ namespace libplctag
             }
         }
 
-        private int? _elementCount;
-        public int? ElementCount
+        private int[] _elementCount;
+        public int[] ElementCount
         {
             get => _elementCount;
             set
@@ -181,6 +181,9 @@ namespace libplctag
 
         private string GetAttributeString()
         {
+            //Multiply all the dimensions to get total elements
+            //Native library reads 1D arrays
+            var totalElements = ElementCount?.Aggregate(1, (x, y) => x * y);
 
             var attributes = new Dictionary<string, string>();
 
@@ -189,7 +192,7 @@ namespace libplctag
             attributes.Add("path", Path);
             attributes.Add("plc", PlcType.ToString().ToLower());
             attributes.Add("elem_size", ElementSize?.ToString());
-            attributes.Add("elem_count", ElementCount?.ToString());
+            attributes.Add("elem_count", totalElements?.ToString());
             attributes.Add("name", Name);
             attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
             if(UseConnectedMessaging.HasValue)

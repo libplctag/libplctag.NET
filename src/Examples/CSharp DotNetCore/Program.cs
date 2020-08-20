@@ -6,14 +6,14 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
-            TestDatatypes.Run();
+            //TestDatatypes.Run();
             //ExampleGenericTag.UDT_Array();
             //ExampleAsync.SyncAsyncMultipleTagComparison();
             //ExampleAsync.AsyncParallelCancellation();
             //ExampleGenericTag.Run();
             //ExampleRW.Run();
-            //ExampleArray.Run();
-            ExampleListTags.Run();
+            ExampleArray.Run();
+            //ExampleListTags.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
             //NativeImportExample.Run();
