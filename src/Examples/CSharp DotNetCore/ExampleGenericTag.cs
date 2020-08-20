@@ -99,7 +99,7 @@ namespace CSharpDotNetCore
         public static void StringArray()
         {
 
-            var stringTag = new Tag<StringMarshaller, string>()
+            var stringTag = new Tag<StringMarshaller, string[]>()
             {
                 Name = "MY_STRING_1D[0]",
                 Gateway = gateway,
@@ -127,7 +127,7 @@ namespace CSharpDotNetCore
         public static void UDT_Array()
         {
 
-            var sequenceArray = new Tag<SequenceMarshaller, Sequence>()
+            var sequenceArray = new Tag<SequenceMarshaller, Sequence[]>()
             {
                 Name = "MY_SEQUENCE_3D[0,0,0]",
                 Gateway = gateway,
@@ -163,7 +163,7 @@ namespace CSharpDotNetCore
             };
             myBool.Initialize();
 
-            myBool.Value[0] = true;
+            myBool.Value = true;
 
             myBool.Write();
 
@@ -174,7 +174,7 @@ namespace CSharpDotNetCore
         public static void MyBoolArray()
         {
 
-            var myBools = new Tag<BoolMarshaller, bool>()
+            var myBools = new Tag<BoolMarshaller, bool[]>()
             {
                 Name = "MY_BOOL_1D[0]",
                 Gateway = gateway,

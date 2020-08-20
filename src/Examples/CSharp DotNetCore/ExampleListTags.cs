@@ -16,17 +16,17 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var tags = new Tag<TagInfoMarshaller, TagInfo>()
+            var tags = new Tag<TagInfoMarshaller, TagInfo[]>()
             {
-                Gateway = "192.168.0.10",
+                Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
                 Name = "@tags"
             };
 
-            tags.Initialize(TIMEOUT_MS);
-            tags.Read(TIMEOUT_MS);
+            tags.Initialize();
+            tags.Read();
 
             ConsoleTable
                 .From(tags.Value.Select(t => new

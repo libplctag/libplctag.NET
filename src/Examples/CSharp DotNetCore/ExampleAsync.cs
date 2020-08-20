@@ -20,9 +20,10 @@ namespace CSharpDotNetCore
                 Path = "1,0",
                 ElementSize = 4,
                 PlcType = PlcType.ControlLogix,
-                Protocol = Protocol.ab_eip
+                Protocol = Protocol.ab_eip,
+                Timeout = TimeSpan.FromMilliseconds(1000),
             };
-            myTag.Initialize(5000);
+            myTag.Initialize();
 
             myTag.SetInt32(0, 3737);
 
@@ -56,7 +57,7 @@ namespace CSharpDotNetCore
                         Protocol = Protocol.ab_eip,
                         ElementSize = 4
                     };
-                    myTag.Initialize(5000);
+                    myTag.Initialize();
                     return myTag;
                     })
                 .ToList();
@@ -112,7 +113,7 @@ namespace CSharpDotNetCore
                 Protocol = Protocol.ab_eip,
                 ElementSize = 4
             };
-            myTag.Initialize(5000);
+            myTag.Initialize();
 
             int repetitions = 100;
 
@@ -121,8 +122,8 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < repetitions; ii++)
             {
                 Task.WaitAll(
-                    Task.Run(() => myTag.Read(1000)),
-                    Task.Run(() => myTag.Read(1000))
+                    Task.Run(() => myTag.Read()),
+                    Task.Run(() => myTag.Read())
                     );
             }
             sw.Stop();
@@ -191,9 +192,10 @@ namespace CSharpDotNetCore
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = 4
+                        ElementSize = 4,
+                        Timeout = TimeSpan.FromMilliseconds(1000),
                     };
-                    myTag.Initialize(5000);
+                    myTag.Initialize();
                     return myTag; 
                 })
                 .ToList();
@@ -234,9 +236,10 @@ namespace CSharpDotNetCore
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = 4
+                        ElementSize = 4,
+                        Timeout = TimeSpan.FromMilliseconds(1000),
                     };
-                    myTag.Initialize(5000);
+                    myTag.Initialize();
                     return myTag;
                 })
                 .ToList();

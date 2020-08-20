@@ -1,21 +1,13 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class RealMarshaller : Marshaller<float>
+    public class RealMarshaller : Marshaller<float>, IMarshaller<float>, IMarshaller<float[]>
     {
 
         override public int? ElementSize => 4;
 
-        override public float DecodeOne(Tag tag, int offset, out int elementSize)
-        {
-            elementSize = ElementSize.Value;
-            return tag.GetFloat32(offset* ElementSize.Value);
-        }
+        override public float Decode(Tag tag, int offset) => tag.GetFloat32(offset);
 
-        override public void EncodeOne(Tag tag, int offset, out int elementSize, float value)
-        {
-            elementSize = ElementSize.Value;
-            tag.SetFloat32(offset, value);
-        }
+        override public void Encode(Tag tag, int offset, float value) => tag.SetFloat32(offset, value);
 
     }
 }

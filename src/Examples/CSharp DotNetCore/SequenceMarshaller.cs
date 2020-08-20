@@ -41,7 +41,7 @@ namespace CSharpDotNetCore
     /// set ElementCount = 1).
     /// 
     /// </remarks>
-    public class SequenceMarshaller : Marshaller<Sequence>
+    public class SequenceMarshaller : Marshaller<Sequence>, IMarshaller<Sequence>, IMarshaller<Sequence[]>
     {
 
 
@@ -50,7 +50,7 @@ namespace CSharpDotNetCore
         // provide the value so the tag constructor can use it
         // If ElementSize = null, this will not be passed to the
         // Tag constructor
-        override public int? ElementSize => 268;
+        public override int? ElementSize => 268;
 
 
 
@@ -58,7 +58,7 @@ namespace CSharpDotNetCore
         // into a CLR data transfer object
         // The function is called once per array element, so we only 
         // need to decode one array element at a time.
-        override public Sequence DecodeOne(Tag tag, int offset, out int elementSize)
+        override public Sequence Decode(Tag tag, int offset)
         {
 
 
@@ -66,7 +66,7 @@ namespace CSharpDotNetCore
             // If our UDT has a size that does not change, we can set this based on ElementSize
             // Some types have an ElementSize that varies with it's contents (e.g. STRING on some controllers)
             // Those types must wait until they know the actual elementSize before returning it
-            elementSize = ElementSize.Value;
+            //elementSize = ElementSize.Value;
 
 
 
@@ -102,7 +102,7 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 20; ii++)
             {
                 var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                TIMERS[ii] = timerMarshaller.DecodeOne(tag, timerOffset, out int timerSize);   // Because TIMER has a static size, we can safely ignore the timerSize.
+                TIMERS[ii] = timerMarshaller.Decode(tag, timerOffset);
             }
 
 
@@ -128,10 +128,8 @@ namespace CSharpDotNetCore
 
 
 
-        override public void EncodeOne(Tag tag, int offset, out int elementSize, Sequence value)
+        override public void Encode(Tag tag, int offset, Sequence value)
         {
-
-            elementSize = ElementSize.Value;
 
             var DINT0 = value.Step_No;
             var DINT1 = value.Next_Step;
@@ -159,7 +157,7 @@ namespace CSharpDotNetCore
             for (int ii = 0; ii < 20; ii++)
             {
                 var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                timerMarshaller.EncodeOne(tag, timerOffset, out int timerSize, value.Timer[ii]);
+                timerMarshaller.Encode(tag, timerOffset, value.Timer[ii]);
             }
 
         }
@@ -175,7 +173,6 @@ namespace CSharpDotNetCore
             binary.CopyTo(result, 0);
             return result[0];
         }
-
     }
 
 
