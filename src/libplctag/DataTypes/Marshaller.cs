@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T>: IMarshaller<T>, IMarshaller<T[]>
+    public abstract class Marshaller<T>: IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>
     {
         public PlcType PlcType { get; set; }
 
         abstract public int? ElementSize { get; }
 
-        virtual public int? SetArrayLength(int? elementCount) => elementCount;
+        public int[] ArrayDimensions { get; set; }
 
-        virtual public int? GetArrayLength(Tag tag) => tag.ElementCount;
-
+        //Multiply all the dimensions to get total elements
+        virtual public int? GetElementCount() => ArrayDimensions?.Aggregate(1, (x, y) => x * y);
 
         virtual protected T[] DecodeArray(Tag tag)
         {
@@ -61,6 +62,17 @@ namespace libplctag.DataTypes
         virtual public void Encode(Tag tag, T[] value) => EncodeArray(tag, value);
 
         T[] IMarshaller<T[]>.Decode(Tag tag) => DecodeArray(tag);
+
+
+        T[,] IMarshaller<T[,]>.Decode(Tag tag)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IMarshaller<T[,]>.Encode(Tag tag, T[,] value)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
