@@ -51,7 +51,7 @@ namespace CSharpDotNetCore
                 PlcType = PLC_TYPE,
                 Protocol = PROTOCOL,
                 Timeout = TimeSpan.FromMilliseconds(DEFAULT_TIMEOUT),
-                ArrayLength=5,
+                ArrayDimensions = new int[] { 5 },
             };
             tagArray.Initialize();
 

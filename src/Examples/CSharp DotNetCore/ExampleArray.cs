@@ -13,7 +13,7 @@ namespace CSharpDotNetCore
             Console.WriteLine($"\r\n*** ExampleArray ***");
 
             //DINT Test Read/Write
-            const int ARRAY_LENGTH = 1;
+            const int ARRAY_LENGTH = 5;
             const int TIMEOUT = 1000;
             const string gateway = "10.10.10.10";
             const string path = "1,0";
@@ -21,12 +21,12 @@ namespace CSharpDotNetCore
             //Generics version
             var dintTag = new Tag<DintMarshaller, int[]>()
             {
-                Name = "TestDINTArray2",
+                Name = "TestDINTArray",
                 Gateway = gateway,
                 Path = path,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ArrayLength = ARRAY_LENGTH,
+                ArrayDimensions = new int[] { ARRAY_LENGTH },
                 Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
             dintTag.Initialize();

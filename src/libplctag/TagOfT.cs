@@ -44,10 +44,14 @@ namespace libplctag
             get => _tag.PlcType;
             set => _tag.PlcType = value;
         }
-        public int[] ArrayLength
+        public int[] ArrayDimensions
         {
-            get => _marshaller.GetArrayLength(_tag);
-            set => _tag.ElementCount = _marshaller.SetArrayLength(value);
+            get => _marshaller.ArrayDimensions;
+            set
+            {
+                _marshaller.ArrayDimensions = value;
+                _tag.ElementCount = _marshaller.GetElementCount();
+            } 
         }
         public string Name
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace libplctag.DataTypes
 {
@@ -8,9 +9,20 @@ namespace libplctag.DataTypes
         public int? ElementSize => 1;
 
         public PlcType PlcType { get; set; }
+        public int[] ArrayDimensions { get; set; }
+
+        public int? GetElementCount()
+        {
+            if (ArrayDimensions == null)
+                return null;
+
+            //TODO: Test -> I'm not confident that the overall bool count is packed as a 1D array and not packed by dimension.
+            //Multiply dimensions for total elements
+            var totalElements = ArrayDimensions.Aggregate(1, (x, y) => x * y);
+            return (int)Math.Ceiling((double)totalElements / 32.0);
+        }
 
         public int? SetArrayLength(int? elementCount) => (int)Math.Ceiling((double)elementCount.Value / 32.0);
-        public int? GetArrayLength(Tag tag) => tag.ElementCount.Value * 32;
 
         bool IMarshaller<bool>.Decode(Tag tag) => tag.GetBit(0);
 
@@ -33,5 +45,6 @@ namespace libplctag.DataTypes
                 tag.SetBit(ii, value[ii]);
             }
         }
+
     }
 }

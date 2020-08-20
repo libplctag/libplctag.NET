@@ -25,6 +25,9 @@ namespace libplctag.DataTypes
         //TODO: Is null appropriate since it's unknown?
         public int? ElementSize => null;
 
+        public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This marshaller can only be used to read Tag Information");
+        }
+
         public TagInfo Decode(Tag tag, int offset, out int elementSize)
         {
 
@@ -82,15 +85,10 @@ namespace libplctag.DataTypes
             throw new NotImplementedException("This marshaller can only be used to read Tag Information");
         }
 
-        public int? GetArrayLength(Tag tag)
+        public int? GetElementCount()
         {
             //TODO: We know this value after we decode once. SHould we trigger a decode or cache the value after first decode?
-            throw new NotImplementedException();
-        }
-
-        public int? SetArrayLength(int? elementCount)
-        {
-            throw new NotImplementedException("This marshaller can only be used to read Tag Information");
+            return null;
         }
     }
 
