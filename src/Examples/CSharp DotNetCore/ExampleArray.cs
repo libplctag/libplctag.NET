@@ -19,14 +19,14 @@ namespace CSharpDotNetCore
             const string path = "1,0";
 
             //Generics version
-            var dintTag = new Tag<DintMarshaller, int[]>()
+            var dintTag = new Tag<DintMarshaller, int[,]>()
             {
-                Name = "TestDINTArray",
+                Name = "TestDINTArray2",
                 Gateway = gateway,
                 Path = path,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ArrayDimensions = new int[] { ARRAY_LENGTH },
+                ArrayDimensions = new int[] { ARRAY_LENGTH, ARRAY_LENGTH },
                 Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
             dintTag.Initialize();
@@ -34,10 +34,18 @@ namespace CSharpDotNetCore
             //dintTag.Write();
 
             dintTag.Read();
+
+            dintTag.Write();
+
             //Read back value from local memory
             for (int i = 0; i < ARRAY_LENGTH; i++)
+
             {
-                Console.WriteLine($"Value[{i}]: {dintTag.Value[i]}");
+                for (int j = 0; j < ARRAY_LENGTH; j++)
+                {
+                    Console.WriteLine($"Value[{i}, {j}]: {dintTag.Value[i, j]}");
+
+                }
             }
 
             //var myArrayTag = new Tag()
