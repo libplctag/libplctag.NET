@@ -6,7 +6,7 @@ using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T> : IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>
+    public abstract class Marshaller<T> : IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>, IMarshaller<T[,,]>
     {
         public PlcType PlcType { get; set; }
 
@@ -68,6 +68,10 @@ namespace libplctag.DataTypes
         T[,] IMarshaller<T[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray<T>(ArrayDimensions[0], ArrayDimensions[1]);
 
         void IMarshaller<T[,]>.Encode(Tag tag, T[,] value) => EncodeArray(tag, value.To1DArray());
+
+        T[,,] IMarshaller<T[,,]>.Decode(Tag tag) => DecodeArray(tag).To3DArray<T>(ArrayDimensions[0], ArrayDimensions[1], ArrayDimensions[2]);
+
+        void IMarshaller<T[,,]>.Encode(Tag tag, T[,,] value) => EncodeArray(tag, value.To1DArray());
     }
 
 }

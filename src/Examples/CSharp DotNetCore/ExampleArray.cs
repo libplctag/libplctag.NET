@@ -48,6 +48,25 @@ namespace CSharpDotNetCore
                 }
             }
 
+            //Generics version
+            var dintTag3 = new Tag<DintMarshaller, int[,,]>()
+            {
+                Name = "TestDINTArray3",
+                Gateway = gateway,
+                Path = path,
+                PlcType = PlcType.ControlLogix,
+                Protocol = Protocol.ab_eip,
+                ArrayDimensions = new int[] { ARRAY_LENGTH, ARRAY_LENGTH, ARRAY_LENGTH },
+                Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
+            };
+            dintTag3.Initialize();
+            //dintTag.Value = new int[] { 1, 2, 3, 4, 5 };
+            //dintTag.Write();
+
+            dintTag3.Read();
+
+            dintTag3.Write();
+
             //var myArrayTag = new Tag()
             //{
             //    Name = "TestArray",
