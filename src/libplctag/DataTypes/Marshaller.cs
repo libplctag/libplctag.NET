@@ -6,7 +6,7 @@ using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T>: IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>
+    public abstract class Marshaller<T> : IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>
     {
         public PlcType PlcType { get; set; }
 
@@ -20,9 +20,8 @@ namespace libplctag.DataTypes
         virtual protected T[] DecodeArray(Tag tag)
         {
             if (ElementSize is null)
-            {
                 throw new ArgumentNullException($"{nameof(ElementSize)} cannot be null for array decoding");
-            }
+
 
             var buffer = new List<T>();
 
