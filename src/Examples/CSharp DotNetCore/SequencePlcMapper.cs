@@ -41,7 +41,7 @@ namespace CSharpDotNetCore
     /// set ElementCount = 1).
     /// 
     /// </remarks>
-    public class SequencePlcMapper : PlcMapper<Sequence>, IPlcMapper<Sequence>, IPlcMapper<Sequence[]>
+    public class SequencePlcMapper : PlcMapperBase<Sequence>, IPlcMapper<Sequence>, IPlcMapper<Sequence[]>
     {
 
 

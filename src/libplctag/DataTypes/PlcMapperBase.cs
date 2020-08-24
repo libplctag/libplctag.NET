@@ -6,7 +6,7 @@ using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
-    public abstract class PlcMapper<T> : IPlcMapper<T>, IPlcMapper<T[]>, IPlcMapper<T[,]>, IPlcMapper<T[,,]>
+    public abstract class PlcMapperBase<T> : IPlcMapper<T>, IPlcMapper<T[]>, IPlcMapper<T[,]>, IPlcMapper<T[,,]>
     {
         public PlcType PlcType { get; set; }
 
