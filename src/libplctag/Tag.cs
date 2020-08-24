@@ -181,7 +181,6 @@ namespace libplctag
 
         private string GetAttributeString()
         {
-
             var attributes = new Dictionary<string, string>();
 
             attributes.Add("protocol", this.Protocol.ToString());

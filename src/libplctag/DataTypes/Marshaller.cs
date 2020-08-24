@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T>: IMarshaller<T>, IMarshaller<T[]>
+    public abstract class Marshaller<T> : IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>, IMarshaller<T[,,]>
     {
         public PlcType PlcType { get; set; }
 
         abstract public int? ElementSize { get; }
 
-        virtual public int? SetArrayLength(int? elementCount) => elementCount;
+        public int[] ArrayDimensions { get; set; }
 
-        virtual public int? GetArrayLength(Tag tag) => tag.ElementCount;
-
+        //Multiply all the dimensions to get total elements
+        virtual public int? GetElementCount() => ArrayDimensions?.Aggregate(1, (x, y) => x * y);
 
         virtual protected T[] DecodeArray(Tag tag)
         {
             if (ElementSize is null)
-            {
                 throw new ArgumentNullException($"{nameof(ElementSize)} cannot be null for array decoding");
-            }
+
 
             var buffer = new List<T>();
 
@@ -61,6 +63,15 @@ namespace libplctag.DataTypes
         virtual public void Encode(Tag tag, T[] value) => EncodeArray(tag, value);
 
         T[] IMarshaller<T[]>.Decode(Tag tag) => DecodeArray(tag);
+
+
+        T[,] IMarshaller<T[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray<T>(ArrayDimensions[0], ArrayDimensions[1]);
+
+        void IMarshaller<T[,]>.Encode(Tag tag, T[,] value) => EncodeArray(tag, value.To1DArray());
+
+        T[,,] IMarshaller<T[,,]>.Decode(Tag tag) => DecodeArray(tag).To3DArray<T>(ArrayDimensions[0], ArrayDimensions[1], ArrayDimensions[2]);
+
+        void IMarshaller<T[,,]>.Encode(Tag tag, T[,,] value) => EncodeArray(tag, value.To1DArray());
     }
 
 }

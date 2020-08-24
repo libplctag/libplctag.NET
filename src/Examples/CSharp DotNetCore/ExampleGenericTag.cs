@@ -106,7 +106,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ArrayLength = 100
+                ArrayDimensions = new int[] { 100 },
             };
 
             stringTag.Initialize();
@@ -134,7 +134,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ArrayLength = 8
+                ArrayDimensions = new int[] { 8 },
             };
             sequenceArray.Initialize();
 
@@ -159,7 +159,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ArrayLength = 1
+                ArrayDimensions = new int[] { 1 },
             };
             myBool.Initialize();
 
@@ -181,7 +181,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 Protocol = Protocol.ab_eip,
                 PlcType = PlcType.ControlLogix,
-                ArrayLength = 30
+                ArrayDimensions = new int[] { 30 },
             };
             myBools.Initialize();
 
