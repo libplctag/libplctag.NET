@@ -1,6 +1,6 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class DintMarshaller : Marshaller<int>, IMarshaller<int>, IMarshaller<int[]>
+    public class DintPlcMapper : PlcMapper<int>, IPlcMapper<int>, IPlcMapper<int[]>
     {
         public override int? ElementSize => 4;
 

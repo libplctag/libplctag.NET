@@ -6,7 +6,7 @@ using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
-    public abstract class Marshaller<T> : IMarshaller<T>, IMarshaller<T[]>, IMarshaller<T[,]>, IMarshaller<T[,,]>
+    public abstract class PlcMapper<T> : IPlcMapper<T>, IPlcMapper<T[]>, IPlcMapper<T[,]>, IPlcMapper<T[,,]>
     {
         public PlcType PlcType { get; set; }
 
@@ -62,16 +62,16 @@ namespace libplctag.DataTypes
 
         virtual public void Encode(Tag tag, T[] value) => EncodeArray(tag, value);
 
-        T[] IMarshaller<T[]>.Decode(Tag tag) => DecodeArray(tag);
+        T[] IPlcMapper<T[]>.Decode(Tag tag) => DecodeArray(tag);
 
 
-        T[,] IMarshaller<T[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray<T>(ArrayDimensions[0], ArrayDimensions[1]);
+        T[,] IPlcMapper<T[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray<T>(ArrayDimensions[0], ArrayDimensions[1]);
 
-        void IMarshaller<T[,]>.Encode(Tag tag, T[,] value) => EncodeArray(tag, value.To1DArray());
+        void IPlcMapper<T[,]>.Encode(Tag tag, T[,] value) => EncodeArray(tag, value.To1DArray());
 
-        T[,,] IMarshaller<T[,,]>.Decode(Tag tag) => DecodeArray(tag).To3DArray<T>(ArrayDimensions[0], ArrayDimensions[1], ArrayDimensions[2]);
+        T[,,] IPlcMapper<T[,,]>.Decode(Tag tag) => DecodeArray(tag).To3DArray<T>(ArrayDimensions[0], ArrayDimensions[1], ArrayDimensions[2]);
 
-        void IMarshaller<T[,,]>.Encode(Tag tag, T[,,] value) => EncodeArray(tag, value.To1DArray());
+        void IPlcMapper<T[,,]>.Encode(Tag tag, T[,,] value) => EncodeArray(tag, value.To1DArray());
     }
 
 }

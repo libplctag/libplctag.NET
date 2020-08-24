@@ -8,12 +8,12 @@ namespace CSharpDotNetCore
 
 
     /// <summary>
-    /// This is an example marshaller for a User Defined Type (UDT)
+    /// This is an example plcMapper for a User Defined Type (UDT)
     /// </summary>
     /// <remarks>
     /// 
     /// This type was developed for use on a CompactLogix controller
-    /// and is included to show how to develop a custom marshaller
+    /// and is included to show how to develop a custom plcMapper
     /// 
     /// Step_No     DINT            4 bytes
     /// Next_Step   DINT            4 bytes
@@ -41,7 +41,7 @@ namespace CSharpDotNetCore
     /// set ElementCount = 1).
     /// 
     /// </remarks>
-    public class SequenceMarshaller : Marshaller<Sequence>, IMarshaller<Sequence>, IMarshaller<Sequence[]>
+    public class SequencePlcMapper : PlcMapper<Sequence>, IPlcMapper<Sequence>, IPlcMapper<Sequence[]>
     {
 
 
@@ -73,7 +73,7 @@ namespace CSharpDotNetCore
             // Plain DINT objects
             //
             // Note that the buffer access is always offset
-            // This is so that our Marshaller can be used in both
+            // This is so that our PlcMapper can be used in both
             // Single Values or Arrays
             var DINT0 = tag.GetInt32(offset + 0);
             var DINT1 = tag.GetInt32(offset + 4);
@@ -92,17 +92,17 @@ namespace CSharpDotNetCore
 
 
 
-            // We can make use of other Marshallers!
+            // We can make use of other PlcMappers!
             // This means that if our UDT contains other structures (or UDTs)
-            var timerMarshaller = new TimerMarshaller()
-            { PlcType = this.PlcType };                     // Pass the PlcType through to this Marshaller just in case it's behaviour depends on PlcType
+            var timerPlcMapper = new TimerPlcMapper()
+            { PlcType = this.PlcType };                     // Pass the PlcType through to this PlcMapper just in case it's behaviour depends on PlcType
 
 
             var TIMERS = new AbTimer[20];
             for (int ii = 0; ii < 20; ii++)
             {
-                var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                TIMERS[ii] = timerMarshaller.Decode(tag, timerOffset);
+                var timerOffset = offset + 28 + ii * timerPlcMapper.ElementSize.Value;
+                TIMERS[ii] = timerPlcMapper.Decode(tag, timerOffset);
             }
 
 
@@ -153,11 +153,11 @@ namespace CSharpDotNetCore
             tag.SetInt32(offset + 20, DINT5);
             tag.SetInt32(offset + 24, DINT6);
 
-            var timerMarshaller = new TimerMarshaller();
+            var timerPlcMapper = new TimerPlcMapper();
             for (int ii = 0; ii < 20; ii++)
             {
-                var timerOffset = offset + 28 + ii * timerMarshaller.ElementSize.Value;
-                timerMarshaller.Encode(tag, timerOffset, value.Timer[ii]);
+                var timerOffset = offset + 28 + ii * timerPlcMapper.ElementSize.Value;
+                timerPlcMapper.Encode(tag, timerOffset, value.Timer[ii]);
             }
 
         }

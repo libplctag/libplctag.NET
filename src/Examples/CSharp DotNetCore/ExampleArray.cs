@@ -19,7 +19,7 @@ namespace CSharpDotNetCore
             const string path = "1,0";
 
             //Generics version
-            var dintTag = new Tag<DintMarshaller, int[,]>()
+            var dintTag = new Tag<DintPlcMapper, int[,]>()
             {
                 Name = "TestDINTArray2",
                 Gateway = gateway,
@@ -49,7 +49,7 @@ namespace CSharpDotNetCore
             }
 
             //Generics version
-            var dintTag3 = new Tag<DintMarshaller, int[,,]>()
+            var dintTag3 = new Tag<DintPlcMapper, int[,,]>()
             {
                 Name = "TestDINTArray3",
                 Gateway = gateway,
