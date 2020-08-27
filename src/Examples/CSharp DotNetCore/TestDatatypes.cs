@@ -23,27 +23,27 @@ namespace CSharpDotNetCore
 
             //Bool - Test both cases
             //Random value would look correct 50% of the time
-            var boolTag = BuildTag<BoolMarshaller, bool>("TestBOOL");
+            var boolTag = BuildTag<BoolPlcMapper, bool>("TestBOOL");
             TestTag(boolTag, true);
             TestTag(boolTag, false);
 
             //Signed Numbers
-            TestTag(BuildTag<SintMarshaller, sbyte>("TestSINT"));
-            TestTag(BuildTag<IntMarshaller, short>("TestINT"));
-            TestTag(BuildTag<DintMarshaller, int>("TestDINT"));
-            TestTag(BuildTag<LintMarshaller, long>("TestLINT"));
+            TestTag(BuildTag<SintPlcMapper, sbyte>("TestSINT"));
+            TestTag(BuildTag<IntPlcMapper, short>("TestINT"));
+            TestTag(BuildTag<DintPlcMapper, int>("TestDINT"));
+            TestTag(BuildTag<LintPlcMapper, long>("TestLINT"));
 
             //Logix doesn't support unsigned
 
             //Floating Points
-            TestTag(BuildTag<RealMarshaller, float>("TestREAL"));
+            TestTag(BuildTag<RealPlcMapper, float>("TestREAL"));
             //TestTag(new GenericTag<PlcTypeLREAL, double>(gateway, Path, PlcType.Logix, "TestLREAL", timeout));
 
             //Arrays
             //var testArray = new int[] {37, 38, 39, 40, 50 };
             var testArray = RandomValue.Array<int>(5);
 
-            var tagArray = new Tag<DintMarshaller, int[]>()
+            var tagArray = new Tag<DintPlcMapper, int[]>()
             {
                 Name = "TestDINTArray",
                 Gateway = GATEWAY,
@@ -61,13 +61,13 @@ namespace CSharpDotNetCore
         }
 
 
-        private static bool TestTag<M, T>(Tag<M, T> tag) where T : struct where M : IMarshaller<T>, new()
+        private static bool TestTag<M, T>(Tag<M, T> tag) where T : struct where M : IPlcMapper<T>, new()
         {
             T testValue = RandomValue.Object<T>();
             return TestTag(tag, testValue);
         }
 
-        private static bool TestTag<M, T>(Tag<M, T> tag, T testValue) where M : IMarshaller<T>, new()
+        private static bool TestTag<M, T>(Tag<M, T> tag, T testValue) where M : IPlcMapper<T>, new()
         {
 
             Console.WriteLine($"\r\n*** {tag.Name} [{typeof(M)}] {typeof(T)} ***");
@@ -91,7 +91,7 @@ namespace CSharpDotNetCore
             return result.AreEqual;
         }
 
-        private static Tag<M, T> BuildTag<M, T>(string name) where M : IMarshaller<T>, new()
+        private static Tag<M, T> BuildTag<M, T>(string name) where M : IPlcMapper<T>, new()
         {
             var tag = new Tag<M, T>()
             {

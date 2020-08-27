@@ -16,7 +16,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            var tags = new Tag<TagInfoMarshaller, TagInfo[]>()
+            var tags = new Tag<TagInfoPlcMapper, TagInfo[]>()
             {
                 Gateway = "10.10.10.10",
                 Path = "1,0",

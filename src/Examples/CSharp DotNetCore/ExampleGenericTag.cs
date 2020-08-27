@@ -20,7 +20,7 @@ namespace CSharpDotNetCore
         {
 
             //Bool - Test both cases
-            var boolTag = new Tag<BoolMarshaller, bool>()
+            var boolTag = new Tag<BoolPlcMapper, bool>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
@@ -29,7 +29,7 @@ namespace CSharpDotNetCore
                 Protocol = Protocol.ab_eip
             };
             //Signed Numbers
-            var sintTag = new Tag<SintMarshaller, sbyte>()
+            var sintTag = new Tag<SintPlcMapper, sbyte>()
             {
                 Name = "TestSINT",
                 Gateway = gateway,
@@ -37,7 +37,7 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            var intTag = new Tag<IntMarshaller, short>()
+            var intTag = new Tag<IntPlcMapper, short>()
             {
                 Name = "TestINT",
                 Gateway = gateway,
@@ -45,7 +45,7 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            var dintTag = new Tag<DintMarshaller, int>()
+            var dintTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
@@ -53,7 +53,7 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            var lintTag = new Tag<LintMarshaller, long>()
+            var lintTag = new Tag<LintPlcMapper, long>()
             {
                 Name = "TestLINT",
                 Gateway = gateway,
@@ -63,7 +63,7 @@ namespace CSharpDotNetCore
             };
 
             //Floating Points
-            var realTag = new Tag<RealMarshaller, float>()
+            var realTag = new Tag<RealPlcMapper, float>()
             {
                 Name = "TestREAL",
                 Gateway = gateway,
@@ -99,7 +99,7 @@ namespace CSharpDotNetCore
         public static void StringArray()
         {
 
-            var stringTag = new Tag<StringMarshaller, string[]>()
+            var stringTag = new Tag<StringPlcMapper, string[]>()
             {
                 Name = "MY_STRING_1D[0]",
                 Gateway = gateway,
@@ -127,7 +127,7 @@ namespace CSharpDotNetCore
         public static void UDT_Array()
         {
 
-            var sequenceArray = new Tag<SequenceMarshaller, Sequence[]>()
+            var sequenceArray = new Tag<SequencePlcMapper, Sequence[]>()
             {
                 Name = "MY_SEQUENCE_3D[0,0,0]",
                 Gateway = gateway,
@@ -152,7 +152,7 @@ namespace CSharpDotNetCore
         public static void MyBool()
         {
 
-            var myBool = new Tag<BoolMarshaller, bool>()
+            var myBool = new Tag<BoolPlcMapper, bool>()
             {
                 Name = "MY_BOOL",
                 Gateway = gateway,
@@ -174,7 +174,7 @@ namespace CSharpDotNetCore
         public static void MyBoolArray()
         {
 
-            var myBools = new Tag<BoolMarshaller, bool[]>()
+            var myBools = new Tag<BoolPlcMapper, bool[]>()
             {
                 Name = "MY_BOOL_1D[0]",
                 Gateway = gateway,

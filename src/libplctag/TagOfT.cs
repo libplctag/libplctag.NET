@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 namespace libplctag
 {
     public class Tag<M, T> : IDisposable
-        where M : IMarshaller<T>, new()
+        where M : IPlcMapper<T>, new()
     {
 
         private readonly Tag _tag;
-        private readonly IMarshaller<T> _marshaller;
+        private readonly IPlcMapper<T> _plcMapper;
 
         public Tag()
         {
-            _marshaller = new M();
+            _plcMapper = new M();
             _tag = new Tag()
             {
-                ElementSize = _marshaller.ElementSize,
+                ElementSize = _plcMapper.ElementSize,
             };
         }
 
@@ -46,11 +46,11 @@ namespace libplctag
         }
         public int[] ArrayDimensions
         {
-            get => _marshaller.ArrayDimensions;
+            get => _plcMapper.ArrayDimensions;
             set
             {
-                _marshaller.ArrayDimensions = value;
-                _tag.ElementCount = _marshaller.GetElementCount();
+                _plcMapper.ArrayDimensions = value;
+                _tag.ElementCount = _plcMapper.GetElementCount();
             } 
         }
         public string Name
@@ -113,12 +113,12 @@ namespace libplctag
 
         void DecodeAll()
         {
-            Value = _marshaller.Decode(_tag);
+            Value = _plcMapper.Decode(_tag);
         }
 
         void EncodeAll()
         {
-            _marshaller.Encode(_tag, Value);
+            _plcMapper.Encode(_tag, Value);
         }
 
         public Status GetStatus() => _tag.GetStatus();

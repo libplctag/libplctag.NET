@@ -15,7 +15,7 @@ namespace libplctag.DataTypes
         public uint[] Dimensions { get; set; }
     }
 
-    public class TagInfoMarshaller : IMarshaller<TagInfo[]>
+    public class TagInfoPlcMapper : IPlcMapper<TagInfo[]>
     {
 
         const int TAG_STRING_SIZE = 200;
@@ -25,7 +25,7 @@ namespace libplctag.DataTypes
         //TODO: Is null appropriate since it's unknown?
         public int? ElementSize => null;
 
-        public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This marshaller can only be used to read Tag Information");
+        public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This plcMapper can only be used to read Tag Information");
         }
 
         public TagInfo Decode(Tag tag, int offset, out int elementSize)
@@ -82,7 +82,7 @@ namespace libplctag.DataTypes
 
         public void Encode(Tag tag, TagInfo[] value)
         {
-            throw new NotImplementedException("This marshaller can only be used to read Tag Information");
+            throw new NotImplementedException("This plcMapper can only be used to read Tag Information");
         }
 
         public int? GetElementCount()

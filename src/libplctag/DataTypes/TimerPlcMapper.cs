@@ -5,7 +5,7 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class TimerMarshaller : Marshaller<AbTimer>, IMarshaller<AbTimer>, IMarshaller<AbTimer[]>
+    public class TimerPlcMapper : PlcMapperBase<AbTimer>, IPlcMapper<AbTimer>, IPlcMapper<AbTimer[]>
     {
 
         public override int? ElementSize => 12;

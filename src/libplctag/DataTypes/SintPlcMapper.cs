@@ -1,6 +1,6 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class SintMarshaller : Marshaller<sbyte>, IMarshaller<sbyte>, IMarshaller<sbyte[]>
+    public class SintPlcMapper : PlcMapperBase<sbyte>, IPlcMapper<sbyte>, IPlcMapper<sbyte[]>
     {
 
         override public int? ElementSize => 1;

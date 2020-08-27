@@ -1,10 +1,10 @@
 ﻿namespace libplctag.DataTypes
 {
-    public interface IMarshaller<T>
+    public interface IPlcMapper<T>
     {
         /// <summary>
         /// You can define different marshalling behaviour for different types
-        /// The PlcType is injected during Marshaller instantiation, and
+        /// The PlcType is injected during PlcMapper instantiation, and
         /// will be available to you in your marshalling logic
         /// </summary>
         PlcType PlcType { get; set; }

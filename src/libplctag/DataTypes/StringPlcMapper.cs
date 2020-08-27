@@ -4,7 +4,7 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
-    public class StringMarshaller : Marshaller<string>, IMarshaller<string>, IMarshaller<string[]>
+    public class StringPlcMapper : PlcMapperBase<string>, IPlcMapper<string>, IPlcMapper<string[]>
     {
 
         const int MAX_CONTROLLOGIX_STRING_LENGTH = 82;

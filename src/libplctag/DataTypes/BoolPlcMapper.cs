@@ -5,7 +5,7 @@ using System.Linq;
 namespace libplctag.DataTypes
 {
 
-    public class BoolMarshaller : IMarshaller<bool>, IMarshaller<bool[]>, IMarshaller<bool[,]>
+    public class BoolPlcMapper : IPlcMapper<bool>, IPlcMapper<bool[]>, IPlcMapper<bool[,]>
     {
         public int? ElementSize => 1;
 
@@ -46,17 +46,17 @@ namespace libplctag.DataTypes
             }
         }
 
-        bool IMarshaller<bool>.Decode(Tag tag) => tag.GetBit(0);
+        bool IPlcMapper<bool>.Decode(Tag tag) => tag.GetBit(0);
 
-        void IMarshaller<bool>.Encode(Tag tag, bool value) => tag.SetBit(0, value);
+        void IPlcMapper<bool>.Encode(Tag tag, bool value) => tag.SetBit(0, value);
 
-        bool[] IMarshaller<bool[]>.Decode(Tag tag) => DecodeArray(tag);
+        bool[] IPlcMapper<bool[]>.Decode(Tag tag) => DecodeArray(tag);
 
-        void IMarshaller<bool[]>.Encode(Tag tag, bool[] value) => EncodeArray(tag, value);
+        void IPlcMapper<bool[]>.Encode(Tag tag, bool[] value) => EncodeArray(tag, value);
 
-        bool[,] IMarshaller<bool[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray(ArrayDimensions[0], ArrayDimensions[1]);
+        bool[,] IPlcMapper<bool[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray(ArrayDimensions[0], ArrayDimensions[1]);
 
-        void IMarshaller<bool[,]>.Encode(Tag tag, bool[,] value) => EncodeArray(tag, value.To1DArray());
+        void IPlcMapper<bool[,]>.Encode(Tag tag, bool[,] value) => EncodeArray(tag, value.To1DArray());
 
     }
 }
