@@ -120,7 +120,7 @@ namespace libplctag
 
                 if (!IsInitialized)
                     return _readCacheMillisecondDuration;
-                
+
                 return GetIntAttribute("read_cache_ms");
             }
             set
@@ -130,7 +130,7 @@ namespace libplctag
                     _readCacheMillisecondDuration = value;
                     return;
                 }
-                
+
                 SetIntAttribute("read_cache_ms", value.Value);
             }
         }
@@ -191,7 +191,7 @@ namespace libplctag
             attributes.Add("elem_count", ElementCount?.ToString());
             attributes.Add("name", Name);
             attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
-            if(UseConnectedMessaging.HasValue)
+            if (UseConnectedMessaging.HasValue)
                 attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
 
             string separator = "&";
@@ -271,6 +271,9 @@ namespace libplctag
         /// </summary>
         public void Read()
         {
+            if (!IsInitialized)
+                Initialize();
+
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_read(tagHandle, millisecondTimeout);
@@ -284,6 +287,9 @@ namespace libplctag
         /// </summary>
         public async Task ReadAsync(CancellationToken token = default)
         {
+            if (!IsInitialized)
+                await InitializeAsync(token);
+
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
@@ -309,6 +315,9 @@ namespace libplctag
         /// </summary>
         public void Write()
         {
+            if (!IsInitialized)
+                Initialize();
+
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_write(tagHandle, millisecondTimeout);
@@ -323,6 +332,9 @@ namespace libplctag
         /// </summary>
         public async Task WriteAsync(CancellationToken token = default)
         {
+            if (!IsInitialized)
+                await InitializeAsync(token);
+
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
@@ -468,7 +480,7 @@ namespace libplctag
 
         public void SetUInt16(int offset, ushort value)
         {
-           var result = (Status)plctag.plc_tag_set_uint16(tagHandle, offset, value);
+            var result = (Status)plctag.plc_tag_set_uint16(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
         }
