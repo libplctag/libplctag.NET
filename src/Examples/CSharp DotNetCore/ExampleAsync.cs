@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,25 +14,24 @@ namespace CSharpDotNetCore
     {
         public static async Task Run()
         {
-            var myTag = new Tag()
+            var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
-                ElementSize = 4,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
                 Timeout = TimeSpan.FromMilliseconds(1000),
             };
             myTag.Initialize();
 
-            myTag.SetInt32(0, 3737);
+            myTag.Value = 3737;
 
             await myTag.WriteAsync();
 
             await myTag.ReadAsync();
 
-            int myDint = myTag.GetInt32(0);
+            int myDint = myTag.Value;
 
             Console.WriteLine(myDint);
         }
@@ -42,20 +42,19 @@ namespace CSharpDotNetCore
 
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
 
-            List<Tag> myTags;
+            List<Tag<DintPlcMapper, int>> myTags;
 
             for (int ii = 0; ii < 10; ii++)
             {
                 myTags = Enumerable.Range(0, 10)
                 .Select(i => {
-                    var myTag = new Tag()
+                    var myTag = new Tag<DintPlcMapper, int>()
                     {
                         Name = $"MY_DINT_ARRAY_1000[{i}]",
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = 4
                     };
                     myTag.Initialize();
                     return myTag;
@@ -104,14 +103,13 @@ namespace CSharpDotNetCore
         {
 
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
-            var myTag = new Tag()
+            var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = 4
             };
             myTag.Initialize();
 
@@ -185,14 +183,13 @@ namespace CSharpDotNetCore
 
             var myTags = Enumerable.Range(0, maxTags)
                 .Select(i => {
-                    var myTag = new Tag()
+                    var myTag = new Tag<DintPlcMapper, int>()
                     {
                         Name = "PROGRAM:SomeProgram.SomeDINT",
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = 4,
                         Timeout = TimeSpan.FromMilliseconds(1000),
                     };
                     myTag.Initialize();
@@ -229,14 +226,13 @@ namespace CSharpDotNetCore
 
             var myTags = Enumerable.Range(0, maxTags)
                 .Select(i => {
-                    var myTag = new Tag()
+                    var myTag = new Tag<DintPlcMapper, int>()
                     {
-                        Name = "MY_DINT_ARRAY_1000[{i}]",
+                        Name = $"MY_DINT_ARRAY_1000[{i}]",
                         Gateway = "10.10.10.10",
                         Path = "1,0",
                         PlcType = PlcType.ControlLogix,
                         Protocol = Protocol.ab_eip,
-                        ElementSize = 4,
                         Timeout = TimeSpan.FromMilliseconds(1000),
                     };
                     myTag.Initialize();

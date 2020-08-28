@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -11,64 +12,41 @@ namespace CSharpDotNetFramework
         {
             Console.WriteLine($"\r\n*** ExampleRW ***");
 
+            const int TIMEOUT = 5000;
+
             //DINT Test Read/Write
-            var myTag = new Tag()
+            var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = 4
+                Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
-
-            //Check that tag gets created properly
-            while (myTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
-            Console.WriteLine($"Tag created and verified on PLC");
-
+            myTag.Initialize();
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting tag read");
-            myTag.Read(0);
-
-            //Wait for Read to complete
-            while (myTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
-            Console.WriteLine($"Tag read complete");
+            myTag.Read();
 
             //Read back value from local memory
-            int myDint = myTag.GetInt32(0);
+            int myDint = myTag.Value;
             Console.WriteLine($"Initial Value: {myDint}");
 
             //Set Tag Value
             myDint++;
-            myTag.SetInt32(0, myDint);
-            myTag.Write(0);
-            Console.WriteLine($"Starting tag write ({myDint})");
+            myTag.Value = myDint;
 
-            //Wait for Write to complete
-            while (myTag.GetStatus() == Status.Pending)
-                Thread.Sleep(100);
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
-            Console.WriteLine($"Tag write complete");
+            Console.WriteLine($"Starting tag write ({myDint})");
+            myTag.Write();
 
             //Read tag value - This pulls the value from the PLC into the local Tag value
             Console.WriteLine($"Starting synchronous tag read");
-            myTag.Read(1000);
-
-            //Check read success
-            if (myTag.GetStatus() != Status.Ok)
-                throw new LibPlcTagException(myTag.GetStatus());
-            Console.WriteLine($"Synchronous tag read complete");
+            myTag.Read();
 
             //Read back value from local memory
-            var myDintReadBack = myTag.GetInt32(0);
+            var myDintReadBack = myTag.Value;
             Console.WriteLine($"Final Value: {myDintReadBack}");
 
         }

@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -14,10 +15,9 @@ namespace CSharpDotNetCore
             const int TIMEOUT = 5000;
 
             //DINT Test Read/Write
-            var myTag = new Tag()
+            var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
-                ElementSize = 4,
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
@@ -31,12 +31,12 @@ namespace CSharpDotNetCore
             myTag.Read();
 
             //Read back value from local memory
-            int myDint = myTag.GetInt32(0);
+            int myDint = myTag.Value;
             Console.WriteLine($"Initial Value: {myDint}");
 
             //Set Tag Value
             myDint++;
-            myTag.SetInt32(0, myDint);
+            myTag.Value = myDint;
 
             Console.WriteLine($"Starting tag write ({myDint})");
             myTag.Write();
@@ -46,7 +46,7 @@ namespace CSharpDotNetCore
             myTag.Read();
 
             //Read back value from local memory
-            var myDintReadBack = myTag.GetInt32(0);
+            var myDintReadBack = myTag.Value;
             Console.WriteLine($"Final Value: {myDintReadBack}");
 
         }
