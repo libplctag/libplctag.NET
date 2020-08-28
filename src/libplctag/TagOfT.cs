@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace libplctag
 {
-    public class Tag<M, T> : IDisposable
-        where M : IPlcMapper<T>, new()
+    public class Tag<M, T> : IDisposable, ITag where M : IPlcMapper<T>, new()
     {
 
         private readonly Tag _tag;
@@ -51,7 +50,7 @@ namespace libplctag
             {
                 _plcMapper.ArrayDimensions = value;
                 _tag.ElementCount = _plcMapper.GetElementCount();
-            } 
+            }
         }
         public string Name
         {
