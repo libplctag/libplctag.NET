@@ -9,7 +9,7 @@ using libplctag.NativeImport;
 namespace libplctag
 {
 
-    public sealed class Tag : ITag, IDisposable
+    public sealed class Tag : IDisposable
     {
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
