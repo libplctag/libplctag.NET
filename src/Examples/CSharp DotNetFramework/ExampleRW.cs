@@ -17,12 +17,23 @@ namespace CSharpDotNetFramework
             //DINT Test Read/Write
             var myTag = new Tag<DintPlcMapper, int>()
             {
+                //Name of tag on the PLC, Controller-scoped would be just "SomeDINT"
                 Name = "PROGRAM:SomeProgram.SomeDINT",
+                
+                //PLC IP Address
                 Gateway = "10.10.10.10",
-                Path = "1,0",
+
+                //CIP path to PLC CPU. "1,0" will be used for most AB PLCs
+                Path = "1,0", 
+
+                //Type of PLC
                 PlcType = PlcType.ControlLogix,
+
+                //Protocol
                 Protocol = Protocol.ab_eip,
-                Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
+
+                //A global timeout value that is used for Initialize/Read/Write methods
+                Timeout = TimeSpan.FromMilliseconds(TIMEOUT), 
             };
             myTag.Initialize();
 

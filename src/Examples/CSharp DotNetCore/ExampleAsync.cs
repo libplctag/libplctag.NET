@@ -23,7 +23,8 @@ namespace CSharpDotNetCore
                 Protocol = Protocol.ab_eip,
                 Timeout = TimeSpan.FromMilliseconds(1000),
             };
-            myTag.Initialize();
+
+            await myTag.InitializeAsync();
 
             myTag.Value = 3737;
 

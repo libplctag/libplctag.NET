@@ -10,7 +10,10 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
+            //A simple starting example that demonstrates reading and writing a DINT tag
 
+
+            //Instantiate the tag with the proper mapper and datatype
             var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
@@ -21,15 +24,20 @@ namespace CSharpDotNetCore
                 Timeout = TimeSpan.FromSeconds(5)
             };
 
+            //Initialize the tag to set up structures and prepare for read/write
             myTag.Initialize();
 
+            //The value is held locally and only synchronized on Read() or Write()
             myTag.Value = 3737;
+
+            //Transfer Value to PLC
             myTag.Write();
 
+            //Transfer from PLC to Value
             myTag.Read();
 
+            //Write to console
             int myDint = myTag.Value;
-
             Console.WriteLine(myDint);
         }
     }

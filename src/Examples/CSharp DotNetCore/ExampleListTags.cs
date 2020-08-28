@@ -10,11 +10,9 @@ namespace CSharpDotNetCore
 {
     static class ExampleListTags
     {
-
-        static int TIMEOUT_MS = 5000;
-
         public static void Run()
         {
+            //This example will list all tags at the controller-scoped level
 
             var tags = new Tag<TagInfoPlcMapper, TagInfo[]>()
             {

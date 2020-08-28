@@ -8,6 +8,11 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
+            //This example only utilizes the libplctag.NativeImport library
+            //It is a very thin wrapper around the libplctag C library
+            //It's only recommended for corner cases or features that aren't supported in libplctag.net
+            //Please reference the libplctag documentation for API and usage
+
 
             var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
 
