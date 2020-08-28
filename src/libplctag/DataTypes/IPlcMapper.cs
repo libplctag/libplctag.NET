@@ -29,9 +29,19 @@
         /// </summary>
         int? GetElementCount();
 
+        /// <summary>
+        /// This is the method that reads/unpacks the underlying value of the tag
+        /// and returns it as a C# type
+        /// </summary>
+        /// <param name="tag">Tag to be Decoded</param>
+        /// <returns>C# value of tag</returns>
         T Decode(Tag tag);
-        //T DecodeOne(Tag tag, int offset, out int elementSize);
+
+        /// <summary>
+        /// This is the method that transforms the C# type into the underlying value of the tag
+        /// </summary>
+        /// <param name="tag">Tag to be encoded to</param>
+        /// <param name="value">C# value to be transformed</param>
         void Encode(Tag tag, T value);
-        //void EncodeOne(Tag tag, int offset, out int elementSize, T value);
     }
 }
