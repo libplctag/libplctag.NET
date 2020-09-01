@@ -12,6 +12,8 @@ namespace CSharpDotNetCore
 {
     class TestDatatypes
     {
+        //This is built for testing the basic functions until unit testing without hardware is feasible
+
         private const int DEFAULT_TIMEOUT = 1000;
         private const string GATEWAY = "10.10.10.10";
         const string PATH = "1,0";
@@ -57,7 +59,6 @@ namespace CSharpDotNetCore
             tagArray.Initialize();
 
             TestTag(tagArray, testArray);
-
 
         }
 

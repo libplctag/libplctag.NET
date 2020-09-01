@@ -1,4 +1,5 @@
 ﻿using libplctag;
+using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
@@ -9,28 +10,34 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
+            //A simple starting example that demonstrates reading and writing a DINT tag
 
-            var myTag = new Tag()
+
+            //Instantiate the tag with the proper mapper and datatype
+            var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "PROGRAM:SomeProgram.SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ElementSize = 4,
                 Timeout = TimeSpan.FromSeconds(5)
             };
 
+            //Initialize the tag to set up structures and prepare for read/write
             myTag.Initialize();
 
-            myTag.SetInt32(0, 3737);
+            //The value is held locally and only synchronized on Read() or Write()
+            myTag.Value = 3737;
 
+            //Transfer Value to PLC
             myTag.Write();
 
+            //Transfer from PLC to Value
             myTag.Read();
 
-            int myDint = myTag.GetInt32(0);
-
+            //Write to console
+            int myDint = myTag.Value;
             Console.WriteLine(myDint);
         }
     }

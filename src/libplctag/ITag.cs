@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace libplctag
 {
+    /// <summary>
+    /// An interface to represent any generic tag without
+    /// exposing its value
+    /// </summary>
     public interface ITag : IDisposable
     {
         int[] ArrayDimensions { get; set; }

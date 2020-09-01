@@ -2,6 +2,9 @@
 
 namespace libplctag
 {
+    /// <summary>
+    /// Debug levels available in the base libplctag library
+    /// </summary>
     public enum DebugLevel
     {
         None =      DEBUG_LEVELS.PLCTAG_DEBUG_NONE,

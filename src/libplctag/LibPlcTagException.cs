@@ -3,6 +3,9 @@
 namespace libplctag
 {
 
+    /// <summary>
+    /// An exception thrown by the underlying libplctag library
+    /// </summary>
     public class LibPlcTagException : Exception
     {
         public LibPlcTagException()
