@@ -4,6 +4,7 @@ using libplctag.DataTypes;
 using RandomTestValues;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -63,7 +64,8 @@ namespace CSharpDotNetCore
 
         private static bool TestTag<M, T>(Tag<M, T> tag) where T : struct where M : IPlcMapper<T>, new()
         {
-            T testValue = RandomValue.Object<T>();
+            //HACK: RandomValue.Object<T> only supports classes generically
+            T testValue = RandomValue.List<T>(1).Single();
             return TestTag(tag, testValue);
         }
 
