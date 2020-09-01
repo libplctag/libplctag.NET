@@ -2,6 +2,9 @@
 
 namespace libplctag
 {
+    /// <summary>
+    /// Events returned by the base libplctag library
+    /// </summary>
     public enum Event
     {
         ReadStarted =       EVENT_CODES.PLCTAG_EVENT_READ_STARTED,

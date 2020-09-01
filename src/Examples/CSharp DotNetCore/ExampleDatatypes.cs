@@ -8,10 +8,8 @@ using System.Text;
 
 namespace CSharpDotNetCore
 {
-    class ExampleGenericTag
+    class ExampleDatatypes
     {
-
-        const int timeout = 1000;
         const string gateway = "10.10.10.10";
         const string path = "1,0";
 
@@ -19,7 +17,7 @@ namespace CSharpDotNetCore
         public static void Run()
         {
 
-            //Bool - Test both cases
+            //Bool
             var boolTag = new Tag<BoolPlcMapper, bool>()
             {
                 Name = "TestBOOL",
@@ -28,6 +26,10 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
+            boolTag.Initialize();
+            boolTag.Read();
+
+
             //Signed Numbers
             var sintTag = new Tag<SintPlcMapper, sbyte>()
             {
@@ -37,6 +39,9 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
+            sintTag.Initialize();
+            sintTag.Read();
+
             var intTag = new Tag<IntPlcMapper, short>()
             {
                 Name = "TestINT",
@@ -45,6 +50,10 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
+            intTag.Initialize();
+            intTag.Read();
+
+
             var dintTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "TestBOOL",
@@ -53,6 +62,10 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
+            dintTag.Initialize();
+            dintTag.Read();
+
+
             var lintTag = new Tag<LintPlcMapper, long>()
             {
                 Name = "TestLINT",
@@ -61,6 +74,9 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
+            lintTag.Initialize();
+            lintTag.Read();
+
 
             //Floating Points
             var realTag = new Tag<RealPlcMapper, float>()
@@ -71,34 +87,11 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-
-
-            boolTag.Initialize();
-            boolTag.Read();
-
-            sintTag.Initialize();
-            sintTag.Read();
-
-            intTag.Initialize();
-            intTag.Read();
-
-            dintTag.Initialize();
-            dintTag.Read();
-
-            lintTag.Initialize();
-            lintTag.Read();
-
             realTag.Initialize();
             realTag.Read();
 
 
-
-        }
-
-
-        public static void StringArray()
-        {
-
+            //Strings and String Arrays
             var stringTag = new Tag<StringPlcMapper, string[]>()
             {
                 Name = "MY_STRING_1D[0]",
@@ -108,91 +101,15 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayDimensions = new int[] { 100 },
             };
-
             stringTag.Initialize();
-
             var r = new Random((int)DateTime.Now.ToBinary());
 
-            for (int ii = 0; ii < 100; ii++)
+            for (int ii = 0; ii < stringTag.Value.Length; ii++)
                 stringTag.Value[ii] = r.Next().ToString();
 
             stringTag.Write();
 
             Console.WriteLine("DONE");
-
-
-        }
-
-
-        public static void UDT_Array()
-        {
-
-            var sequenceArray = new Tag<SequencePlcMapper, Sequence[]>()
-            {
-                Name = "MY_SEQUENCE_3D[0,0,0]",
-                Gateway = gateway,
-                Path = path,
-                Protocol = Protocol.ab_eip,
-                PlcType = PlcType.ControlLogix,
-                ArrayDimensions = new int[] { 8 },
-            };
-            sequenceArray.Initialize();
-
-            for (int ii = 0; ii < 8; ii++)
-                sequenceArray.Value[ii].Command = ii * 2;
-
-            sequenceArray.Write();
-
-
-            Console.WriteLine("DONE! Check values in RsLogix");
-
-        }
-
-
-        public static void MyBool()
-        {
-
-            var myBool = new Tag<BoolPlcMapper, bool>()
-            {
-                Name = "MY_BOOL",
-                Gateway = gateway,
-                Path = path,
-                Protocol = Protocol.ab_eip,
-                PlcType = PlcType.ControlLogix,
-                ArrayDimensions = new int[] { 1 },
-            };
-            myBool.Initialize();
-
-            myBool.Value = true;
-
-            myBool.Write();
-
-            Console.WriteLine("DONE! Check values in RsLogix");
-
-        }
-
-        public static void MyBoolArray()
-        {
-
-            var myBools = new Tag<BoolPlcMapper, bool[]>()
-            {
-                Name = "MY_BOOL_1D[0]",
-                Gateway = gateway,
-                Path = path,
-                Protocol = Protocol.ab_eip,
-                PlcType = PlcType.ControlLogix,
-                ArrayDimensions = new int[] { 30 },
-            };
-            myBools.Initialize();
-
-            for (int ii = 0; ii < 30; ii++)
-            {
-                myBools.Value[ii] = !myBools.Value[ii];
-            }
-
-            myBools.Write();
-
-            Console.WriteLine("DONE! Check values in RsLogix");
 
         }
 
