@@ -102,7 +102,7 @@ namespace CSharpDotNetCore
                 Protocol = PROTOCOL,
                 Timeout = TimeSpan.FromMilliseconds(DEFAULT_TIMEOUT),
             };
-            tag.Initialize();
+            //tag.Initialize();
             return tag;
 
         }
