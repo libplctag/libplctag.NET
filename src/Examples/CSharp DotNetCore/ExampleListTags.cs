@@ -23,7 +23,6 @@ namespace CSharpDotNetCore
                 Name = "@tags"
             };
 
-            tags.Initialize();
             tags.Read();
 
             ConsoleTable

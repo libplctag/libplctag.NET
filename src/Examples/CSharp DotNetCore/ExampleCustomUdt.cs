@@ -23,7 +23,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayDimensions = new int[] { 8 },
             };
-            sequenceArray.Initialize();
 
             for (int ii = 0; ii < 8; ii++)
                 sequenceArray.Value[ii].Command = ii * 2;

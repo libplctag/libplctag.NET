@@ -31,8 +31,6 @@ namespace CSharpDotNetCore
                 Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
 
-            dintTag.Initialize();
-
             dintTag.Value = new int[] { 1, 2, 3, 4, 5 };
             dintTag.Write();
 
