@@ -26,7 +26,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            boolTag.Initialize();
             boolTag.Read();
 
 
@@ -39,7 +38,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            sintTag.Initialize();
             sintTag.Read();
 
             var intTag = new Tag<IntPlcMapper, short>()
@@ -50,7 +48,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            intTag.Initialize();
             intTag.Read();
 
 
@@ -62,7 +59,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            dintTag.Initialize();
             dintTag.Read();
 
 
@@ -74,7 +70,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            lintTag.Initialize();
             lintTag.Read();
 
 
@@ -87,7 +82,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip
             };
-            realTag.Initialize();
             realTag.Read();
 
 
@@ -101,7 +95,6 @@ namespace CSharpDotNetCore
                 PlcType = PlcType.ControlLogix,
                 ArrayDimensions = new int[] { 100 },
             };
-            stringTag.Initialize();
             var r = new Random((int)DateTime.Now.ToBinary());
 
             for (int ii = 0; ii < stringTag.Value.Length; ii++)

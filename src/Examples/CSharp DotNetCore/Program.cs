@@ -7,14 +7,18 @@ namespace CSharpDotNetCore
         static void Main(string[] args)
         {
             TestDatatypes.Run();
-            ExampleAsync.SyncAsyncMultipleTagComparison();
-            ExampleAsync.AsyncParallelCancellation();
+            //ExampleGenericTag.UDT_Array();
+            //ExampleAsync.SyncAsyncMultipleTagComparison();
+            //ExampleAsync.AsyncParallelCancellation();
+            //ExampleGenericTag.Run();
+            //ExampleRW.Run();
             ExampleArray.Run();
-            ExampleListTags.Run();
-            ExampleArray.Run();
-            NativeImportExample.Run();
-            NativeImportExample.RunCallbackExample();
-            NativeImportExample.RunLoggerExample();
+            //ExampleListTags.Run();
+            //ExampleRW.Run();
+            //ExampleArray.Run();
+            //NativeImportExample.Run();
+            //NativeImportExample.RunCallbackExample();
+            //NativeImportExample.RunLoggerExample();
             Console.ReadKey();
         }
     }

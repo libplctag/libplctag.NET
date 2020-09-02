@@ -25,6 +25,8 @@ namespace CSharpDotNetCore
             };
 
             //Initialize the tag to set up structures and prepare for read/write
+            //This is optional as an optimization before using the tag
+            //If omitted, the tag will initialize on the first Read() or Write()
             myTag.Initialize();
 
             //The value is held locally and only synchronized on Read() or Write()

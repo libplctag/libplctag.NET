@@ -153,6 +153,9 @@ namespace libplctag
         /// <returns>Task</returns>
         public async Task ReadAsync(CancellationToken token = default)
         {
+            if (!_tag.IsInitialized)
+                await _tag.InitializeAsync(token);
+
             await _tag.ReadAsync(token);
             DecodeAll();
         }
@@ -164,6 +167,9 @@ namespace libplctag
         /// </summary>
         public void Read()
         {
+            if (!_tag.IsInitialized)
+                _tag.Initialize();
+
             _tag.Read();
             DecodeAll();
         }
@@ -175,6 +181,9 @@ namespace libplctag
         /// <returns>Task</returns>
         public async Task WriteAsync(CancellationToken token = default)
         {
+            if (!_tag.IsInitialized)
+                await _tag.InitializeAsync(token);
+
             EncodeAll();
             await _tag.WriteAsync(token);
         }
@@ -184,6 +193,9 @@ namespace libplctag
         /// </summary>
         public void Write()
         {
+            if (!_tag.IsInitialized)
+                _tag.Initialize();
+
             EncodeAll();
             _tag.Write();
         }
