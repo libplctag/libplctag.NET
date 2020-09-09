@@ -10,6 +10,7 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>A library for PLC communication</PackageDescription>
     <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
   </PropertyGroup>
