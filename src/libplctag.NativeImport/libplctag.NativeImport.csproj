@@ -21,6 +21,7 @@
     <EmbeddedResource Include="runtime\osx_x64\libplctag.dylib" />
     <EmbeddedResource Include="runtime\win_x64\plctag.dll" />
     <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

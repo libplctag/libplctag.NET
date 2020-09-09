@@ -13,10 +13,15 @@
     <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+    <PackageTags></PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="libplctag.NativeImport" Version="0.0.11-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
