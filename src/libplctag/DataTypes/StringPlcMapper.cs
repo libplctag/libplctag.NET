@@ -73,7 +73,7 @@ namespace libplctag.DataTypes
             var asciiEncodedString = new byte[actualStringLength];
             for (int ii = 0; ii < actualStringLength; ii++)
             {
-                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + 2 + ii);
+                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + ii);
             }
 
             return Encoding.ASCII.GetString(asciiEncodedString);
@@ -90,7 +90,7 @@ namespace libplctag.DataTypes
 
             for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                tag.SetUInt8(offset + 4 + 2 + ii, Convert.ToByte(asciiEncodedString[ii]));
+                tag.SetUInt8(offset + 4 + ii, Convert.ToByte(asciiEncodedString[ii]));
             }
         }
 
