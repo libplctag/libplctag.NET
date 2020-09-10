@@ -66,14 +66,17 @@ namespace libplctag.DataTypes
 
         string ControlLogixDecode(Tag tag, int offset)
         {
-            var apparentStringLength = tag.GetInt32(offset);
+            const int STRING_LENGTH_HEADER = 4;
+
+            int apparentStringLength = tag.GetInt32(offset);
+
 
             var actualStringLength = Math.Min(apparentStringLength, MAX_CONTROLLOGIX_STRING_LENGTH);
 
             var asciiEncodedString = new byte[actualStringLength];
             for (int ii = 0; ii < actualStringLength; ii++)
             {
-                asciiEncodedString[ii] = tag.GetUInt8(offset + 4 + 2 + ii);
+                asciiEncodedString[ii] = tag.GetUInt8(offset + STRING_LENGTH_HEADER + ii);
             }
 
             return Encoding.ASCII.GetString(asciiEncodedString);
@@ -81,6 +84,8 @@ namespace libplctag.DataTypes
 
         void ControlLogixEncode(Tag tag, int offset, string value)
         {
+            const int STRING_LENGTH_HEADER = 4;
+
             if (value.Length > MAX_CONTROLLOGIX_STRING_LENGTH)
                 throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
 
@@ -90,7 +95,7 @@ namespace libplctag.DataTypes
 
             for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
-                tag.SetUInt8(offset + 4 + 2 + ii, Convert.ToByte(asciiEncodedString[ii]));
+                tag.SetUInt8(offset + STRING_LENGTH_HEADER + ii, Convert.ToByte(asciiEncodedString[ii]));
             }
         }
 
