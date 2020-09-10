@@ -151,13 +151,14 @@ namespace libplctag
         /// </summary>
         /// <param name="token">Optional Cancellation Token</param>
         /// <returns>Task</returns>
-        public async Task ReadAsync(CancellationToken token = default)
+        public async Task<T> ReadAsync(CancellationToken token = default)
         {
             if (!_tag.IsInitialized)
                 await _tag.InitializeAsync(token);
 
             await _tag.ReadAsync(token);
             DecodeAll();
+            return Value;
         }
 
         /// <summary>
@@ -165,14 +166,19 @@ namespace libplctag
         /// The data is not automatically kept up to date. 
         /// If you need to find out the data periodically, you need to read the tag periodically.
         /// </summary>
-        public void Read()
+        public T Read()
         {
             if (!_tag.IsInitialized)
                 _tag.Initialize();
 
             _tag.Read();
             DecodeAll();
+            return Value;
         }
+
+        object ITag.Read() => Read();
+
+        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync();
 
         /// <summary>
         /// Writing a tag sends the data from Value (local memory) to the target PLC.
@@ -191,6 +197,19 @@ namespace libplctag
         /// <summary>
         /// Writing a tag sends the data from Value (local memory) to the target PLC.
         /// </summary>
+        /// <param name="value">Value to be set locally and sent to PLC</param>
+        /// <param name="token">Optional Cancellation Token</param>
+        /// <returns>Task</returns>
+        public async Task WriteAsync(T value, CancellationToken token = default)
+        {
+            Value = value;
+            await WriteAsync(token);
+        }
+
+
+        /// <summary>
+        /// Writing a tag sends the data from Value (local memory) to the target PLC.
+        /// </summary>
         public void Write()
         {
             if (!_tag.IsInitialized)
@@ -200,6 +219,15 @@ namespace libplctag
             _tag.Write();
         }
 
+        /// <summary>
+        /// Writing a tag sends the data from Value (local memory) to the target PLC.
+        /// </summary>
+        /// <param name="value">Value to be set locally and sent to PLC</param>
+        public void Write(T value)
+        {
+            Value = value;
+            Write();
+        }
 
         void DecodeAll()
         {
