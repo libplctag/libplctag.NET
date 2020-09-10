@@ -42,23 +42,14 @@ namespace CSharpDotNetCore
             TestTag(BuildTag<RealPlcMapper, float>("TestREAL"));
             //TestTag(new GenericTag<PlcTypeLREAL, double>(gateway, Path, PlcType.Logix, "TestLREAL", timeout));
 
+            //String
+            var tagString = BuildTag<StringPlcMapper, string>("TestSTRING");
+            TestTag(tagString, RandomValue.String(82));
+
             //Arrays
-            //var testArray = new int[] {37, 38, 39, 40, 50 };
-            var testArray = RandomValue.Array<int>(5);
-
-            var tagArray = new Tag<DintPlcMapper, int[]>()
-            {
-                Name = "TestDINTArray",
-                Gateway = GATEWAY,
-                Path = PATH,
-                PlcType = PLC_TYPE,
-                Protocol = PROTOCOL,
-                Timeout = TimeSpan.FromMilliseconds(DEFAULT_TIMEOUT),
-                ArrayDimensions = new int[] { 5 },
-            };
-            tagArray.Initialize();
-
-            TestTag(tagArray, testArray);
+            var tagArray = BuildTag<DintPlcMapper, int[]>("TestDINTArray");
+            tagArray.ArrayDimensions = new int[] { 5 };
+            TestTag(tagArray, RandomValue.Array<int>(5));
 
         }
 
