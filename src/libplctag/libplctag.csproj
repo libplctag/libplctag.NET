@@ -5,7 +5,7 @@
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
-    <Version>0.0.28-alpha02</Version>
+    <Version>0.0.29-alpha01</Version>
     <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>A library for PLC communication</PackageDescription>
