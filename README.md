@@ -1,8 +1,6 @@
 ﻿# libplctag .NET
 
-This wrapper project is still in alpha. If you have problems, please refer to the [project's contact information](https://github.com/libplctag/libplctag#contact).
-
-This repository contains two .NET wrappers for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
+This repository contains two .NET packages for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
 * [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
 * [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag.NativeImport) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport)
 
@@ -23,6 +21,9 @@ For usage, see the examples in the example projects:
 
 ## libplctag.NativeImport
 
-libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to application developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.
+libplctag.NativeImport provides low-level (raw) access to the native libplctag library.
+The purpose of this package is to expose the native library API (which is written in C), and handle platform and configuration issues.
 
-An example of it's usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+Documentation for this API can be found [here](https://github.com/libplctag/libplctag/wiki/API).
+
+If you do wish to make use of the native library API in a .NET project, an example of it's usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
