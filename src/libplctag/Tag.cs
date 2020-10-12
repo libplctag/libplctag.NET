@@ -13,7 +13,7 @@ namespace libplctag
     {
 
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
-        private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(100);
+        private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private string _name;
