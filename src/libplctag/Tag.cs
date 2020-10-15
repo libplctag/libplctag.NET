@@ -19,11 +19,15 @@ namespace libplctag
         private string _name;
         public string Name
         {
-            get => _name;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _name;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _name = value;
             }
         }
@@ -31,11 +35,15 @@ namespace libplctag
         private Protocol? _protocol;
         public Protocol? Protocol
         {
-            get => _protocol;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _protocol;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _protocol = value;
             }
         }
@@ -43,11 +51,15 @@ namespace libplctag
         private string _gateway;
         public string Gateway
         {
-            get => _gateway;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _gateway;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _gateway = value;
             }
         }
@@ -55,11 +67,15 @@ namespace libplctag
         private PlcType? _plcType;
         public PlcType? PlcType
         {
-            get => _plcType;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _plcType;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _plcType = value;
             }
         }
@@ -67,11 +83,15 @@ namespace libplctag
         private string _path;
         public string Path
         {
-            get => _path;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _path;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _path = value;
             }
         }
@@ -79,11 +99,15 @@ namespace libplctag
         private int? _elementSize;
         public int? ElementSize
         {
-            get => _elementSize;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _elementSize;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _elementSize = value;
             }
         }
@@ -91,11 +115,15 @@ namespace libplctag
         private int? _elementCount;
         public int? ElementCount
         {
-            get => _elementCount;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _elementCount;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _elementCount = value;
             }
         }
@@ -103,11 +131,15 @@ namespace libplctag
         private bool? _useConnectedMessaging;
         public bool? UseConnectedMessaging
         {
-            get => _useConnectedMessaging;
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _useConnectedMessaging;
+            }
             set
             {
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
+                ThrowIfAlreadyDisposed();
+                ThrowIfAlreadyInitialized();
                 _useConnectedMessaging = value;
             }
         }
@@ -117,14 +149,17 @@ namespace libplctag
         {
             get
             {
-
+                ThrowIfAlreadyDisposed();
+                
                 if (!IsInitialized)
                     return _readCacheMillisecondDuration;
-
+                
                 return GetIntAttribute("read_cache_ms");
             }
             set
             {
+                ThrowIfAlreadyDisposed();
+                
                 if (!IsInitialized)
                 {
                     _readCacheMillisecondDuration = value;
@@ -135,17 +170,20 @@ namespace libplctag
             }
         }
 
-        private TimeSpan timeout = defaultTimeout;
+        private TimeSpan _timeout = defaultTimeout;
         public TimeSpan Timeout
         {
-            get { return timeout; }
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _timeout;
+            }
             set
             {
+                ThrowIfAlreadyDisposed();
                 if (value <= TimeSpan.Zero || value > maxTimeout)
-                {
-                    throw new ArgumentOutOfRangeException("value");
-                }
-                timeout = value;
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                _timeout = value;
             }
         }
 
@@ -154,6 +192,12 @@ namespace libplctag
         ~Tag()
         {
             Dispose();
+        }
+
+        private void ThrowIfAlreadyDisposed()
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
         }
 
         private bool _isDisposed = false;
@@ -174,6 +218,9 @@ namespace libplctag
 
         public void Abort()
         {
+
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_abort(tagHandle);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -181,6 +228,7 @@ namespace libplctag
 
         private string GetAttributeString()
         {
+
             var attributes = new Dictionary<string, string>();
 
             attributes.Add("protocol", this.Protocol.ToString());
@@ -199,6 +247,12 @@ namespace libplctag
 
         }
 
+        private void ThrowIfAlreadyInitialized()
+        {
+            if (IsInitialized)
+                throw new InvalidOperationException("Already initialized");
+        }
+
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -208,10 +262,11 @@ namespace libplctag
         /// </summary>
         public void Initialize()
         {
-            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
+            
+            ThrowIfAlreadyDisposed();
+            ThrowIfAlreadyInitialized();
 
-            if (IsInitialized)
-                throw new InvalidOperationException("Already initialized");
+            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             if (millisecondTimeout <= 0)
                 throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
@@ -234,12 +289,14 @@ namespace libplctag
         /// </summary>
         public async Task InitializeAsync(CancellationToken token = default)
         {
+            
+            ThrowIfAlreadyDisposed();
+            ThrowIfAlreadyInitialized();
+
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
 
-                if (IsInitialized)
-                    throw new InvalidOperationException("Already initialized");
 
                 var attributeString = GetAttributeString();
 
@@ -271,6 +328,8 @@ namespace libplctag
         /// </summary>
         public void Read()
         {
+            ThrowIfAlreadyDisposed();
+
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_read(tagHandle, millisecondTimeout);
@@ -284,6 +343,8 @@ namespace libplctag
         /// </summary>
         public async Task ReadAsync(CancellationToken token = default)
         {
+            ThrowIfAlreadyDisposed();
+
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
@@ -309,6 +370,8 @@ namespace libplctag
         /// </summary>
         public void Write()
         {
+            ThrowIfAlreadyDisposed();
+
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_write(tagHandle, millisecondTimeout);
@@ -323,6 +386,8 @@ namespace libplctag
         /// </summary>
         public async Task WriteAsync(CancellationToken token = default)
         {
+            ThrowIfAlreadyDisposed();
+
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
@@ -344,6 +409,8 @@ namespace libplctag
 
         public int GetSize()
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_size(tagHandle);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
@@ -351,10 +418,17 @@ namespace libplctag
                 return result;
         }
 
-        public Status GetStatus() => (Status)plctag.plc_tag_status(tagHandle);
+        public Status GetStatus()
+        {
+            ThrowIfAlreadyDisposed();
+
+            return (Status)plctag.plc_tag_status(tagHandle);
+        }
 
         public byte[] GetBuffer()
         {
+            ThrowIfAlreadyDisposed();
+
             var tagSize = GetSize();
             var temp = new byte[tagSize];
 
@@ -367,6 +441,8 @@ namespace libplctag
 
         private int GetIntAttribute(string attributeName)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
             if (result == int.MinValue)
                 throw new LibPlcTagException();
@@ -375,6 +451,8 @@ namespace libplctag
 
         private void SetIntAttribute(string attributeName, int value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, attributeName, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -382,6 +460,8 @@ namespace libplctag
 
         public bool GetBit(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_bit(tagHandle, offset);
             if (result == 0)
                 return false;
@@ -393,6 +473,8 @@ namespace libplctag
 
         public void SetBit(int offset, bool value)
         {
+            ThrowIfAlreadyDisposed();
+
             int valueAsInteger = value == true ? 1 : 0;
             var result = (Status)plctag.plc_tag_set_bit(tagHandle, offset, valueAsInteger);
             if (result != Status.Ok)
@@ -401,6 +483,8 @@ namespace libplctag
 
         public ulong GetUInt64(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_uint64(tagHandle, offset);
             if (result == ulong.MaxValue)
                 throw new LibPlcTagException();
@@ -408,6 +492,8 @@ namespace libplctag
         }
         public void SetUInt64(int offset, ulong value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint64(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -415,6 +501,8 @@ namespace libplctag
 
         public long GetInt64(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_int64(tagHandle, offset);
             if (result == long.MinValue)
                 throw new LibPlcTagException();
@@ -423,6 +511,8 @@ namespace libplctag
 
         public void SetInt64(int offset, long value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int64(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -430,6 +520,8 @@ namespace libplctag
 
         public uint GetUInt32(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_uint32(tagHandle, offset);
             if (result == uint.MaxValue)
                 throw new LibPlcTagException();
@@ -438,6 +530,8 @@ namespace libplctag
 
         public void SetUInt32(int offset, uint value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint32(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -445,6 +539,8 @@ namespace libplctag
 
         public int GetInt32(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_int32(tagHandle, offset);
             if (result == int.MinValue)
                 throw new LibPlcTagException();
@@ -453,6 +549,8 @@ namespace libplctag
 
         public void SetInt32(int offset, int value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int32(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -460,6 +558,8 @@ namespace libplctag
 
         public ushort GetUInt16(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_uint16(tagHandle, offset);
             if (result == ushort.MaxValue)
                 throw new LibPlcTagException();
@@ -468,6 +568,8 @@ namespace libplctag
 
         public void SetUInt16(int offset, ushort value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint16(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -475,6 +577,8 @@ namespace libplctag
 
         public short GetInt16(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_int16(tagHandle, offset);
             if (result == short.MinValue)
                 throw new LibPlcTagException();
@@ -482,6 +586,8 @@ namespace libplctag
         }
         public void SetInt16(int offset, short value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int16(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -489,6 +595,8 @@ namespace libplctag
 
         public byte GetUInt8(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_uint8(tagHandle, offset);
             if (result == byte.MaxValue)
                 throw new LibPlcTagException();
@@ -497,6 +605,8 @@ namespace libplctag
 
         public void SetUInt8(int offset, byte value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint8(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -504,6 +614,8 @@ namespace libplctag
 
         public sbyte GetInt8(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_int8(tagHandle, offset);
             if (result == sbyte.MinValue)
                 throw new LibPlcTagException();
@@ -512,6 +624,8 @@ namespace libplctag
 
         public void SetInt8(int offset, sbyte value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int8(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -519,6 +633,8 @@ namespace libplctag
 
         public double GetFloat64(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_float64(tagHandle, offset);
             if (result == double.MinValue)
                 throw new LibPlcTagException();
@@ -526,6 +642,8 @@ namespace libplctag
         }
         public void SetFloat64(int offset, double value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_float64(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
@@ -533,6 +651,8 @@ namespace libplctag
 
         public float GetFloat32(int offset)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = plctag.plc_tag_get_float32(tagHandle, offset);
             if (result == float.MinValue)
                 throw new LibPlcTagException();
@@ -540,6 +660,8 @@ namespace libplctag
         }
         public void SetFloat32(int offset, float value)
         {
+            ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_float32(tagHandle, offset, value);
             if (result != Status.Ok)
                 throw new LibPlcTagException(result);
