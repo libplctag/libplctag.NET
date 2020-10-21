@@ -445,17 +445,16 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
             if (result == int.MinValue)
-                throw new LibPlcTagException();
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
         private void SetIntAttribute(string attributeName, int value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, attributeName, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public bool GetBit(int offset)
@@ -477,8 +476,7 @@ namespace libplctag
 
             int valueAsInteger = value == true ? 1 : 0;
             var result = (Status)plctag.plc_tag_set_bit(tagHandle, offset, valueAsInteger);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public ulong GetUInt64(int offset)
@@ -487,21 +485,16 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_uint64(tagHandle, offset);
             if (result == ulong.MaxValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
 
         }
         public void SetUInt64(int offset, ulong value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_uint64(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public long GetInt64(int offset)
@@ -510,21 +503,16 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_int64(tagHandle, offset);
             if (result == long.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
         public void SetInt64(int offset, long value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_int64(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public uint GetUInt32(int offset)
@@ -533,11 +521,8 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_uint32(tagHandle, offset);
             if (result == uint.MaxValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
@@ -546,8 +531,7 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
 
             var result = (Status)plctag.plc_tag_set_uint32(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public int GetInt32(int offset)
@@ -556,21 +540,15 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_int32(tagHandle, offset);
             if (result == int.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
             return result;
         }
 
         public void SetInt32(int offset, int value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_int32(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public ushort GetUInt16(int offset)
@@ -579,11 +557,8 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_uint16(tagHandle, offset);
             if (result == ushort.MaxValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
@@ -592,8 +567,7 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
 
             var result = (Status)plctag.plc_tag_set_uint16(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public short GetInt16(int offset)
@@ -602,11 +576,8 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_int16(tagHandle, offset);
             if (result == short.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
         public void SetInt16(int offset, short value)
@@ -614,8 +585,7 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
 
             var result = (Status)plctag.plc_tag_set_int16(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public byte GetUInt8(int offset)
@@ -624,21 +594,16 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_uint8(tagHandle, offset);
             if (result == byte.MaxValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
         public void SetUInt8(int offset, byte value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_uint8(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public sbyte GetInt8(int offset)
@@ -647,21 +612,16 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_int8(tagHandle, offset);
             if (result == sbyte.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
 
         public void SetInt8(int offset, sbyte value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_int8(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public double GetFloat64(int offset)
@@ -670,42 +630,39 @@ namespace libplctag
 
             var result = plctag.plc_tag_get_float64(tagHandle, offset);
             if (result == double.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+
             return result;
         }
         public void SetFloat64(int offset, double value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_float64(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         public float GetFloat32(int offset)
         {
             ThrowIfAlreadyDisposed();
-
+            
             var result = plctag.plc_tag_get_float32(tagHandle, offset);
             if (result == float.MinValue)
-            {
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
-            }
+                ThrowIfStatusNotOk();
+            
             return result;
         }
         public void SetFloat32(int offset, float value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_set_float32(tagHandle, offset, value);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
+        }
+
+        private void ThrowIfStatusNotOk(Status? status = null)
+        {
+            var statusToCheck = status ?? GetStatus();
+            if (statusToCheck != Status.Ok)
+                throw new LibPlcTagException(statusToCheck);
         }
 
     }
