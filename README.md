@@ -24,6 +24,12 @@ For usage, see the examples in the example projects:
 libplctag.NativeImport provides low-level (raw) access to the native libplctag library.
 The purpose of this package is to expose the native library API (which is written in C), and handle platform and configuration issues.
 
-Documentation for this API can be found [here](https://github.com/libplctag/libplctag/wiki/API).
+Documentation for the native API can be found [here](https://github.com/libplctag/libplctag/wiki/API).
 
 If you do wish to make use of the native library API in a .NET project, an example of it's usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+
+During initialization, this package extracts to disk the appropriate native runtime. By default, it will overwrite any runtime that is already on disk. If you wish to disable this behaviour and use a different runtime (e.g. one that you've manually compiled, or a pre-release), you can disable the Force Extract feature.
+```csharp
+// Before any calls to any libplctag methods
+plctag.ForceExtractLibrary = false;
+```
