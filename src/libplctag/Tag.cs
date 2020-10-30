@@ -210,20 +210,16 @@ namespace libplctag
                 return;
 
             var result = (Status)plctag.plc_tag_destroy(tagHandle);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
 
             _isDisposed = true;
         }
 
         public void Abort()
         {
-
             ThrowIfAlreadyDisposed();
-
             var result = (Status)plctag.plc_tag_abort(tagHandle);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         private string GetAttributeString()
@@ -297,7 +293,6 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-
                 var attributeString = GetAttributeString();
 
                 var result = plctag.plc_tag_create(attributeString, 0);
@@ -314,9 +309,7 @@ namespace libplctag
                     }
                 }
 
-                var status = GetStatus();
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
+                ThrowIfStatusNotOk();
 
                 IsInitialized = true;
             }
@@ -333,8 +326,7 @@ namespace libplctag
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_read(tagHandle, millisecondTimeout);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
+            ThrowIfStatusNotOk(result);
         }
 
         /// <summary>
@@ -359,8 +351,7 @@ namespace libplctag
                     }
                 }
 
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
+                ThrowIfStatusNotOk(status);
             }
         }
 
@@ -375,9 +366,7 @@ namespace libplctag
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)plctag.plc_tag_write(tagHandle, millisecondTimeout);
-            if (result != Status.Ok)
-                throw new LibPlcTagException(result);
-
+            ThrowIfStatusNotOk(result);
         }
 
         /// <summary>
@@ -402,8 +391,7 @@ namespace libplctag
                     }
                 }
 
-                if (status != Status.Ok)
-                    throw new LibPlcTagException(status);
+                ThrowIfStatusNotOk(status);
             }
         }
 
@@ -421,7 +409,6 @@ namespace libplctag
         public Status GetStatus()
         {
             ThrowIfAlreadyDisposed();
-
             return (Status)plctag.plc_tag_status(tagHandle);
         }
 
@@ -453,6 +440,7 @@ namespace libplctag
         private void SetIntAttribute(string attributeName, int value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
         }
@@ -493,6 +481,7 @@ namespace libplctag
         public void SetUInt64(int offset, ulong value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -511,6 +500,7 @@ namespace libplctag
         public void SetInt64(int offset, long value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -547,6 +537,7 @@ namespace libplctag
         public void SetInt32(int offset, int value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int32(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -602,6 +593,7 @@ namespace libplctag
         public void SetUInt8(int offset, byte value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_uint8(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -620,6 +612,7 @@ namespace libplctag
         public void SetInt8(int offset, sbyte value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_int8(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -637,6 +630,7 @@ namespace libplctag
         public void SetFloat64(int offset, double value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_float64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
@@ -654,6 +648,7 @@ namespace libplctag
         public void SetFloat32(int offset, float value)
         {
             ThrowIfAlreadyDisposed();
+
             var result = (Status)plctag.plc_tag_set_float32(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
