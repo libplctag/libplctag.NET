@@ -91,10 +91,10 @@ namespace libplctag.DataTypes
             const int LEN_OFFSET = 0;
             const int DATA_OFFSET = 4;
 
+            tag.SetInt16(offset + LEN_OFFSET, Convert.ToInt16(value.Length));
+
             byte[] asciiEncodedString = new byte[MAX_CONTROLLOGIX_STRING_LENGTH];
             Encoding.ASCII.GetBytes(value).CopyTo(asciiEncodedString, 0);
-
-            tag.SetInt16(offset + LEN_OFFSET, Convert.ToInt16(value.Length));
 
             for (int ii = 0; ii < asciiEncodedString.Length; ii++)
             {
@@ -144,24 +144,18 @@ namespace libplctag.DataTypes
             if (value.Length > MAX_LOGIXPCCC_STRING_LENGTH)
                 throw new ArgumentException("String length exceeds maximum for a tag of type STRING");
 
-            var writeLength = value.Length + (value.Length % 2); //add 1 to write length if odd
+            const int LEN_OFFSET = 0;
+            const int DATA_OFFSET = 2;
 
-            var asciiEncodedString = Encoding.ASCII.GetBytes(value);
+            tag.SetInt16(offset + LEN_OFFSET, Convert.ToInt16(value.Length));
 
-            tag.SetInt16(offset, Convert.ToInt16(value.Length));
+            byte[] asciiEncodedString = new byte[MAX_LOGIXPCCC_STRING_LENGTH];
+            Encoding.ASCII.GetBytes(value).CopyTo(asciiEncodedString, 0);
 
-            for (int ii = 0; ii < (writeLength - 1); ii += 2)
+            for (int ii = 0; ii < asciiEncodedString.Length; ii += 2)
             {
-                if ((value.Length % 2 == 0) || (ii < (writeLength - 2)))
-                //if odd number string then set penultimate char (1 after string end) as /00
-                {
-                    tag.SetUInt8(offset + 2 + ii, Convert.ToByte(asciiEncodedString[ii + 1]));
-                }
-                else
-                {
-                    tag.SetUInt8(offset + 2 + ii, 0x00);
-                }
-                tag.SetUInt8(offset + 2 + ii + 1, Convert.ToByte(asciiEncodedString[ii]));
+                tag.SetUInt8(offset + DATA_OFFSET + ii + 0, asciiEncodedString[ii + 1]);
+                tag.SetUInt8(offset + DATA_OFFSET + ii + 1, asciiEncodedString[ii + 0]);
             }
         }
 
