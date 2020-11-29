@@ -24,12 +24,14 @@ For usage, see the examples in the example projects:
 libplctag.NativeImport provides low-level (raw) access to the native libplctag library.
 The purpose of this package is to expose the native library API (which is written in C), and handle platform and configuration issues.
 
-Documentation for the native API can be found [here](https://github.com/libplctag/libplctag/wiki/API).
+Documentation for the native API can be found [here](https://github.com/libplctag/libplctag/wiki/API). An example of its usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
 
-If you do wish to make use of the native library API in a .NET project, an example of it's usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+During initialization, this package extracts to disk the appropriate native runtime. By default, it will overwrite any runtime that is already on disk. If you wish to disable this behaviour and use a different runtime (e.g. one that you've compiled yourself, or a pre-release), you can disable the Force Extract feature.
 
-During initialization, this package extracts to disk the appropriate native runtime. By default, it will overwrite any runtime that is already on disk. If you wish to disable this behaviour and use a different runtime (e.g. one that you've manually compiled, or a pre-release), you can disable the Force Extract feature.
 ```csharp
 // Before any calls to any libplctag methods
 plctag.ForceExtractLibrary = false;
 ```
+
+The libplctag native runtime can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
+
