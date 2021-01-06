@@ -301,7 +301,7 @@ namespace libplctag
                 else
                     tagHandle = result;
 
-                using (token.Register(() => Abort()))
+                using (cts.Token.Register(() => Abort()))
                 {
                     while (GetStatus() == Status.Pending)
                     {
@@ -342,7 +342,7 @@ namespace libplctag
                 cts.CancelAfter(Timeout);
                 var status = (Status)plctag.plc_tag_read(tagHandle, 0);
 
-                using (token.Register(() => Abort()))
+                using (cts.Token.Register(() => Abort()))
                 {
                     while (status == Status.Pending)
                     {
@@ -382,7 +382,7 @@ namespace libplctag
                 cts.CancelAfter(Timeout);
                 var status = (Status)plctag.plc_tag_write(tagHandle, 0);
 
-                using (token.Register(() => Abort()))
+                using (cts.Token.Register(() => Abort()))
                 {
                     while (status == Status.Pending)
                     {
