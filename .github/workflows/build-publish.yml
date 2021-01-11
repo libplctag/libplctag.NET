@@ -45,10 +45,10 @@ jobs:
           # VERSION_STATIC: 1.0.0
 
           # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: false
+          TAG_COMMIT: true
 
           # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
+          TAG_FORMAT: libplctag-v*
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
@@ -79,10 +79,10 @@ jobs:
           # VERSION_STATIC: 1.0.0
 
           # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: false
+          TAG_COMMIT: true
 
           # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
+          TAG_FORMAT: libplctag.NativeImport-v*
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
