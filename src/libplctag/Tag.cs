@@ -11,137 +11,82 @@ namespace libplctag
 
     public sealed class Tag : IDisposable
     {
-
+        private const int ASYNC = 0;
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
+
+
+        private T GetField<T>(ref T field)
+        {
+            ThrowIfAlreadyDisposed();
+            return field;
+        }
+
+        private void SetField<T>(ref T field, T value)
+        {
+            ThrowIfAlreadyDisposed();
+            ThrowIfAlreadyInitialized();
+            field = value;
+        }
+
+
+
         private string _name;
         public string Name
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _name;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _name = value;
-            }
+            get => GetField(ref _name);
+            set => SetField(ref _name, value);
         }
 
         private Protocol? _protocol;
         public Protocol? Protocol
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _protocol;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _protocol = value;
-            }
+            get => GetField(ref _protocol);
+            set => SetField(ref _protocol, value);
         }
 
         private string _gateway;
         public string Gateway
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _gateway;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _gateway = value;
-            }
+            get => GetField(ref _gateway);
+            set => SetField(ref _gateway, value);
         }
 
         private PlcType? _plcType;
         public PlcType? PlcType
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _plcType;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _plcType = value;
-            }
+            get => GetField(ref _plcType);
+            set => SetField(ref _plcType, value);
         }
 
         private string _path;
         public string Path
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _path;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _path = value;
-            }
+            get => GetField(ref _path);
+            set => SetField(ref _path, value);
         }
 
         private int? _elementSize;
         public int? ElementSize
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _elementSize;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _elementSize = value;
-            }
+            get => GetField(ref _elementSize);
+            set => SetField(ref _elementSize, value);
         }
 
         private int? _elementCount;
         public int? ElementCount
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _elementCount;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _elementCount = value;
-            }
+            get => GetField(ref _elementCount);
+            set => SetField(ref _elementCount, value);
         }
 
         private bool? _useConnectedMessaging;
         public bool? UseConnectedMessaging
         {
-            get
-            {
-                ThrowIfAlreadyDisposed();
-                return _useConnectedMessaging;
-            }
-            set
-            {
-                ThrowIfAlreadyDisposed();
-                ThrowIfAlreadyInitialized();
-                _useConnectedMessaging = value;
-            }
+            get => GetField(ref _useConnectedMessaging);
+            set => SetField(ref _useConnectedMessaging, value);
         }
 
         private int? _readCacheMillisecondDuration;
@@ -295,7 +240,7 @@ namespace libplctag
 
                 var attributeString = GetAttributeString();
 
-                var result = plctag.plc_tag_create(attributeString, 0);
+                var result = plctag.plc_tag_create(attributeString, ASYNC);
                 if (result < 0)
                     throw new LibPlcTagException((Status)result);
                 else
@@ -335,7 +280,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)plctag.plc_tag_read(tagHandle, 0);
+                var initialStatus = (Status)plctag.plc_tag_read(tagHandle, ASYNC);
 
                 var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
 
@@ -369,7 +314,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)plctag.plc_tag_write(tagHandle, 0);
+                var initialStatus = (Status)plctag.plc_tag_write(tagHandle, ASYNC);
 
                 var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
 
@@ -440,200 +385,37 @@ namespace libplctag
                 throw new LibPlcTagException((Status)result);
         }
 
-        public void SetBit(int offset, bool value)
-        {
-            ThrowIfAlreadyDisposed();
+        public void SetBit(int offset, bool value)          => SetTagValue(plctag.plc_tag_set_bit, offset, value == true ? 1 : 0);
 
-            int valueAsInteger = value == true ? 1 : 0;
-            var result = (Status)plctag.plc_tag_set_bit(tagHandle, offset, valueAsInteger);
-            ThrowIfStatusNotOk(result);
-        }
+        public ulong GetUInt64(int offset)                  => GetTagValue(plctag.plc_tag_get_uint64, offset, ulong.MaxValue);
+        public void SetUInt64(int offset, ulong value)      => SetTagValue(plctag.plc_tag_set_uint64, offset, value);
 
-        public ulong GetUInt64(int offset)
-        {
-            ThrowIfAlreadyDisposed();
+        public long GetInt64(int offset)                    => GetTagValue(plctag.plc_tag_get_int64, offset, long.MinValue);
+        public void SetInt64(int offset, long value)        => SetTagValue(plctag.plc_tag_set_int64, offset, value);
 
-            var result = plctag.plc_tag_get_uint64(tagHandle, offset);
-            if (result == ulong.MaxValue)
-                ThrowIfStatusNotOk();
+        public uint GetUInt32(int offset)                   => GetTagValue(plctag.plc_tag_get_uint32, offset, uint.MaxValue);
+        public void SetUInt32(int offset, uint value)       => SetTagValue(plctag.plc_tag_set_uint32, offset, value);
 
-            return result;
+        public int GetInt32(int offset)                     => GetTagValue(plctag.plc_tag_get_int32, offset, int.MinValue);
+        public void SetInt32(int offset, int value)         => SetTagValue(plctag.plc_tag_set_int32, offset, value);
 
-        }
-        public void SetUInt64(int offset, ulong value)
-        {
-            ThrowIfAlreadyDisposed();
+        public ushort GetUInt16(int offset)                 => GetTagValue(plctag.plc_tag_get_uint16, offset, ushort.MaxValue);
+        public void SetUInt16(int offset, ushort value)     => SetTagValue(plctag.plc_tag_set_uint16, offset, value);
 
-            var result = (Status)plctag.plc_tag_set_uint64(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
+        public short GetInt16(int offset)                   => GetTagValue(plctag.plc_tag_get_int16, offset, short.MinValue);
+        public void SetInt16(int offset, short value)       => SetTagValue(plctag.plc_tag_set_int16, offset, value);
 
-        public long GetInt64(int offset)
-        {
-            ThrowIfAlreadyDisposed();
+        public byte GetUInt8(int offset)                    => GetTagValue(plctag.plc_tag_get_uint8, offset, byte.MaxValue);
+        public void SetUInt8(int offset, byte value)        => SetTagValue(plctag.plc_tag_set_uint8, offset, value);
 
-            var result = plctag.plc_tag_get_int64(tagHandle, offset);
-            if (result == long.MinValue)
-                ThrowIfStatusNotOk();
+        public sbyte GetInt8(int offset)                    => GetTagValue(plctag.plc_tag_get_int8, offset, sbyte.MinValue);
+        public void SetInt8(int offset, sbyte value)        => SetTagValue(plctag.plc_tag_set_int8, offset, value);
 
-            return result;
-        }
+        public double GetFloat64(int offset)                => GetTagValue(plctag.plc_tag_get_float64, offset, double.MinValue);
+        public void SetFloat64(int offset, double value)    => SetTagValue(plctag.plc_tag_set_float64, offset, value);
 
-        public void SetInt64(int offset, long value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_int64(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public uint GetUInt32(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_uint32(tagHandle, offset);
-            if (result == uint.MaxValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-
-        public void SetUInt32(int offset, uint value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_uint32(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public int GetInt32(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_int32(tagHandle, offset);
-            if (result == int.MinValue)
-                ThrowIfStatusNotOk();
-            return result;
-        }
-
-        public void SetInt32(int offset, int value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_int32(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public ushort GetUInt16(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_uint16(tagHandle, offset);
-            if (result == ushort.MaxValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-
-        public void SetUInt16(int offset, ushort value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_uint16(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public short GetInt16(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_int16(tagHandle, offset);
-            if (result == short.MinValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-        public void SetInt16(int offset, short value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_int16(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public byte GetUInt8(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_uint8(tagHandle, offset);
-            if (result == byte.MaxValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-
-        public void SetUInt8(int offset, byte value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_uint8(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public sbyte GetInt8(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_int8(tagHandle, offset);
-            if (result == sbyte.MinValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-
-        public void SetInt8(int offset, sbyte value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_int8(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public double GetFloat64(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = plctag.plc_tag_get_float64(tagHandle, offset);
-            if (result == double.MinValue)
-                ThrowIfStatusNotOk();
-
-            return result;
-        }
-        public void SetFloat64(int offset, double value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_float64(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
-
-        public float GetFloat32(int offset)
-        {
-            ThrowIfAlreadyDisposed();
-            
-            var result = plctag.plc_tag_get_float32(tagHandle, offset);
-            if (result == float.MinValue)
-                ThrowIfStatusNotOk();
-            
-            return result;
-        }
-        public void SetFloat32(int offset, float value)
-        {
-            ThrowIfAlreadyDisposed();
-
-            var result = (Status)plctag.plc_tag_set_float32(tagHandle, offset, value);
-            ThrowIfStatusNotOk(result);
-        }
+        public float GetFloat32(int offset)                 => GetTagValue(plctag.plc_tag_get_float32, offset, float.MinValue);
+        public void SetFloat32(int offset, float value)     => SetTagValue(plctag.plc_tag_set_float32, offset, value);
 
         private void ThrowIfStatusNotOk(Status? status = null)
         {
@@ -642,7 +424,27 @@ namespace libplctag
                 throw new LibPlcTagException(statusToCheck);
         }
 
-        async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
+        private void SetTagValue<T>(Func<int, int, T, int> nativeMethod, int offset, T value)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = (Status)nativeMethod(tagHandle, offset, value);
+            ThrowIfStatusNotOk(result);
+        }
+
+        private T GetTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueForPossibleError)
+            where T : struct
+        {
+            ThrowIfAlreadyDisposed();
+
+            var result = nativeMethod(tagHandle, offset);
+            if (result.Equals(valueForPossibleError))
+                ThrowIfStatusNotOk();
+
+            return result;
+        }
+
+
+        private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
         {
 
             if (initialStatus != Status.Pending)
