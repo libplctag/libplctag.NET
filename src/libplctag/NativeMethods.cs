@@ -1,7 +1,5 @@
 ﻿using libplctag.NativeImport;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using static libplctag.NativeImport.plctag;
 
 namespace libplctag
