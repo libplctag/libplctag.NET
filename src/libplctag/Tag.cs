@@ -301,13 +301,7 @@ namespace libplctag
                 else
                     tagHandle = result;
 
-                using (cts.Token.Register(() => Abort()))
-                {
-                    while (GetStatus() == Status.Pending)
-                    {
-                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    }
-                }
+                await DelayWhilePending((Status)result, cts.Token);
 
                 ThrowIfStatusNotOk();
 
@@ -340,18 +334,12 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-                var status = (Status)plctag.plc_tag_read(tagHandle, 0);
 
-                using (cts.Token.Register(() => Abort()))
-                {
-                    while (status == Status.Pending)
-                    {
-                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                        status = GetStatus();
-                    }
-                }
+                var initialStatus = (Status)plctag.plc_tag_read(tagHandle, 0);
 
-                ThrowIfStatusNotOk(status);
+                var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
+
+                ThrowIfStatusNotOk(statusAfterPending);
             }
         }
 
@@ -380,18 +368,12 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-                var status = (Status)plctag.plc_tag_write(tagHandle, 0);
 
-                using (cts.Token.Register(() => Abort()))
-                {
-                    while (status == Status.Pending)
-                    {
-                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                        status = GetStatus();
-                    }
-                }
+                var initialStatus = (Status)plctag.plc_tag_write(tagHandle, 0);
 
-                ThrowIfStatusNotOk(status);
+                var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
+
+                ThrowIfStatusNotOk(statusAfterPending);
             }
         }
 
@@ -658,6 +640,36 @@ namespace libplctag
             var statusToCheck = status ?? GetStatus();
             if (statusToCheck != Status.Ok)
                 throw new LibPlcTagException(statusToCheck);
+        }
+
+        async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
+        {
+
+            if (initialStatus != Status.Pending)
+                return initialStatus;
+
+            var status = initialStatus;
+
+            using (token.Register(() => Abort()))
+            {
+                while (status == Status.Pending)
+                {
+                    try
+                    {
+                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        if (token.IsCancellationRequested)
+                            throw;
+                        else
+                            throw new LibPlcTagException(Status.ErrorTimeout);
+                    }
+                    status = GetStatus();
+                }
+            }
+
+            return status;
         }
 
     }
