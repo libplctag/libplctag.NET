@@ -345,37 +345,37 @@ namespace libplctag
                 throw new LibPlcTagException((Status)result);
         }
 
-        public void SetBit(int offset, bool value)          => SetTagValue(plctag.plc_tag_set_bit, offset, value == true ? 1 : 0);
+        public void SetBit(int offset, bool value)          => SetNativeTagValue(plctag.plc_tag_set_bit, offset, value == true ? 1 : 0);
 
-        public ulong GetUInt64(int offset)                  => GetTagValue(plctag.plc_tag_get_uint64, offset, ulong.MaxValue);
-        public void SetUInt64(int offset, ulong value)      => SetTagValue(plctag.plc_tag_set_uint64, offset, value);
+        public ulong GetUInt64(int offset)                  => GetNativeTagValue(plctag.plc_tag_get_uint64, offset, ulong.MaxValue);
+        public void SetUInt64(int offset, ulong value)      => SetNativeTagValue(plctag.plc_tag_set_uint64, offset, value);
 
-        public long GetInt64(int offset)                    => GetTagValue(plctag.plc_tag_get_int64, offset, long.MinValue);
-        public void SetInt64(int offset, long value)        => SetTagValue(plctag.plc_tag_set_int64, offset, value);
+        public long GetInt64(int offset)                    => GetNativeTagValue(plctag.plc_tag_get_int64, offset, long.MinValue);
+        public void SetInt64(int offset, long value)        => SetNativeTagValue(plctag.plc_tag_set_int64, offset, value);
 
-        public uint GetUInt32(int offset)                   => GetTagValue(plctag.plc_tag_get_uint32, offset, uint.MaxValue);
-        public void SetUInt32(int offset, uint value)       => SetTagValue(plctag.plc_tag_set_uint32, offset, value);
+        public uint GetUInt32(int offset)                   => GetNativeTagValue(plctag.plc_tag_get_uint32, offset, uint.MaxValue);
+        public void SetUInt32(int offset, uint value)       => SetNativeTagValue(plctag.plc_tag_set_uint32, offset, value);
 
-        public int GetInt32(int offset)                     => GetTagValue(plctag.plc_tag_get_int32, offset, int.MinValue);
-        public void SetInt32(int offset, int value)         => SetTagValue(plctag.plc_tag_set_int32, offset, value);
+        public int GetInt32(int offset)                     => GetNativeTagValue(plctag.plc_tag_get_int32, offset, int.MinValue);
+        public void SetInt32(int offset, int value)         => SetNativeTagValue(plctag.plc_tag_set_int32, offset, value);
 
-        public ushort GetUInt16(int offset)                 => GetTagValue(plctag.plc_tag_get_uint16, offset, ushort.MaxValue);
-        public void SetUInt16(int offset, ushort value)     => SetTagValue(plctag.plc_tag_set_uint16, offset, value);
+        public ushort GetUInt16(int offset)                 => GetNativeTagValue(plctag.plc_tag_get_uint16, offset, ushort.MaxValue);
+        public void SetUInt16(int offset, ushort value)     => SetNativeTagValue(plctag.plc_tag_set_uint16, offset, value);
 
-        public short GetInt16(int offset)                   => GetTagValue(plctag.plc_tag_get_int16, offset, short.MinValue);
-        public void SetInt16(int offset, short value)       => SetTagValue(plctag.plc_tag_set_int16, offset, value);
+        public short GetInt16(int offset)                   => GetNativeTagValue(plctag.plc_tag_get_int16, offset, short.MinValue);
+        public void SetInt16(int offset, short value)       => SetNativeTagValue(plctag.plc_tag_set_int16, offset, value);
 
-        public byte GetUInt8(int offset)                    => GetTagValue(plctag.plc_tag_get_uint8, offset, byte.MaxValue);
-        public void SetUInt8(int offset, byte value)        => SetTagValue(plctag.plc_tag_set_uint8, offset, value);
+        public byte GetUInt8(int offset)                    => GetNativeTagValue(plctag.plc_tag_get_uint8, offset, byte.MaxValue);
+        public void SetUInt8(int offset, byte value)        => SetNativeTagValue(plctag.plc_tag_set_uint8, offset, value);
 
-        public sbyte GetInt8(int offset)                    => GetTagValue(plctag.plc_tag_get_int8, offset, sbyte.MinValue);
-        public void SetInt8(int offset, sbyte value)        => SetTagValue(plctag.plc_tag_set_int8, offset, value);
+        public sbyte GetInt8(int offset)                    => GetNativeTagValue(plctag.plc_tag_get_int8, offset, sbyte.MinValue);
+        public void SetInt8(int offset, sbyte value)        => SetNativeTagValue(plctag.plc_tag_set_int8, offset, value);
 
-        public double GetFloat64(int offset)                => GetTagValue(plctag.plc_tag_get_float64, offset, double.MinValue);
-        public void SetFloat64(int offset, double value)    => SetTagValue(plctag.plc_tag_set_float64, offset, value);
+        public double GetFloat64(int offset)                => GetNativeTagValue(plctag.plc_tag_get_float64, offset, double.MinValue);
+        public void SetFloat64(int offset, double value)    => SetNativeTagValue(plctag.plc_tag_set_float64, offset, value);
 
-        public float GetFloat32(int offset)                 => GetTagValue(plctag.plc_tag_get_float32, offset, float.MinValue);
-        public void SetFloat32(int offset, float value)     => SetTagValue(plctag.plc_tag_set_float32, offset, value);
+        public float GetFloat32(int offset)                 => GetNativeTagValue(plctag.plc_tag_get_float32, offset, float.MinValue);
+        public void SetFloat32(int offset, float value)     => SetNativeTagValue(plctag.plc_tag_set_float32, offset, value);
 
 
 
@@ -402,14 +402,14 @@ namespace libplctag
 
 
 
-        private void SetTagValue<T>(Func<int, int, T, int> nativeMethod, int offset, T value)
+        private void SetNativeTagValue<T>(Func<int, int, T, int> nativeMethod, int offset, T value)
         {
             ThrowIfAlreadyDisposed();
             var result = (Status)nativeMethod(nativeTagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
-        private T GetTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)
+        private T GetNativeTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)
             where T : struct
         {
             ThrowIfAlreadyDisposed();
