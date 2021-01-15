@@ -218,11 +218,11 @@ namespace libplctag
             if (_isDisposed)
                 return;
 
-            if (!IsInitialized)
-                return;
-
-            var result = (Status)_nativeMethods.plc_tag_destroy(tagHandle);
-            ThrowIfStatusNotOk(result);
+            if (IsInitialized)
+            {
+                var result = (Status)_nativeMethods.plc_tag_destroy(tagHandle);
+                ThrowIfStatusNotOk(result);
+            }
 
             _isDisposed = true;
         }
