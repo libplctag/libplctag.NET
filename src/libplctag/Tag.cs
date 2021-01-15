@@ -11,25 +11,16 @@ namespace libplctag
 
     public sealed class Tag : IDisposable
     {
-        private const int ASYNC = 0;
+
+        private const int ASYNC_TIMEOUT = 0;
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
 
+        private int nativeTagHandle;
 
-        private T GetField<T>(ref T field)
-        {
-            ThrowIfAlreadyDisposed();
-            return field;
-        }
-
-        private void SetField<T>(ref T field, T value)
-        {
-            ThrowIfAlreadyDisposed();
-            ThrowIfAlreadyInitialized();
-            field = value;
-        }
+        private bool _isDisposed = false;
 
 
 
@@ -132,20 +123,15 @@ namespace libplctag
             }
         }
 
-        private int tagHandle;
+        
 
         ~Tag()
         {
             Dispose();
         }
 
-        private void ThrowIfAlreadyDisposed()
-        {
-            if (_isDisposed)
-                throw new ObjectDisposedException(GetType().FullName);
-        }
+        
 
-        private bool _isDisposed = false;
         public void Dispose()
         {
             if (_isDisposed)
@@ -154,7 +140,7 @@ namespace libplctag
             if (!IsInitialized)
                 return;
 
-            var result = (Status)plctag.plc_tag_destroy(tagHandle);
+            var result = (Status)plctag.plc_tag_destroy(nativeTagHandle);
             ThrowIfStatusNotOk(result);
 
             _isDisposed = true;
@@ -163,36 +149,10 @@ namespace libplctag
         public void Abort()
         {
             ThrowIfAlreadyDisposed();
-            var result = (Status)plctag.plc_tag_abort(tagHandle);
+            var result = (Status)plctag.plc_tag_abort(nativeTagHandle);
             ThrowIfStatusNotOk(result);
         }
 
-        private string GetAttributeString()
-        {
-
-            var attributes = new Dictionary<string, string>();
-
-            attributes.Add("protocol", this.Protocol.ToString());
-            attributes.Add("gateway", this.Gateway);
-            attributes.Add("path", Path);
-            attributes.Add("plc", PlcType.ToString().ToLower());
-            attributes.Add("elem_size", ElementSize?.ToString());
-            attributes.Add("elem_count", ElementCount?.ToString());
-            attributes.Add("name", Name);
-            attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
-            if (UseConnectedMessaging.HasValue)
-                attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
-
-            string separator = "&";
-            return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
-
-        }
-
-        private void ThrowIfAlreadyInitialized()
-        {
-            if (IsInitialized)
-                throw new InvalidOperationException("Already initialized");
-        }
 
         public bool IsInitialized { get; private set; }
 
@@ -218,7 +178,7 @@ namespace libplctag
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
-                tagHandle = result;
+                nativeTagHandle = result;
 
             IsInitialized = true;
         }
@@ -240,11 +200,11 @@ namespace libplctag
 
                 var attributeString = GetAttributeString();
 
-                var result = plctag.plc_tag_create(attributeString, ASYNC);
+                var result = plctag.plc_tag_create(attributeString, ASYNC_TIMEOUT);
                 if (result < 0)
                     throw new LibPlcTagException((Status)result);
                 else
-                    tagHandle = result;
+                    nativeTagHandle = result;
 
                 await DelayWhilePending((Status)result, cts.Token);
 
@@ -264,7 +224,7 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)plctag.plc_tag_read(tagHandle, millisecondTimeout);
+            var result = (Status)plctag.plc_tag_read(nativeTagHandle, millisecondTimeout);
             ThrowIfStatusNotOk(result);
         }
 
@@ -280,7 +240,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)plctag.plc_tag_read(tagHandle, ASYNC);
+                var initialStatus = (Status)plctag.plc_tag_read(nativeTagHandle, ASYNC_TIMEOUT);
 
                 var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
 
@@ -298,7 +258,7 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)plctag.plc_tag_write(tagHandle, millisecondTimeout);
+            var result = (Status)plctag.plc_tag_write(nativeTagHandle, millisecondTimeout);
             ThrowIfStatusNotOk(result);
         }
 
@@ -314,7 +274,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)plctag.plc_tag_write(tagHandle, ASYNC);
+                var initialStatus = (Status)plctag.plc_tag_write(nativeTagHandle, ASYNC_TIMEOUT);
 
                 var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
 
@@ -326,7 +286,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = plctag.plc_tag_get_size(tagHandle);
+            var result = plctag.plc_tag_get_size(nativeTagHandle);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
@@ -336,7 +296,7 @@ namespace libplctag
         public Status GetStatus()
         {
             ThrowIfAlreadyDisposed();
-            return (Status)plctag.plc_tag_status(tagHandle);
+            return (Status)plctag.plc_tag_status(nativeTagHandle);
         }
 
         public byte[] GetBuffer()
@@ -357,7 +317,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = plctag.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
+            var result = plctag.plc_tag_get_int_attribute(nativeTagHandle, attributeName, int.MinValue);
             if (result == int.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -368,7 +328,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)plctag.plc_tag_set_int_attribute(tagHandle, attributeName, value);
+            var result = (Status)plctag.plc_tag_set_int_attribute(nativeTagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -376,7 +336,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = plctag.plc_tag_get_bit(tagHandle, offset);
+            var result = plctag.plc_tag_get_bit(nativeTagHandle, offset);
             if (result == 0)
                 return false;
             else if (result == 1)
@@ -417,6 +377,22 @@ namespace libplctag
         public float GetFloat32(int offset)                 => GetTagValue(plctag.plc_tag_get_float32, offset, float.MinValue);
         public void SetFloat32(int offset, float value)     => SetTagValue(plctag.plc_tag_set_float32, offset, value);
 
+
+
+
+
+        private void ThrowIfAlreadyDisposed()
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+        }
+
+        private void ThrowIfAlreadyInitialized()
+        {
+            if (IsInitialized)
+                throw new InvalidOperationException("Already initialized");
+        }
+
         private void ThrowIfStatusNotOk(Status? status = null)
         {
             var statusToCheck = status ?? GetStatus();
@@ -424,25 +400,39 @@ namespace libplctag
                 throw new LibPlcTagException(statusToCheck);
         }
 
+
+
         private void SetTagValue<T>(Func<int, int, T, int> nativeMethod, int offset, T value)
         {
             ThrowIfAlreadyDisposed();
-            var result = (Status)nativeMethod(tagHandle, offset, value);
+            var result = (Status)nativeMethod(nativeTagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
-        private T GetTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueForPossibleError)
+        private T GetTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)
             where T : struct
         {
             ThrowIfAlreadyDisposed();
 
-            var result = nativeMethod(tagHandle, offset);
-            if (result.Equals(valueForPossibleError))
+            var result = nativeMethod(nativeTagHandle, offset);
+            if (result.Equals(valueIndicatingPossibleError))
                 ThrowIfStatusNotOk();
 
             return result;
         }
 
+        private T GetField<T>(ref T field)
+        {
+            ThrowIfAlreadyDisposed();
+            return field;
+        }
+
+        private void SetField<T>(ref T field, T value)
+        {
+            ThrowIfAlreadyDisposed();
+            ThrowIfAlreadyInitialized();
+            field = value;
+        }
 
         private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
         {
@@ -472,6 +462,27 @@ namespace libplctag
             }
 
             return status;
+        }
+
+        private string GetAttributeString()
+        {
+
+            var attributes = new Dictionary<string, string>();
+
+            attributes.Add("protocol", Protocol.ToString());
+            attributes.Add("gateway", Gateway);
+            attributes.Add("path", Path);
+            attributes.Add("plc", PlcType.ToString().ToLower());
+            attributes.Add("elem_size", ElementSize?.ToString());
+            attributes.Add("elem_count", ElementCount?.ToString());
+            attributes.Add("name", Name);
+            attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
+            if (UseConnectedMessaging.HasValue)
+                attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
+
+            string separator = "&";
+            return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
+
         }
 
     }
