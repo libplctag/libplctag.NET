@@ -9,15 +9,17 @@ namespace libplctag.Tests
         [Fact]
         public void Status_ok_when_first_created()
         {
-            var tag = new TestTag(new MockNativeMethods());
+            var tag = new MockTag();
 
-            Assert.Equal(Status.Ok, tag.GetStatus());
+            var status = tag.GetStatus();
+
+            Assert.Equal(Status.Ok, status);
         }
 
         [Fact]
         public void Can_not_use_if_already_disposed()
         {
-            var tag = new TestTag(new MockNativeMethods());
+            var tag = new MockTag();
 
             tag.Dispose();
 
@@ -28,19 +30,20 @@ namespace libplctag.Tests
         public void AttributeStringFormatted()
         {
 
-            var native = new MockNativeMethods();
+            var nativeTag = new MockNativeTag();
 
-            var tag = new TestTag(native)
+            var tag = new MockTag(nativeTag)
             {
                 ElementSize = 4,
                 ElementCount = 10,
                 PlcType = PlcType.Slc500,
-                Name = "TagName"
+                Name = "TagName",
+                Protocol = Protocol.ab_eip
             };
 
             tag.Initialize();
 
-            Assert.Equal("protocol=&plc=slc500&elem_size=4&elem_count=10&name=TagName", native.AttributeString);
+            Assert.Equal("protocol=ab_eip&plc=slc500&elem_size=4&elem_count=10&name=TagName", nativeTag.AttributeString);
 
         }
     }

@@ -4,7 +4,7 @@ using static libplctag.NativeImport.plctag;
 
 namespace libplctag
 {
-    class NativeMethods : INativeMethods
+    class NativeTag : INativeTag
     {
 
         public bool ForceExtractLibrary

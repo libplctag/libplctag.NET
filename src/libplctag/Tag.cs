@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using libplctag.NativeImport;
+
+[assembly: InternalsVisibleTo("libplctag.Tests")]
 
 namespace libplctag
 {
@@ -194,16 +196,16 @@ namespace libplctag
             Dispose();
         }
 
-        readonly INativeMethods _nativeMethods;
+        readonly INativeTag _native;
 
         public Tag()
         {
-            _nativeMethods = new NativeMethods();
+            _native = new NativeTag();
         }
 
-        private protected Tag(INativeMethods nativeMethods)
+        private protected Tag(INativeTag nativeMethods)
         {
-            _nativeMethods = nativeMethods;
+            _native = nativeMethods;
         }
 
         private void ThrowIfAlreadyDisposed()
@@ -220,7 +222,7 @@ namespace libplctag
 
             if (IsInitialized)
             {
-                var result = (Status)_nativeMethods.plc_tag_destroy(tagHandle);
+                var result = (Status)_native.plc_tag_destroy(tagHandle);
                 ThrowIfStatusNotOk(result);
             }
 
@@ -230,7 +232,7 @@ namespace libplctag
         public void Abort()
         {
             ThrowIfAlreadyDisposed();
-            var result = (Status)_nativeMethods.plc_tag_abort(tagHandle);
+            var result = (Status)_native.plc_tag_abort(tagHandle);
             ThrowIfStatusNotOk(result);
         }
 
@@ -281,7 +283,7 @@ namespace libplctag
 
             var attributeString = GetAttributeString();
 
-            var result = _nativeMethods.plc_tag_create(attributeString, millisecondTimeout);
+            var result = _native.plc_tag_create(attributeString, millisecondTimeout);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
@@ -307,7 +309,7 @@ namespace libplctag
 
                 var attributeString = GetAttributeString();
 
-                var result = _nativeMethods.plc_tag_create(attributeString, 0);
+                var result = _native.plc_tag_create(attributeString, 0);
                 if (result < 0)
                     throw new LibPlcTagException((Status)result);
                 else
@@ -337,7 +339,7 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)_nativeMethods.plc_tag_read(tagHandle, millisecondTimeout);
+            var result = (Status)_native.plc_tag_read(tagHandle, millisecondTimeout);
             ThrowIfStatusNotOk(result);
         }
 
@@ -352,7 +354,7 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-                var status = (Status)_nativeMethods.plc_tag_read(tagHandle, 0);
+                var status = (Status)_native.plc_tag_read(tagHandle, 0);
 
                 using (cts.Token.Register(() => Abort()))
                 {
@@ -377,7 +379,7 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)_nativeMethods.plc_tag_write(tagHandle, millisecondTimeout);
+            var result = (Status)_native.plc_tag_write(tagHandle, millisecondTimeout);
             ThrowIfStatusNotOk(result);
         }
 
@@ -392,7 +394,7 @@ namespace libplctag
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-                var status = (Status)_nativeMethods.plc_tag_write(tagHandle, 0);
+                var status = (Status)_native.plc_tag_write(tagHandle, 0);
 
                 using (cts.Token.Register(() => Abort()))
                 {
@@ -411,7 +413,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_size(tagHandle);
+            var result = _native.plc_tag_get_size(tagHandle);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
@@ -421,7 +423,7 @@ namespace libplctag
         public Status GetStatus()
         {
             ThrowIfAlreadyDisposed();
-            return (Status)_nativeMethods.plc_tag_status(tagHandle);
+            return (Status)_native.plc_tag_status(tagHandle);
         }
 
         public byte[] GetBuffer()
@@ -442,7 +444,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
+            var result = _native.plc_tag_get_int_attribute(tagHandle, attributeName, int.MinValue);
             if (result == int.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -453,7 +455,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_int_attribute(tagHandle, attributeName, value);
+            var result = (Status)_native.plc_tag_set_int_attribute(tagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -461,7 +463,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_bit(tagHandle, offset);
+            var result = _native.plc_tag_get_bit(tagHandle, offset);
             if (result == 0)
                 return false;
             else if (result == 1)
@@ -475,7 +477,7 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
 
             int valueAsInteger = value == true ? 1 : 0;
-            var result = (Status)_nativeMethods.plc_tag_set_bit(tagHandle, offset, valueAsInteger);
+            var result = (Status)_native.plc_tag_set_bit(tagHandle, offset, valueAsInteger);
             ThrowIfStatusNotOk(result);
         }
 
@@ -483,7 +485,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_uint64(tagHandle, offset);
+            var result = _native.plc_tag_get_uint64(tagHandle, offset);
             if (result == ulong.MaxValue)
                 ThrowIfStatusNotOk();
 
@@ -494,7 +496,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_uint64(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_uint64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -502,7 +504,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_int64(tagHandle, offset);
+            var result = _native.plc_tag_get_int64(tagHandle, offset);
             if (result == long.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -513,7 +515,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_int64(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_int64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -521,7 +523,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_uint32(tagHandle, offset);
+            var result = _native.plc_tag_get_uint32(tagHandle, offset);
             if (result == uint.MaxValue)
                 ThrowIfStatusNotOk();
 
@@ -532,7 +534,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_uint32(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_uint32(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -540,7 +542,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_int32(tagHandle, offset);
+            var result = _native.plc_tag_get_int32(tagHandle, offset);
             if (result == int.MinValue)
                 ThrowIfStatusNotOk();
             return result;
@@ -550,7 +552,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_int32(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_int32(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -558,7 +560,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_uint16(tagHandle, offset);
+            var result = _native.plc_tag_get_uint16(tagHandle, offset);
             if (result == ushort.MaxValue)
                 ThrowIfStatusNotOk();
 
@@ -569,7 +571,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_uint16(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_uint16(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -577,7 +579,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_int16(tagHandle, offset);
+            var result = _native.plc_tag_get_int16(tagHandle, offset);
             if (result == short.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -587,7 +589,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_int16(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_int16(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -595,7 +597,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_uint8(tagHandle, offset);
+            var result = _native.plc_tag_get_uint8(tagHandle, offset);
             if (result == byte.MaxValue)
                 ThrowIfStatusNotOk();
 
@@ -606,7 +608,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_uint8(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_uint8(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -614,7 +616,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_int8(tagHandle, offset);
+            var result = _native.plc_tag_get_int8(tagHandle, offset);
             if (result == sbyte.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -625,7 +627,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_int8(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_int8(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -633,7 +635,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = _nativeMethods.plc_tag_get_float64(tagHandle, offset);
+            var result = _native.plc_tag_get_float64(tagHandle, offset);
             if (result == double.MinValue)
                 ThrowIfStatusNotOk();
 
@@ -643,7 +645,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_float64(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_float64(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 
@@ -651,7 +653,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
             
-            var result = _nativeMethods.plc_tag_get_float32(tagHandle, offset);
+            var result = _native.plc_tag_get_float32(tagHandle, offset);
             if (result == float.MinValue)
                 ThrowIfStatusNotOk();
             
@@ -661,7 +663,7 @@ namespace libplctag
         {
             ThrowIfAlreadyDisposed();
 
-            var result = (Status)_nativeMethods.plc_tag_set_float32(tagHandle, offset, value);
+            var result = (Status)_native.plc_tag_set_float32(tagHandle, offset, value);
             ThrowIfStatusNotOk(result);
         }
 

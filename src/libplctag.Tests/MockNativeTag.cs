@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace libplctag.Tests
 {
-    class MockNativeMethods : INativeMethods
+    class MockNativeTag : INativeTag
     {
-
 
         Status status;
         readonly Dictionary<int, object> Value = new Dictionary<int, object>();
 
 
         public string AttributeString { get; internal set; }
-
-
 
         public bool ForceExtractLibrary { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

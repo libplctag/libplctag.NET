@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace libplctag
 {
-    interface INativeMethods
+    interface INativeTag
     {
         bool ForceExtractLibrary { get; set; }
 
