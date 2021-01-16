@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Moq;
 
 namespace libplctag.Tests
 {
@@ -7,13 +8,16 @@ namespace libplctag.Tests
     {
 
         [Fact]
-        public void Status_ok_when_first_created()
+        public void Destroy_is_called_if_initialized_and_disposed()
         {
-            var tag = new NativeTagWrapper(new MockNativeTag());
+            var mock = new Mock<INativeTag>();
 
-            var status = tag.GetStatus();
+            var tag = new NativeTagWrapper(mock.Object);
 
-            Assert.Equal(Status.Ok, status);
+            tag.Initialize();
+            tag.Dispose();
+
+            mock.Verify(m => m.plc_tag_destroy(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -24,6 +28,17 @@ namespace libplctag.Tests
             tag.Dispose();
 
             Assert.Throws<ObjectDisposedException>(() => tag.GetStatus());
+        }
+
+
+        [Fact]
+        public void Status_ok_when_first_created()
+        {
+            var tag = new NativeTagWrapper(new MockNativeTag());
+
+            var status = tag.GetStatus();
+
+            Assert.Equal(Status.Ok, status);
         }
 
         [Fact]

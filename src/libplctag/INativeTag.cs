@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
 namespace libplctag
 {
     interface INativeTag
