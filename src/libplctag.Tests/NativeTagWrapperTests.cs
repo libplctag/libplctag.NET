@@ -3,13 +3,13 @@ using Xunit;
 
 namespace libplctag.Tests
 {
-    public class UnitTest1
+    public class NativeTagWrapperTests
     {
 
         [Fact]
         public void Status_ok_when_first_created()
         {
-            var tag = new MockTag();
+            var tag = new NativeTagWrapper(new MockNativeTag());
 
             var status = tag.GetStatus();
 
@@ -19,7 +19,7 @@ namespace libplctag.Tests
         [Fact]
         public void Can_not_use_if_already_disposed()
         {
-            var tag = new MockTag();
+            var tag = new NativeTagWrapper(new MockNativeTag());
 
             tag.Dispose();
 
@@ -32,7 +32,7 @@ namespace libplctag.Tests
 
             var nativeTag = new MockNativeTag();
 
-            var tag = new MockTag(nativeTag)
+            var tag = new NativeTagWrapper(nativeTag)
             {
                 ElementSize = 4,
                 ElementCount = 10,
