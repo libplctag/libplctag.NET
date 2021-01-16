@@ -10,20 +10,20 @@ namespace libplctag.Tests
         [Fact]
         public void Destroy_is_called_if_initialized_and_disposed()
         {
-            var mock = new Mock<INativeTag>();
-
-            var tag = new NativeTagWrapper(mock.Object);
+            var nativeTag = new Mock<INativeTag>();
+            var tag = new NativeTagWrapper(nativeTag.Object);
 
             tag.Initialize();
             tag.Dispose();
 
-            mock.Verify(m => m.plc_tag_destroy(It.IsAny<int>()), Times.Once);
+            nativeTag.Verify(m => m.plc_tag_destroy(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
         public void Can_not_use_if_already_disposed()
         {
-            var tag = new NativeTagWrapper(new MockNativeTag());
+            var nativeTag = new Mock<INativeTag>();
+            var tag = new NativeTagWrapper(nativeTag.Object);
 
             tag.Dispose();
 
@@ -34,7 +34,8 @@ namespace libplctag.Tests
         [Fact]
         public void Status_ok_when_first_created()
         {
-            var tag = new NativeTagWrapper(new MockNativeTag());
+            var nativeTag = new Mock<INativeTag>();
+            var tag = new NativeTagWrapper(nativeTag.Object);
 
             var status = tag.GetStatus();
 
@@ -45,9 +46,8 @@ namespace libplctag.Tests
         public void AttributeStringFormatted()
         {
 
-            var nativeTag = new MockNativeTag();
-
-            var tag = new NativeTagWrapper(nativeTag)
+            var nativeTag = new Mock<INativeTag>();
+            var tag = new NativeTagWrapper(nativeTag.Object)
             {
                 ElementSize = 4,
                 ElementCount = 10,
@@ -58,7 +58,7 @@ namespace libplctag.Tests
 
             tag.Initialize();
 
-            Assert.Equal("protocol=ab_eip&plc=slc500&elem_size=4&elem_count=10&name=TagName", nativeTag.AttributeString);
+            nativeTag.Verify(m => m.plc_tag_create("protocol=ab_eip&plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
 
         }
     }
