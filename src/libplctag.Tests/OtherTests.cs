@@ -32,7 +32,6 @@ namespace libplctag.Tests
                 ElementCount = 10,
                 PlcType = PlcType.Slc500,
                 Name = "TagName",
-                Protocol = Protocol.ab_eip
             };
 
 
@@ -41,7 +40,7 @@ namespace libplctag.Tests
 
 
             // Assert
-            nativeTag.Verify(m => m.plc_tag_create("protocol=ab_eip&plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
+            nativeTag.Verify(m => m.plc_tag_create("plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
 
         }
     }
