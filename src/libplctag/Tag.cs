@@ -62,6 +62,44 @@ namespace libplctag
             set => _tag.UseConnectedMessaging = value;
         }
 
+        /// <summary>
+        /// Initializes the tag by establishing necessary connections.
+        /// Can only be called once per instance.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Initialize() => _tag.Initialize();
+
+        /// <summary>
+        /// Initializes the tag by establishing necessary connections.
+        /// Can only be called once per instance.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public Task InitializeAsync(CancellationToken token = default) => _tag.InitializeAsync(token);
+
+        /// <summary>
+        /// Executes a synchronous read on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Read() => _tag.Read();
+
+        /// <summary>
+        /// Executes an asynch read on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public Task ReadAsync(CancellationToken token = default) => _tag.ReadAsync(token);
+
+        /// <summary>
+        /// Executes a synchronous write on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public void Write() => _tag.Write();
+
+        /// <summary>
+        /// Executes an asynch write on a tag.
+        /// Timeout is controlled via class property.
+        /// </summary>
+        public Task WriteAsync(CancellationToken token = default) => _tag.WriteAsync(token);
+
         public void Abort() => _tag.Abort();
         public void Dispose() => _tag.Dispose();
         public bool GetBit(int offset) => _tag.GetBit(offset);
@@ -78,10 +116,6 @@ namespace libplctag
         public uint GetUInt32(int offset) => _tag.GetUInt8(offset);
         public ulong GetUInt64(int offset) => _tag.GetUInt8(offset);
         public byte GetUInt8(int offset) => _tag.GetUInt8(offset);
-        public void Initialize() => _tag.Initialize();
-        public Task InitializeAsync(CancellationToken token = default) => _tag.InitializeAsync(token);
-        public void Read() => _tag.Read();
-        public Task ReadAsync(CancellationToken token = default) => _tag.ReadAsync(token);
         public void SetBit(int offset, bool value) => _tag.SetBit(offset, value);
         public void SetFloat32(int offset, float value) => _tag.SetFloat32(offset, value);
         public void SetFloat64(int offset, double value) => _tag.SetFloat64(offset, value);
@@ -93,7 +127,7 @@ namespace libplctag
         public void SetUInt32(int offset, uint value) => _tag.SetUInt32(offset, value);
         public void SetUInt64(int offset, ulong value) => _tag.SetUInt64(offset, value);
         public void SetUInt8(int offset, byte value) => _tag.SetUInt8(offset, value);
-        public void Write() => _tag.Write();
-        public Task WriteAsync(CancellationToken token = default) => _tag.WriteAsync(token);
+
+
     }
 }

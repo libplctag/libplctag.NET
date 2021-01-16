@@ -260,11 +260,7 @@ namespace libplctag
 
         public bool IsInitialized { get; private set; }
 
-        /// <summary>
-        /// Initializes the tag by establishing necessary connections.
-        /// Can only be called once per instance.
-        /// Timeout is controlled via class property.
-        /// </summary>
+        
         public void Initialize()
         {
 
@@ -287,11 +283,7 @@ namespace libplctag
             IsInitialized = true;
         }
 
-        /// <summary>
-        /// Initializes the tag by establishing necessary connections.
-        /// Can only be called once per instance.
-        /// Timeout is controlled via class property.
-        /// </summary>
+        
         public async Task InitializeAsync(CancellationToken token = default)
         {
 
@@ -324,10 +316,6 @@ namespace libplctag
             }
         }
 
-        /// <summary>
-        /// Executes a synchronous read on a tag.
-        /// Timeout is controlled via class property.
-        /// </summary>
         public void Read()
         {
             ThrowIfAlreadyDisposed();
@@ -338,10 +326,6 @@ namespace libplctag
             ThrowIfStatusNotOk(result);
         }
 
-        /// <summary>
-        /// Executes an asynch read on a tag.
-        /// Timeout is controlled via class property.
-        /// </summary>
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
@@ -364,10 +348,6 @@ namespace libplctag
             }
         }
 
-        /// <summary>
-        /// Executes a synchronous write on a tag.
-        /// Timeout is controlled via class property.
-        /// </summary>
         public void Write()
         {
             ThrowIfAlreadyDisposed();
@@ -378,10 +358,6 @@ namespace libplctag
             ThrowIfStatusNotOk(result);
         }
 
-        /// <summary>
-        /// Executes an asynch write on a tag.
-        /// Timeout is controlled via class property.
-        /// </summary>
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
