@@ -6,7 +6,7 @@ using System.Text;
 
 namespace libplctag.Tests
 {
-    class MockTag : Tag
+    class MockTag : NativeTagWrapper
     {
 
         public MockTag()
