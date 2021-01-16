@@ -25,7 +25,6 @@ namespace libplctag
             get => _tag.Gateway;
             set => _tag.Gateway = value;
         }
-        
         public string Name
         {
             get => _tag.Name;
