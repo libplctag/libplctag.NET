@@ -15,8 +15,6 @@ namespace libplctag.Tests
 
         public string AttributeString { get; internal set; }
 
-        public bool ForceExtractLibrary { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public int plc_tag_abort(int tag)
         {
             status = Status.ErrorAbort;

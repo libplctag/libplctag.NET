@@ -7,8 +7,6 @@ namespace libplctag
 {
     interface INativeTag
     {
-        bool ForceExtractLibrary { get; set; }
-
         int plc_tag_abort(int tag);
         int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch);
         int plc_tag_create(string lpString, int timeout);
