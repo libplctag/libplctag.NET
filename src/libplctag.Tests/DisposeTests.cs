@@ -4,62 +4,62 @@ using Moq;
 
 namespace libplctag.Tests
 {
-    public class NativeTagWrapperTests
+    public class DisposeTests
     {
 
         [Fact]
         public void Destroy_is_called_if_initialized_and_disposed()
         {
+            // Arrange
             var nativeTag = new Mock<INativeTag>();
             var tag = new NativeTagWrapper(nativeTag.Object);
 
+            // Act
             tag.Initialize();
             tag.Dispose();
 
+            // Assert
             nativeTag.Verify(m => m.plc_tag_destroy(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
         public void Can_not_use_if_already_disposed()
         {
+            // Arrange
             var nativeTag = new Mock<INativeTag>();
             var tag = new NativeTagWrapper(nativeTag.Object);
 
+            // Act
             tag.Dispose();
 
+            // Assert
             Assert.Throws<ObjectDisposedException>(() => tag.GetStatus());
         }
 
-
         [Fact]
-        public void Status_ok_when_first_created()
-        {
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
-
-            var status = tag.GetStatus();
-
-            Assert.Equal(Status.Ok, status);
-        }
-
-        [Fact]
-        public void AttributeStringFormatted()
+        public void Finalizer_calls_destroy()
         {
 
+            // See https://www.inversionofcontrol.co.uk/unit-testing-finalizers-in-csharp/
+
+
+            // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            Action dispose = () =>
             {
-                ElementSize = 4,
-                ElementCount = 10,
-                PlcType = PlcType.Slc500,
-                Name = "TagName",
-                Protocol = Protocol.ab_eip
+                // This will go out of scope after dispose() is executed, so the garbage collector will be able to call the finalizer
+                var tag = new NativeTagWrapper(nativeTag.Object);
+                tag.Initialize();
             };
 
-            tag.Initialize();
+            // Act
+            dispose();
+            GC.Collect(0, GCCollectionMode.Forced);
+            GC.WaitForPendingFinalizers();
 
-            nativeTag.Verify(m => m.plc_tag_create("protocol=ab_eip&plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
-
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_destroy(It.IsAny<int>()), Times.Once);
         }
+
     }
 }
