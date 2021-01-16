@@ -182,7 +182,7 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
                 if (value <= TimeSpan.Zero || value > maxTimeout)
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(Timeout), value, "Must be greater than 0");
                 _timeout = value;
             }
         }
@@ -263,9 +263,6 @@ namespace libplctag
             ThrowIfAlreadyInitialized();
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
-
-            if (millisecondTimeout <= 0)
-                throw new ArgumentOutOfRangeException(nameof(millisecondTimeout), "Must be greater than 0 for a synchronous initialization");
 
             var attributeString = GetAttributeString();
 
