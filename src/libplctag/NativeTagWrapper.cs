@@ -202,9 +202,21 @@ namespace libplctag
                 else
                     nativeTagHandle = result;
 
-                await DelayWhilePending((Status)result, cts.Token);
 
-                ThrowIfStatusNotOk();
+                Status? statusAfterPending = null;
+                try
+                {
+                    statusAfterPending = await DelayWhilePending(GetStatus(), cts.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    if (token.IsCancellationRequested)
+                        throw;
+                    else
+                        throw new LibPlcTagException(Status.ErrorTimeout);
+                }
+
+                ThrowIfStatusNotOk(statusAfterPending);
 
                 IsInitialized = true;
             }
@@ -230,9 +242,22 @@ namespace libplctag
 
                 var initialStatus = (Status)_native.plc_tag_read(nativeTagHandle, ASYNC_TIMEOUT);
 
-                var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
+
+                Status? statusAfterPending = null;
+                try
+                {
+                    statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    if (token.IsCancellationRequested)
+                        throw;
+                    else
+                        throw new LibPlcTagException(Status.ErrorTimeout);
+                }
 
                 ThrowIfStatusNotOk(statusAfterPending);
+
             }
         }
 
@@ -256,9 +281,22 @@ namespace libplctag
 
                 var initialStatus = (Status)_native.plc_tag_write(nativeTagHandle, ASYNC_TIMEOUT);
 
-                var statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
 
+                Status? statusAfterPending = null;
+                try
+                {
+                    statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    if (token.IsCancellationRequested)
+                        throw;
+                    else
+                        throw new LibPlcTagException(Status.ErrorTimeout);
+                }
+                
                 ThrowIfStatusNotOk(statusAfterPending);
+
             }
         }
 
@@ -426,17 +464,7 @@ namespace libplctag
             {
                 while (status == Status.Pending)
                 {
-                    try
-                    {
-                        await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        if (token.IsCancellationRequested)
-                            throw;
-                        else
-                            throw new LibPlcTagException(Status.ErrorTimeout);
-                    }
+                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
                     status = GetStatus();
                 }
             }
