@@ -59,9 +59,11 @@ namespace libplctag.Tests
 
 
             // Assert
-            await Assert.ThrowsAsync<LibPlcTagException>(async () => {
+            var ex  = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
                 await tag.InitializeAsync();
             });
+
+            Assert.Equal(Status.ErrorTimeout.ToString(), ex.Message);
         }
 
     }
