@@ -14,7 +14,7 @@ namespace libplctag
     class NativeTagWrapper : IDisposable
     {
 
-        private const int ASYNC_TIMEOUT = 0;
+        private const int TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION = 0;
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
@@ -196,7 +196,7 @@ namespace libplctag
 
                 var attributeString = GetAttributeString();
 
-                var result = _native.plc_tag_create(attributeString, ASYNC_TIMEOUT);
+                var result = _native.plc_tag_create(attributeString, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                 if (result < 0)
                     throw new LibPlcTagException((Status)result);
                 else
@@ -240,7 +240,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)_native.plc_tag_read(nativeTagHandle, ASYNC_TIMEOUT);
+                var initialStatus = (Status)_native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
 
 
                 Status? statusAfterPending = null;
@@ -279,7 +279,7 @@ namespace libplctag
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)_native.plc_tag_write(nativeTagHandle, ASYNC_TIMEOUT);
+                var initialStatus = (Status)_native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
 
 
                 Status? statusAfterPending = null;
