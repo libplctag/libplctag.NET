@@ -66,5 +66,38 @@ namespace libplctag.Tests
             Assert.Equal(Status.ErrorTimeout.ToString(), ex.Message);
         }
 
+        [Fact]
+        public async Task Timeout_returns_pending_but_eventually_ok()
+        {
+            // Arrange
+            var nativeTag = new Mock<INativeTag>();
+
+            nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
+                .Setup(m => m.plc_tag_create(It.IsAny<string>(), 0))
+                .Returns((int)Status.Pending);
+
+            nativeTag
+                .SetupSequence(m => m.plc_tag_status(It.IsAny<int>()))
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Pending)
+                .Returns((int)Status.Ok);
+
+            var tag = new NativeTagWrapper(nativeTag.Object)
+            {
+                Timeout = TimeSpan.FromMilliseconds(500)
+            };
+
+            // Act
+            await tag.InitializeAsync();
+
+            // Assert
+            Assert.Equal(Status.Ok, tag.GetStatus());
+        }
+
     }
 }
