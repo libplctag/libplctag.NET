@@ -1,4 +1,7 @@
 
+# This script is used to make it easier to copy native libraries into the libplctag.NativeImport project without error.
+
+
 # Step 1: Download the releases and put in a folder called "releases" next to this script. The folder structure should look like this:
 #   .\releases
 #   .\releases\libplctag_2.2.0_macos_x64.zip
@@ -10,6 +13,13 @@
 # Step 2: Run the script
 
 # Step 3: Verify that the files have been correctly copied
+
+# Step 4: Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required)
+
+# Step 5: Increment version number of libplctag.NativeImport project
+
+# Step 6: Upload to nuget
+#         Note there is a github action which automatically builds libplctag.NativeImport and uploads to nuget
 
 
 
