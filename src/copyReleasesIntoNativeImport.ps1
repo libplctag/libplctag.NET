@@ -32,7 +32,7 @@
 
 
 $releasesFolder = ".\releases\"
-$destinationFolder = ".\src\libplctag.NativeImport\runtime"
+$destinationFolder = ".\libplctag.NativeImport\runtime"
 
 
 
