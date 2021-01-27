@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace libplctag.NativeImport
 {
@@ -289,6 +290,36 @@ namespace libplctag.NativeImport
 
 
 
+        public static int plc_tag_get_string(Int32 tag_id, int string_start_offset, StringBuilder buffer, int buffer_length)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_get_string_raw(tag_id, string_start_offset, buffer, buffer_length);
+        }
+
+        public static int plc_tag_set_string(Int32 tag_id, int string_start_offset, string string_val)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_set_string_raw(tag_id, string_start_offset, string_val);
+        }
+
+        public static int plc_tag_get_string_length(Int32 tag_id, int string_start_offset)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_get_string_length_raw(tag_id, string_start_offset);
+        }
+
+        public static int plc_tag_get_string_capacity(Int32 tag_id, int string_start_offset)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_get_string_capacity_raw(tag_id, string_start_offset);
+        }
+
+        public static int plc_tag_get_string_total_length(Int32 tag_id, int string_start_offset)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_get_string_total_length_raw(tag_id, string_start_offset);
+        }
+
 
 
 
@@ -468,6 +499,23 @@ namespace libplctag.NativeImport
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_debug_level), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         static extern void plc_tag_set_debug_level_raw(int debug_level);
+
+
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        static extern int plc_tag_get_string_raw(Int32 tag_id, int string_start_offset, StringBuilder buffer, int buffer_length);
+        
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_string), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        static extern int plc_tag_set_string_raw(Int32 tag_id, int string_start_offset, [MarshalAs(UnmanagedType.LPStr)] string string_val);
+        
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string_length), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        static extern int plc_tag_get_string_length_raw(Int32 tag_id, int string_start_offset);
+        
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string_capacity), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        static extern int plc_tag_get_string_capacity_raw(Int32 tag_id, int string_start_offset);
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string_total_length), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        static extern int plc_tag_get_string_total_length_raw(Int32 tag_id, int string_start_offset);
 
 
     }
