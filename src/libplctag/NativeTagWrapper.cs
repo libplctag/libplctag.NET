@@ -475,18 +475,18 @@ namespace libplctag
         private string GetAttributeString()
         {
 
-            var attributes = new Dictionary<string, string>();
-
-            attributes.Add("protocol", Protocol.ToString());
-            attributes.Add("gateway", Gateway);
-            attributes.Add("path", Path);
-            attributes.Add("plc", PlcType.ToString().ToLower());
-            attributes.Add("elem_size", ElementSize?.ToString());
-            attributes.Add("elem_count", ElementCount?.ToString());
-            attributes.Add("name", Name);
-            attributes.Add("read_cache_ms", ReadCacheMillisecondDuration?.ToString());
-            if (UseConnectedMessaging.HasValue)
-                attributes.Add("use_connected_msg", UseConnectedMessaging.Value ? "1" : "0");
+            var attributes = new Dictionary<string, string>
+            {
+                { "protocol",           Protocol?.ToString() },
+                { "gateway",            Gateway },
+                { "path",               Path },
+                { "plc",                PlcType?.ToString()?.ToLower() },
+                { "elem_size",          ElementSize?.ToString() },
+                { "elem_count",         ElementCount?.ToString() },
+                { "name",               Name },
+                { "read_cache_ms",      ReadCacheMillisecondDuration?.ToString() },
+                { "use_connected_msg",  UseConnectedMessaging.HasValue ? (UseConnectedMessaging.Value ? "1" : "0") : null}
+            };
 
             string separator = "&";
             return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
