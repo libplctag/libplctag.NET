@@ -17,8 +17,8 @@ namespace libplctag
         }
         public int? ElementSize
         {
-            get => _tag.ElementCount;
-            set => _tag.ElementCount = value;
+            get => _tag.ElementSize;
+            set => _tag.ElementSize = value;
         }
         public string Gateway
         {
@@ -47,8 +47,8 @@ namespace libplctag
         }
         public int? ReadCacheMillisecondDuration
         {
-            get => _tag.ElementCount;
-            set => _tag.ElementCount = value;
+            get => _tag.ReadCacheMillisecondDuration;
+            set => _tag.ReadCacheMillisecondDuration = value;
         }
         public TimeSpan Timeout
         {
@@ -99,34 +99,44 @@ namespace libplctag
         /// </summary>
         public Task WriteAsync(CancellationToken token = default) => _tag.WriteAsync(token);
 
-        public void Abort() => _tag.Abort();
-        public void Dispose() => _tag.Dispose();
-        public bool GetBit(int offset) => _tag.GetBit(offset);
-        public byte[] GetBuffer() => _tag.GetBuffer();
-        public float GetFloat32(int offset) => _tag.GetFloat32(offset);
-        public double GetFloat64(int offset) => _tag.GetFloat64(offset);
-        public short GetInt16(int offset) => _tag.GetInt16(offset);
-        public int GetInt32(int offset) => _tag.GetInt32(offset);
-        public long GetInt64(int offset) => _tag.GetInt64(offset);
-        public sbyte GetInt8(int offset) => _tag.GetInt8(offset);
-        public int GetSize() => _tag.GetSize();
-        public Status GetStatus() => _tag.GetStatus();
-        public ushort GetUInt16(int offset) => _tag.GetUInt8(offset);
-        public uint GetUInt32(int offset) => _tag.GetUInt8(offset);
-        public ulong GetUInt64(int offset) => _tag.GetUInt8(offset);
-        public byte GetUInt8(int offset) => _tag.GetUInt8(offset);
-        public void SetBit(int offset, bool value) => _tag.SetBit(offset, value);
-        public void SetFloat32(int offset, float value) => _tag.SetFloat32(offset, value);
-        public void SetFloat64(int offset, double value) => _tag.SetFloat64(offset, value);
-        public void SetInt16(int offset, short value) => _tag.SetInt16(offset, value);
-        public void SetInt32(int offset, int value) => _tag.SetInt32(offset, value);
-        public void SetInt64(int offset, long value) => _tag.SetInt64(offset, value);
-        public void SetInt8(int offset, sbyte value) => _tag.SetInt8(offset, value);
-        public void SetUInt16(int offset, ushort value) => _tag.SetUInt16(offset, value);
-        public void SetUInt32(int offset, uint value) => _tag.SetUInt32(offset, value);
-        public void SetUInt64(int offset, ulong value) => _tag.SetUInt64(offset, value);
-        public void SetUInt8(int offset, byte value) => _tag.SetUInt8(offset, value);
+        public void Abort()                                 => _tag.Abort();
+        public void Dispose()                               => _tag.Dispose();
+        public byte[] GetBuffer()                           => _tag.GetBuffer();
+        public int GetSize()                                => _tag.GetSize();
+        public Status GetStatus()                           => _tag.GetStatus();
 
+        public bool GetBit(int offset)                      => _tag.GetBit(offset);
+        public void SetBit(int offset, bool value)          => _tag.SetBit(offset, value);
+
+        public float GetFloat32(int offset)                 => _tag.GetFloat32(offset);
+        public void SetFloat32(int offset, float value)     => _tag.SetFloat32(offset, value);
+
+        public double GetFloat64(int offset)                => _tag.GetFloat64(offset);
+        public void SetFloat64(int offset, double value)    => _tag.SetFloat64(offset, value);
+
+        public sbyte GetInt8(int offset)                    => _tag.GetInt8(offset);
+        public void SetInt8(int offset, sbyte value)        => _tag.SetInt8(offset, value);
+
+        public short GetInt16(int offset)                   => _tag.GetInt16(offset);
+        public void SetInt16(int offset, short value)       => _tag.SetInt16(offset, value);
+
+        public int GetInt32(int offset)                     => _tag.GetInt32(offset);
+        public void SetInt32(int offset, int value)         => _tag.SetInt32(offset, value);
+
+        public long GetInt64(int offset)                    => _tag.GetInt64(offset);
+        public void SetInt64(int offset, long value)        => _tag.SetInt64(offset, value);
+
+        public byte GetUInt8(int offset)                    => _tag.GetUInt8(offset);
+        public void SetUInt8(int offset, byte value)        => _tag.SetUInt8(offset, value);
+
+        public ushort GetUInt16(int offset)                 => _tag.GetUInt16(offset);
+        public void SetUInt16(int offset, ushort value)     => _tag.SetUInt16(offset, value);
+
+        public uint GetUInt32(int offset)                   => _tag.GetUInt32(offset);
+        public void SetUInt32(int offset, uint value)       => _tag.SetUInt32(offset, value);
+
+        public ulong GetUInt64(int offset)                  => _tag.GetUInt64(offset);
+        public void SetUInt64(int offset, ulong value)      => _tag.SetUInt64(offset, value);
 
     }
 }
