@@ -48,6 +48,8 @@ namespace libplctag
         public int plc_tag_get_bit(Int32 tag, int offset_bit)                                   => plctag.plc_tag_get_bit(tag, offset_bit);
         public int plc_tag_set_bit(Int32 tag, int offset_bit, int val)                          => plctag.plc_tag_set_bit(tag, offset_bit, val);
         public void plc_tag_set_debug_level(int debug_level)                                    => plctag.plc_tag_set_debug_level(debug_level);
+        public int plc_tag_get_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length)       => plctag.plc_tag_get_raw_bytes(tag, start_offset, buffer, buffer_length);
+        public int plc_tag_set_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length)       => plctag.plc_tag_set_raw_bytes(tag, start_offset, buffer, buffer_length);
 
     }
 }
