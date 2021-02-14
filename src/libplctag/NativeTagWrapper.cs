@@ -324,8 +324,8 @@ namespace libplctag
             var tagSize = GetSize();
             var temp = new byte[tagSize];
 
-            for (int ii = 0; ii < tagSize; ii++)
-                temp[ii] = GetUInt8(ii);
+            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, 0, temp, temp.Length);
+            ThrowIfStatusNotOk(result);
 
             return temp;
         }
