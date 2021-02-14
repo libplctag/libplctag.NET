@@ -321,6 +321,19 @@ namespace libplctag.NativeImport
         }
 
 
+        public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_get_raw_bytes_raw(tag_id, start_offset, buffer, buffer_length);
+        }
+
+        public static int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
+        {
+            ExtractLibraryIfRequired();
+            return plc_tag_set_raw_bytes_raw(tag_id, start_offset, buffer, buffer_length);
+        }
+
+
 
 
 
@@ -517,6 +530,12 @@ namespace libplctag.NativeImport
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string_total_length), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         static extern int plc_tag_get_string_total_length_raw(Int32 tag_id, int string_start_offset);
 
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_raw_bytes), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        static extern int plc_tag_get_raw_bytes_raw(Int32 tag_id, int start_offset, [Out] byte[] buffer, int buffer_length);
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_raw_bytes), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        static extern int plc_tag_set_raw_bytes_raw(Int32 tag_id, int start_offset, [In] byte[] buffer, int buffer_length);
 
     }
 }
