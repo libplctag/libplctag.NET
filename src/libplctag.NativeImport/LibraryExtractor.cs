@@ -15,7 +15,7 @@ namespace libplctag.NativeImport
 
             if (forceExtract || !LibraryExists(extractDirectory))
             {
-                ExtractAppropriateLibrary(extractDirectory);
+                ExtractAppropriateLibraryToDirectory(extractDirectory);
             }
 
         }
@@ -34,14 +34,14 @@ namespace libplctag.NativeImport
             return Path.GetDirectoryName(path);
         }
 
-        static void ExtractAppropriateLibrary(string folder)
+        static void ExtractAppropriateLibraryToDirectory(string outputDirectory)
         {
             var library = GetAppropriateLibraryInfo();
             var embeddedResource = GetEmbeddedResource(library.ResourceName);
 
             if (embeddedResource == null) throw new TypeLoadException("Appropriate native library is not embedded in this wrapper library");
 
-            var extractPath = Path.Combine(folder, library.FileName);
+            var extractPath = Path.Combine(outputDirectory, library.FileName);
             File.WriteAllBytes(extractPath, embeddedResource);
         }
 
