@@ -55,24 +55,24 @@ namespace libplctag.NativeImport
                 return new LibraryInfo("libplctag.NativeImport.runtime.win_x64", "plctag.dll");
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
-                return new LibraryInfo(null, "plctag.dll");
+                return new LibraryInfo("libplctag.NativeImport.runtime.win_ARM", "plctag.dll");
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-                return new LibraryInfo(null, "plctag.dll");
+                return new LibraryInfo("libplctag.NativeImport.runtime.win_ARM64", "plctag.dll");
 
 
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X86)
-                return new LibraryInfo("libplctag.NativeImport.runtime.linux_86", "libplctag.so");
+                return new LibraryInfo("libplctag.NativeImport.runtime.linux_x86", "libplctag.so");
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
                 return new LibraryInfo("libplctag.NativeImport.runtime.linux_x64", "libplctag.so");
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
-                return new LibraryInfo(null, "plctag.dll");
+                return new LibraryInfo("libplctag.NativeImport.runtime.linux_ARM", "libplctag.so");
 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-                return new LibraryInfo(null, "plctag.dll");
+                return new LibraryInfo("libplctag.NativeImport.runtime.linux_ARM64", "libplctag.so");
 
 
 
