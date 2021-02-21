@@ -4,11 +4,10 @@
 
 # Step 1: Download the releases and put in a folder called "releases" next to this script. The folder structure should look like this:
 #   .\releases
-#   .\releases\libplctag_2.2.0_macos_x64.zip
-#   .\releases\libplctag_2.2.0_ubuntu_x64.zip
-#   .\releases\libplctag_2.2.0_ubuntu_x86.zip
-#   .\releases\libplctag_2.2.0_windows_x64.zip
-#   .\releases\libplctag_2.2.0_windows_x86.zip
+#   .\releases\libplctag_[version]_[os1]_[architecture1].zip
+#   .\releases\libplctag_[version]_[os2]_[architecture2].zip
+#   .\releases\libplctag_[version]_[os3]_[architecture3].zip
+#   ...
 
 # Step 2: Run the script
 
@@ -26,53 +25,66 @@
 
 
 
+$macos_x64 = @{     zip = "libplctag_*_macos_x64.zip";                  source = "libplctag_*_macos_x64\libplctag.dylib";                       destination = "osx_x64\libplctag.dylib" }
+$linux_x64 = @{     zip = "libplctag_*_ubuntu_x64.zip";                 source = "libplctag_*_ubuntu_x64\libplctag.so";                         destination = "linux_x64\libplctag.so" }
+$linux_x86 = @{     zip = "libplctag_*_ubuntu_x86.zip";                 source = "libplctag_*_ubuntu_x86\libplctag.so";                         destination = "linux_x86\libplctag.so" }
+$linux_ARM = @{     zip = "libplctag_*_linux_arm7l_EXPERIMENTAL.zip";   source = "libplctag_*_linux_arm7l_EXPERIMENTAL\libplctag.so";           destination = "linux_ARM\libplctag.so" }
+$linux_ARM64 = @{   zip = "libplctag_*_linux_aarch64_EXPERIMENTAL.zip"; source = "libplctag_*_linux_aarch64_EXPERIMENTAL\libplctag.so";         destination = "linux_ARM64\libplctag.so" }
+$windows_x64 = @{   zip = "libplctag_*_windows_x64.zip";                source = "libplctag_*_windows_x64\Release\plctag.dll";                  destination = "win_x64\plctag.dll" }
+$windows_x86 = @{   zip = "libplctag_*_windows_x86.zip";                source = "libplctag_*_windows_x86\Release\plctag.dll";                  destination = "win_x86\plctag.dll" }
+$windows_ARM = @{   zip = "libplctag_*_windows_Arm.zip";                source = "libplctag_*_windows_Arm\Release\plctag.dll";                  destination = "win_ARM\plctag.dll" }
+$windows_ARM64 = @{ zip = "libplctag_*_windows_Arm64_EXPERIMENTAL.zip"; source = "libplctag_*_windows_Arm64_EXPERIMENTAL\Release\plctag.dll";   destination = "win_ARM64\plctag.dll" }
 
 
 
 
+$builds = @(
+    $macos_x64,
+    $linux_x64,
+    $linux_x86,
+    $linux_ARM,
+    $linux_ARM64,
+    $windows_x64,
+    $windows_x86,
+    $windows_ARM,
+    $windows_ARM64
+)
 
-$releasesFolder = ".\releases\"
+
+
+$sourceFolder = ".\releases"
 $destinationFolder = ".\libplctag.NativeImport\runtime"
 
 
 
-Push-Location
-Set-Location $releasesFolder
 
-Get-Item libplctag_*_macos_x64.zip   | Expand-Archive
-Get-Item libplctag_*_ubuntu_x64.zip  | Expand-Archive
-Get-Item libplctag_*_ubuntu_x86.zip  | Expand-Archive
-Get-Item libplctag_*_windows_x64.zip | Expand-Archive
-Get-Item libplctag_*_windows_x86.zip | Expand-Archive
+
+
+# Unzip the build files
+Push-Location
+Set-Location $sourceFolder
+
+foreach ($build in $builds) {
+	Get-Item $build.zip      | Expand-Archive
+}
 
 Pop-Location
 
 
 
-Copy-Item $releasesFolder\libplctag_*_macos_x64\libplctag.dylib         $destinationFolder\osx_x64\libplctag.dylib
-Copy-Item $releasesFolder\libplctag_*_ubuntu_x64\libplctag.so           $destinationFolder\linux_x64\libplctag.so
-Copy-Item $releasesFolder\libplctag_*_ubuntu_x86\libplctag.so           $destinationFolder\linux_x86\libplctag.so
-Copy-Item $releasesFolder\libplctag_*_windows_x64\Release\plctag.dll    $destinationFolder\win_x64\plctag.dll
-Copy-Item $releasesFolder\libplctag_*_windows_x86\Release\plctag.dll    $destinationFolder\win_x86\plctag.dll
+
+# Copy each file into libplctag.NET NativeImport project
+foreach ($build in $builds) {
+    Copy-Item "$sourceFolder\$($build.source)" "$destinationFolder\$($build.destination)"
+}
 
 
 
 
-
-
-
-
-Get-FileHash $releasesFolder\libplctag_*_macos_x64\libplctag.dylib
-Get-FileHash $destinationFolder\osx_x64\libplctag.dylib
-
-Get-FileHash $releasesFolder\libplctag_*_ubuntu_x64\libplctag.so
-Get-FileHash $destinationFolder\linux_x64\libplctag.so
-
-Get-FileHash $releasesFolder\libplctag_*_ubuntu_x86\libplctag.so
-Get-FileHash $destinationFolder\linux_x86\libplctag.so
-
-Get-FileHash $releasesFolder\libplctag_*_windows_x64\Release\plctag.dll
-Get-FileHash $destinationFolder\win_x64\plctag.dll
-
-Get-FileHash $releasesFolder\libplctag_*_windows_x86\Release\plctag.dll
-Get-FileHash $destinationFolder\win_x86\plctag.dll
+# Help the user to confirm that each file has been copied into the correct folder
+foreach ($build in $builds) {
+    Write-Host "$($build.zip)"
+    Get-FileHash "$sourceFolder\$($build.source)"
+    Get-FileHash "$destinationFolder\$($build.destination)"
+    Write-Host
+}
