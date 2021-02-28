@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -394,6 +395,22 @@ namespace libplctag
 
         public float GetFloat32(int offset)                 => GetNativeTagValue(_native.plc_tag_get_float32, offset, float.MinValue);
         public void SetFloat32(int offset, float value)     => SetNativeTagValue(_native.plc_tag_set_float32, offset, value);
+
+
+        public string GetString(int offset)
+        {
+            ThrowIfAlreadyDisposed();
+
+            var stringMaxLength = _native.plc_tag_get_string_capacity(nativeTagHandle, offset);
+            var stringBuffer = new StringBuilder(stringMaxLength);
+            var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, stringBuffer, stringBuffer.Capacity);
+
+            ThrowIfStatusNotOk(status);
+
+            return stringBuffer.ToString();
+        }
+
+        public void SetString(int offset, string value) => SetNativeTagValue(_native.plc_tag_set_string, offset, value);
 
 
 

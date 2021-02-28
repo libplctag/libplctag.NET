@@ -138,5 +138,8 @@ namespace libplctag
         public ulong GetUInt64(int offset)                  => _tag.GetUInt64(offset);
         public void SetUInt64(int offset, ulong value)      => _tag.SetUInt64(offset, value);
 
+        public string GetString(int offset)                 => _tag.GetString(offset);
+        public void SetString(int offset, string value)     => _tag.SetString(offset, value);
+
     }
 }
