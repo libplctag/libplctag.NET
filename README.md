@@ -4,13 +4,12 @@ This repository contains two .NET packages for [libplctag](https://github.com/li
 * [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
 * [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag.NativeImport) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport)
 
-
 ### libplctag
 
-This is the package intended for use by application developers. It attempts to provide an API that should feel natural to .NET developers by providing:
-* Values are strongly-typed (both ATOMIC types and User-Defined-Types).
+This is the package intended for use by application developers. It attempts to provide an API that should feel natural to .NET developers by providing the following features:
+* Values are strongly-typed (both Atomic types and User-Defined Types).
 * Errors are thrown as Exceptions
-* Async/Await
+* Async/Await support
 * Native memory handle cleanup via IDisposable and finalizers
 
 ```csharp
@@ -77,6 +76,15 @@ plctag.plc_tag_destroy(tagHandle);
 Documentation for this API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
 
 The libplctag native library can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
+
+
+
+## Getting Started
+
+Both packages are available from nuget.org and can be added using your preferred installation tool.
+
+`dotnet add package libplctag` or `dotnet add package libplctag.NativeImport`
+
 
 ## Project Goals
 
