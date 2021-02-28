@@ -24,7 +24,9 @@ jobs:
         
     - name: Build
       run: dotnet build './src/'
-    
+      
+    - name: Test
+      run: dotnet test './src/'
    
     - name: Publish libplctag on version change
       id: publish_libplctag
