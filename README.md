@@ -6,11 +6,12 @@ This repository contains two .NET packages for [libplctag](https://github.com/li
 
 ### libplctag
 
-This is the package intended for use by application developers. It attempts to provide an API that should feel natural to .NET developers by providing the following features:
+This is the package intended for use in .NET applications.
+It provides an API for libplctag that should feel natural to .NET developers by supporting the following features:
 * Values are strongly-typed (both Atomic types and User-Defined Types).
 * Errors are thrown as Exceptions
-* Async/Await support
-* Native resource cleanup via IDisposable and finalizers
+* Async/Await
+* Native resource cleanup
 
 ```csharp
 // Instantiate the tag with the appropriate mapper and datatype
