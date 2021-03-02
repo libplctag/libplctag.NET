@@ -10,7 +10,7 @@ This is the package intended for use by application developers. It attempts to p
 * Values are strongly-typed (both Atomic types and User-Defined Types).
 * Errors are thrown as Exceptions
 * Async/Await support
-* Native memory handle cleanup via IDisposable and finalizers
+* Native resource cleanup via IDisposable and finalizers
 
 ```csharp
 // Instantiate the tag with the appropriate mapper and datatype
@@ -39,10 +39,12 @@ For further usage, see the examples in the example projects:
 
 ### libplctag.NativeImport
 
-libplctag.NativeImport provides low-level (raw) access to the native libplctag library.
-The purpose of this package is to expose the native library API (which is written in C), and handle platform and configuration issues.
+libplctag.NativeImport provides low-level (raw) access to the [native libplctag library](https://github.com/libplctag/libplctag) (which is written in C).
+The purpose of this package is to expose the [API for this native library](https://github.com/libplctag/libplctag/wiki/API), and handle platform and configuration issues.
 
-During initialization, this package extracts to disk the appropriate native runtime. By default, it will overwrite any runtime that is already on disk. If you wish to disable this behaviour and use a different runtime (e.g. one that you've compiled yourself, or a pre-release), you can disable the Force Extract feature.
+During initialization, this package extracts to disk the appropriate native library.
+By default, it will overwrite files with the same filename (plctag.dll, libplctag.so, or libplctag.dylib).
+If you wish to disable this behaviour and use a different native library (e.g. one that you've compiled yourself, or a pre-release), you can disable the Force Extract feature.
 
 ```csharp
 // Before any calls to any libplctag methods
@@ -54,10 +56,10 @@ If the above example were to be implemented using this API, it would look like s
 ```csharp
 var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=10.10.10.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=PROGRAM:SomeProgram.SomeDINT", 5000);
 
-var statusBeforeRead = (STATUS_CODES)plctag.plc_tag_status(tagHandle);
-if (statusBeforeRead != STATUS_CODES.PLCTAG_STATUS_OK)
+var statusAfterCreate = (STATUS_CODES)plctag.plc_tag_status(tagHandle);
+if (statusAfterCreate != STATUS_CODES.PLCTAG_STATUS_OK)
 {
-    throw new Exception($"Something went wrong: {statusBeforeRead}");
+    throw new Exception($"Something went wrong: {statusAfterCreate}");
 }
 
 var statusAfterRead = (STATUS_CODES)plctag.plc_tag_read(tagHandle, 5000);
@@ -84,7 +86,6 @@ The libplctag native library can be compiled for [many platforms](https://github
 Both packages are available from nuget.org and can be added using your preferred installation tool.
 
 `dotnet add package libplctag` or `dotnet add package libplctag.NativeImport`
-
 
 ## Project Goals
 
