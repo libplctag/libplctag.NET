@@ -32,6 +32,8 @@ myTag.Read();
 Console.WriteLine(myTag.Value);
 ```
 
+This package depends on libplctag.NativeImport to gain access to the underlying libplctag native library.
+
 For further usage, see the examples in the example projects:
 
 * [C#](https://github.com/libplctag/libplctag.NET/tree/master/src/Examples/CSharp%20DotNetCore)
