@@ -27,7 +27,7 @@ namespace CSharpDotNetCore
                 Path = path,
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                ArrayDimensions = new int[] { ARRAY_LENGTH, ARRAY_LENGTH },
+                ArrayDimensions = new int[] { ARRAY_LENGTH },
                 Timeout = TimeSpan.FromMilliseconds(TIMEOUT),
             };
 
@@ -35,9 +35,7 @@ namespace CSharpDotNetCore
             dintTag.Write();
 
             dintTag.Read();
-
-            dintTag.Write();
-
+            
             //Read back value from local memory
             for (int i = 0; i < dintTag.Value.Length; i++)
             {
