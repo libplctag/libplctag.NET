@@ -2,7 +2,7 @@
 # This script is used to make it easier to copy native libraries into the libplctag.NativeImport project without error.
 
 # Step 1: Update the version variable with the version to download and copy into NativeImport
-$version = "2.3.4"
+$version = "2.3.5"
 
 # Step 2: Run the script
 
