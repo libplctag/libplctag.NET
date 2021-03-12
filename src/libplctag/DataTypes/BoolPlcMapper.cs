@@ -15,7 +15,7 @@ namespace libplctag.DataTypes
         public int? GetElementCount()
         {
             if (ArrayDimensions == null)
-                return 1;
+                return null;
 
             //TODO: Test -> I'm not confident that the overall bool count is packed as a 1D array and not packed by dimension.
             //Multiply dimensions for total elements
