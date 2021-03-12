@@ -28,10 +28,8 @@ namespace libplctag.NativeImport
 
         static string GetExecutingAssemblyDirectory()
         {
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(path);
+            string location = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(location);
         }
 
         static void ExtractAppropriateLibraryToDirectory(string outputDirectory)
