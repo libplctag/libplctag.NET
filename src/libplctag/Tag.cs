@@ -9,7 +9,6 @@ namespace libplctag
 
         NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
 
-        public bool IsInitialized => _tag.IsInitialized;
         public int? ElementCount
         {
             get => _tag.ElementCount;
