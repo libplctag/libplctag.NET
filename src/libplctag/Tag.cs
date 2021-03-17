@@ -9,6 +9,14 @@ namespace libplctag
 
         NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
 
+        
+        /// <summary>
+        /// True if <see cref="Initialize"/> or <see cref="InitializeAsync(CancellationToken)"/> has been called.
+        /// </summary>
+        // TODO remove. No longer used by this class but would be a breaking change.
+        public bool IsInitialized => _tag.IsInitialized;
+
+
         /// <summary>
         /// Optional An integer number of elements per tag .
         /// </summary>

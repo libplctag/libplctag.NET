@@ -37,6 +37,8 @@ namespace libplctag
         }
 
 
+        // TODO remove. No longer used by Tag but would be a breaking change.
+        public bool IsInitialized => _isInitialized;
 
 
         private string _name;
