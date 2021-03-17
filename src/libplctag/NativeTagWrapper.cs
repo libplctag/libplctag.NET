@@ -22,6 +22,7 @@ namespace libplctag
         private int nativeTagHandle;
 
         private bool _isDisposed = false;
+        private bool _isInitialized = false;
 
         readonly INativeTag _native;
 
@@ -36,6 +37,8 @@ namespace libplctag
         }
 
 
+        // TODO remove. No longer used by Tag but would be a breaking change.
+        public bool IsInitialized => _isInitialized;
 
 
         private string _name;
@@ -101,7 +104,7 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!IsInitialized)
+                if (!_isInitialized)
                     return _readCacheMillisecondDuration;
 
                 return GetIntAttribute("read_cache_ms");
@@ -110,7 +113,7 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!IsInitialized)
+                if (!_isInitialized)
                 {
                     _readCacheMillisecondDuration = value;
                     return;
@@ -146,7 +149,7 @@ namespace libplctag
             if (_isDisposed)
                 return;
 
-            if (IsInitialized)
+            if (_isInitialized)
             {
                 var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
                 ThrowIfStatusNotOk(result);
@@ -163,7 +166,6 @@ namespace libplctag
         }
 
 
-        public bool IsInitialized { get; private set; }
 
         public void Initialize()
         {
@@ -181,12 +183,11 @@ namespace libplctag
             else
                 nativeTagHandle = result;
 
-            IsInitialized = true;
+            _isInitialized = true;
         }
 
         public async Task InitializeAsync(CancellationToken token = default)
         {
-
             ThrowIfAlreadyDisposed();
             ThrowIfAlreadyInitialized();
 
@@ -218,13 +219,14 @@ namespace libplctag
 
                 ThrowIfStatusNotOk(statusAfterPending);
 
-                IsInitialized = true;
+                _isInitialized = true;
             }
         }
 
         public void Read()
         {
             ThrowIfAlreadyDisposed();
+            InitializeIfRequired();
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
@@ -235,6 +237,7 @@ namespace libplctag
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
+            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
@@ -264,6 +267,7 @@ namespace libplctag
         public void Write()
         {
             ThrowIfAlreadyDisposed();
+            InitializeIfRequired();
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
@@ -274,6 +278,7 @@ namespace libplctag
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
+            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
@@ -396,18 +401,29 @@ namespace libplctag
         public void SetFloat32(int offset, float value)     => SetNativeTagValue(_native.plc_tag_set_float32, offset, value);
 
 
-
-
-
         private void ThrowIfAlreadyDisposed()
         {
             if (_isDisposed)
                 throw new ObjectDisposedException(GetType().FullName);
         }
 
+        private void InitializeIfRequired()
+        {
+            if (!_isInitialized)
+                Initialize();
+        }
+
+        private Task InitializeAsyncIfRequired(CancellationToken token)
+        {
+            if (!_isInitialized)
+                return InitializeAsync(token);
+            else
+                return Task.CompletedTask;
+        }
+
         private void ThrowIfAlreadyInitialized()
         {
-            if (IsInitialized)
+            if (_isInitialized)
                 throw new InvalidOperationException("Already initialized");
         }
 
