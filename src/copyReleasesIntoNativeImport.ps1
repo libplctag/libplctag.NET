@@ -1,18 +1,23 @@
 
 # This script is used to make it easier to copy native libraries into the libplctag.NativeImport project without error.
 
-# Step 1: Update the version variable with the version to download and copy into NativeImport
-$version = "2.3.6"
 
-# Step 2: Run the script
 
-# Step 3: Verify that the files have been correctly copied
+# Step 1: Run the script with the selected version
+if($args.Count -ne 1)
+{
+  Write-Host "Please specify version to be downloaded (e.g. '2.3.6')"
+  Exit
+}
+$version = $args[0]
 
-# Step 4: Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required)
+# Step 2: Verify that the files have been correctly copied
 
-# Step 5: Increment version number of libplctag.NativeImport project
+# Step 3: Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required)
 
-# Step 6: Upload to nuget
+# Step 4: Increment version number of libplctag.NativeImport project
+
+# Step 5: Upload to nuget
 #         Note there is a github action which automatically builds libplctag.NativeImport and uploads to nuget
 
 
