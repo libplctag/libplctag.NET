@@ -129,7 +129,7 @@ namespace IIoT_EipDeviceScanner
         /// <param name="timestampTicks">The timestamp of the tag value in DateTime ticks</param>
         /// <returns>The Tag tree list of the Tag</returns>
         //--------------------------------------------------------------------------------------------
-        public EipTagList AddTag(EipTagList parent, string tagName, int length = 0, uint instanceId = 0, int type = 0, uint[] dimensions = null, UInt16 structureHandle = 0, string plcAccessTagName = null, object value = null, long timestampTicks = -1)
+        public EipTagList AddTag(EipTagList parent, string tagName, int length = 0, uint instanceId = 0, int type = 0, uint[] dimensions = null, UInt16 structureHandle = 0, string plcAccessTagName = null, object value = null, long timestampTicks = 0)
         //--------------------------------------------------------------------------------------------
         {
             EipTagList tagList = new EipTagList(tagName, length, instanceId, type, dimensions, structureHandle, plcAccessTagName, value, timestampTicks);
