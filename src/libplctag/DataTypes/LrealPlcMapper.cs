@@ -1,6 +1,6 @@
 ﻿namespace libplctag.DataTypes
 {
-    public class LrealPlcMapper : PlcMapperBase<double>, IPlcMapper<double>, IPlcMapper<double[]>
+    public class LrealPlcMapper : PlcMapperBase<double>
     {
 
         override public int? ElementSize => 8;
