@@ -496,7 +496,7 @@ namespace libplctag
                 { "protocol",           Protocol?.ToString() },
                 { "gateway",            Gateway },
                 { "path",               Path },
-                { "plc",                PlcType?.ToString()?.ToLower() },
+                { "plc",                PlcType == libplctag.PlcType.Omron ? "omron-njnx" : PlcType?.ToString()?.ToLower() },
                 { "elem_size",          ElementSize?.ToString() },
                 { "elem_count",         ElementCount?.ToString() },
                 { "name",               Name },
