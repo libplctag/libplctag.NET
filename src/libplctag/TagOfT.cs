@@ -125,15 +125,21 @@ namespace libplctag
         }
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
-        public Task WriteAsync(CancellationToken token = default)
+        public async Task WriteAsync(CancellationToken token = default)
         {
+            if (!_tag.IsInitialized)
+                await _tag.InitializeAsync(token);
+
             EncodeAll();
-            return _tag.WriteAsync(token);
+            await _tag.WriteAsync(token);
         }
 
         /// <inheritdoc cref="Tag.Write"/>
         public void Write()
         {
+            if (!_tag.IsInitialized)
+                _tag.Initialize();
+
             EncodeAll();
             _tag.Write();
         }
