@@ -13,7 +13,6 @@ namespace libplctag
         /// <summary>
         /// True if <see cref="Initialize"/> or <see cref="InitializeAsync"/> has been called.
         /// </summary>
-        // TODO remove. No longer used by this class but would be a breaking change.
         public bool IsInitialized => _tag.IsInitialized;
 
 
