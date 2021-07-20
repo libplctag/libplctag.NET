@@ -4,7 +4,7 @@ using System.Text;
 
 namespace libplctag
 {
-    public class LibPlcTagEventArgs : EventArgs
+    class LibPlcTagEventArgs : EventArgs
     {
         public Status Status { get; set; }
     }
