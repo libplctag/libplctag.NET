@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,11 +153,10 @@ namespace libplctag
 
             if (_isInitialized)
             {
+                RemoveEvents();
                 var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
                 ThrowIfStatusNotOk(result);
-                RemoveEvents();
             }
-
 
             _isDisposed = true;
         }
@@ -181,14 +180,13 @@ namespace libplctag
 
             var attributeString = GetAttributeString();
 
-            SetUpEvents();
-
             var result = _native.plc_tag_create(attributeString, millisecondTimeout);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
                 nativeTagHandle = result;
 
+            SetUpEvents();
 
             _isInitialized = true;
         }
@@ -256,24 +254,19 @@ namespace libplctag
                 {
                     Abort();
 
-                    if (token.IsCancellationRequested)
-                        readTask.TrySetCanceled();
-                    else
-                        readTask.TrySetException(new LibPlcTagException(Status.ErrorTimeout));
+                    if (readTasks.TryPop(out var readTask))
+                    {
+                        if (token.IsCancellationRequested)
+                            readTask.SetCanceled();
+                        else
+                            readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                    }
                 }))
                 {
-                    var initiateReadResult = (Status)_native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    switch (initiateReadResult)
-                    {
-                        case Status.Ok:
-                            return;
-                        case Status.Pending:
-                            readTask = new TaskCompletionSource<object>();
-                            await readTask.Task;
-                            return;
-                        default:
-                            throw new LibPlcTagException(initiateReadResult);
-                    }
+                    var readTask = new TaskCompletionSource<object>();
+                    readTasks.Push(readTask);
+                    _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                    await readTask.Task;
                 }
             }
         }
@@ -303,24 +296,19 @@ namespace libplctag
                 {
                     Abort();
 
-                    if (token.IsCancellationRequested)
-                        readTask.SetCanceled();
-                    else
-                        readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                    if (writeTasks.TryPop(out var writeTask))
+                    {
+                        if (token.IsCancellationRequested)
+                            writeTask.SetCanceled();
+                        else
+                            writeTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                    }
                 }))
                 {
-                    var initiateWriteResult = (Status)_native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    switch (initiateWriteResult)
-                    {
-                        case Status.Ok:
-                            return;
-                        case Status.Pending:
-                            writeTask = new TaskCompletionSource<object>();
-                            await writeTask.Task;
-                            return;
-                        default:
-                            throw new LibPlcTagException(initiateWriteResult);
-                    }
+                    var writeTask = new TaskCompletionSource<object>();
+                    writeTasks.Push(writeTask);
+                    _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                    await writeTask.Task;
                 }
             }
         }
@@ -559,37 +547,44 @@ namespace libplctag
 
         }
 
-        private TaskCompletionSource<object> readTask;
+        private ConcurrentStack<TaskCompletionSource<object>> readTasks = new ConcurrentStack<TaskCompletionSource<object>>();
         void ReadTaskCompleter(object sender, LibPlcTagEventArgs e)
         {
-            switch (e.Status)
+            if (readTasks.TryPop(out var readTask))
             {
-                case Status.Ok:
-                    readTask?.SetResult(null);
-                    break;
-                case Status.Pending:
-                    // Do nothing, wait for another ReadCompleted callback when Status is Ok.
-                    break;
-                default:
-                    readTask?.SetException(new LibPlcTagException(e.Status));
-                    break;
+                switch (e.Status)
+                {
+                    case Status.Ok:
+                        readTask?.SetResult(null);
+                        break;
+                    case Status.Pending:
+                        // Do nothing, wait for another ReadCompleted callback when Status is Ok.
+                        break;
+                    default:
+                        readTask?.SetException(new LibPlcTagException(e.Status));
+                        break;
+                }
             }
         }
 
-        private TaskCompletionSource<object> writeTask;
+        private ConcurrentStack<TaskCompletionSource<object>> writeTasks = new ConcurrentStack<TaskCompletionSource<object>>();
         void WriteTaskCompleter(object sender, LibPlcTagEventArgs e)
         {
-            switch (e.Status)
+            if (writeTasks.TryPop(out var writeTask))
             {
-                case Status.Ok:
-                    writeTask?.SetResult(null);
-                    break;
-                case Status.Pending:
-                    // Do nothing, wait for another WriteCompleted callback when Status is Ok.
-                    break;
-                default:
-                    writeTask?.SetException(new LibPlcTagException(e.Status));
-                    break;
+                switch (e.Status)
+                {
+                    case Status.Ok:
+                        writeTask?.SetResult(null);
+                        break;
+                    case Status.Pending:
+                        // Do nothing, wait for another WriteCompleted callback when Status is Ok.
+                        break;
+                    default:
+                        writeTask?.SetException(new LibPlcTagException(e.Status));
+                        break;
+
+                }
             }
         }
 
@@ -605,7 +600,6 @@ namespace libplctag
 
             var @event = (Event)eventCode;
             var status = (Status)statusCode;
-
             var eventArgs = new LibPlcTagEventArgs() { Status = status };
 
             switch (@event)
