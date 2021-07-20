@@ -14,12 +14,14 @@ namespace libplctag
     class NativeTagWrapper : IDisposable
     {
 
+
         private const int TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION = 0;
         private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private int nativeTagHandle;
+        private libplctag.NativeImport.plctag.callback_func coreLibCallbackFuncDelegate;
 
         private bool _isDisposed = false;
         private bool _isInitialized = false;
@@ -153,7 +155,9 @@ namespace libplctag
             {
                 var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
                 ThrowIfStatusNotOk(result);
+                RemoveEvents();
             }
+
 
             _isDisposed = true;
         }
@@ -177,11 +181,14 @@ namespace libplctag
 
             var attributeString = GetAttributeString();
 
+            SetUpEvents();
+
             var result = _native.plc_tag_create(attributeString, millisecondTimeout);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
                 nativeTagHandle = result;
+
 
             _isInitialized = true;
         }
@@ -203,6 +210,7 @@ namespace libplctag
                 else
                     nativeTagHandle = result;
 
+                SetUpEvents();
 
                 Status? statusAfterPending = null;
                 try
@@ -237,30 +245,36 @@ namespace libplctag
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)_native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                await InitializeAsyncIfRequired(cts.Token);
 
+                using (cts.Token.Register(() =>
+                {
+                    Abort();
 
-                Status? statusAfterPending = null;
-                try
-                {
-                    statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
-                }
-                catch (TaskCanceledException)
-                {
                     if (token.IsCancellationRequested)
-                        throw;
+                        readTask.TrySetCanceled();
                     else
-                        throw new LibPlcTagException(Status.ErrorTimeout);
+                        readTask.TrySetException(new LibPlcTagException(Status.ErrorTimeout));
+                }))
+                {
+                    var initiateReadResult = (Status)_native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                    switch (initiateReadResult)
+                    {
+                        case Status.Ok:
+                            return;
+                        case Status.Pending:
+                            readTask = new TaskCompletionSource<object>();
+                            await readTask.Task;
+                            return;
+                        default:
+                            throw new LibPlcTagException(initiateReadResult);
+                    }
                 }
-
-                ThrowIfStatusNotOk(statusAfterPending);
-
             }
         }
 
@@ -278,30 +292,36 @@ namespace libplctag
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
 
-                var initialStatus = (Status)_native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                await InitializeAsyncIfRequired(cts.Token);
 
+                using (cts.Token.Register(() =>
+                {
+                    Abort();
 
-                Status? statusAfterPending = null;
-                try
-                {
-                    statusAfterPending = await DelayWhilePending(initialStatus, cts.Token);
-                }
-                catch (TaskCanceledException)
-                {
                     if (token.IsCancellationRequested)
-                        throw;
+                        readTask.SetCanceled();
                     else
-                        throw new LibPlcTagException(Status.ErrorTimeout);
+                        readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                }))
+                {
+                    var initiateWriteResult = (Status)_native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+                    switch (initiateWriteResult)
+                    {
+                        case Status.Ok:
+                            return;
+                        case Status.Pending:
+                            writeTask = new TaskCompletionSource<object>();
+                            await writeTask.Task;
+                            return;
+                        default:
+                            throw new LibPlcTagException(initiateWriteResult);
+                    }
                 }
-                
-                ThrowIfStatusNotOk(statusAfterPending);
-
             }
         }
 
@@ -507,6 +527,110 @@ namespace libplctag
             string separator = "&";
             return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
 
+        }
+
+
+
+
+        void SetUpEvents()
+        {
+
+            // Used to finalize the asynchronous read/write task completion sources
+            ReadCompleted += ReadTaskCompleter;
+            WriteCompleted += WriteTaskCompleter;
+
+            // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
+            coreLibCallbackFuncDelegate = new libplctag.NativeImport.plctag.callback_func(coreLibEventCallback);
+
+            var callbackRegistrationResult = (Status)_native.plc_tag_register_callback(nativeTagHandle, coreLibCallbackFuncDelegate);
+            ThrowIfStatusNotOk(callbackRegistrationResult);
+
+        }
+
+        void RemoveEvents()
+        {
+
+            // Used to finalize the  read/write task completion sources
+            ReadCompleted -= ReadTaskCompleter;
+            WriteCompleted -= WriteTaskCompleter;
+
+            var callbackRemovalResult = (Status)_native.plc_tag_unregister_callback(nativeTagHandle);
+            ThrowIfStatusNotOk(callbackRemovalResult);
+
+        }
+
+        private TaskCompletionSource<object> readTask;
+        void ReadTaskCompleter(object sender, LibPlcTagEventArgs e)
+        {
+            switch (e.Status)
+            {
+                case Status.Ok:
+                    readTask?.SetResult(null);
+                    break;
+                case Status.Pending:
+                    // Do nothing, wait for another ReadCompleted callback when Status is Ok.
+                    break;
+                default:
+                    readTask?.SetException(new LibPlcTagException(e.Status));
+                    break;
+            }
+        }
+
+        private TaskCompletionSource<object> writeTask;
+        void WriteTaskCompleter(object sender, LibPlcTagEventArgs e)
+        {
+            switch (e.Status)
+            {
+                case Status.Ok:
+                    writeTask?.SetResult(null);
+                    break;
+                case Status.Pending:
+                    // Do nothing, wait for another WriteCompleted callback when Status is Ok.
+                    break;
+                default:
+                    writeTask?.SetException(new LibPlcTagException(e.Status));
+                    break;
+            }
+        }
+
+        event EventHandler<LibPlcTagEventArgs> ReadStarted;
+        event EventHandler<LibPlcTagEventArgs> ReadCompleted;
+        event EventHandler<LibPlcTagEventArgs> WriteStarted;
+        event EventHandler<LibPlcTagEventArgs> WriteCompleted;
+        event EventHandler<LibPlcTagEventArgs> Aborted;
+        event EventHandler<LibPlcTagEventArgs> Destroyed;
+
+        void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
+        {
+
+            var @event = (Event)eventCode;
+            var status = (Status)statusCode;
+
+            var eventArgs = new LibPlcTagEventArgs() { Status = status };
+
+            switch (@event)
+            {
+                case Event.ReadCompleted:
+                    ReadCompleted?.Invoke(this, eventArgs);
+                    break;
+                case Event.ReadStarted:
+                    ReadStarted?.Invoke(this, eventArgs);
+                    break;
+                case Event.WriteStarted:
+                    WriteStarted?.Invoke(this, eventArgs);
+                    break;
+                case Event.WriteCompleted:
+                    WriteCompleted?.Invoke(this, eventArgs);
+                    break;
+                case Event.Aborted:
+                    Aborted?.Invoke(this, eventArgs);
+                    break;
+                case Event.Destroyed:
+                    Destroyed?.Invoke(this, eventArgs);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
     }
