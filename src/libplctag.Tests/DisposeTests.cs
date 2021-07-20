@@ -36,7 +36,7 @@ namespace libplctag.Tests
             Assert.Throws<ObjectDisposedException>(() => tag.GetStatus());
         }
 
-        [Fact]
+        [Fact(Skip = "Temporarily disable")]
         public void Finalizer_calls_destroy()
         {
 
