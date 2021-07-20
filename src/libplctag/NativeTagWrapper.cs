@@ -263,7 +263,7 @@ namespace libplctag
                     }
                 }))
                 {
-                    var readTask = new TaskCompletionSource<object>();
+                    var readTask = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                     readTasks.Push(readTask);
                     _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                     await readTask.Task;
@@ -305,7 +305,7 @@ namespace libplctag
                     }
                 }))
                 {
-                    var writeTask = new TaskCompletionSource<object>();
+                    var writeTask = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                     writeTasks.Push(writeTask);
                     _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                     await writeTask.Task;
