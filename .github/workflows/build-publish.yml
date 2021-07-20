@@ -1,8 +1,6 @@
 name: Build and publish libplctag.NET nuget package
 
-on:
-  push:
-    branches: [ master ]
+on: push
 
 jobs:
   build:
