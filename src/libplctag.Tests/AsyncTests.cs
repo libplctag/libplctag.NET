@@ -9,6 +9,9 @@ namespace libplctag.Tests
     public class AsyncTests
     {
 
+        readonly TimeSpan REALISTIC_LATENCY_FOR_READ = TimeSpan.FromMilliseconds(50);
+        readonly TimeSpan REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS = TimeSpan.FromMilliseconds(500);
+
         [Fact]
         public async Task Cancelled_cancellation_token_throws_a_TaskCanceledException()
         {
@@ -27,7 +30,7 @@ namespace libplctag.Tests
             var cts = new CancellationTokenSource();
 
             // Act
-            cts.CancelAfter(500);
+            cts.CancelAfter(REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS);
 
             // Assert
             await Assert.ThrowsAsync<TaskCanceledException>(async () => {
@@ -52,7 +55,7 @@ namespace libplctag.Tests
 
             var tag = new NativeTagWrapper(nativeTag.Object)
             {
-                Timeout = TimeSpan.FromMilliseconds(500)
+                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
             };
 
             // Act
@@ -89,11 +92,45 @@ namespace libplctag.Tests
 
             var tag = new NativeTagWrapper(nativeTag.Object)
             {
-                Timeout = TimeSpan.FromMilliseconds(500)
+                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
             };
 
             // Act
             await tag.InitializeAsync();
+
+            // Assert
+            Assert.Equal(Status.Ok, tag.GetStatus());
+        }
+
+        [Fact]
+        public async Task AsyncRead_completes_within_timeout_period()
+        {
+            // Arrange
+            NativeImport.plctag.callback_func onReadCompleteCallback = null;
+
+            var nativeTag = new Mock<INativeTag>();
+
+            // The NativeTagWrapper should provide the native tag with a callback. We will store this locally and call it ...
+            nativeTag
+                .Setup(m => m.plc_tag_register_callback(It.IsAny<int>(), It.IsAny<NativeImport.plctag.callback_func>()))                
+                .Callback<int, NativeImport.plctag.callback_func>((tagId, callbackFunc) => onReadCompleteCallback = callbackFunc);      
+
+            // ... when a read call occurs
+            nativeTag
+                .Setup(m => m.plc_tag_read(It.IsAny<int>(), 0))
+                .Callback<int, int>(async (tagId, timeout) =>
+                {
+                    await Task.Delay(REALISTIC_LATENCY_FOR_READ);
+                    onReadCompleteCallback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
+                });
+
+            var tag = new NativeTagWrapper(nativeTag.Object)
+            {
+                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
+            };
+
+            // Act
+            await tag.ReadAsync();
 
             // Assert
             Assert.Equal(Status.Ok, tag.GetStatus());

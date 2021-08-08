@@ -217,11 +217,16 @@ namespace libplctag
                 }
                 catch (TaskCanceledException)
                 {
+                    RemoveEvents();
+
                     if (token.IsCancellationRequested)
                         throw;
                     else
                         throw new LibPlcTagException(Status.ErrorTimeout);
                 }
+
+                if (statusAfterPending != Status.Ok)
+                    RemoveEvents();
 
                 ThrowIfStatusNotOk(statusAfterPending);
 

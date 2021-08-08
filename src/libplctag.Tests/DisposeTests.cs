@@ -36,7 +36,7 @@ namespace libplctag.Tests
             Assert.Throws<ObjectDisposedException>(() => tag.GetStatus());
         }
 
-        [Fact(Skip = "Temporarily disable")]
+        [Fact(Skip = "This no longer works because the Mock is holding a reference to a callback defined on the Tag. This would not happen outside of unit tests.")]
         public void Finalizer_calls_destroy()
         {
 
