@@ -36,7 +36,7 @@ namespace libplctag.Tests
             Assert.Throws<ObjectDisposedException>(() => tag.GetStatus());
         }
 
-        [Fact]
+        [Fact(Skip = "The finalizer is no longer called because the Mock is holding a reference to a callback defined on the Tag. This would not happen outside of unit tests.")]
         public void Finalizer_calls_destroy()
         {
 
