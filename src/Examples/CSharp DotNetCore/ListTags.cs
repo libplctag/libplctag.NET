@@ -1,4 +1,5 @@
-﻿using libplctag;
+﻿using ConsoleTables;
+using libplctag;
 using libplctag.DataTypes;
 using libplctag.NativeImport;
 using System;
@@ -143,6 +144,18 @@ namespace CSharpDotNetCore
                 }
 
                 udtDefinitions.Add(template);
+
+            }
+
+
+
+            foreach (var udt in udtDefinitions)
+            {
+
+                Console.WriteLine($"Id={udt.Id} Name={udt.Name} NumFields={udt.NumFields}");
+                foreach (var f in udt.Fields)
+                    Console.WriteLine($"    Name={f.Name} Offset={f.Offset} Metadata={f.Metadata} Type={f.Type}");
+
 
             }
 

@@ -424,9 +424,8 @@ namespace libplctag
             var stringLength = GetStringLength(offset);
             var sb = new StringBuilder(stringLength);
             _native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
-            return sb.ToString();
+            return sb.ToString().Substring(0, stringLength);
         }
-
 
         private void ThrowIfAlreadyDisposed()
         {
