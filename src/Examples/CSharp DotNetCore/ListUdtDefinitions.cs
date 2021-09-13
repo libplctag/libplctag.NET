@@ -53,9 +53,9 @@ namespace CSharpDotNetCore
 
             foreach (var udt in udtDefinitions)
             {
-                Console.WriteLine($"Id={udt.Id} Name={udt.Name} NumFields={udt.NumFields}");
+                Console.WriteLine($"Id={udt.Id} Name={udt.Name} NumFields={udt.NumFields} Size={udt.Size}");
                 foreach (var f in udt.Fields)
-                    Console.WriteLine($"    Name={f.Name} Offset={f.Offset} Metadata={f.Metadata} Type={f.Type} Size={f.Size}");
+                    Console.WriteLine($"    Name={f.Name} Offset={f.Offset} Metadata={f.Metadata} Type={f.Type}");
             }
 
         }

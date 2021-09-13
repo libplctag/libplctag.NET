@@ -11,12 +11,12 @@ namespace libplctag.DataTypes
         public string Name { get; set; }
         public ushort Type { get; set; }
         public ushort Metadata { get; set; }
-        public uint Size { get; set; }
         public uint Offset { get; set; }
     }
 
     public class UdtInfo
     {
+        public uint Size { get; set; }
         public string Name { get; set; }
         public ushort Id { get; set; }
         public ushort NumFields { get; set; }
@@ -46,6 +46,7 @@ namespace libplctag.DataTypes
                 NumFields = num_members,
                 Handle = struct_handle,
                 Id = template_id,
+                Size = udt_instance_size
             };
 
             var offset = 14;
