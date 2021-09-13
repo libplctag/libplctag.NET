@@ -10,7 +10,7 @@ using System.Text;
 namespace CSharpDotNetCore
 {
 
-    class ListTags
+    class ListUdtDefinitions
     {
         static public void Run()
         {
