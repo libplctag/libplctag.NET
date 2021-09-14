@@ -14,7 +14,8 @@ namespace CSharpDotNetCore
             //ExampleRW.Run();
             //ExampleArray.Run();
             //ExampleListTags.Run();
-            ListUdtDefinitions.Run();
+            //ListUdtDefinitions.Run();
+            ListPlc.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
             Console.ReadKey();

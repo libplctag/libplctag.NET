@@ -620,8 +620,6 @@ namespace libplctag
             var status = (Status)statusCode;
             var eventArgs = new LibPlcTagEventArgs() { Status = status };
 
-            Console.WriteLine($"{DateTime.Now}\t{eventTagHandle}\t{@event}\t{status}");
-
             switch (@event)
             {
                 case Event.ReadCompleted:
