@@ -15,8 +15,6 @@ namespace CSharpDotNetCore
         static public void Run()
         {
 
-            plctag.ForceExtractLibrary = false;
-
             Console.WriteLine("Controller Tags");
             Console.WriteLine("===============");
 
