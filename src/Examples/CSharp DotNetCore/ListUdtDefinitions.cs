@@ -15,8 +15,6 @@ namespace CSharpDotNetCore
         static public void Run()
         {
 
-            plctag.ForceExtractLibrary = false;
-
             var tags = new Tag<TagInfoPlcMapper, TagInfo[]>()
             {
                 Gateway = "192.168.0.10",
