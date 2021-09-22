@@ -9,9 +9,9 @@ namespace libplctag.DataTypes
     public class TagInfo
     {
         public uint Id { get; set; }
-        public int Type { get; set; }
+        public ushort Type { get; set; }
         public string Name { get; set; }
-        public int Length { get; set; }
+        public ushort Length { get; set; }
         public uint[] Dimensions { get; set; }
     }
 
