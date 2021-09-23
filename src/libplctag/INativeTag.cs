@@ -1,5 +1,6 @@
 ﻿using libplctag.NativeImport;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
@@ -23,7 +24,6 @@ namespace libplctag
         sbyte plc_tag_get_int8(int tag, int offset);
         int plc_tag_get_int_attribute(int tag, string attrib_name, int default_value);
         int plc_tag_get_size(int tag);
-        int plc_tag_set_size(int tag, int new_size);
         ushort plc_tag_get_uint16(int tag, int offset);
         uint plc_tag_get_uint32(int tag, int offset);
         ulong plc_tag_get_uint64(int tag, int offset);
@@ -53,5 +53,9 @@ namespace libplctag
         int plc_tag_write(int tag, int timeout);
         int plc_tag_get_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
         int plc_tag_set_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
+        int plc_tag_get_string_length(int tag, int string_start_offset);
+        int plc_tag_get_string(int tag, int string_start_offset, StringBuilder buffer, int buffer_length);
+        int plc_tag_get_string_total_length(int tag, int string_start_offset);
+        int plc_tag_get_string_capacity(int tag, int string_start_offset);
     }
 }
