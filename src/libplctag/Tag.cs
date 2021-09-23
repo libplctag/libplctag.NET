@@ -208,6 +208,7 @@ namespace libplctag
         /// </summary>
         public byte[] GetBuffer()                           => _tag.GetBuffer();
         public int GetSize()                                => _tag.GetSize();
+        public int SetSize(int newSize)                     => _tag.SetSize(int newSize);
 
         /// <summary>
         /// Check the operational status of the tag

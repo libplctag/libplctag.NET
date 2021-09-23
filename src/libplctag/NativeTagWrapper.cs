@@ -329,6 +329,13 @@ namespace libplctag
                 return result;
         }
 
+        public void SetSize(int newSize)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = (Status)_native.plc_tag_set_size(nativeTagHandle, newSize);
+            ThrowIfStatusNotOk(result);
+        }
+
         public Status GetStatus()
         {
             ThrowIfAlreadyDisposed();
@@ -363,7 +370,6 @@ namespace libplctag
         private void SetIntAttribute(string attributeName, int value)
         {
             ThrowIfAlreadyDisposed();
-
             var result = (Status)_native.plc_tag_set_int_attribute(nativeTagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
         }

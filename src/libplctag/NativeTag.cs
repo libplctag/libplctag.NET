@@ -22,6 +22,7 @@ namespace libplctag
         public int plc_tag_read(Int32 tag, int timeout)                                         => plctag.plc_tag_read(tag, timeout);
         public int plc_tag_write(Int32 tag, int timeout)                                        => plctag.plc_tag_write(tag, timeout);
         public int plc_tag_get_size(Int32 tag)                                                  => plctag.plc_tag_get_size(tag);
+        public int plc_tag_set_size(Int32 tag, int new_size)                                    => plctag.plc_tag_set_size(tag, new_size);
         public int plc_tag_abort(Int32 tag)                                                     => plctag.plc_tag_abort(tag);
         public int plc_tag_get_int_attribute(Int32 tag, string attrib_name, int default_value)  => plctag.plc_tag_get_int_attribute(tag, attrib_name, default_value);
         public int plc_tag_set_int_attribute(Int32 tag, string attrib_name, int new_value)      => plctag.plc_tag_set_int_attribute(tag, attrib_name, new_value);
