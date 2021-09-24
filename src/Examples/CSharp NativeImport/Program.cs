@@ -6,7 +6,8 @@ namespace NativeImport_Examples
     {
         static void Main(string[] args)
         {
-            NativeImportExample.Run();
+            Multithread.main();
+            //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
             //NativeImportExample.RunLoggerExample();
             Console.ReadKey();

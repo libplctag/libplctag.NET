@@ -16,7 +16,7 @@ namespace CSharpDotNetCore
 
             var tags = new Tag<TagInfoPlcMapper, TagInfo[]>()
             {
-                Gateway = "10.10.10.10",
+                Gateway = "192.168.0.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
