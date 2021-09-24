@@ -76,7 +76,6 @@ namespace libplctag.NativeImport
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_size), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int plc_tag_get_size(Int32 tag);
 
-
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_size), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int plc_tag_set_size(Int32 tag, int new_size);
 
