@@ -312,7 +312,7 @@ namespace libplctag.NativeImport
         public static void plc_tag_set_debug_level(int debug_level)
         {
             ExtractLibraryIfRequired();
-            plc_tag_set_debug_level(debug_level);
+            NativeMethods.plc_tag_set_debug_level(debug_level);
         }
 
 

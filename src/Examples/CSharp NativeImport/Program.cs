@@ -6,10 +6,10 @@ namespace NativeImport_Examples
     {
         static void Main(string[] args)
         {
-            Multithread.main();
+            //Multithread.main();
             //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
-            //NativeImportExample.RunLoggerExample();
+            NativeImportExample.RunLoggerExample();
             Console.ReadKey();
         }
     }

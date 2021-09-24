@@ -6,6 +6,7 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
+            LoggingExample.Run();
             //TestDatatypes.Run();
             //ExampleGenericTag.UDT_Array();
             //ExampleAsync.SyncAsyncMultipleTagComparison();
@@ -15,7 +16,7 @@ namespace CSharpDotNetCore
             //ExampleArray.Run();
             //ExampleListTags.Run();
             //ListUdtDefinitions.Run();
-            ListPlc.Run();
+            //ListPlc.Run();
             //ExampleRW.Run();
             //ExampleArray.Run();
             Console.ReadKey();

@@ -8,6 +8,7 @@ namespace libplctag
     /// </summary>
     public static class LibPlcTag
     {
+
         private const int LIB_ATTRIBUTE_POINTER = 0;
 
         static public int VersionMajor => plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_major", int.MinValue);
@@ -40,6 +41,48 @@ namespace libplctag
         {
             get => (DebugLevel)plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
             set => plctag.plc_tag_set_debug_level((int)value);
+        }
+
+
+        static readonly object logEventSubscriptionLock = new object();
+        static private event EventHandler<LogEventArgs> logEvent;
+        static bool alreadySubscribedToEvents = false;
+        static private void ensureSubscribeToEvents()
+        {
+            if (alreadySubscribedToEvents)
+                return;
+
+            var myLogger = new plctag.log_callback_func(invokeLogEvent);
+            var statusAfterRegistration = (Status)plctag.plc_tag_register_logger(myLogger);
+            if (statusAfterRegistration != Status.Ok)
+                throw new LibPlcTagException(statusAfterRegistration);
+        }
+
+        static void invokeLogEvent(int tag_id, int debug_level, string message)
+        {
+            logEvent?.Invoke(null, new LogEventArgs() { DebugLevel = (DebugLevel)debug_level, Message = message.TrimEnd('\n') });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static public event EventHandler<LogEventArgs> LogEvent
+        {
+            add
+            {
+                lock (logEventSubscriptionLock)
+                {
+                    ensureSubscribeToEvents();
+                    logEvent += value;
+                }
+            }
+            remove
+            {
+                lock (logEventSubscriptionLock)
+                {
+                    logEvent -= value;
+                }
+            }
         }
 
     }

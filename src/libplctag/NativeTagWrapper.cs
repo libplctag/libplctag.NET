@@ -573,7 +573,7 @@ namespace libplctag
         }
 
         private readonly ConcurrentStack<TaskCompletionSource<object>> readTasks = new ConcurrentStack<TaskCompletionSource<object>>();
-        void ReadTaskCompleter(object sender, LibPlcTagEventArgs e)
+        void ReadTaskCompleter(object sender, TagEventArgs e)
         {
             if (readTasks.TryPop(out var readTask))
             {
@@ -593,7 +593,7 @@ namespace libplctag
         }
 
         private readonly ConcurrentStack<TaskCompletionSource<object>> writeTasks = new ConcurrentStack<TaskCompletionSource<object>>();
-        void WriteTaskCompleter(object sender, LibPlcTagEventArgs e)
+        void WriteTaskCompleter(object sender, TagEventArgs e)
         {
             if (writeTasks.TryPop(out var writeTask))
             {
@@ -613,19 +613,19 @@ namespace libplctag
             }
         }
 
-        event EventHandler<LibPlcTagEventArgs> ReadStarted;
-        event EventHandler<LibPlcTagEventArgs> ReadCompleted;
-        event EventHandler<LibPlcTagEventArgs> WriteStarted;
-        event EventHandler<LibPlcTagEventArgs> WriteCompleted;
-        event EventHandler<LibPlcTagEventArgs> Aborted;
-        event EventHandler<LibPlcTagEventArgs> Destroyed;
+        event EventHandler<TagEventArgs> ReadStarted;
+        event EventHandler<TagEventArgs> ReadCompleted;
+        event EventHandler<TagEventArgs> WriteStarted;
+        event EventHandler<TagEventArgs> WriteCompleted;
+        event EventHandler<TagEventArgs> Aborted;
+        event EventHandler<TagEventArgs> Destroyed;
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
         {
 
             var @event = (Event)eventCode;
             var status = (Status)statusCode;
-            var eventArgs = new LibPlcTagEventArgs() { Status = status };
+            var eventArgs = new TagEventArgs() { Status = status };
 
             switch (@event)
             {
