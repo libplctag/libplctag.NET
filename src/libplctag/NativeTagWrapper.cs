@@ -423,16 +423,20 @@ namespace libplctag
 
 
 
-        public int GetStringLength(int offset)              => _native.plc_tag_get_string_length(nativeTagHandle, offset);
-        public int GetStringCapacity(int offset)            => _native.plc_tag_get_string_capacity(nativeTagHandle, offset);
-        public int GetStringTotalLength(int offset)         => _native.plc_tag_get_string_total_length(nativeTagHandle, offset);
+        public void SetString(int offset, string value)     => SetNativeTagValue(_native.plc_tag_set_string, offset, value);
+        public int GetStringLength(int offset)              => GetNativeTagValue(_native.plc_tag_get_string_length, offset);
+        public int GetStringCapacity(int offset)            => GetNativeTagValue(_native.plc_tag_get_string_capacity, offset);
+        public int GetStringTotalLength(int offset)         => GetNativeTagValue(_native.plc_tag_get_string_total_length, offset);
         public string GetString(int offset)
         {
+            ThrowIfAlreadyDisposed();
             var stringLength = GetStringLength(offset);
             var sb = new StringBuilder(stringLength);
-            _native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            ThrowIfStatusNotOk(status);
             return sb.ToString().Substring(0, stringLength);
         }
+
 
         private void ThrowIfAlreadyDisposed()
         {
@@ -474,6 +478,14 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
             var result = (Status)nativeMethod(nativeTagHandle, offset, value);
             ThrowIfStatusNotOk(result);
+        }
+
+        private int GetNativeTagValue(Func<int, int, int> nativeMethod, int offset)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = nativeMethod(nativeTagHandle, offset);
+            ThrowIfStatusNotOk((Status)result);
+            return result;
         }
 
         private T GetNativeTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)

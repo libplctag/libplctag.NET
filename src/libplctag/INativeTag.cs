@@ -58,5 +58,6 @@ namespace libplctag
         int plc_tag_get_string(int tag, int string_start_offset, StringBuilder buffer, int buffer_length);
         int plc_tag_get_string_total_length(int tag, int string_start_offset);
         int plc_tag_get_string_capacity(int tag, int string_start_offset);
+        int plc_tag_set_string(int tag, int string_start_offset, string string_val);
     }
 }
