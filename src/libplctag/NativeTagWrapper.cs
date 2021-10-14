@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -423,16 +423,20 @@ namespace libplctag
 
 
 
+        public void SetString(int offset, string value)     => SetNativeTagValue(_native.plc_tag_set_string, offset, value);
         public int GetStringLength(int offset)              => _native.plc_tag_get_string_length(nativeTagHandle, offset);
         public int GetStringCapacity(int offset)            => _native.plc_tag_get_string_capacity(nativeTagHandle, offset);
         public int GetStringTotalLength(int offset)         => _native.plc_tag_get_string_total_length(nativeTagHandle, offset);
         public string GetString(int offset)
         {
+            ThrowIfAlreadyDisposed();
             var stringLength = GetStringLength(offset);
             var sb = new StringBuilder(stringLength);
-            _native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            ThrowIfStatusNotOk(status);
             return sb.ToString().Substring(0, stringLength);
         }
+
 
         private void ThrowIfAlreadyDisposed()
         {
