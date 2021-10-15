@@ -19,11 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+    <PackageReference Include="libplctag.NativeImport" Version="1.0.17" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libplctag.NativeImport\libplctag.NativeImport.csproj" />
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
