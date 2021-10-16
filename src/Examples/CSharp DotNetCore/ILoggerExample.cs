@@ -14,7 +14,7 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
-            var host = Host.CreateDefaultBuilder(null)
+            Host.CreateDefaultBuilder(null)
                 .ConfigureServices(services =>
                 {
                     services.AddLibPlcTagLogging();
@@ -24,9 +24,9 @@ namespace CSharpDotNetCore
                 {
                     logging.AddConsole();
                     logging.SetMinimumLevel(LogLevel.Debug);
-                });
-
-            host.Build().Run();
+                })
+                .Build()
+                .Run();
         }
 
         class Example : IHostedService
@@ -100,7 +100,7 @@ namespace CSharpDotNetCore
         }
     }
 
-    public static class LibPlcTagLoggingExtensions
+    static class LibPlcTagLoggingExtensions
     {
         public static IServiceCollection AddLibPlcTagLogging(this IServiceCollection services)
         {
