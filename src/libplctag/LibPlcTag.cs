@@ -49,13 +49,14 @@ namespace libplctag
         static readonly object logEventSubscriptionLock = new object();
         static private event EventHandler<LogEventArgs> logEvent;
         static bool alreadySubscribedToEvents = false;
+        static plctag.log_callback_func loggerDelegate;
         static private void ensureSubscribeToEvents()
         {
             if (alreadySubscribedToEvents)
                 return;
 
-            var myLogger = new plctag.log_callback_func(invokeLogEvent);
-            var statusAfterRegistration = (Status)_native.plc_tag_register_logger(myLogger);
+            loggerDelegate = new plctag.log_callback_func(invokeLogEvent);
+            var statusAfterRegistration = (Status)_native.plc_tag_register_logger(loggerDelegate);
             if (statusAfterRegistration != Status.Ok)
                 throw new LibPlcTagException(statusAfterRegistration);
         }
@@ -85,6 +86,20 @@ namespace libplctag
                     logEvent -= value;
                 }
             }
+        }
+
+        /// <summary>
+        /// After this function returns, the library will have cleaned up all internal threads and resources.
+        /// You can immediately turn around and call plc_tag_create() again and the library will start up again.
+        /// Note: you must dispose of all Tags before calling <see cref="Shutdown"/>
+        /// </summary>
+        /// <remarks>
+        /// Some wrappers and systems are not able to trigger the standard POSIX or Windows functions when the library is 
+        /// being unloaded or the program is shutting down. In those cases, you can call this function.
+        /// </remarks>
+        static public void Shutdown()
+        {
+            _native.plc_tag_shutdown();
         }
 
     }

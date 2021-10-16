@@ -6,7 +6,8 @@ namespace CSharpDotNetCore
     {
         static void Main(string[] args)
         {
-            LoggingExample.Run();
+            ILoggerExample.Run();
+            //LoggingExample.Run();
             //TestDatatypes.Run();
             //ExampleGenericTag.UDT_Array();
             //ExampleAsync.SyncAsyncMultipleTagComparison();
