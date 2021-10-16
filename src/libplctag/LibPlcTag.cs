@@ -9,11 +9,13 @@ namespace libplctag
     public static class LibPlcTag
     {
 
+        static INativeTag _native = new NativeTag();
+
         private const int LIB_ATTRIBUTE_POINTER = 0;
 
-        static public int VersionMajor => plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_major", int.MinValue);
-        static public int VersionMinor => plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_minor", int.MinValue);
-        static public int VersionPatch => plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_patch", int.MinValue);
+        static public int VersionMajor => _native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_major", int.MinValue);
+        static public int VersionMinor => _native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_minor", int.MinValue);
+        static public int VersionPatch => _native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "version_patch", int.MinValue);
 
         /// <summary>
         /// Check if base library meets version requirements
@@ -24,7 +26,7 @@ namespace libplctag
         /// <returns></returns>
         static public bool IsRequiredVersion(int requiredMajor, int requiredMinor, int requiredPatch)
         {
-            var result = (Status)plctag.plc_tag_check_lib_version(requiredMajor, requiredMinor, requiredPatch);
+            var result = (Status)_native.plc_tag_check_lib_version(requiredMajor, requiredMinor, requiredPatch);
 
             if (result == Status.Ok)
                 return true;
@@ -39,8 +41,8 @@ namespace libplctag
         /// </summary>
         static public DebugLevel DebugLevel
         {
-            get => (DebugLevel)plctag.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
-            set => plctag.plc_tag_set_debug_level((int)value);
+            get => (DebugLevel)_native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
+            set => _native.plc_tag_set_debug_level((int)value);
         }
 
 
@@ -53,7 +55,7 @@ namespace libplctag
                 return;
 
             var myLogger = new plctag.log_callback_func(invokeLogEvent);
-            var statusAfterRegistration = (Status)plctag.plc_tag_register_logger(myLogger);
+            var statusAfterRegistration = (Status)_native.plc_tag_register_logger(myLogger);
             if (statusAfterRegistration != Status.Ok)
                 throw new LibPlcTagException(statusAfterRegistration);
         }

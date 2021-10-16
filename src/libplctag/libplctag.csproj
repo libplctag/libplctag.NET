@@ -15,15 +15,14 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
     <PackageTags></PackageTags>
-    <UserSecretsId>0a944457-5d33-4635-b241-75af8c6e5e7c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="1.0.17" />
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+    <PackageReference Include="libplctag.NativeImport" Version="1.0.19" />
   </ItemGroup>
 
 </Project>
