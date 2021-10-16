@@ -31,18 +31,7 @@ namespace CSharpDotNetCore
 
         class Example : IHostedService
         {
-            public Task StartAsync(CancellationToken cancellationToken)
-            {
-                Task.Run(() => RunAsync());
-                return Task.CompletedTask;
-            }
-
-            public Task StopAsync(CancellationToken cancellationToken)
-            {
-                return Task.CompletedTask;
-            }
-
-            async Task RunAsync()
+            public async Task StartAsync(CancellationToken cancellationToken)
             {
                 var myTag = new Tag<DintPlcMapper, int>()
                 {
@@ -55,20 +44,20 @@ namespace CSharpDotNetCore
                 };
 
                 await myTag.InitializeAsync();
-
-                myTag.Value = 1234;
-                await myTag.WriteAsync();
             }
+
+            public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
         }
     }
 
     class LibPlcTagLogSource : IHostedService
     {
-        private readonly ILogger<LibPlcTagLogSource> logger;
+        private readonly ILogger<LibPlcTagLogSource> _logger;
 
         public LibPlcTagLogSource(ILogger<LibPlcTagLogSource> logger)
         {
-            this.logger = logger;
+            _logger = logger;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -96,7 +85,7 @@ namespace CSharpDotNetCore
                 DebugLevel.Spew     => LogLevel.Trace,
                 _                   => throw new NotImplementedException(),
             };
-            logger.Log(logLevel, e.Message);
+            _logger.Log(logLevel, e.Message);
         }
     }
 
