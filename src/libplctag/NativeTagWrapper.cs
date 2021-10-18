@@ -676,7 +676,7 @@ namespace libplctag
                 { "int64_byte_order",       Int64ByteOrder?.ToString() },
                 { "float32_byte_order",     Float32ByteOrder?.ToString() },
                 { "float64_byte_order",     Float64ByteOrder?.ToString() },
-                { "str_count_word_bytes",   FormatNullableBoolean(StringCountWordBytes) },
+                { "str_count_word_bytes",   StringCountWordBytes?.ToString() },
                 { "str_is_byte_swapped",    FormatNullableBoolean(StringIsByteSwapped)  },
                 { "str_is_counted",         FormatNullableBoolean(StringIsCounted) },
                 { "str_is_fixed_length",    FormatNullableBoolean(StringIsFixedLength)  },
