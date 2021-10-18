@@ -165,44 +165,44 @@ namespace libplctag
             set => SetField(ref _debugLevel, value);
         }
 
-        private string _int16ByteOrder;
-        public string Int16ByteOrder
+        private ByteOrder _int16ByteOrder;
+        public ByteOrder Int16ByteOrder
         {
             get => GetField(ref _int16ByteOrder);
-            set => SetField(ref _int16ByteOrder, value);
+            set => SetByteOrderField(ref _int16ByteOrder, value, 16);
         }
 
-        private string _int32ByteOrder;
-        public string Int32ByteOrder
+        private ByteOrder _int32ByteOrder;
+        public ByteOrder Int32ByteOrder
         {
             get => GetField(ref _int32ByteOrder);
-            set => SetField(ref _int32ByteOrder, value);
+            set => SetByteOrderField(ref _int32ByteOrder, value, 32);
         }
 
-        private string _int64ByteOrder;
-        public string Int64ByteOrder
+        private ByteOrder _int64ByteOrder;
+        public ByteOrder Int64ByteOrder
         {
             get => GetField(ref _int64ByteOrder);
-            set => SetField(ref _int64ByteOrder, value);
+            set => SetByteOrderField(ref _int64ByteOrder, value, 64);
         }
 
-        private string _float32ByteOrder;
-        public string Float32ByteOrder
+        private ByteOrder _float32ByteOrder;
+        public ByteOrder Float32ByteOrder
         {
             get => GetField(ref _float32ByteOrder);
-            set => SetField(ref _float32ByteOrder, value);
+            set => SetByteOrderField(ref _float32ByteOrder, value, 32);
         }
 
-        private string _float64ByteOrder;
-        public string Float64ByteOrder
+        private ByteOrder _float64ByteOrder;
+        public ByteOrder Float64ByteOrder
         {
             get => GetField(ref _float64ByteOrder);
-            set => SetField(ref _float64ByteOrder, value);
+            set => SetByteOrderField(ref _float64ByteOrder, value, 64);
         }
 
 
-        private bool? _stringCountWordBytes;
-        public bool? StringCountWordBytes
+        private uint? _stringCountWordBytes;
+        public uint? StringCountWordBytes
         {
             get => GetField(ref _stringCountWordBytes);
             set => SetField(ref _stringCountWordBytes, value);
@@ -614,6 +614,14 @@ namespace libplctag
             field = value;
         }
 
+        private void SetByteOrderField(ref ByteOrder field, ByteOrder value, int numberOfBits)
+        {
+            if (value.NumberOfBytes != numberOfBits / 8)
+                throw new LibPlcTagException($"{typeof(ByteOrder)} does not have correct number of bits");
+
+            SetField(ref field, value);
+        }
+
         private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
         {
 
@@ -663,11 +671,11 @@ namespace libplctag
                 { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
                 { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
                 { "debug",                  ((int)DebugLevel).ToString() },
-                { "int16_byte_order",       Int16ByteOrder },
-                { "int32_byte_order",       Int32ByteOrder },
-                { "int64_byte_order",       Int64ByteOrder },
-                { "float32_byte_order",     Float32ByteOrder },
-                { "float64_byte_order",     Float64ByteOrder },
+                { "int16_byte_order",       Int16ByteOrder?.ToString() },
+                { "int32_byte_order",       Int32ByteOrder?.ToString() },
+                { "int64_byte_order",       Int64ByteOrder?.ToString() },
+                { "float32_byte_order",     Float32ByteOrder?.ToString() },
+                { "float64_byte_order",     Float64ByteOrder?.ToString() },
                 { "str_count_word_bytes",   FormatNullableBoolean(StringCountWordBytes) },
                 { "str_is_byte_swapped",    FormatNullableBoolean(StringIsByteSwapped)  },
                 { "str_is_counted",         FormatNullableBoolean(StringIsCounted) },
