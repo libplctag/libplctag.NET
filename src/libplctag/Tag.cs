@@ -11,12 +11,6 @@ namespace libplctag
         readonly NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
 
 
-        public event EventHandler<LibPlcTagEventArgs> ReadStarted { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
-        public event EventHandler<LibPlcTagEventArgs> ReadCompleted { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
-        public event EventHandler<LibPlcTagEventArgs> WriteStarted { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
-        public event EventHandler<LibPlcTagEventArgs> WriteCompleted { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
-        public event EventHandler<LibPlcTagEventArgs> Aborted { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
-        public event EventHandler<LibPlcTagEventArgs> Destroyed { add => throw new NotImplementedException(); remove => throw new NotImplementedException(); }
 
 
         /// <summary>
@@ -415,6 +409,38 @@ namespace libplctag
         public int GetStringTotalLength(int offset)         => _tag.GetStringTotalLength(offset);
         public int GetStringCapacity(int offset)            => _tag.GetStringCapacity(offset);
         public string GetString(int offset)                 => _tag.GetString(offset);
+
+
+        public event EventHandler<LibPlcTagEventArgs> ReadStarted
+        {
+            add => _tag.ReadStarted += value;
+            remove => _tag.ReadStarted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> ReadCompleted
+        {
+            add => _tag.ReadCompleted += value;
+            remove => _tag.ReadCompleted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> WriteStarted
+        {
+            add => _tag.WriteStarted += value;
+            remove => _tag.WriteStarted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> WriteCompleted
+        {
+            add => _tag.WriteCompleted += value;
+            remove => _tag.WriteCompleted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> Aborted
+        {
+            add => _tag.Aborted += value;
+            remove => _tag.Aborted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> Destroyed
+        {
+            add => _tag.Destroyed += value;
+            remove => _tag.Destroyed -= value;
+        }
 
         ~Tag()
         {

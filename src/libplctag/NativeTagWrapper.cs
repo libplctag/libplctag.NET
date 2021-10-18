@@ -762,12 +762,12 @@ namespace libplctag
             }
         }
 
-        event EventHandler<LibPlcTagEventArgs> ReadStarted;
-        event EventHandler<LibPlcTagEventArgs> ReadCompleted;
-        event EventHandler<LibPlcTagEventArgs> WriteStarted;
-        event EventHandler<LibPlcTagEventArgs> WriteCompleted;
-        event EventHandler<LibPlcTagEventArgs> Aborted;
-        event EventHandler<LibPlcTagEventArgs> Destroyed;
+        public event EventHandler<LibPlcTagEventArgs> ReadStarted;
+        public event EventHandler<LibPlcTagEventArgs> ReadCompleted;
+        public event EventHandler<LibPlcTagEventArgs> WriteStarted;
+        public event EventHandler<LibPlcTagEventArgs> WriteCompleted;
+        public event EventHandler<LibPlcTagEventArgs> Aborted;
+        public event EventHandler<LibPlcTagEventArgs> Destroyed;
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
         {
