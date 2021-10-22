@@ -67,8 +67,15 @@ namespace libplctag
         }
 
         /// <summary>
-        /// 
+        /// You can redirect all logging from the library to your own delegate.
         /// </summary>
+        /// <remarks>
+        /// WARNING There are some important restrictions on logging delegates:
+        /// The delegate will be called from multiple threads, sometimes simultaneously! Your code must be thread aware and thread-safe.
+        /// The delegate will be called with one or more mutexes held in almost all cases.You must not call any tag API functions other than plc_tag_decode_error(). If you do there is a large chance that the library will hang.
+        /// Logging messages come from deep within the library's core routines. Many of these are very delay sensitive. Do not do anything that would block or delay the return of the logging callback to the library!
+        /// The message string passed to your callback function will be managed by the library. Do not attempt to free its memory or modify the string. If you need to do modifications, make your own copy and return.
+        /// </remarks>
         static public event EventHandler<LogEventArgs> LogEvent
         {
             add
