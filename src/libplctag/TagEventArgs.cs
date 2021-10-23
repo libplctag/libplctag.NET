@@ -6,7 +6,6 @@ namespace libplctag
 {
     public class TagEventArgs : EventArgs
     {
-        public Event Event { get; set; }
         public Status Status { get; set; }
     }
 }
