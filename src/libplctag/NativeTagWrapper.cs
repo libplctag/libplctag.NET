@@ -614,26 +614,6 @@ namespace libplctag
             field = value;
         }
 
-        private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
-        {
-
-            if (initialStatus != Status.Pending)
-                return initialStatus;
-
-            var status = initialStatus;
-
-            using (token.Register(() => Abort()))
-            {
-                while (status == Status.Pending)
-                {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    status = GetStatus();
-                }
-            }
-
-            return status;
-        }
-
         private string GetAttributeString()
         {
 
