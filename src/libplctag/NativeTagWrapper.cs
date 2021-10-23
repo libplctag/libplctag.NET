@@ -661,7 +661,7 @@ namespace libplctag
                 { "use_connected_msg",      FormatNullableBoolean(UseConnectedMessaging) },
                 { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
                 { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
-                { "debug",                  ((int)DebugLevel).ToString() },
+                { "debug",                  DebugLevel == DebugLevel.None ? null : ((int)DebugLevel).ToString() },
                 { "int16_byte_order",       Int16ByteOrder },
                 { "int32_byte_order",       Int32ByteOrder },
                 { "int64_byte_order",       Int64ByteOrder },
