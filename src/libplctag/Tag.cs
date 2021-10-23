@@ -412,32 +412,32 @@ namespace libplctag
         public string GetString(int offset)                 => _tag.GetString(offset);
 
 
-        public event EventHandler<LibPlcTagEventArgs> ReadStarted
+        public event EventHandler<TagEventArgs> ReadStarted
         {
             add => _tag.ReadStarted += value;
             remove => _tag.ReadStarted -= value;
         }
-        public event EventHandler<LibPlcTagEventArgs> ReadCompleted
+        public event EventHandler<TagEventArgs> ReadCompleted
         {
             add => _tag.ReadCompleted += value;
             remove => _tag.ReadCompleted -= value;
         }
-        public event EventHandler<LibPlcTagEventArgs> WriteStarted
+        public event EventHandler<TagEventArgs> WriteStarted
         {
             add => _tag.WriteStarted += value;
             remove => _tag.WriteStarted -= value;
         }
-        public event EventHandler<LibPlcTagEventArgs> WriteCompleted
+        public event EventHandler<TagEventArgs> WriteCompleted
         {
             add => _tag.WriteCompleted += value;
             remove => _tag.WriteCompleted -= value;
         }
-        public event EventHandler<LibPlcTagEventArgs> Aborted
+        public event EventHandler<TagEventArgs> Aborted
         {
             add => _tag.Aborted += value;
             remove => _tag.Aborted -= value;
         }
-        public event EventHandler<LibPlcTagEventArgs> Destroyed
+        public event EventHandler<TagEventArgs> Destroyed
         {
             add => _tag.Destroyed += value;
             remove => _tag.Destroyed -= value;

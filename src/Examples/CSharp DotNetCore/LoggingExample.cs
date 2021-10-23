@@ -6,22 +6,22 @@ using System.Threading;
 
 namespace CSharpDotNetCore
 {
-    class Example
+    class LoggingExample
     {
         public static void Run()
         {
-            //A simple starting example that demonstrates reading and writing a DINT tag
-
+            LibPlcTag.LogEvent += LibPlcTag_LogEvent;
+            LibPlcTag.DebugLevel = DebugLevel.Detail;
 
             //Instantiate the tag with the proper mapper and datatype
             var myTag = new Tag<DintPlcMapper, int>()
             {
-                Name = "PROGRAM:SomeProgram.SomeDINT",
-                Gateway = "10.10.10.10",
+                Name = "MyTag[0]",
+                Gateway = "127.0.0.1",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                Timeout = TimeSpan.FromSeconds(5)
+                Timeout = TimeSpan.FromSeconds(5),
             };
 
             //Initialize the tag to set up structures and prepare for read/write
@@ -41,6 +41,11 @@ namespace CSharpDotNetCore
             //Write to console
             int myDint = myTag.Value;
             Console.WriteLine(myDint);
+        }
+
+        private static void LibPlcTag_LogEvent(object sender, LogEventArgs e)
+        {
+            Console.WriteLine($"{e.DebugLevel}\t\t{e.Message}");
         }
     }
 }
