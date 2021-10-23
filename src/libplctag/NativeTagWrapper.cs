@@ -183,7 +183,7 @@ namespace libplctag
         public string Int64ByteOrder
         {
             get => GetField(ref _int64ByteOrder);
-            set => SetField(ref _int64ByteOrder, value;
+            set => SetField(ref _int64ByteOrder, value);
         }
 
         private string _float32ByteOrder;
