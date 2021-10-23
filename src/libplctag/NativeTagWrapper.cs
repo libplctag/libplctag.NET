@@ -165,39 +165,39 @@ namespace libplctag
             set => SetField(ref _debugLevel, value);
         }
 
-        private ByteOrder _int16ByteOrder;
-        public ByteOrder Int16ByteOrder
+        private string _int16ByteOrder;
+        public string Int16ByteOrder
         {
             get => GetField(ref _int16ByteOrder);
-            set => SetByteOrderField(ref _int16ByteOrder, value, 16);
+            set => SetField(ref _int16ByteOrder, value);
         }
 
-        private ByteOrder _int32ByteOrder;
-        public ByteOrder Int32ByteOrder
+        private string _int32ByteOrder;
+        public string Int32ByteOrder
         {
             get => GetField(ref _int32ByteOrder);
-            set => SetByteOrderField(ref _int32ByteOrder, value, 32);
+            set => SetField(ref _int32ByteOrder, value);
         }
 
-        private ByteOrder _int64ByteOrder;
-        public ByteOrder Int64ByteOrder
+        private string _int64ByteOrder;
+        public string Int64ByteOrder
         {
             get => GetField(ref _int64ByteOrder);
-            set => SetByteOrderField(ref _int64ByteOrder, value, 64);
+            set => SetField(ref _int64ByteOrder, value;
         }
 
-        private ByteOrder _float32ByteOrder;
-        public ByteOrder Float32ByteOrder
+        private string _float32ByteOrder;
+        public string Float32ByteOrder
         {
             get => GetField(ref _float32ByteOrder);
-            set => SetByteOrderField(ref _float32ByteOrder, value, 32);
+            set => SetField(ref _float32ByteOrder, value);
         }
 
-        private ByteOrder _float64ByteOrder;
-        public ByteOrder Float64ByteOrder
+        private string _float64ByteOrder;
+        public string Float64ByteOrder
         {
             get => GetField(ref _float64ByteOrder);
-            set => SetByteOrderField(ref _float64ByteOrder, value, 64);
+            set => SetField(ref _float64ByteOrder, value);
         }
 
 
@@ -612,14 +612,6 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
             ThrowIfAlreadyInitialized();
             field = value;
-        }
-
-        private void SetByteOrderField(ref ByteOrder field, ByteOrder value, int numberOfBits)
-        {
-            if (value.NumberOfBytes != numberOfBits / 8)
-                throw new LibPlcTagException($"{typeof(ByteOrder)} does not have correct number of bits");
-
-            SetField(ref field, value);
         }
 
         private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)

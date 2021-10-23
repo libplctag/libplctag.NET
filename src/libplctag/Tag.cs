@@ -175,7 +175,7 @@ namespace libplctag
         /// <summary>
         /// Configures. the byte order of 16-bit integers.
         /// </summary>
-        public ByteOrder Int16ByteOrder
+        public string Int16ByteOrder
         {
             get => _tag.Int16ByteOrder;
             set => _tag.Int16ByteOrder = value;
@@ -184,7 +184,7 @@ namespace libplctag
         /// <summary>
         /// Optional. Configures the byte order of 32-bit integers.
         /// </summary>
-        public ByteOrder Int32ByteOrder
+        public string Int32ByteOrder
         {
             get => _tag.Int32ByteOrder;
             set => _tag.Int32ByteOrder = value;
@@ -193,7 +193,7 @@ namespace libplctag
         /// <summary>
         /// Optional. Configures the byte order of 64-bit integers.
         /// </summary>
-        public ByteOrder Int64ByteOrder
+        public string Int64ByteOrder
         {
             get => _tag.Int64ByteOrder;
             set => _tag.Int64ByteOrder = value;
@@ -202,7 +202,7 @@ namespace libplctag
         /// <summary>
         /// Optional. Configures the byte order of 32-bit floating point values.
         /// </summary>
-        public ByteOrder Float32ByteOrder
+        public string Float32ByteOrder
         {
             get => _tag.Float32ByteOrder;
             set => _tag.Float32ByteOrder = value;
@@ -211,7 +211,7 @@ namespace libplctag
         /// <summary>
         /// Optional. Configures the byte order of 64-bit floating point values.
         /// </summary>
-        public ByteOrder Float64ByteOrder
+        public string Float64ByteOrder
         {
             get => _tag.Float64ByteOrder;
             set => _tag.Float64ByteOrder = value;
