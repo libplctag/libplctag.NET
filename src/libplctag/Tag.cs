@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 
 namespace libplctag
 {
+
     public sealed class Tag : IDisposable
     {
 
-        NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
+        readonly NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
 
-        
+
+
+
         /// <summary>
         /// True if <see cref="Initialize"/> or <see cref="InitializeAsync"/> has been called.
         /// </summary>
@@ -103,7 +106,7 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Use this attribute to cause the tag read operations to cache data the requested number of milliseconds. 
+        /// Optional. Use this attribute to cause the tag read operations to cache data the requested number of milliseconds. 
         /// This can be used to lower the actual number of requests against the PLC. 
         /// Example read_cache_ms=100 will result in read operations no more often than once every 100 milliseconds.
         /// </summary>
@@ -124,7 +127,7 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Control whether to use connected or unconnected messaging. 
+        /// Optional. Control whether to use connected or unconnected messaging. 
         /// Only valid on Logix-class PLCs. Connected messaging is required on Micro800 and DH+ bridged links. 
         /// Default is PLC-specific and link-type specific. Generally you do not need to set this.
         /// </summary>
@@ -132,6 +135,158 @@ namespace libplctag
         {
             get => _tag.UseConnectedMessaging;
             set => _tag.UseConnectedMessaging = value;
+        }
+
+        /// <summary>
+        /// Optional. An integer number of milliseconds to periodically read data from the PLC.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Use this attribute to automatically read data from the PLC on a set interval.
+        /// This can be used in conjunction with the <see cref="ReadStarted"/> and <see cref="ReadCompleted"/> events to respond to the data updates.
+        /// </remarks>
+        public TimeSpan? AutoSyncReadInterval
+        {
+            get => _tag.AutoSyncReadInterval;
+            set => _tag.AutoSyncReadInterval = value;
+        }
+
+        /// <summary>
+        /// Optional. An integer number of milliseconds to buffer tag data changes before writing to the PLC.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Use this attribute to automatically write data to the PLC a set duration after setting its value.
+        /// This can be used to lower the actual number of write operations by locally buffering local writes, and only writing to the PLC the most recent one when the wait completes.
+        /// You can determine when a write starts and completes by catching the <see cref="WriteStarted"/> and <see cref="WriteCompleted"/> events.
+        /// </remarks>
+        public TimeSpan? AutoSyncWriteInterval
+        {
+            get => _tag.AutoSyncWriteInterval;
+            set => _tag.AutoSyncWriteInterval = value;
+        }
+
+        public DebugLevel DebugLevel
+        {
+            get => _tag.DebugLevel;
+            set => _tag.DebugLevel = value;
+        }
+
+        /// <summary>
+        /// Configures. the byte order of 16-bit integers.
+        /// </summary>
+        public string Int16ByteOrder
+        {
+            get => _tag.Int16ByteOrder;
+            set => _tag.Int16ByteOrder = value;
+        }
+
+        /// <summary>
+        /// Optional. Configures the byte order of 32-bit integers.
+        /// </summary>
+        public string Int32ByteOrder
+        {
+            get => _tag.Int32ByteOrder;
+            set => _tag.Int32ByteOrder = value;
+        }
+
+        /// <summary>
+        /// Optional. Configures the byte order of 64-bit integers.
+        /// </summary>
+        public string Int64ByteOrder
+        {
+            get => _tag.Int64ByteOrder;
+            set => _tag.Int64ByteOrder = value;
+        }
+
+        /// <summary>
+        /// Optional. Configures the byte order of 32-bit floating point values.
+        /// </summary>
+        public string Float32ByteOrder
+        {
+            get => _tag.Float32ByteOrder;
+            set => _tag.Float32ByteOrder = value;
+        }
+
+        /// <summary>
+        /// Optional. Configures the byte order of 64-bit floating point values.
+        /// </summary>
+        public string Float64ByteOrder
+        {
+            get => _tag.Float64ByteOrder;
+            set => _tag.Float64ByteOrder = value;
+        }
+
+        /// <summary>
+        /// Optional. A positive integer value of 1, 2, 4, or 8 determining how big the leading count word is in a string.
+        /// </summary>
+        public uint? StringCountWordBytes
+        {
+            get => _tag.StringCountWordBytes;
+            set => _tag.StringCountWordBytes = value;
+        }
+
+        /// <summary>
+        /// Optional. Determines whether character bytes are swapped within 16-bit words.
+        /// </summary>
+        public bool? StringIsByteSwapped
+        {
+            get => _tag.StringIsByteSwapped;
+            set => _tag.StringIsByteSwapped = value;
+        }
+
+        /// <summary>
+        /// Optional. Determines whether strings have a count word or not.
+        /// </summary>
+        public bool? StringIsCounted
+        {
+            get => _tag.StringIsCounted;
+            set => _tag.StringIsCounted = value;
+        }
+
+        /// <summary>
+        /// Optional. Determines whether strings have a fixed length that they occupy.
+        /// </summary>
+        public bool? StringIsFixedLength
+        {
+            get => _tag.StringIsFixedLength;
+            set => _tag.StringIsFixedLength = value;
+        }
+
+        /// <summary>
+        /// Optional. Determines whether strings are zero-terminated as is done in C.
+        /// </summary>
+        public bool? StringIsZeroTerminated
+        {
+            get => _tag.StringIsZeroTerminated;
+            set => _tag.StringIsZeroTerminated = value;
+        }
+
+        /// <summary>
+        /// Optional. Determines the maximum number of character bytes in a string.
+        /// </summary>
+        public uint? StringMaxCapacity
+        {
+            get => _tag.StringMaxCapacity;
+            set => _tag.StringMaxCapacity = value;
+        }
+
+        /// <summary>
+        /// Optional. A positive integer value determining the total number of padding bytes at the end of a string.
+        /// </summary>
+        public uint? StringPadBytes
+        {
+            get => _tag.StringPadBytes;
+            set => _tag.StringPadBytes = value;
+        }
+
+        /// <summary>
+        /// Optional. A positive integer value determining the total number of bytes used in the tag buffer by a string. Must be used with str_is_fixed_length.
+        /// </summary>
+        public uint? StringTotalLength
+        {
+            get => _tag.StringTotalLength;
+            set => _tag.StringTotalLength = value;
         }
 
         /// <summary>
@@ -255,6 +410,38 @@ namespace libplctag
         public int GetStringTotalLength(int offset)         => _tag.GetStringTotalLength(offset);
         public int GetStringCapacity(int offset)            => _tag.GetStringCapacity(offset);
         public string GetString(int offset)                 => _tag.GetString(offset);
+
+
+        public event EventHandler<LibPlcTagEventArgs> ReadStarted
+        {
+            add => _tag.ReadStarted += value;
+            remove => _tag.ReadStarted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> ReadCompleted
+        {
+            add => _tag.ReadCompleted += value;
+            remove => _tag.ReadCompleted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> WriteStarted
+        {
+            add => _tag.WriteStarted += value;
+            remove => _tag.WriteStarted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> WriteCompleted
+        {
+            add => _tag.WriteCompleted += value;
+            remove => _tag.WriteCompleted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> Aborted
+        {
+            add => _tag.Aborted += value;
+            remove => _tag.Aborted -= value;
+        }
+        public event EventHandler<LibPlcTagEventArgs> Destroyed
+        {
+            add => _tag.Destroyed += value;
+            remove => _tag.Destroyed -= value;
+        }
 
         ~Tag()
         {

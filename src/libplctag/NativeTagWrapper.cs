@@ -144,6 +144,119 @@ namespace libplctag
         }
 
 
+        private TimeSpan? _autoSyncReadInterval;
+        public TimeSpan? AutoSyncReadInterval
+        {
+            get => GetField(ref _autoSyncReadInterval);
+            set => SetField(ref _autoSyncReadInterval, value);
+        }
+
+        private TimeSpan? _autoSyncWriteInterval;
+        public TimeSpan? AutoSyncWriteInterval
+        {
+            get => GetField(ref _autoSyncWriteInterval);
+            set => SetField(ref _autoSyncWriteInterval, value);
+        }
+
+        private DebugLevel _debugLevel = DebugLevel.None;
+        public DebugLevel DebugLevel
+        {
+            get => GetField(ref _debugLevel);
+            set => SetField(ref _debugLevel, value);
+        }
+
+        private string _int16ByteOrder;
+        public string Int16ByteOrder
+        {
+            get => GetField(ref _int16ByteOrder);
+            set => SetField(ref _int16ByteOrder, value);
+        }
+
+        private string _int32ByteOrder;
+        public string Int32ByteOrder
+        {
+            get => GetField(ref _int32ByteOrder);
+            set => SetField(ref _int32ByteOrder, value);
+        }
+
+        private string _int64ByteOrder;
+        public string Int64ByteOrder
+        {
+            get => GetField(ref _int64ByteOrder);
+            set => SetField(ref _int64ByteOrder, value);
+        }
+
+        private string _float32ByteOrder;
+        public string Float32ByteOrder
+        {
+            get => GetField(ref _float32ByteOrder);
+            set => SetField(ref _float32ByteOrder, value);
+        }
+
+        private string _float64ByteOrder;
+        public string Float64ByteOrder
+        {
+            get => GetField(ref _float64ByteOrder);
+            set => SetField(ref _float64ByteOrder, value);
+        }
+
+
+        private uint? _stringCountWordBytes;
+        public uint? StringCountWordBytes
+        {
+            get => GetField(ref _stringCountWordBytes);
+            set => SetField(ref _stringCountWordBytes, value);
+        }
+
+        private bool? _stringIsByteSwapped;
+        public bool? StringIsByteSwapped
+        {
+            get => GetField(ref _stringIsByteSwapped);
+            set => SetField(ref _stringIsByteSwapped, value);
+        }
+
+        private bool? _stringIsCounted;
+        public bool? StringIsCounted
+        {
+            get => GetField(ref _stringIsCounted);
+            set => SetField(ref _stringIsCounted, value);
+        }
+
+        private bool? _stringIsFixedLength;
+        public bool? StringIsFixedLength
+        {
+            get => GetField(ref _stringIsFixedLength);
+            set => SetField(ref _stringIsFixedLength, value);
+        }
+
+        private bool? _stringIsZeroTerminated;
+        public bool? StringIsZeroTerminated
+        {
+            get => GetField(ref _stringIsZeroTerminated);
+            set => SetField(ref _stringIsZeroTerminated, value);
+        }
+
+        private uint? _stringMaxCapacity;
+        public uint? StringMaxCapacity
+        {
+            get => GetField(ref _stringMaxCapacity);
+            set => SetField(ref _stringMaxCapacity, value);
+        }
+
+        private uint? _stringPadBytes;
+        public uint? StringPadBytes
+        {
+            get => GetField(ref _stringPadBytes);
+            set => SetField(ref _stringPadBytes, value);
+        }
+
+        private uint? _stringTotalLength;
+        public uint? StringTotalLength
+        {
+            get => GetField(ref _stringTotalLength);
+            set => SetField(ref _stringTotalLength, value);
+        }
+
 
 
 
@@ -512,40 +625,47 @@ namespace libplctag
             field = value;
         }
 
-        private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
-        {
-
-            if (initialStatus != Status.Pending)
-                return initialStatus;
-
-            var status = initialStatus;
-
-            using (token.Register(() => Abort()))
-            {
-                while (status == Status.Pending)
-                {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    status = GetStatus();
-                }
-            }
-
-            return status;
-        }
-
         private string GetAttributeString()
         {
 
+            string FormatNullableBoolean(bool? value)
+                => value.HasValue ? (value.Value ? "1" : "0") : null;
+
+            string FormatPlcType(PlcType? type)
+            {
+                if (type == libplctag.PlcType.Omron)
+                    return "omron-njnx";
+                else
+                    return type?.ToString().ToLowerInvariant();
+            }
+
             var attributes = new Dictionary<string, string>
             {
-                { "protocol",           Protocol?.ToString() },
-                { "gateway",            Gateway },
-                { "path",               Path },
-                { "plc",                PlcType == libplctag.PlcType.Omron ? "omron-njnx" : PlcType?.ToString()?.ToLower() },
-                { "elem_size",          ElementSize?.ToString() },
-                { "elem_count",         ElementCount?.ToString() },
-                { "name",               Name },
-                { "read_cache_ms",      ReadCacheMillisecondDuration?.ToString() },
-                { "use_connected_msg",  UseConnectedMessaging.HasValue ? (UseConnectedMessaging.Value ? "1" : "0") : null}
+                { "protocol",               Protocol?.ToString() },
+                { "gateway",                Gateway },
+                { "path",                   Path },
+                { "plc",                    FormatPlcType(PlcType) },
+                { "elem_size",              ElementSize?.ToString() },
+                { "elem_count",             ElementCount?.ToString() },
+                { "name",                   Name },
+                { "read_cache_ms",          ReadCacheMillisecondDuration?.ToString() },
+                { "use_connected_msg",      FormatNullableBoolean(UseConnectedMessaging) },
+                { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
+                { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
+                { "debug",                  DebugLevel == DebugLevel.None ? null : ((int)DebugLevel).ToString() },
+                { "int16_byte_order",       Int16ByteOrder },
+                { "int32_byte_order",       Int32ByteOrder },
+                { "int64_byte_order",       Int64ByteOrder },
+                { "float32_byte_order",     Float32ByteOrder },
+                { "float64_byte_order",     Float64ByteOrder },
+                { "str_count_word_bytes",   StringCountWordBytes?.ToString() },
+                { "str_is_byte_swapped",    FormatNullableBoolean(StringIsByteSwapped)  },
+                { "str_is_counted",         FormatNullableBoolean(StringIsCounted) },
+                { "str_is_fixed_length",    FormatNullableBoolean(StringIsFixedLength)  },
+                { "str_is_zero_terminated", FormatNullableBoolean(StringIsFixedLength)  },
+                { "str_max_capacity",       StringMaxCapacity?.ToString() },
+                { "str_pad_bytes",          StringPadBytes?.ToString() },
+                { "str_total_length",       StringTotalLength?.ToString() },
             };
 
             string separator = "&";
@@ -624,12 +744,12 @@ namespace libplctag
             }
         }
 
-        event EventHandler<LibPlcTagEventArgs> ReadStarted;
-        event EventHandler<LibPlcTagEventArgs> ReadCompleted;
-        event EventHandler<LibPlcTagEventArgs> WriteStarted;
-        event EventHandler<LibPlcTagEventArgs> WriteCompleted;
-        event EventHandler<LibPlcTagEventArgs> Aborted;
-        event EventHandler<LibPlcTagEventArgs> Destroyed;
+        public event EventHandler<LibPlcTagEventArgs> ReadStarted;
+        public event EventHandler<LibPlcTagEventArgs> ReadCompleted;
+        public event EventHandler<LibPlcTagEventArgs> WriteStarted;
+        public event EventHandler<LibPlcTagEventArgs> WriteCompleted;
+        public event EventHandler<LibPlcTagEventArgs> Aborted;
+        public event EventHandler<LibPlcTagEventArgs> Destroyed;
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
         {
