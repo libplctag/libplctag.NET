@@ -1,19 +1,22 @@
 ﻿using libplctag;
 using libplctag.DataTypes;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
-using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CSharpDotNetCore
 {
     class LoggingExample
     {
-        public static void Run()
+        public static async void Run()
         {
-            LibPlcTag.LogEvent += LibPlcTag_LogEvent;
-            LibPlcTag.DebugLevel = DebugLevel.Detail;
-
-            //Instantiate the tag with the proper mapper and datatype
+            LibPlcTag.Logger = new MyConsoleLogger();
+            LibPlcTag.LogLevel = LogLevel.Information;
             var myTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "MyTag[0]",
@@ -24,28 +27,62 @@ namespace CSharpDotNetCore
                 Timeout = TimeSpan.FromSeconds(5),
             };
 
-            //Initialize the tag to set up structures and prepare for read/write
-            //This is optional as an optimization before using the tag
-            //If omitted, the tag will initialize on the first Read() or Write()
-            myTag.Initialize();
-
-            //The value is held locally and only synchronized on Read() or Write()
-            myTag.Value = 3737;
-
-            //Transfer Value to PLC
-            myTag.Write();
-
-            //Transfer from PLC to Value
-            myTag.Read();
-
-            //Write to console
-            int myDint = myTag.Value;
-            Console.WriteLine(myDint);
+            await myTag.InitializeAsync();
         }
 
-        private static void LibPlcTag_LogEvent(object sender, LogEventArgs e)
+    }
+
+    /// <summary>
+    /// Ugh - how many times do I just need to create an instance of a logger but don't want to set up dependency injection!?
+    /// </summary>
+    class MyConsoleLogger : ILogger
+    {
+        public IDisposable BeginScope<TState>(TState state)
         {
-            Console.WriteLine($"{e.DebugLevel}\t\t{e.Message}");
+            throw new NotImplementedException();
+        }
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            Console.WriteLine($"{logLevel} {state}");
         }
     }
+
+    /// <summary>
+    /// This would be used in the case where Dependency Injection is used.
+    /// </summary>
+    class LibPlcTagLogSource : IHostedService
+    {
+        private readonly ILogger<LibPlcTagLogSource> _logger;
+
+        public LibPlcTagLogSource(ILogger<LibPlcTagLogSource> logger)
+        {
+            _logger = logger;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            LibPlcTag.Logger = _logger;
+            LibPlcTag.LogLevel = LogLevel.Trace;
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+    }
+
+    static class LibPlcTagLoggingExtensions
+    {
+        public static IServiceCollection AddLibPlcTagLogging(this IServiceCollection services)
+        {
+            services.AddHostedService<LibPlcTagLogSource>();
+            return services;
+        }
+    }
+
 }

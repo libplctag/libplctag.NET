@@ -1,4 +1,5 @@
 ﻿using libplctag.NativeImport;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace libplctag
@@ -39,17 +40,16 @@ namespace libplctag
         /// <summary>
         /// Sets a debug level for the underlying libplctag library
         /// </summary>
-        static public DebugLevel DebugLevel
+        static public LogLevel LogLevel
         {
-            get => (DebugLevel)_native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
+            get => (LogLevel)_native.plc_tag_get_int_attribute(LIB_ATTRIBUTE_POINTER, "debug", int.MinValue);
             set => _native.plc_tag_set_debug_level((int)value);
         }
 
 
-        static readonly object logEventSubscriptionLock = new object();
-        static private event EventHandler<LogEventArgs> logEvent;
         static bool alreadySubscribedToEvents = false;
         static plctag.log_callback_func loggerDelegate;
+
         static private void ensureSubscribeToEvents()
         {
             if (alreadySubscribedToEvents)
@@ -59,39 +59,23 @@ namespace libplctag
             var statusAfterRegistration = (Status)_native.plc_tag_register_logger(loggerDelegate);
             if (statusAfterRegistration != Status.Ok)
                 throw new LibPlcTagException(statusAfterRegistration);
+
+            alreadySubscribedToEvents = true;
         }
 
         static void invokeLogEvent(int tag_id, int debug_level, string message)
         {
-            logEvent?.Invoke(null, new LogEventArgs() { DebugLevel = (DebugLevel)debug_level, Message = message.TrimEnd('\n') });
+            logger?.Log((LogLevel)debug_level, message.TrimEnd('\n'));
         }
 
-        /// <summary>
-        /// You can redirect all logging from the library to your own delegate.
-        /// </summary>
-        /// <remarks>
-        /// WARNING There are some important restrictions on logging delegates:
-        /// The delegate will be called from multiple threads, sometimes simultaneously! Your code must be thread aware and thread-safe.
-        /// The delegate will be called with one or more mutexes held in almost all cases.You must not call any tag API functions other than plc_tag_decode_error(). If you do there is a large chance that the library will hang.
-        /// Logging messages come from deep within the library's core routines. Many of these are very delay sensitive. Do not do anything that would block or delay the return of the logging callback to the library!
-        /// The message string passed to your callback function will be managed by the library. Do not attempt to free its memory or modify the string. If you need to do modifications, make your own copy and return.
-        /// </remarks>
-        static public event EventHandler<LogEventArgs> LogEvent
+        private static ILogger logger;
+        static public ILogger Logger
         {
-            add
+            get => logger;
+            set
             {
-                lock (logEventSubscriptionLock)
-                {
-                    ensureSubscribeToEvents();
-                    logEvent += value;
-                }
-            }
-            remove
-            {
-                lock (logEventSubscriptionLock)
-                {
-                    logEvent -= value;
-                }
+                ensureSubscribeToEvents();
+                logger = value;
             }
         }
 
