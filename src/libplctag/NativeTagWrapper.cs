@@ -144,6 +144,119 @@ namespace libplctag
         }
 
 
+        private TimeSpan? _autoSyncReadInterval;
+        public TimeSpan? AutoSyncReadInterval
+        {
+            get => GetField(ref _autoSyncReadInterval);
+            set => SetField(ref _autoSyncReadInterval, value);
+        }
+
+        private TimeSpan? _autoSyncWriteInterval;
+        public TimeSpan? AutoSyncWriteInterval
+        {
+            get => GetField(ref _autoSyncWriteInterval);
+            set => SetField(ref _autoSyncWriteInterval, value);
+        }
+
+        private DebugLevel _debugLevel = DebugLevel.None;
+        public DebugLevel DebugLevel
+        {
+            get => GetField(ref _debugLevel);
+            set => SetField(ref _debugLevel, value);
+        }
+
+        private string _int16ByteOrder;
+        public string Int16ByteOrder
+        {
+            get => GetField(ref _int16ByteOrder);
+            set => SetField(ref _int16ByteOrder, value);
+        }
+
+        private string _int32ByteOrder;
+        public string Int32ByteOrder
+        {
+            get => GetField(ref _int32ByteOrder);
+            set => SetField(ref _int32ByteOrder, value);
+        }
+
+        private string _int64ByteOrder;
+        public string Int64ByteOrder
+        {
+            get => GetField(ref _int64ByteOrder);
+            set => SetField(ref _int64ByteOrder, value);
+        }
+
+        private string _float32ByteOrder;
+        public string Float32ByteOrder
+        {
+            get => GetField(ref _float32ByteOrder);
+            set => SetField(ref _float32ByteOrder, value);
+        }
+
+        private string _float64ByteOrder;
+        public string Float64ByteOrder
+        {
+            get => GetField(ref _float64ByteOrder);
+            set => SetField(ref _float64ByteOrder, value);
+        }
+
+
+        private uint? _stringCountWordBytes;
+        public uint? StringCountWordBytes
+        {
+            get => GetField(ref _stringCountWordBytes);
+            set => SetField(ref _stringCountWordBytes, value);
+        }
+
+        private bool? _stringIsByteSwapped;
+        public bool? StringIsByteSwapped
+        {
+            get => GetField(ref _stringIsByteSwapped);
+            set => SetField(ref _stringIsByteSwapped, value);
+        }
+
+        private bool? _stringIsCounted;
+        public bool? StringIsCounted
+        {
+            get => GetField(ref _stringIsCounted);
+            set => SetField(ref _stringIsCounted, value);
+        }
+
+        private bool? _stringIsFixedLength;
+        public bool? StringIsFixedLength
+        {
+            get => GetField(ref _stringIsFixedLength);
+            set => SetField(ref _stringIsFixedLength, value);
+        }
+
+        private bool? _stringIsZeroTerminated;
+        public bool? StringIsZeroTerminated
+        {
+            get => GetField(ref _stringIsZeroTerminated);
+            set => SetField(ref _stringIsZeroTerminated, value);
+        }
+
+        private uint? _stringMaxCapacity;
+        public uint? StringMaxCapacity
+        {
+            get => GetField(ref _stringMaxCapacity);
+            set => SetField(ref _stringMaxCapacity, value);
+        }
+
+        private uint? _stringPadBytes;
+        public uint? StringPadBytes
+        {
+            get => GetField(ref _stringPadBytes);
+            set => SetField(ref _stringPadBytes, value);
+        }
+
+        private uint? _stringTotalLength;
+        public uint? StringTotalLength
+        {
+            get => GetField(ref _stringTotalLength);
+            set => SetField(ref _stringTotalLength, value);
+        }
+
 
 
 
@@ -391,48 +504,52 @@ namespace libplctag
 
         public void SetBit(int offset, bool value)          => SetNativeTagValue(_native.plc_tag_set_bit, offset, value == true ? 1 : 0);
 
-        public ulong GetUInt64(int offset)                  => GetNativeTagValue(_native.plc_tag_get_uint64, offset, ulong.MaxValue);
+        public ulong GetUInt64(int offset)                  => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_uint64, offset, ulong.MaxValue);
         public void SetUInt64(int offset, ulong value)      => SetNativeTagValue(_native.plc_tag_set_uint64, offset, value);
 
-        public long GetInt64(int offset)                    => GetNativeTagValue(_native.plc_tag_get_int64, offset, long.MinValue);
+        public long GetInt64(int offset)                    => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_int64, offset, long.MinValue);
         public void SetInt64(int offset, long value)        => SetNativeTagValue(_native.plc_tag_set_int64, offset, value);
 
-        public uint GetUInt32(int offset)                   => GetNativeTagValue(_native.plc_tag_get_uint32, offset, uint.MaxValue);
+        public uint GetUInt32(int offset)                   => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_uint32, offset, uint.MaxValue);
         public void SetUInt32(int offset, uint value)       => SetNativeTagValue(_native.plc_tag_set_uint32, offset, value);
 
-        public int GetInt32(int offset)                     => GetNativeTagValue(_native.plc_tag_get_int32, offset, int.MinValue);
+        public int GetInt32(int offset)                     => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_int32, offset, int.MinValue);
         public void SetInt32(int offset, int value)         => SetNativeTagValue(_native.plc_tag_set_int32, offset, value);
 
-        public ushort GetUInt16(int offset)                 => GetNativeTagValue(_native.plc_tag_get_uint16, offset, ushort.MaxValue);
+        public ushort GetUInt16(int offset)                 => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_uint16, offset, ushort.MaxValue);
         public void SetUInt16(int offset, ushort value)     => SetNativeTagValue(_native.plc_tag_set_uint16, offset, value);
 
-        public short GetInt16(int offset)                   => GetNativeTagValue(_native.plc_tag_get_int16, offset, short.MinValue);
+        public short GetInt16(int offset)                   => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_int16, offset, short.MinValue);
         public void SetInt16(int offset, short value)       => SetNativeTagValue(_native.plc_tag_set_int16, offset, value);
 
-        public byte GetUInt8(int offset)                    => GetNativeTagValue(_native.plc_tag_get_uint8, offset, byte.MaxValue);
+        public byte GetUInt8(int offset)                    => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_uint8, offset, byte.MaxValue);
         public void SetUInt8(int offset, byte value)        => SetNativeTagValue(_native.plc_tag_set_uint8, offset, value);
 
-        public sbyte GetInt8(int offset)                    => GetNativeTagValue(_native.plc_tag_get_int8, offset, sbyte.MinValue);
+        public sbyte GetInt8(int offset)                    => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_int8, offset, sbyte.MinValue);
         public void SetInt8(int offset, sbyte value)        => SetNativeTagValue(_native.plc_tag_set_int8, offset, value);
 
-        public double GetFloat64(int offset)                => GetNativeTagValue(_native.plc_tag_get_float64, offset, double.MinValue);
+        public double GetFloat64(int offset)                => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_float64, offset, double.MinValue);
         public void SetFloat64(int offset, double value)    => SetNativeTagValue(_native.plc_tag_set_float64, offset, value);
 
-        public float GetFloat32(int offset)                 => GetNativeTagValue(_native.plc_tag_get_float32, offset, float.MinValue);
+        public float GetFloat32(int offset)                 => GetNativeValueAndThrowOnSpecificResult(_native.plc_tag_get_float32, offset, float.MinValue);
         public void SetFloat32(int offset, float value)     => SetNativeTagValue(_native.plc_tag_set_float32, offset, value);
 
 
 
-        public int GetStringLength(int offset)              => _native.plc_tag_get_string_length(nativeTagHandle, offset);
-        public int GetStringCapacity(int offset)            => _native.plc_tag_get_string_capacity(nativeTagHandle, offset);
-        public int GetStringTotalLength(int offset)         => _native.plc_tag_get_string_total_length(nativeTagHandle, offset);
+        public void SetString(int offset, string value)     => SetNativeTagValue(_native.plc_tag_set_string, offset, value);
+        public int GetStringLength(int offset)              => GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_get_string_length, offset);
+        public int GetStringCapacity(int offset)            => GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_get_string_capacity, offset);
+        public int GetStringTotalLength(int offset)         => GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_get_string_total_length, offset);
         public string GetString(int offset)
         {
+            ThrowIfAlreadyDisposed();
             var stringLength = GetStringLength(offset);
             var sb = new StringBuilder(stringLength);
-            _native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
+            ThrowIfStatusNotOk(status);
             return sb.ToString().Substring(0, stringLength);
         }
+
 
         private void ThrowIfAlreadyDisposed()
         {
@@ -476,15 +593,22 @@ namespace libplctag
             ThrowIfStatusNotOk(result);
         }
 
-        private T GetNativeTagValue<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)
+        private int GetNativeValueAndThrowOnNegativeResult(Func<int, int, int> nativeMethod, int offset)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = nativeMethod(nativeTagHandle, offset);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            return result;
+        }
+
+        private T GetNativeValueAndThrowOnSpecificResult<T>(Func<int, int, T> nativeMethod, int offset, T valueIndicatingPossibleError)
             where T : struct
         {
             ThrowIfAlreadyDisposed();
-
             var result = nativeMethod(nativeTagHandle, offset);
             if (result.Equals(valueIndicatingPossibleError))
                 ThrowIfStatusNotOk();
-
             return result;
         }
 
@@ -501,40 +625,47 @@ namespace libplctag
             field = value;
         }
 
-        private async Task<Status> DelayWhilePending(Status initialStatus, CancellationToken token)
-        {
-
-            if (initialStatus != Status.Pending)
-                return initialStatus;
-
-            var status = initialStatus;
-
-            using (token.Register(() => Abort()))
-            {
-                while (status == Status.Pending)
-                {
-                    await Task.Delay(ASYNC_STATUS_POLL_INTERVAL, token);
-                    status = GetStatus();
-                }
-            }
-
-            return status;
-        }
-
         private string GetAttributeString()
         {
 
+            string FormatNullableBoolean(bool? value)
+                => value.HasValue ? (value.Value ? "1" : "0") : null;
+
+            string FormatPlcType(PlcType? type)
+            {
+                if (type == libplctag.PlcType.Omron)
+                    return "omron-njnx";
+                else
+                    return type?.ToString().ToLowerInvariant();
+            }
+
             var attributes = new Dictionary<string, string>
             {
-                { "protocol",           Protocol?.ToString() },
-                { "gateway",            Gateway },
-                { "path",               Path },
-                { "plc",                PlcType == libplctag.PlcType.Omron ? "omron-njnx" : PlcType?.ToString()?.ToLower() },
-                { "elem_size",          ElementSize?.ToString() },
-                { "elem_count",         ElementCount?.ToString() },
-                { "name",               Name },
-                { "read_cache_ms",      ReadCacheMillisecondDuration?.ToString() },
-                { "use_connected_msg",  UseConnectedMessaging.HasValue ? (UseConnectedMessaging.Value ? "1" : "0") : null}
+                { "protocol",               Protocol?.ToString() },
+                { "gateway",                Gateway },
+                { "path",                   Path },
+                { "plc",                    FormatPlcType(PlcType) },
+                { "elem_size",              ElementSize?.ToString() },
+                { "elem_count",             ElementCount?.ToString() },
+                { "name",                   Name },
+                { "read_cache_ms",          ReadCacheMillisecondDuration?.ToString() },
+                { "use_connected_msg",      FormatNullableBoolean(UseConnectedMessaging) },
+                { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
+                { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
+                { "debug",                  DebugLevel == DebugLevel.None ? null : ((int)DebugLevel).ToString() },
+                { "int16_byte_order",       Int16ByteOrder },
+                { "int32_byte_order",       Int32ByteOrder },
+                { "int64_byte_order",       Int64ByteOrder },
+                { "float32_byte_order",     Float32ByteOrder },
+                { "float64_byte_order",     Float64ByteOrder },
+                { "str_count_word_bytes",   StringCountWordBytes?.ToString() },
+                { "str_is_byte_swapped",    FormatNullableBoolean(StringIsByteSwapped)  },
+                { "str_is_counted",         FormatNullableBoolean(StringIsCounted) },
+                { "str_is_fixed_length",    FormatNullableBoolean(StringIsFixedLength)  },
+                { "str_is_zero_terminated", FormatNullableBoolean(StringIsFixedLength)  },
+                { "str_max_capacity",       StringMaxCapacity?.ToString() },
+                { "str_pad_bytes",          StringPadBytes?.ToString() },
+                { "str_total_length",       StringTotalLength?.ToString() },
             };
 
             string separator = "&";
@@ -613,12 +744,12 @@ namespace libplctag
             }
         }
 
-        event EventHandler<TagEventArgs> ReadStarted;
-        event EventHandler<TagEventArgs> ReadCompleted;
-        event EventHandler<TagEventArgs> WriteStarted;
-        event EventHandler<TagEventArgs> WriteCompleted;
-        event EventHandler<TagEventArgs> Aborted;
-        event EventHandler<TagEventArgs> Destroyed;
+        public event EventHandler<TagEventArgs> ReadStarted;
+        public event EventHandler<TagEventArgs> ReadCompleted;
+        public event EventHandler<TagEventArgs> WriteStarted;
+        public event EventHandler<TagEventArgs> WriteCompleted;
+        public event EventHandler<TagEventArgs> Aborted;
+        public event EventHandler<TagEventArgs> Destroyed;
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
         {
