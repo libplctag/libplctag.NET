@@ -1,10 +1,15 @@
 # libplctag .NET
 
+## Packages
 This repository contains two .NET packages for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
-* [libplctag](https://www.nuget.org/packages/libplctag/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag) ![Nuget](https://img.shields.io/nuget/dt/libplctag)
-* [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget version](https://img.shields.io/nuget/vpre/libplctag.NativeImport) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport)
 
-### libplctag
+| Package | Downloads | Stable | Preview |
+|-|-|-|-|
+| [libplctag](https://www.nuget.org/packages/libplctag/) | ![Nuget](https://img.shields.io/nuget/dt/libplctag) | ![Nuget version](https://img.shields.io/nuget/v/libplctag) | ![Nuget version](https://img.shields.io/nuget/vpre/libplctag) |
+| [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) | ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport) | ![Nuget version](https://img.shields.io/nuget/v/libplctag.NativeImport) | ![Nuget version](https://img.shields.io/nuget/vpre/libplctag.NativeImport) |
+
+
+## libplctag
 
 This is the package intended for use in .NET applications.
 It provides an API for libplctag that should feel natural to .NET developers by supporting the following features:
@@ -12,6 +17,8 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 * Errors are thrown as Exceptions
 * Async/Await
 * Native resource cleanup
+
+### Example
 
 ```csharp
 // Instantiate the tag with the appropriate mapper and datatype
@@ -40,7 +47,7 @@ For further usage, see the examples in the example projects:
 * [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Program.vb)
 
 
-### libplctag.NativeImport
+## libplctag.NativeImport
 
 libplctag.NativeImport provides low-level (raw) access to the [native libplctag library](https://github.com/libplctag/libplctag) (which is written in C).
 The purpose of this package is to expose the [API for this native library](https://github.com/libplctag/libplctag/wiki/API), and handle platform and configuration issues.
