@@ -18,6 +18,23 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 * Async/Await
 * Native resource cleanup
 
+
+## libplctag.NativeImport
+
+The libplctag.NativeImport library automatically extracts platform-specific version of the base libplctag library needed for the .NET wrapper. If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](https://github.com/libplctag/libplctag.NET/wiki/Using-a-non-packaged-version-of-the-native-libplctag-library)
+
+
+Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+
+The libplctag native library can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
+
+
+## Getting Started
+
+Both packages are available from nuget and can be added using your preferred installation tool.
+
+`dotnet add package libplctag` or `dotnet add package libplctag.NativeImport`
+
 ### Example
 
 ```csharp
@@ -47,21 +64,6 @@ For further usage, see the examples in the example projects:
 * [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Program.vb)
 
 
-## libplctag.NativeImport
-
-The libplctag.NativeImport library automatically extracts platform-specific version of the base libplctag library needed for the .NET wrapper. If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](https://github.com/libplctag/libplctag.NET/wiki/Using-a-non-packaged-version-of-the-native-libplctag-library)
-
-
-Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
-
-The libplctag native library can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
-
-
-## Getting Started
-
-Both packages are available from nuget.org and can be added using your preferred installation tool.
-
-`dotnet add package libplctag` or `dotnet add package libplctag.NativeImport`
 
 
 ## Developing for systems with immutable application directories
