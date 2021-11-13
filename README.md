@@ -1,3 +1,6 @@
+<img src="https://raw.githubusercontent.com/libplctag/libplctag.NET/master/assets/libplctag-final.svg?sanitize=true" alt="libplctag" width="180"/>
+<p>
+
 # libplctag .NET
 
 ## Packages
@@ -11,7 +14,8 @@ This repository contains two .NET packages for [libplctag](https://github.com/li
 
 ## libplctag
 
-This is the package intended for use in .NET applications.
+This is the package intended for use in .NET applications. It depends on libplctag.NativeImport to gain access to the underlying libplctag native library.
+
 It provides an API for libplctag that should feel natural to .NET developers by supporting the following features:
 * Values are strongly-typed (both Atomic types and User-Defined Types).
 * Errors are thrown as Exceptions
@@ -21,7 +25,9 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 
 ## libplctag.NativeImport
 
-The libplctag.NativeImport library automatically extracts platform-specific version of the base libplctag library needed for the .NET wrapper. If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](https://github.com/libplctag/libplctag.NET/wiki/Using-a-non-packaged-version-of-the-native-libplctag-library)
+Most developers will not need to directly reference the Native Import library. This library automatically extracts platform-specific version of the base libplctag library needed for the libplctag .NET wrapper. 
+
+If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](https://github.com/libplctag/libplctag.NET/wiki/Using-a-non-packaged-version-of-the-native-libplctag-library)
 
 
 Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
@@ -31,19 +37,22 @@ The libplctag native library can be compiled for [many platforms](https://github
 
 ## Getting Started
 
-Both packages are available from nuget and can be added using your preferred installation tool.
+In most cases only the  libplctag package will be needed. It can be added in Visual Studio through the package manager or via the following commandline:
 
-`dotnet add package libplctag` or `dotnet add package libplctag.NativeImport`
+`dotnet add package libplctag`
 
-### Example
+### Example Code for an Allen-Bradley CompactLogix/ControlLogix PLC
 
 ```csharp
 // Instantiate the tag with the appropriate mapper and datatype
 var myTag = new Tag<DintPlcMapper, int>()
 {
+    //Name is the full path to tag. "PROGRAM:" is required for C*Logix.
     Name = "PROGRAM:SomeProgram.SomeDINT",
-    Gateway = "10.10.10.10",
-    Path = "1,0",
+    //Gateway is the IP Address of the PLC.
+    Gateway = "10.10.10.10", 
+    //Path is the location in the control plane of the CPU. Almost always "1,0".
+    Path = "1,0", 
     PlcType = PlcType.ControlLogix,
     Protocol = Protocol.ab_eip,
     Timeout = TimeSpan.FromSeconds(5)
@@ -55,8 +64,6 @@ myTag.Read();
 // Output to Console
 Console.WriteLine(myTag.Value);
 ```
-
-This package depends on libplctag.NativeImport to gain access to the underlying libplctag native library.
 
 For further usage, see the examples in the example projects:
 
