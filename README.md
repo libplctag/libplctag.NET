@@ -37,7 +37,7 @@ The libplctag native library can be compiled for [many platforms](https://github
 
 ## Getting Started
 
-In most cases only the  libplctag package will be needed. It can be added in Visual Studio through the package manager or via the following commandline:
+In most cases only the  libplctag package will be needed. It can be added in Visual Studio through the package manager or via the commandline:
 
 `dotnet add package libplctag`
 
@@ -69,8 +69,6 @@ For further usage, see the examples in the example projects:
 
 * [C#](https://github.com/libplctag/libplctag.NET/tree/master/src/Examples/CSharp%20DotNetCore)
 * [VB.NET](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/VB.NET%20DotNetCore/Program.vb)
-
-
 
 
 ## Developing for systems with immutable application directories
