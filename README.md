@@ -27,7 +27,7 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 
 Most developers will not need to directly reference the Native Import library. This library automatically extracts platform-specific version of the base libplctag library needed for the libplctag .NET wrapper. 
 
-If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](docs/Using-a-non-packaged-version-of-the-native-libplctag-library)
+If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](docs/Using-a-non-packaged-version-of-the-native-libplctag-library.md)
 
 
 Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
