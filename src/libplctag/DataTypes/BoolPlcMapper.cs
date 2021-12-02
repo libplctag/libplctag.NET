@@ -5,7 +5,7 @@ using System.Linq;
 namespace libplctag.DataTypes
 {
 
-    public class BoolPlcMapper : IPlcMapper<bool>, IPlcMapper<bool[]>, IPlcMapper<bool[,]>
+    public class BoolPlcMapper : IPlcMapper<bool>, IPlcMapper<bool[]>, IPlcMapper<bool[,]>, IPlcMapper<bool[,,]>
     {
         public int? ElementSize => 1;
 
@@ -46,9 +46,9 @@ namespace libplctag.DataTypes
             }
         }
 
-        bool IPlcMapper<bool>.Decode(Tag tag) => tag.GetBit(0);
+        bool IPlcMapper<bool>.Decode(Tag tag) => tag.PlcType == PlcType.Omron ? tag.GetUInt8(0) != 0 : tag.GetUInt8(0) == 255;
 
-        void IPlcMapper<bool>.Encode(Tag tag, bool value) => tag.SetBit(0, value);
+        void IPlcMapper<bool>.Encode(Tag tag, bool value) => tag.SetUInt8(0, value == true ? (byte)255 : (byte)0);
 
         bool[] IPlcMapper<bool[]>.Decode(Tag tag) => DecodeArray(tag);
 
@@ -57,6 +57,10 @@ namespace libplctag.DataTypes
         bool[,] IPlcMapper<bool[,]>.Decode(Tag tag) => DecodeArray(tag).To2DArray(ArrayDimensions[0], ArrayDimensions[1]);
 
         void IPlcMapper<bool[,]>.Encode(Tag tag, bool[,] value) => EncodeArray(tag, value.To1DArray());
+
+        bool[,,] IPlcMapper<bool[,,]>.Decode(Tag tag) => DecodeArray(tag).To3DArray(ArrayDimensions[0], ArrayDimensions[1], ArrayDimensions[2]);
+
+        void IPlcMapper<bool[,,]>.Encode(Tag tag, bool[,,] value) => EncodeArray(tag, value.To1DArray());
 
     }
 }

@@ -9,9 +9,9 @@ namespace libplctag.DataTypes
     public class TagInfo
     {
         public uint Id { get; set; }
-        public int Type { get; set; }
+        public ushort Type { get; set; }
         public string Name { get; set; }
-        public int Length { get; set; }
+        public ushort Length { get; set; }
         public uint[] Dimensions { get; set; }
     }
 
@@ -24,9 +24,7 @@ namespace libplctag.DataTypes
 
         //TODO: Is null appropriate since it's unknown?
         public int? ElementSize => null;
-
-        public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This plcMapper can only be used to read Tag Information");
-        }
+        public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This plcMapper can only be used to read Tag Information"); }
 
         public TagInfo Decode(Tag tag, int offset, out int elementSize)
         {

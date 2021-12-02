@@ -1,8 +1,5 @@
 ﻿using libplctag.DataTypes;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +8,7 @@ namespace libplctag
     /// <summary>
     /// A class that allows for strongly-typed objects tied to PLC tags
     /// </summary>
-    /// <typeparam name="M">A mapper class that handles data conversion</typeparam>
+    /// <typeparam name="M">A <see cref="IPlcMapper{T}"/> class that handles data conversion</typeparam>
     /// <typeparam name="T">The desired C# type of Tag.Value</typeparam>
     public class Tag<M, T> : IDisposable, ITag where M : IPlcMapper<T>, new()
     {
@@ -28,44 +25,81 @@ namespace libplctag
             };
         }
 
-        /// <summary>
-        /// Determines the type of the PLC protocol.
-        /// </summary>
+        /// <inheritdoc cref="Tag.Protocol"/>
         public Protocol? Protocol
         {
             get => _tag.Protocol;
             set => _tag.Protocol = value;
         }
 
-        /// <summary>
-        /// This tells the library what host name or IP address to use for the PLC 
-        /// or the gateway to the PLC (in the case that the PLC is remote).
-        /// </summary>
+        /// <inheritdoc cref="Tag.Gateway"/>
         public string Gateway
         {
             get => _tag.Gateway;
             set => _tag.Gateway = value;
         }
 
-        /// <summary>
-        /// This attribute is required for CompactLogix/ControlLogix tags 
-        /// and for tags using a DH+ protocol bridge (i.e. a DHRIO module) to get to a PLC/5, SLC 500, or MicroLogix PLC on a remote DH+ link. 
-        /// The attribute is ignored if it is not a DH+ bridge route, but will generate a warning if debugging is active. 
-        /// Note that Micro800 connections must not have a path attribute.
-        /// </summary>
+        /// <inheritdoc cref="Tag.Path"/>
         public string Path
         {
             get => _tag.Path;
             set => _tag.Path = value;
         }
 
-        /// <summary>
-        /// The type of PLC
-        /// </summary>
+        /// <inheritdoc cref="Tag.PlcType"/>
         public PlcType? PlcType
         {
             get => _tag.PlcType;
             set => _tag.PlcType = value;
+        }
+
+        /// <inheritdoc cref="Tag.Name"/>
+        public string Name
+        {
+            get => _tag.Name;
+            set => _tag.Name = value;
+        }
+
+        /// <inheritdoc cref="Tag.UseConnectedMessaging"/>
+        public bool? UseConnectedMessaging
+        {
+            get => _tag.UseConnectedMessaging;
+            set => _tag.UseConnectedMessaging = value;
+        }
+
+        /// <inheritdoc cref="Tag.ReadCacheMillisecondDuration"/>
+        public int? ReadCacheMillisecondDuration
+        {
+            get => _tag.ReadCacheMillisecondDuration;
+            set => _tag.ReadCacheMillisecondDuration = value;
+        }
+
+        /// <inheritdoc cref="Tag.Timeout"/>
+        public TimeSpan Timeout
+        {
+            get => _tag.Timeout;
+            set => _tag.Timeout = value;
+        }
+
+        /// <inheritdoc cref="Tag.AutoSyncReadInterval"/>
+        public TimeSpan? AutoSyncReadInterval
+        {
+            get => _tag.AutoSyncReadInterval;
+            set => _tag.AutoSyncReadInterval = value;
+        }
+
+        /// <inheritdoc cref="Tag.AutoSyncWriteInterval"/>
+        public TimeSpan? AutoSyncWriteInterval
+        {
+            get => _tag.AutoSyncWriteInterval;
+            set => _tag.AutoSyncWriteInterval = value;
+        }
+
+        /// <inheritdoc cref="Tag.DebugLevel"/>
+        public DebugLevel DebugLevel
+        {
+            get => _tag.DebugLevel;
+            set => _tag.DebugLevel = value;
         }
 
         /// <summary>
@@ -83,108 +117,37 @@ namespace libplctag
             }
         }
 
-        /// <summary>
-        /// This is the full name of the tag.
-        /// For program tags, prepend `Program:{ProgramName}.` 
-        /// where {ProgramName} is the name of the program in which the tag is created.
-        /// </summary>
-        public string Name
-        {
-            get => _tag.Name;
-            set => _tag.Name = value;
-        }
-
-        /// <summary>
-        /// Control whether to use connected or unconnected messaging. 
-        /// Only valid on Logix-class PLCs. Connected messaging is required on Micro800 and DH+ bridged links. 
-        /// Default is PLC-specific and link-type specific. Generally you do not need to set this.
-        /// </summary>
-        public bool? UseConnectedMessaging
-        {
-            get => _tag.UseConnectedMessaging;
-            set => _tag.UseConnectedMessaging = value;
-        }
-
-        /// <summary>
-        /// Use this attribute to cause the tag read operations to cache data the requested number of milliseconds. 
-        /// This can be used to lower the actual number of requests against the PLC. 
-        /// Example read_cache_ms=100 will result in read operations no more often than once every 100 milliseconds.
-        /// </summary>
-        public int? ReadCacheMillisecondDuration
-        {
-            get => _tag.ReadCacheMillisecondDuration;
-            set => _tag.ReadCacheMillisecondDuration = value;
-        }
-
-        /// <summary>
-        /// A global timeout value that is used for Initialize/Read/Write methods.
-        /// It applies to both synchronous and async calls.
-        /// </summary>
-        public TimeSpan Timeout
-        {
-            get => _tag.Timeout;
-            set => _tag.Timeout = value;
-        }
-
-        /// <summary>
-        /// Creates the underlying data structures and references required before tag operations.
-        /// </summary>
+        /// <inheritdoc cref="Tag.Initialize"/>
         public void Initialize()
         {
             _tag.Initialize();
             DecodeAll();
         }
 
-        /// <summary>
-        /// Creates the underlying data structures and references required before tag operations.
-        /// </summary>
+        /// <inheritdoc cref="Tag.InitializeAsync"/>
         public async Task InitializeAsync(CancellationToken token = default)
         {
             await _tag.InitializeAsync(token);
             DecodeAll();
         }
 
-        /// <summary>
-        /// Reading a tag brings the data at the time of read into the local memory of the PC running the library. 
-        /// The data is not automatically kept up to date. 
-        /// If you need to find out the data periodically, you need to read the tag periodically.
-        /// </summary>
-        /// <param name="token">Optional Cancellation Token</param>
-        /// <returns>Task</returns>
-        public async Task<T> ReadAsync(CancellationToken token = default)
+        /// <inheritdoc cref="Tag.ReadAsync"/>
+        public async Task ReadAsync(CancellationToken token = default)
         {
-            if (!_tag.IsInitialized)
-                await _tag.InitializeAsync(token);
-
             await _tag.ReadAsync(token);
             DecodeAll();
             return Value;
         }
 
-        /// <summary>
-        /// Reading a tag brings the data at the time of read into the local memory of the PC running the library. 
-        /// The data is not automatically kept up to date. 
-        /// If you need to find out the data periodically, you need to read the tag periodically.
-        /// </summary>
-        public T Read()
+        /// <inheritdoc cref="Tag.Read"/>
+        public void Read()
         {
-            if (!_tag.IsInitialized)
-                _tag.Initialize();
-
             _tag.Read();
             DecodeAll();
             return Value;
         }
 
-        object ITag.Read() => Read();
-
-        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync();
-
-        /// <summary>
-        /// Writing a tag sends the data from Value (local memory) to the target PLC.
-        /// </summary>
-        /// <param name="token">Optional Cancellation Token</param>
-        /// <returns>Task</returns>
+        /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(CancellationToken token = default)
         {
             if (!_tag.IsInitialized)
@@ -194,22 +157,7 @@ namespace libplctag
             await _tag.WriteAsync(token);
         }
 
-        /// <summary>
-        /// Writing a tag sends the data from Value (local memory) to the target PLC.
-        /// </summary>
-        /// <param name="value">Value to be set locally and sent to PLC</param>
-        /// <param name="token">Optional Cancellation Token</param>
-        /// <returns>Task</returns>
-        public async Task WriteAsync(T value, CancellationToken token = default)
-        {
-            Value = value;
-            await WriteAsync(token);
-        }
-
-
-        /// <summary>
-        /// Writing a tag sends the data from Value (local memory) to the target PLC.
-        /// </summary>
+        /// <inheritdoc cref="Tag.Write"/>
         public void Write()
         {
             if (!_tag.IsInitialized)
@@ -217,16 +165,6 @@ namespace libplctag
 
             EncodeAll();
             _tag.Write();
-        }
-
-        /// <summary>
-        /// Writing a tag sends the data from Value (local memory) to the target PLC.
-        /// </summary>
-        /// <param name="value">Value to be set locally and sent to PLC</param>
-        public void Write(T value)
-        {
-            Value = value;
-            Write();
         }
 
         void DecodeAll()
@@ -239,10 +177,7 @@ namespace libplctag
             _plcMapper.Encode(_tag, Value);
         }
 
-        /// <summary>
-        /// Check the operational status of the tag
-        /// </summary>
-        /// <returns>Tag's current status</returns>
+        /// <inheritdoc cref="Tag.GetStatus"/>
         public Status GetStatus() => _tag.GetStatus();
 
         public void Dispose() => _tag.Dispose();
@@ -256,6 +191,38 @@ namespace libplctag
         /// The local memory value that can be transferred to/from the PLC
         /// </summary>
         public T Value { get; set; }
+
+
+        public event EventHandler<TagEventArgs> ReadStarted
+        {
+            add => _tag.ReadStarted += value;
+            remove => _tag.ReadStarted -= value;
+        }
+        public event EventHandler<TagEventArgs> ReadCompleted
+        {
+            add => _tag.ReadCompleted += value;
+            remove => _tag.ReadCompleted -= value;
+        }
+        public event EventHandler<TagEventArgs> WriteStarted
+        {
+            add => _tag.WriteStarted += value;
+            remove => _tag.WriteStarted -= value;
+        }
+        public event EventHandler<TagEventArgs> WriteCompleted
+        {
+            add => _tag.WriteCompleted += value;
+            remove => _tag.WriteCompleted -= value;
+        }
+        public event EventHandler<TagEventArgs> Aborted
+        {
+            add => _tag.Aborted += value;
+            remove => _tag.Aborted -= value;
+        }
+        public event EventHandler<TagEventArgs> Destroyed
+        {
+            add => _tag.Destroyed += value;
+            remove => _tag.Destroyed -= value;
+        }
 
     }
 }

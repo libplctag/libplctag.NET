@@ -1,8 +1,6 @@
 name: Build and publish libplctag.NET nuget package
 
-on:
-  push:
-    branches: [ master ]
+on: push
 
 jobs:
   build:
@@ -20,11 +18,14 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 5.0.x
         
     - name: Build
       run: dotnet build './src/'
-    
+      
+    - name: Test
+      run: dotnet test './src/'
+   
     - name: Publish libplctag on version change
       id: publish_libplctag
       uses: rohith/publish-nuget@v2
@@ -45,10 +46,10 @@ jobs:
           # VERSION_STATIC: 1.0.0
 
           # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: false
+          TAG_COMMIT: true
 
           # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
+          TAG_FORMAT: libplctag-v*
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
@@ -79,10 +80,10 @@ jobs:
           # VERSION_STATIC: 1.0.0
 
           # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: false
+          TAG_COMMIT: true
 
           # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
+          TAG_FORMAT: libplctag.NativeImport-v*
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
