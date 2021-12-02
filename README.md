@@ -47,9 +47,9 @@ In most cases only the  libplctag package will be needed. It can be added in Vis
 // Instantiate the tag with the appropriate mapper and datatype
 var myTag = new Tag<DintPlcMapper, int>()
 {
-    //Name is the full path to tag. "PROGRAM:" is required for C*Logix.
+    //Name is the full path to tag. 
     Name = "PROGRAM:SomeProgram.SomeDINT",
-    //Gateway is the IP Address of the PLC.
+    //Gateway is the IP Address of the PLC or communication module.
     Gateway = "10.10.10.10", 
     //Path is the location in the control plane of the CPU. Almost always "1,0".
     Path = "1,0", 
