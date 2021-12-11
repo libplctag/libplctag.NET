@@ -77,6 +77,8 @@ namespace libplctag.NativeImport
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
                 return new LibraryInfo("libplctag.NativeImport.runtime.osx_x64", "libplctag.dylib");
 
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+                return new LibraryInfo("libplctag.NativeImport.runtime.osx_ARM64", "libplctag.dylib");
 
             else
                 throw new TypeLoadException("Unknown platform");
