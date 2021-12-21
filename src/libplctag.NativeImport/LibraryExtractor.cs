@@ -11,7 +11,7 @@ namespace libplctag.NativeImport
         public static void Init(bool forceExtract = false)
         {
 
-            var extractDirectory = GetExecutingAssemblyDirectory();
+            var extractDirectory = GetExtractDirectory();
 
             if (forceExtract || !LibraryExists(extractDirectory))
             {
@@ -26,10 +26,9 @@ namespace libplctag.NativeImport
             return File.Exists(Path.Combine(folder, library.FileName));
         }
 
-        static string GetExecutingAssemblyDirectory()
+        static string GetExtractDirectory()
         {
-            string location = Assembly.GetExecutingAssembly().Location;
-            return Path.GetDirectoryName(location);
+            return AppContext.BaseDirectory;
         }
 
         static void ExtractAppropriateLibraryToDirectory(string outputDirectory)
