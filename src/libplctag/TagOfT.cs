@@ -209,7 +209,7 @@ namespace libplctag
         /// The local memory value that can be transferred to/from the PLC
         /// </summary>
         public T Value { get; set; }
-
+        object ITag.Value { get => Value; set => Value = (T)value; }
 
         public event EventHandler<TagEventArgs> ReadStarted
         {

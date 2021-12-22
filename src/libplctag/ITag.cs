@@ -27,5 +27,7 @@ namespace libplctag
         Task<object> ReadAsync(CancellationToken token = default);
         void Write();
         Task WriteAsync(CancellationToken token = default);
+
+        Object Value { get; set; }
     }
 }
