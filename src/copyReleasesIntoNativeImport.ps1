@@ -21,23 +21,23 @@ $version = $args[0]
 #         Note there is a github action which automatically builds libplctag.NativeImport and uploads to nuget
 
 
-
-
-$macos_x64 = @{     zip = "libplctag_$($version)_macos_x64.zip";                  source = "libplctag_$($version)_macos_x64\libplctag.dylib";                       destination = "osx_x64\libplctag.dylib" }
-$linux_x64 = @{     zip = "libplctag_$($version)_ubuntu_x64.zip";                 source = "libplctag_$($version)_ubuntu_x64\libplctag.so";                         destination = "linux_x64\libplctag.so" }
-$linux_x86 = @{     zip = "libplctag_$($version)_ubuntu_x86.zip";                 source = "libplctag_$($version)_ubuntu_x86\libplctag.so";                         destination = "linux_x86\libplctag.so" }
-$linux_ARM = @{     zip = "libplctag_$($version)_linux_arm7l_EXPERIMENTAL.zip";   source = "libplctag_$($version)_linux_arm7l_EXPERIMENTAL\libplctag.so";           destination = "linux_ARM\libplctag.so" }
-$linux_ARM64 = @{   zip = "libplctag_$($version)_linux_aarch64_EXPERIMENTAL.zip"; source = "libplctag_$($version)_linux_aarch64_EXPERIMENTAL\libplctag.so";         destination = "linux_ARM64\libplctag.so" }
-$windows_x64 = @{   zip = "libplctag_$($version)_windows_x64.zip";                source = "libplctag_$($version)_windows_x64\Release\plctag.dll";                  destination = "win_x64\plctag.dll" }
-$windows_x86 = @{   zip = "libplctag_$($version)_windows_x86.zip";                source = "libplctag_$($version)_windows_x86\Release\plctag.dll";                  destination = "win_x86\plctag.dll" }
-$windows_ARM = @{   zip = "libplctag_$($version)_windows_Arm.zip";                source = "libplctag_$($version)_windows_Arm\Release\plctag.dll";                  destination = "win_ARM\plctag.dll" }
-$windows_ARM64 = @{ zip = "libplctag_$($version)_windows_Arm64_EXPERIMENTAL.zip"; source = "libplctag_$($version)_windows_Arm64_EXPERIMENTAL\Release\plctag.dll";   destination = "win_ARM64\plctag.dll" }
+$macos_x64 = @{     zip = "libplctag_$($version)_macos_x64.zip";                            source = "libplctag_$($version)_macos_x64\libplctag.dylib";                       destination = "osx_x64\libplctag.dylib" }
+$macos_ARM64 = @{   zip = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL.zip";           source = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL\libplctag.dylib";      destination = "osx_ARM64\libplctag.dylib" }
+$linux_x64 = @{     zip = "libplctag_$($version)_ubuntu_x64.zip";                           source = "libplctag_$($version)_ubuntu_x64\libplctag.so";                         destination = "linux_x64\libplctag.so" }
+$linux_x86 = @{     zip = "libplctag_$($version)_ubuntu_x86.zip";                           source = "libplctag_$($version)_ubuntu_x86\libplctag.so";                         destination = "linux_x86\libplctag.so" }
+$linux_ARM = @{     zip = "libplctag_$($version)_linux_arm7l.zip";                          source = "libplctag_$($version)_linux_arm7l\libplctag.so";                        destination = "linux_ARM\libplctag.so" }
+$linux_ARM64 = @{   zip = "libplctag_$($version)_linux_aarch64.zip";                        source = "libplctag_$($version)_linux_aarch64\libplctag.so";                      destination = "linux_ARM64\libplctag.so" }
+$windows_x64 = @{   zip = "libplctag_$($version)_windows_x64.zip";                          source = "libplctag_$($version)_windows_x64\Release\plctag.dll";                  destination = "win_x64\plctag.dll" }
+$windows_x86 = @{   zip = "libplctag_$($version)_windows_x86.zip";                          source = "libplctag_$($version)_windows_x86\Release\plctag.dll";                  destination = "win_x86\plctag.dll" }
+$windows_ARM = @{   zip = "libplctag_$($version)_windows_Arm.zip";                          source = "libplctag_$($version)_windows_Arm\Release\plctag.dll";                  destination = "win_ARM\plctag.dll" }
+$windows_ARM64 = @{ zip = "libplctag_$($version)_windows_Arm64.zip";                        source = "libplctag_$($version)_windows_Arm64\Release\plctag.dll";                destination = "win_ARM64\plctag.dll" }
 
 
 
 
 $builds = @(
     $macos_x64,
+    $macos_ARM64,
     $linux_x64,
     $linux_x86,
     $linux_ARM,

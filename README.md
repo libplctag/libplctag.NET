@@ -41,11 +41,11 @@ In most cases only the  libplctag package will be needed. It can be added in Vis
 
 `dotnet add package libplctag`
 
-### Example Code for an Allen-Bradley CompactLogix/ControlLogix PLC
+### Simple Example Code for an Allen-Bradley CompactLogix/ControlLogix PLC
 
 ```csharp
 // Instantiate the tag with the appropriate mapper and datatype
-var myTag = new Tag<DintPlcMapper, int>()
+var myTag = new TagDint()
 {
     //Name is the full path to tag. 
     Name = "PROGRAM:SomeProgram.SomeDINT",
@@ -60,12 +60,14 @@ var myTag = new Tag<DintPlcMapper, int>()
 
 // Read the value from the PLC
 myTag.Read();
+int output = myTag.Value;
 
 // Output to Console
-Console.WriteLine(myTag.Value);
+Console.WriteLine($"SomeProgram.SomeDINT = {output}");
 ```
+In advanced scenarios, tags can be instantiated using generics (ex. `Tag<DintPlcMapper, int>`, `Tag<BoolPlcMapper, bool>`) and can be referenced via an `ITag` interface.
 
-For further usage, see the examples in the example projects:
+For more detail and further usage, see the examples in the example projects:
 
 * [C#](src/Examples/CSharp%20DotNetCore)
 * [VB.NET](src/Examples/VB.NET%20DotNetCore/Program.vb)
