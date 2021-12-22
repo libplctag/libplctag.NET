@@ -132,7 +132,7 @@ namespace libplctag
         }
 
         /// <inheritdoc cref="Tag.ReadAsync"/>
-        public async Task ReadAsync(CancellationToken token = default)
+        public async Task<T> ReadAsync(CancellationToken token = default)
         {
             await _tag.ReadAsync(token);
             DecodeAll();
@@ -140,12 +140,16 @@ namespace libplctag
         }
 
         /// <inheritdoc cref="Tag.Read"/>
-        public void Read()
+        public T Read()
         {
             _tag.Read();
             DecodeAll();
             return Value;
         }
+
+        object ITag.Read() => Read();
+
+        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync();
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(CancellationToken token = default)
@@ -157,6 +161,13 @@ namespace libplctag
             await _tag.WriteAsync(token);
         }
 
+        /// <inheritdoc cref="Tag.WriteAsync"/>
+        public async Task WriteAsync(T value, CancellationToken token = default)
+        {
+            Value = value;
+            await WriteAsync(token);
+        }
+
         /// <inheritdoc cref="Tag.Write"/>
         public void Write()
         {
@@ -165,6 +176,13 @@ namespace libplctag
 
             EncodeAll();
             _tag.Write();
+        }
+
+        /// <inheritdoc cref="Tag.Write"/>
+        public void Write(T value)
+        {
+            Value = value;
+            Write();
         }
 
         void DecodeAll()
