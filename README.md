@@ -59,11 +59,17 @@ var myTag = new TagDint()
 };
 
 // Read the value from the PLC
-myTag.Read();
-int output = myTag.Value;
+int output = myTag.Read();
 
 // Output to Console
-Console.WriteLine($"SomeProgram.SomeDINT = {output}");
+Console.WriteLine($"Original value: SomeProgram.SomeDINT = {output}");
+
+// Write a new value to the PLC then read it back
+myTag.Write(37);
+output = myTag.Read();
+
+// Output to Console
+Console.WriteLine($"Updated value: SomeProgram.SomeDINT = {output}");
 ```
 In advanced scenarios, tags can be instantiated using generics (ex. `Tag<DintPlcMapper, int>`, `Tag<BoolPlcMapper, bool>`) and can be referenced via an `ITag` interface.
 
