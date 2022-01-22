@@ -286,7 +286,43 @@ namespace libplctag
 
         public void Initialize()
         {
+            var status = TryInitialize();
+            ThrowIfStatusNotOk(status);
+        }
 
+        public async Task InitializeAsync(CancellationToken token = default)
+        {
+            var status = await TryInitializeAsync(token);
+            ThrowIfStatusNotOk(status);
+        }
+
+        public void Read()
+        {
+            var status = TryRead();
+            ThrowIfStatusNotOk(status);
+        }
+
+        public async Task ReadAsync(CancellationToken token = default)
+        {
+            var status = await TryReadAsync(token);
+            ThrowIfStatusNotOk(status);
+        }
+
+        public void Write()
+        {
+            var status = TryWrite();
+            ThrowIfStatusNotOk(status);
+        }
+
+        public async Task WriteAsync(CancellationToken token = default)
+        {
+            var status = await TryWriteAsync(token);
+            ThrowIfStatusNotOk(status);
+        }
+
+
+        public Status TryInitialize()
+        {
             ThrowIfAlreadyDisposed();
             ThrowIfAlreadyInitialized();
 
@@ -296,18 +332,19 @@ namespace libplctag
 
             var result = _native.plc_tag_create(attributeString, millisecondTimeout);
             if (result < 0)
-                throw new LibPlcTagException((Status)result);
+                return (Status)result;
             else
                 nativeTagHandle = result;
 
             SetUpEvents();
 
             _isInitialized = true;
+
+            return (Status)result;
         }
 
-        public async Task InitializeAsync(CancellationToken token = default)
+        public async Task<Status> TryInitializeAsync(CancellationToken token = default)
         {
-
             ThrowIfAlreadyDisposed();
             ThrowIfAlreadyInitialized();
 
@@ -325,11 +362,11 @@ namespace libplctag
                         if (token.IsCancellationRequested)
                             readTask.SetCanceled();
                         else
-                            readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                            readTask.TrySetResult(Status.ErrorTimeout);
                     }
                 }))
                 {
-                    var readTask = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     readTasks.Push(readTask);
 
                     var attributeString = GetAttributeString();
@@ -344,11 +381,12 @@ namespace libplctag
                     await readTask.Task;
 
                     _isInitialized = true;
+
+                    return readTask.Task.Result;
                 }
             }
         }
-
-        public void Read()
+        public Status TryRead()
         {
             ThrowIfAlreadyDisposed();
             InitializeIfRequired();
@@ -356,10 +394,11 @@ namespace libplctag
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)_native.plc_tag_read(nativeTagHandle, millisecondTimeout);
-            ThrowIfStatusNotOk(result);
+
+            return result;
         }
 
-        public async Task ReadAsync(CancellationToken token = default)
+        public async Task<Status> TryReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
 
@@ -378,19 +417,19 @@ namespace libplctag
                         if (token.IsCancellationRequested)
                             readTask.SetCanceled();
                         else
-                            readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                            readTask.SetResult(Status.ErrorTimeout);
                     }
                 }))
                 {
-                    var readTask = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     readTasks.Push(readTask);
                     _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                     await readTask.Task;
+                    return readTask.Task.Result;
                 }
             }
         }
-
-        public void Write()
+        public Status TryWrite()
         {
             ThrowIfAlreadyDisposed();
             InitializeIfRequired();
@@ -398,10 +437,10 @@ namespace libplctag
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
             var result = (Status)_native.plc_tag_write(nativeTagHandle, millisecondTimeout);
-            ThrowIfStatusNotOk(result);
+            return result;
         }
 
-        public async Task WriteAsync(CancellationToken token = default)
+        public async Task<Status> TryWriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
 
@@ -420,14 +459,15 @@ namespace libplctag
                         if (token.IsCancellationRequested)
                             writeTask.SetCanceled();
                         else
-                            writeTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
+                            writeTask.SetResult(Status.ErrorTimeout);
                     }
                 }))
                 {
-                    var writeTask = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    var writeTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     writeTasks.Push(writeTask);
                     _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                     await writeTask.Task;
+                    return writeTask.Task.Result;
                 }
             }
         }
@@ -703,41 +743,35 @@ namespace libplctag
 
         }
 
-        private readonly ConcurrentStack<TaskCompletionSource<object>> readTasks = new ConcurrentStack<TaskCompletionSource<object>>();
+        private readonly ConcurrentStack<TaskCompletionSource<Status>> readTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
         void ReadTaskCompleter(object sender, TagEventArgs e)
         {
             if (readTasks.TryPop(out var readTask))
             {
                 switch (e.Status)
                 {
-                    case Status.Ok:
-                        readTask?.SetResult(null);
-                        break;
                     case Status.Pending:
-                        // Do nothing, wait for another ReadCompleted callback when Status is Ok.
+                        // Do nothing, wait for another ReadCompleted callback
                         break;
                     default:
-                        readTask?.SetException(new LibPlcTagException(e.Status));
+                        readTask?.SetResult(e.Status);
                         break;
                 }
             }
         }
 
-        private readonly ConcurrentStack<TaskCompletionSource<object>> writeTasks = new ConcurrentStack<TaskCompletionSource<object>>();
+        private readonly ConcurrentStack<TaskCompletionSource<Status>> writeTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
         void WriteTaskCompleter(object sender, TagEventArgs e)
         {
             if (writeTasks.TryPop(out var writeTask))
             {
                 switch (e.Status)
                 {
-                    case Status.Ok:
-                        writeTask?.SetResult(null);
-                        break;
                     case Status.Pending:
-                        // Do nothing, wait for another WriteCompleted callback when Status is Ok.
+                        // Do nothing, wait for another WriteCompleted callback
                         break;
                     default:
-                        writeTask?.SetException(new LibPlcTagException(e.Status));
+                        writeTask?.SetResult(e.Status);
                         break;
 
                 }
