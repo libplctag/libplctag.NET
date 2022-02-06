@@ -61,6 +61,8 @@ namespace libplctag.NativeImport
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void callback_func(Int32 tag_id, Int32 event_id, Int32 status);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void callback_func_ex(Int32 tag_id, Int32 event_id, Int32 status, IntPtr userdata);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate void log_callback_func(Int32 tag_id, int debug_level, [MarshalAs(UnmanagedType.LPStr)] string message);
@@ -95,6 +97,12 @@ namespace libplctag.NativeImport
         {
             ExtractLibraryIfRequired();
             return NativeMethods.plc_tag_register_callback(tag_id, func);
+        }
+
+        public static int plc_tag_register_callback_ex(Int32 tag_id, plctag.callback_func_ex func, IntPtr userdata)
+        {
+            ExtractLibraryIfRequired();
+            return NativeMethods.plc_tag_register_callback_ex(tag_id, func, userdata);
         }
 
         public static int plc_tag_unregister_callback(Int32 tag_id)

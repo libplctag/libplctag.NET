@@ -31,6 +31,10 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_register_callback(Int32 tag_id, plctag.callback_func func);
 
 
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_callback_ex), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int plc_tag_register_callback_ex(Int32 tag_id, plctag.callback_func_ex func, IntPtr userdata);
+
+
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_unregister_callback), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int plc_tag_unregister_callback(Int32 tag_id);
 
