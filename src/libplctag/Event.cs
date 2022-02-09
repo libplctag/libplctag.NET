@@ -23,6 +23,9 @@ namespace libplctag
         Aborted =           EVENT_CODES.PLCTAG_EVENT_ABORTED,
 
         /// <inheritdoc cref="EVENT_CODES.PLCTAG_EVENT_DESTROYED"/>
-        Destroyed =         EVENT_CODES.PLCTAG_EVENT_DESTROYED
+        Destroyed =         EVENT_CODES.PLCTAG_EVENT_DESTROYED,
+
+        /// <inheritdoc cref="EVENT_CODES.PLCTAG_EVENT_CREATED"/>
+        Created =           EVENT_CODES.PLCTAG_EVENT_CREATED
     }
 }
