@@ -84,7 +84,7 @@ namespace libplctag.NativeImport
         public static Int32 plc_tag_create_ex([MarshalAs(UnmanagedType.LPStr)] string lpString, callback_func_ex func, IntPtr userdata, int timeout)
         {
             ExtractLibraryIfRequired();
-            return NativeMethods.plc_tag_create(lpString, timeout);
+            return NativeMethods.plc_tag_create_ex(lpString, func, userdata, timeout);
         }
 
         public static int plc_tag_destroy(Int32 tag)
