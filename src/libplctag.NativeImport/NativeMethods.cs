@@ -18,6 +18,9 @@ namespace libplctag.NativeImport
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_create), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern Int32 plc_tag_create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_create_ex), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern Int32 plc_tag_create_ex([MarshalAs(UnmanagedType.LPStr)] string lpString, plctag.callback_func_ex func, IntPtr userdata, int timeout);
+
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_destroy), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int plc_tag_destroy(Int32 tag);
