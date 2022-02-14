@@ -25,7 +25,7 @@ namespace libplctag
         /// <inheritdoc cref="EVENT_CODES.PLCTAG_EVENT_DESTROYED"/>
         Destroyed =         EVENT_CODES.PLCTAG_EVENT_DESTROYED,
 
-        // /// <inheritdoc cref="EVENT_CODES.PLCTAG_EVENT_CREATED"/>
-        Created = 7          //EVENT_CODES.PLCTAG_EVENT_CREATED
+        /// <inheritdoc cref="EVENT_CODES.PLCTAG_EVENT_CREATED"/>
+        Created =           EVENT_CODES.PLCTAG_EVENT_CREATED
     }
 }
