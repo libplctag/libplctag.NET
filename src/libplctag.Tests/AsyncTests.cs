@@ -127,7 +127,7 @@ namespace libplctag.Tests
                 .Callback<string, int>(async (attributeString, timeout) =>
                 {
                     await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
+                    callback?.Invoke(tagId, 7/*(int)NativeImport.EVENT_CODES.PLCTAG_EVENT_CREATED*/, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
                 });
 
             // ... when a read call occurs
