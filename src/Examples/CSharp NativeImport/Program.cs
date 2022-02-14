@@ -9,7 +9,7 @@ namespace NativeImport_Examples
             //Multithread.main();
             //NativeImportExample.Run();
             //NativeImportExample.RunCallbackExample();
-            NativeImportExample.RunLoggerExample();
+            CallbackEx.Run();
             Console.ReadKey();
         }
     }
