@@ -36,6 +36,13 @@
         /// It is not safe to call any API functions on the tag at this time.
         /// This is purely for the callback to manage any application state.
         /// </summary>
-        PLCTAG_EVENT_DESTROYED = 6
+        PLCTAG_EVENT_DESTROYED = 6,
+
+        /// <summary>
+        /// The callback is called after a tag creation completes.
+        /// The final status of the creation is passed to the callback as well.
+        /// This is not as well supported in some cases, so only depend on this for normal tags and not tags like @tags.
+        /// </summary>
+        PLCTAG_EVENT_CREATED = 7
     }
 }
