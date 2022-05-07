@@ -344,6 +344,8 @@ namespace libplctag
                     if(GetStatus() == Status.Pending)
                         await createTask.Task;
 
+                    ThrowIfStatusNotOk(createTask.Task.Result);
+
                     _isInitialized = true;
                 }
             }
