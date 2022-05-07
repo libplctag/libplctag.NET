@@ -28,7 +28,7 @@ jobs:
    
     - name: Publish libplctag on version change
       id: publish_libplctag
-      uses: rohith/publish-nuget@v2
+      uses: alirezanet/publish-nuget@v3.0.4
       with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: './src/libplctag/libplctag.csproj'
@@ -62,7 +62,7 @@ jobs:
 
     - name: Publish libplctag.NativeImport on version change
       id: publish_libplctag_native_import
-      uses: rohith/publish-nuget@v2
+      uses: alirezanet/publish-nuget@v3.0.4
       with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: './src/libplctag.NativeImport/libplctag.NativeImport.csproj'
