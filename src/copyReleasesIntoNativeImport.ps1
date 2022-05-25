@@ -21,16 +21,16 @@ $version = $args[0]
 #         Note there is a github action which automatically builds libplctag.NativeImport and uploads to nuget
 
 
-$macos_x64 = @{     zip = "libplctag_$($version)_macos_x64.zip";                            source = "libplctag_$($version)_macos_x64\libplctag.dylib";                       destination = "osx_x64\libplctag.dylib" }
-$macos_ARM64 = @{   zip = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL.zip";           source = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL\libplctag.dylib";      destination = "osx_ARM64\libplctag.dylib" }
-$linux_x64 = @{     zip = "libplctag_$($version)_ubuntu_x64.zip";                           source = "libplctag_$($version)_ubuntu_x64\libplctag.so";                         destination = "linux_x64\libplctag.so" }
-$linux_x86 = @{     zip = "libplctag_$($version)_ubuntu_x86.zip";                           source = "libplctag_$($version)_ubuntu_x86\libplctag.so";                         destination = "linux_x86\libplctag.so" }
-$linux_ARM = @{     zip = "libplctag_$($version)_linux_arm7l.zip";                          source = "libplctag_$($version)_linux_arm7l\libplctag.so";                        destination = "linux_ARM\libplctag.so" }
-$linux_ARM64 = @{   zip = "libplctag_$($version)_linux_aarch64.zip";                        source = "libplctag_$($version)_linux_aarch64\libplctag.so";                      destination = "linux_ARM64\libplctag.so" }
-$windows_x64 = @{   zip = "libplctag_$($version)_windows_x64.zip";                          source = "libplctag_$($version)_windows_x64\Release\plctag.dll";                  destination = "win_x64\plctag.dll" }
-$windows_x86 = @{   zip = "libplctag_$($version)_windows_x86.zip";                          source = "libplctag_$($version)_windows_x86\Release\plctag.dll";                  destination = "win_x86\plctag.dll" }
-$windows_ARM = @{   zip = "libplctag_$($version)_windows_Arm.zip";                          source = "libplctag_$($version)_windows_Arm\Release\plctag.dll";                  destination = "win_ARM\plctag.dll" }
-$windows_ARM64 = @{ zip = "libplctag_$($version)_windows_Arm64.zip";                        source = "libplctag_$($version)_windows_Arm64\Release\plctag.dll";                destination = "win_ARM64\plctag.dll" }
+$macos_x64 = @{     zip = "libplctag_$($version)_macos_x64.zip";                            source = "libplctag_$($version)_macos_x64\libplctag.dylib";                       destination = "osx-x64\native\libplctag.dylib" }
+$macos_ARM64 = @{   zip = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL.zip";           source = "libplctag_$($version)_macos_aarch64_EXPERIMENTAL\libplctag.dylib";      destination = "osx-arm64\native\libplctag.dylib" }
+$linux_x64 = @{     zip = "libplctag_$($version)_ubuntu_x64.zip";                           source = "libplctag_$($version)_ubuntu_x64\libplctag.so";                         destination = "linux-x64\native\libplctag.so" }
+$linux_x86 = @{     zip = "libplctag_$($version)_ubuntu_x86.zip";                           source = "libplctag_$($version)_ubuntu_x86\libplctag.so";                         destination = "linux-x86\native\libplctag.so" }
+$linux_ARM = @{     zip = "libplctag_$($version)_linux_arm7l.zip";                          source = "libplctag_$($version)_linux_arm7l\libplctag.so";                        destination = "linux-arm\native\libplctag.so" }
+$linux_ARM64 = @{   zip = "libplctag_$($version)_linux_aarch64.zip";                        source = "libplctag_$($version)_linux_aarch64\libplctag.so";                      destination = "linux-arm64\native\libplctag.so" }
+$windows_x64 = @{   zip = "libplctag_$($version)_windows_x64.zip";                          source = "libplctag_$($version)_windows_x64\Release\plctag.dll";                  destination = "win-x64\native\plctag.dll" }
+$windows_x86 = @{   zip = "libplctag_$($version)_windows_x86.zip";                          source = "libplctag_$($version)_windows_x86\Release\plctag.dll";                  destination = "win-x86\native\plctag.dll" }
+$windows_ARM = @{   zip = "libplctag_$($version)_windows_Arm.zip";                          source = "libplctag_$($version)_windows_Arm\Release\plctag.dll";                  destination = "win-arm\native\plctag.dll" }
+$windows_ARM64 = @{ zip = "libplctag_$($version)_windows_Arm64.zip";                        source = "libplctag_$($version)_windows_Arm64\Release\plctag.dll";                destination = "win-arm64\native\plctag.dll" }
 
 
 
@@ -51,7 +51,7 @@ $builds = @(
 
 $downloadUriRoot = "https://github.com/libplctag/libplctag/releases/download/v$($version)"
 $sourceFolder = ".\releases"
-$destinationFolder = ".\libplctag.NativeImport\runtime"
+$destinationFolder = ".\libplctag.NativeImport\runtimes"
 
 
 
@@ -91,6 +91,7 @@ Pop-Location
 
 # Copy each file into libplctag.NET NativeImport project
 foreach ($build in $builds) {
+    New-Item -ItemType File -Path "$destinationFolder\$($build.destination)" -Force
     Copy-Item "$sourceFolder\$($build.source)" "$destinationFolder\$($build.destination)"
 }
 

@@ -23,18 +23,6 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 * Native resource cleanup
 
 
-## libplctag.NativeImport
-
-Most developers will not need to directly reference the Native Import library. This library automatically extracts platform-specific version of the base libplctag library needed for the libplctag .NET wrapper. 
-
-If you wish to override this behavior you can do so: [Using a non packaged version of the native libplctag library](docs/Using-a-non-packaged-version-of-the-native-libplctag-library.md)
-
-
-Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
-
-The libplctag native library can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
-
-
 ## Getting Started
 
 In most cases only the  libplctag package will be needed. It can be added in Visual Studio through the package manager or via the commandline:
@@ -79,19 +67,41 @@ For more detail and further usage, see the examples in the example projects:
 * [VB.NET](src/Examples/VB.NET%20DotNetCore/Program.vb)
 
 
-## Developing for systems with immutable application directories
 
-UWP, Xamarin.Forms and some other frameworks produce executables that, when installed, can not modify their own application directory. [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) relies on the ability to extract the native library to this location, so on these platforms, libplctag will not work.
+## libplctag.NativeImport
 
-The workaround is to supply the appropriate binary(ies) yourself:
-1. Get the native library (i.e. plctag.dll) from [Releases](https://github.com/libplctag/libplctag/releases).
-2. Add this file to your project such that it is copied to the output directory.
-3. Set `plctag.ForceExtractLibrary = false` before any other calls to libplctag.
+libplctag.NativeImport provides low-level (raw) access to the [native libplctag library](https://github.com/libplctag/libplctag) (which is written in C).
+The purpose of this package is to expose the [API for this native library](https://github.com/libplctag/libplctag/wiki/API), and handle platform and configuration issues.
 
-Watch out for x64/x86 mismatches between the native library you downloaded and your solution.
+If the above example were to be implemented using this API, it would look like something this:
 
-This bug is tracked in https://github.com/libplctag/libplctag.NET/issues/137
+```csharp
+var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=10.10.10.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=PROGRAM:SomeProgram.SomeDINT", 5000);
 
+var statusAfterCreate = (STATUS_CODES)plctag.plc_tag_status(tagHandle);
+if (statusAfterCreate != STATUS_CODES.PLCTAG_STATUS_OK)
+{
+    throw new Exception($"Something went wrong: {statusAfterCreate}");
+}
+
+var statusAfterRead = (STATUS_CODES)plctag.plc_tag_read(tagHandle, 5000);
+if (statusAfterRead != STATUS_CODES.PLCTAG_STATUS_OK)
+{
+    throw new Exception($"Something went wrong: {statusAfterRead}");
+}
+
+var theValue = plctag.plc_tag_get_uint32(tagHandle, 0);
+
+Console.WriteLine(theValue);
+
+plctag.plc_tag_destroy(tagHandle);
+```
+
+Most developers will not need to directly reference the Native Import library.
+
+Documentation for the base library API can be found [here](https://github.com/libplctag/libplctag/wiki/API). Further examples of its usage can be found [here](src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+
+The libplctag native library can be compiled for [many platforms](https://github.com/libplctag/libplctag#platform-support), and not all supported platforms are shipped with this wrapper. If you get a `TypeLoadException`, chances are that you can still use this wrapper but you will need to [supply the runtime yourself](https://github.com/libplctag/libplctag/blob/master/BUILD.md).
 
 ## Project Goals
 

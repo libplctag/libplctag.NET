@@ -7,7 +7,7 @@ namespace NativeImport_Examples
 {
     public struct MyUserDataClass
     {
-        public int Value = 1234;
+        public int Value;
     }
 
     class CallbackEx
