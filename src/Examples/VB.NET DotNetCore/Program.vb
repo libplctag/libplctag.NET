@@ -12,6 +12,7 @@ Module Module1
             .Name = "PROGRAM:SomeProgram.SomeDINT",
             .Gateway = "10.10.10.10",
             .PlcType = PlcType.ControlLogix,
+            .Protocol = Protocol.ab_eip,
             .Path = "1,0",
             .Timeout = TimeSpan.FromMilliseconds(5000)
         }
