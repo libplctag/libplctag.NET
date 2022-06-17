@@ -317,11 +317,11 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-                    RemoveEvents();
-
                     if (createTasks.TryPop(out var createTask))
                     {
+                        Abort();
+                        RemoveEvents();
+
                         if (token.IsCancellationRequested)
                             createTask.SetCanceled();
                         else
@@ -343,6 +343,8 @@ namespace libplctag
 
                     if(GetStatus() == Status.Pending)
                         await createTask.Task;
+
+                    ThrowIfStatusNotOk(createTask.Task.Result);
 
                     _isInitialized = true;
                 }
@@ -372,10 +374,10 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-
                     if (readTasks.TryPop(out var readTask))
                     {
+                        Abort();
+
                         if (token.IsCancellationRequested)
                             readTask.SetCanceled();
                         else
@@ -415,10 +417,10 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-
                     if (writeTasks.TryPop(out var writeTask))
                     {
+                        Abort();
+
                         if (token.IsCancellationRequested)
                             writeTask.SetCanceled();
                         else
