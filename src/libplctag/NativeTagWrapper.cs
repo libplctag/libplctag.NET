@@ -617,10 +617,16 @@ namespace libplctag
                 throw new InvalidOperationException("Already initialized");
         }
 
+        public bool IsStatusOk(Status? status = null)
+        {
+            var statusToCheck = status ?? GetStatus();
+            return statusToCheck == Status.Ok;
+        }
+
         private void ThrowIfStatusNotOk(Status? status = null)
         {
             var statusToCheck = status ?? GetStatus();
-            if (statusToCheck != Status.Ok)
+            if (!IsStatusOk(status))
                 throw new LibPlcTagException(statusToCheck);
         }
 
