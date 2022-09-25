@@ -21,8 +21,5 @@ jobs:
           ls
           powershell -File copyReleasesIntoNativeImport.ps1 ${{ github.event.inputs.libplctag_version }}
       
-      - name: Commit and push
-        run: |
-          git commit -m 'Update to libplctag core ${{ github.event.inputs.libplctag_version }}'
-          git push
+      - uses: EndBug/add-and-commit@v9
         
