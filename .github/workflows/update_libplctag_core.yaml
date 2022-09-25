@@ -1,0 +1,28 @@
+name: Update libplctag core
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      libplctag_version:
+        required: true
+        description: Version of libplctag core to download (e.g. 2.5.0)
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Pull in latest libplctag core binaries into repository
+        run: |
+          cd src
+          ls
+          powershell -File copyReleasesIntoNativeImport.ps1 ${{ github.event.inputs.libplctag_version }}
+      
+      - name: Commit and push
+        run: |
+          git commit -m 'Update to libplctag core ${{ github.event.inputs.libplctag_version }}'
+          git push
+        
