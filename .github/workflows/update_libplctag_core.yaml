@@ -22,4 +22,7 @@ jobs:
           powershell -File copyReleasesIntoNativeImport.ps1 ${{ github.event.inputs.libplctag_version }}
       
       - uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Updating to libplctag core v${{ github.event.inputs.libplctag_version }}'
+          default_author: user_info
         
