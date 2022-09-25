@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Update libplctag core latest
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      libplctag_version:
+        required: true
+        description: Version of libplctag core to download (e.g. 2.5.0)
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          cd src
+          powershell -File copyReleasesIntoNaiveImport.ps1 ${{ github.event.inputs.libplctag_version }}
+          git commit -m 'Update to libplctag core ${{ github.event.inputs.libplctag_version }}'
+      
+      - name: Upload
+        run: |
+          git push
+        
