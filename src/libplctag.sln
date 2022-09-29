@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libplctag.Tests", "libplcta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp NativeImport", "Examples\CSharp NativeImport\CSharp NativeImport.csproj", "{799EF76B-5519-4FF3-83FB-87EB34653956}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tag Browser", "Examples\Tag Browser\Tag Browser.csproj", "{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,18 @@ Global
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x64.Build.0 = Release|Any CPU
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x86.ActiveCfg = Release|Any CPU
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x86.Build.0 = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|x64.Build.0 = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Debug|x86.Build.0 = Debug|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|x64.ActiveCfg = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|x64.Build.0 = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|x86.ActiveCfg = Release|Any CPU
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +164,7 @@ Global
 		{F64B1A34-1E04-42B8-A866-73CA2BA27396} = {1C7DFAD1-A246-463B-8678-976D064EB198}
 		{C0A82086-6F33-4E25-89DA-D732592FF1F5} = {1C7DFAD1-A246-463B-8678-976D064EB198}
 		{799EF76B-5519-4FF3-83FB-87EB34653956} = {1C7DFAD1-A246-463B-8678-976D064EB198}
+		{C454844A-8EA1-4DFA-BF2D-B38548CF53F4} = {1C7DFAD1-A246-463B-8678-976D064EB198}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A7A7394-56CD-4BC3-89B0-33608B307B86}
