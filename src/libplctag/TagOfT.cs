@@ -50,7 +50,12 @@ namespace libplctag
         public PlcType? PlcType
         {
             get => _tag.PlcType;
-            set => _tag.PlcType = value;
+            set
+            {
+                _tag.PlcType = value;
+                if(value.HasValue)
+                    _plcMapper.PlcType = value.Value;
+            }
         }
 
         /// <inheritdoc cref="Tag.Name"/>
