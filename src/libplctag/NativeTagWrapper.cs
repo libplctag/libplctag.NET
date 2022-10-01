@@ -474,6 +474,14 @@ namespace libplctag
             return temp;
         }
 
+        public void SetBuffer(byte[] buffer)
+        {
+            ThrowIfAlreadyDisposed();
+
+            GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_set_size, buffer.Length);
+            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            ThrowIfStatusNotOk(result);
+        }
 
         private int GetIntAttribute(string attributeName)
         {
