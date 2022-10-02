@@ -16,8 +16,6 @@ namespace libplctag
         private readonly Tag _tag;
         private readonly IPlcMapper<T> _plcMapper;
 
-        private T _value;
-
         public Tag()
         {
             _plcMapper = new M();
@@ -225,7 +223,6 @@ namespace libplctag
         /// </summary>
         public T Value { get; set; }
         object ITag.Value { get => Value; set => Value = (T)value; }
-        
         public event EventHandler<TagEventArgs> ReadStarted;
         public event EventHandler<TagEventArgs> ReadCompleted;
         public event EventHandler<TagEventArgs> WriteStarted;
