@@ -320,7 +320,6 @@ namespace libplctag
             ThrowIfStatusNotOk(status);
         }
 
-
         public Status TryInitialize()
         {
             ThrowIfAlreadyDisposed();
@@ -378,14 +377,15 @@ namespace libplctag
 
                     SetUpEvents();
 
-                    await readTask.Task;
+                    var status = await readTask.Task;
 
                     _isInitialized = true;
 
-                    return readTask.Task.Result;
+                    return status;
                 }
             }
         }
+
         public Status TryRead()
         {
             ThrowIfAlreadyDisposed();
@@ -393,9 +393,9 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)_native.plc_tag_read(nativeTagHandle, millisecondTimeout);
-
-            return result;
+            var status = (Status)_native.plc_tag_read(nativeTagHandle, millisecondTimeout);
+            
+            return status;
         }
 
         public async Task<Status> TryReadAsync(CancellationToken token = default)
@@ -424,11 +424,12 @@ namespace libplctag
                     var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     readTasks.Push(readTask);
                     _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await readTask.Task;
-                    return readTask.Task.Result;
+                    var status = await readTask.Task;
+                    return status;
                 }
             }
         }
+
         public Status TryWrite()
         {
             ThrowIfAlreadyDisposed();
@@ -436,8 +437,8 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var result = (Status)_native.plc_tag_write(nativeTagHandle, millisecondTimeout);
-            return result;
+            var status = (Status)_native.plc_tag_write(nativeTagHandle, millisecondTimeout);
+            return status;
         }
 
         public async Task<Status> TryWriteAsync(CancellationToken token = default)
@@ -466,8 +467,8 @@ namespace libplctag
                     var writeTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     writeTasks.Push(writeTask);
                     _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await writeTask.Task;
-                    return writeTask.Task.Result;
+                    var status = await writeTask.Task;
+                    return status;
                 }
             }
         }
@@ -630,8 +631,6 @@ namespace libplctag
                 throw new LibPlcTagException(statusToCheck);
         }
 
-
-
         private void SetNativeTagValue<T>(Func<int, int, T, int> nativeMethod, int offset, T value)
         {
             ThrowIfAlreadyDisposed();
@@ -718,9 +717,6 @@ namespace libplctag
             return string.Join(separator, attributes.Where(attr => attr.Value != null).Select(attr => $"{attr.Key}={attr.Value}"));
 
         }
-
-
-
 
         void SetUpEvents()
         {

@@ -185,6 +185,115 @@ namespace libplctag
             Write();
         }
 
+        /// <inheritdoc cref="Tag.TryInitialize"/>
+        public bool TryInitialize()
+        {
+            var isStatusOk = _tag.TryInitialize();
+            if(!isStatusOk)
+            {
+                return false;
+            }
+            else
+            {
+                DecodeAll();
+                return true;
+            }
+        }
+
+        /// <inheritdoc cref="Tag.TryInitializeAsync"/>
+        public async Task<bool> TryInitializeAsync(CancellationToken token = default)
+        {
+            var isStatusOk = await _tag.TryInitializeAsync(token);
+            if (!isStatusOk)
+            {
+                return false;
+            }
+            else
+            {
+                DecodeAll();
+                return true;
+            }
+        }
+
+        /// <inheritdoc cref="Tag.TryReadAsync"/>
+        public async Task<(bool isStausOk, T value)> TryReadAsync(CancellationToken token = default)
+        {
+            var isStatusOk = await _tag.TryReadAsync(token);
+            if(!isStatusOk)
+            {
+                return (false, default(T));
+            }
+            else
+            {
+                DecodeAll();
+                return (true, Value);
+            }
+        }
+
+        /// <inheritdoc cref="Tag.TryRead"/>
+        public (bool isStatusOk, T value) TryRead()
+        {
+            var isStatusOk = _tag.TryRead();
+            if(!isStatusOk)
+            {
+                return (false, default(T));
+            }
+            else
+            {
+                DecodeAll();
+                return (true, Value);
+            }
+        }
+
+        (bool isStatusOk, object value) ITag.TryRead() => TryRead();
+
+        async Task<(bool isStatusOk, object value)> ITag.TryReadAsync(CancellationToken token) => await TryReadAsync(token);
+
+        /// <inheritdoc cref="Tag.TryWriteAsync"/>
+        public async Task<bool> TryWriteAsync(CancellationToken token = default)
+        {
+            if (!_tag.IsInitialized)
+            {
+                if (!(await _tag.TryInitializeAsync(token)))
+                {
+                    return false;
+                }
+            }
+
+            EncodeAll();
+
+            return await _tag.TryWriteAsync(token);
+        }
+
+        /// <inheritdoc cref="Tag.TryWriteAsync"/>
+        public async Task<bool> TryWriteAsync(T value, CancellationToken token = default)
+        {
+            Value = value;
+            return await TryWriteAsync(token);
+        }
+
+        /// <inheritdoc cref="Tag.TryWrite"/>
+        public bool TryWrite()
+        {
+            if (!_tag.IsInitialized)
+            {
+                if (!_tag.TryInitialize())
+                {
+                    return false;
+                }
+            }
+
+            EncodeAll();
+            return _tag.TryWrite();
+        }
+
+        /// <inheritdoc cref="Tag.TryWrite"/>
+        public bool TryWrite(T value)
+        {
+            Value = value;
+            return TryWrite();
+        }
+
         void DecodeAll()
         {
             Value = _plcMapper.Decode(_tag);

@@ -298,6 +298,7 @@ namespace libplctag
         /// Can only be called once per instance.
         /// Timeout is controlled via class property.
         /// </remarks>
+        /// <exception cref="LibPlcTagException"></exception>
         public void Initialize() => _tag.Initialize();
 
         /// <summary>
@@ -355,6 +356,55 @@ namespace libplctag
         /// </remarks>
         public Task WriteAsync(CancellationToken token = default) => _tag.WriteAsync(token);
 
+        /// <summary>
+        /// Creates the underlying data structures and references required before tag operations.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// Whether the operation was successful. 
+        /// </returns>
+        /// 
+        /// <remarks>
+        /// Initializes the tag by establishing necessary connections.
+        /// Can only be called once per instance.
+        /// Timeout is controlled via class property.
+        /// </remarks>
+        public bool TryInitialize()
+        {
+            var status = _tag.TryInitialize();
+            return _tag.IsStatusOk(status);
+        }
+
+        public async Task<bool> TryInitializeAsync(CancellationToken token = default)
+        {
+            var status = await _tag.TryInitializeAsync(token);
+            return _tag.IsStatusOk(status);
+        }
+
+        public bool TryRead()
+        {
+            var status = _tag.TryRead();
+            return _tag.IsStatusOk(status);
+        }
+
+        public async Task<bool> TryReadAsync(CancellationToken token = default)
+        {
+            var status = await _tag.TryReadAsync(token);
+            return _tag.IsStatusOk(status);
+        }
+
+        public bool TryWrite()
+        {
+            var status = _tag.TryWrite();
+            return _tag.IsStatusOk(status);
+        }
+
+        public async Task<bool> TryWriteAsync(CancellationToken token = default)
+        {
+            var status = await _tag.TryWriteAsync(token);
+            return _tag.IsStatusOk(status);
+        }
+
         public void Abort()                                 => _tag.Abort();
         public void Dispose()                               => _tag.Dispose();
 
@@ -370,6 +420,8 @@ namespace libplctag
         /// </summary>
         /// <returns>Tag's current status</returns>
         public Status GetStatus()                           => _tag.GetStatus();
+
+        public bool IsStatusOk(Status status)               => _tag.IsStatusOk(status);
 
         public bool GetBit(int offset)                      => _tag.GetBit(offset);
         public void SetBit(int offset, bool value)          => _tag.SetBit(offset, value);
