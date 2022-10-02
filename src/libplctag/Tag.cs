@@ -8,9 +8,19 @@ namespace libplctag
     public sealed class Tag : IDisposable
     {
 
-        readonly NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
+        readonly NativeTagWrapper _tag;
 
+        public Tag()
+        {
+            _tag = new NativeTagWrapper(new NativeTag());
 
+            _tag.ReadStarted += (s, e) => ReadStarted?.Invoke(this, e);
+            _tag.ReadCompleted += (s, e) => ReadCompleted?.Invoke(this, e);
+            _tag.WriteStarted += (s, e) => WriteStarted?.Invoke(this, e);
+            _tag.WriteCompleted += (s, e) => WriteCompleted?.Invoke(this, e);
+            _tag.Aborted += (s, e) => Aborted?.Invoke(this, e);
+            _tag.Destroyed += (s, e) => Destroyed?.Invoke(this, e);
+        }
 
 
         /// <summary>
@@ -412,37 +422,12 @@ namespace libplctag
         public int GetStringCapacity(int offset)            => _tag.GetStringCapacity(offset);
         public string GetString(int offset)                 => _tag.GetString(offset);
 
-
-        public event EventHandler<TagEventArgs> ReadStarted
-        {
-            add => _tag.ReadStarted += value;
-            remove => _tag.ReadStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> ReadCompleted
-        {
-            add => _tag.ReadCompleted += value;
-            remove => _tag.ReadCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteStarted
-        {
-            add => _tag.WriteStarted += value;
-            remove => _tag.WriteStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteCompleted
-        {
-            add => _tag.WriteCompleted += value;
-            remove => _tag.WriteCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> Aborted
-        {
-            add => _tag.Aborted += value;
-            remove => _tag.Aborted -= value;
-        }
-        public event EventHandler<TagEventArgs> Destroyed
-        {
-            add => _tag.Destroyed += value;
-            remove => _tag.Destroyed -= value;
-        }
+        public event EventHandler<TagEventArgs> ReadStarted;
+        public event EventHandler<TagEventArgs> ReadCompleted;
+        public event EventHandler<TagEventArgs> WriteStarted;
+        public event EventHandler<TagEventArgs> WriteCompleted;
+        public event EventHandler<TagEventArgs> Aborted;
+        public event EventHandler<TagEventArgs> Destroyed;
 
         ~Tag()
         {
