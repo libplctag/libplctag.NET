@@ -25,7 +25,13 @@ namespace libplctag
             };
 
             _tag.ReadStarted += (s, e) => ReadStarted?.Invoke(this, e);
-            _tag.ReadCompleted += (s, e) => ReadCompleted?.Invoke(this, e);
+            _tag.ReadCompleted += (s, e) =>
+            {
+                // If AutoSyncReadInterval is configured, then this event was almost certainly not triggered
+                // by a call to Read/ReadAsync - and therefore the data needs to be decoded.
+                if(AutoSyncReadInterval != null) DecodeAll();
+                ReadCompleted?.Invoke(this, e);
+            };
             _tag.WriteStarted += (s, e) => WriteStarted?.Invoke(this, e);
             _tag.WriteCompleted += (s, e) => WriteCompleted?.Invoke(this, e);
             _tag.Aborted += (s, e) => Aborted?.Invoke(this, e);
@@ -222,7 +228,6 @@ namespace libplctag
         /// </summary>
         public T Value { get; set; }
         object ITag.Value { get => Value; set => Value = (T)value; }
-
         public event EventHandler<TagEventArgs> ReadStarted;
         public event EventHandler<TagEventArgs> ReadCompleted;
         public event EventHandler<TagEventArgs> WriteStarted;
