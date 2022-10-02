@@ -353,20 +353,20 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-                    RemoveEvents();
-
-                    if (readTasks.TryPop(out var readTask))
+                    if (createTasks.TryPop(out var createTask))
                     {
+                        Abort();
+                        RemoveEvents();
+
                         if (token.IsCancellationRequested)
-                            readTask.SetCanceled();
+                            createTask.SetCanceled();
                         else
-                            readTask.TrySetResult(Status.ErrorTimeout);
+                            createTask.TrySetResult(Status.ErrorTimeout);
                     }
                 }))
                 {
-                    var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    readTasks.Push(readTask);
+                    var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    createTasks.Push(createTask);
 
                     var attributeString = GetAttributeString();
                     var result = _native.plc_tag_create(attributeString, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
@@ -377,7 +377,7 @@ namespace libplctag
 
                     SetUpEvents();
 
-                    var status = await readTask.Task;
+                    var status = await createTask.Task;
 
                     _isInitialized = true;
 
@@ -410,10 +410,10 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-
                     if (readTasks.TryPop(out var readTask))
                     {
+                        Abort();
+
                         if (token.IsCancellationRequested)
                             readTask.SetCanceled();
                         else
@@ -453,10 +453,10 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    Abort();
-
                     if (writeTasks.TryPop(out var writeTask))
                     {
+                        Abort();
+
                         if (token.IsCancellationRequested)
                             writeTask.SetCanceled();
                         else
@@ -510,6 +510,14 @@ namespace libplctag
             return temp;
         }
 
+        public void SetBuffer(byte[] buffer)
+        {
+            ThrowIfAlreadyDisposed();
+
+            GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_set_size, buffer.Length);
+            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            ThrowIfStatusNotOk(result);
+        }
 
         private int GetIntAttribute(string attributeName)
         {
@@ -724,6 +732,7 @@ namespace libplctag
             // Used to finalize the asynchronous read/write task completion sources
             ReadCompleted += ReadTaskCompleter;
             WriteCompleted += WriteTaskCompleter;
+            Created += CreatedTaskCompleter;
 
             // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
             coreLibCallbackFuncDelegate = new libplctag.NativeImport.plctag.callback_func(coreLibEventCallback);
@@ -739,10 +748,28 @@ namespace libplctag
             // Used to finalize the  read/write task completion sources
             ReadCompleted -= ReadTaskCompleter;
             WriteCompleted -= WriteTaskCompleter;
+            Created -= CreatedTaskCompleter;
 
             var callbackRemovalResult = (Status)_native.plc_tag_unregister_callback(nativeTagHandle);
             ThrowIfStatusNotOk(callbackRemovalResult);
 
+        }
+
+        private readonly ConcurrentStack<TaskCompletionSource<Status>> createTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
+        void CreatedTaskCompleter(object sender, TagEventArgs e)
+        {
+            if (createTasks.TryPop(out var createTask))
+            {
+                switch (e.Status)
+                {
+                    case Status.Pending:
+                        // Do nothing, wait for another ReadCompleted callback
+                        break;
+                    default:
+                        createTask?.SetResult(e.Status);
+                        break;
+                }
+            }
         }
 
         private readonly ConcurrentStack<TaskCompletionSource<Status>> readTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
@@ -786,6 +813,7 @@ namespace libplctag
         public event EventHandler<TagEventArgs> WriteCompleted;
         public event EventHandler<TagEventArgs> Aborted;
         public event EventHandler<TagEventArgs> Destroyed;
+        public event EventHandler<TagEventArgs> Created;
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
         {
@@ -813,6 +841,9 @@ namespace libplctag
                     break;
                 case Event.Destroyed:
                     Destroyed?.Invoke(this, eventArgs);
+                    break;
+                case Event.Created:
+                    Created?.Invoke(this, eventArgs);
                     break;
                 default:
                     throw new NotImplementedException();

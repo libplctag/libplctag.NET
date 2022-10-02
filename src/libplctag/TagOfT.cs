@@ -23,6 +23,13 @@ namespace libplctag
             {
                 ElementSize = _plcMapper.ElementSize,
             };
+
+            _tag.ReadStarted += (s, e) => ReadStarted?.Invoke(this, e);
+            _tag.ReadCompleted += (s, e) => ReadCompleted?.Invoke(this, e);
+            _tag.WriteStarted += (s, e) => WriteStarted?.Invoke(this, e);
+            _tag.WriteCompleted += (s, e) => WriteCompleted?.Invoke(this, e);
+            _tag.Aborted += (s, e) => Aborted?.Invoke(this, e);
+            _tag.Destroyed += (s, e) => Destroyed?.Invoke(this, e);
         }
 
         /// <inheritdoc cref="Tag.Protocol"/>
@@ -50,7 +57,12 @@ namespace libplctag
         public PlcType? PlcType
         {
             get => _tag.PlcType;
-            set => _tag.PlcType = value;
+            set
+            {
+                _tag.PlcType = value;
+                if(value.HasValue)
+                    _plcMapper.PlcType = value.Value;
+            }
         }
 
         /// <inheritdoc cref="Tag.Name"/>
@@ -320,36 +332,12 @@ namespace libplctag
         public T Value { get; set; }
         object ITag.Value { get => Value; set => Value = (T)value; }
 
-        public event EventHandler<TagEventArgs> ReadStarted
-        {
-            add => _tag.ReadStarted += value;
-            remove => _tag.ReadStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> ReadCompleted
-        {
-            add => _tag.ReadCompleted += value;
-            remove => _tag.ReadCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteStarted
-        {
-            add => _tag.WriteStarted += value;
-            remove => _tag.WriteStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteCompleted
-        {
-            add => _tag.WriteCompleted += value;
-            remove => _tag.WriteCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> Aborted
-        {
-            add => _tag.Aborted += value;
-            remove => _tag.Aborted -= value;
-        }
-        public event EventHandler<TagEventArgs> Destroyed
-        {
-            add => _tag.Destroyed += value;
-            remove => _tag.Destroyed -= value;
-        }
+        public event EventHandler<TagEventArgs> ReadStarted;
+        public event EventHandler<TagEventArgs> ReadCompleted;
+        public event EventHandler<TagEventArgs> WriteStarted;
+        public event EventHandler<TagEventArgs> WriteCompleted;
+        public event EventHandler<TagEventArgs> Aborted;
+        public event EventHandler<TagEventArgs> Destroyed;
 
     }
 }
