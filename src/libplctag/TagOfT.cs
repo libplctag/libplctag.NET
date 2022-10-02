@@ -216,38 +216,38 @@ namespace libplctag
         }
 
         /// <inheritdoc cref="Tag.TryReadAsync"/>
-        public async Task<(bool isStausOk, T value)> TryReadAsync(CancellationToken token = default)
+        public async Task<bool> TryReadAsync(CancellationToken token = default)
         {
             var isStatusOk = await _tag.TryReadAsync(token);
             if(!isStatusOk)
             {
-                return (false, default(T));
+                return false;
             }
             else
             {
                 DecodeAll();
-                return (true, Value);
+                return true;
             }
         }
 
         /// <inheritdoc cref="Tag.TryRead"/>
-        public (bool isStatusOk, T value) TryRead()
+        public bool TryRead()
         {
             var isStatusOk = _tag.TryRead();
             if(!isStatusOk)
             {
-                return (false, default(T));
+                return false;
             }
             else
             {
                 DecodeAll();
-                return (true, Value);
+                return true;
             }
         }
 
-        (bool isStatusOk, object value) ITag.TryRead() => TryRead();
+        bool ITag.TryRead() => TryRead();
 
-        async Task<(bool isStatusOk, object value)> ITag.TryReadAsync(CancellationToken token) => await TryReadAsync(token);
+        async Task<bool> ITag.TryReadAsync(CancellationToken token) => await TryReadAsync(token);
 
         /// <inheritdoc cref="Tag.TryWriteAsync"/>
         public async Task<bool> TryWriteAsync(CancellationToken token = default)

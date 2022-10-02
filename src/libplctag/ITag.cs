@@ -28,8 +28,8 @@ namespace libplctag
 
         object Read();
         Task<object> ReadAsync(CancellationToken token = default);
-        (bool isStatusOk, object value) TryRead();
-        Task<(bool isStatusOk, object value)> TryReadAsync(CancellationToken token = default);
+        bool TryRead();
+        Task<bool> TryReadAsync(CancellationToken token = default);
 
         void Write();
         Task WriteAsync(CancellationToken token = default);
