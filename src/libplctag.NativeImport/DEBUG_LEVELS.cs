@@ -7,6 +7,16 @@
 
 namespace libplctag.NativeImport
 {
+    /// <summary>
+    /// The library provides debugging output when enabled.
+    /// There are three ways to set the debug level (for historical reasons):
+    /// <list type="number">
+    ///     <item>Adding a debug attribute to the attribute string when creating a tag: "protocol=XXX&amp;...&amp;debug=4".</item>
+    ///     <item>Using the <see cref="plctag.plc_tag_set_int_attribute(int, string, int)"/>function to set the debug attribute.</item>
+    ///     <item>Using the <see cref="plctag.plc_tag_set_debug_level(int)"/> function.</item>
+    /// </list>
+    /// The preferred method in code is the last one.
+    /// </summary>
     public enum DEBUG_LEVELS
     {
         /// <summary>

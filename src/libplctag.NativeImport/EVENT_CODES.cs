@@ -7,6 +7,10 @@
 
 namespace libplctag.NativeImport
 {
+    /// <summary>
+    /// The library provides functions to register a callback on a tag.
+    /// These events generate a call to that callback.
+    /// </summary>
     public enum EVENT_CODES
     {
         /// <summary>
