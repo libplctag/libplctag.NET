@@ -15,6 +15,8 @@ tab_width = 4
 end_of_line = crlf
 insert_final_newline = false
 
+file_header_template = Copyright (c) libplctag.NET contributors\nhttps://github.com/libplctag/libplctag.NET\n\nThis Source Code Form is subject to the terms of the Mozilla Public\nLicense, v. 2.0. If a copy of the MPL was not distributed with this\nfile, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #### .NET Coding Conventions ####
 
 # Organize usings
@@ -72,8 +74,6 @@ dotnet_remove_unnecessary_suppression_exclusions = none
 # New line preferences
 dotnet_style_allow_multiple_blank_lines_experimental = true
 dotnet_style_allow_statement_immediately_after_block_experimental = true
-
-file_header_template = Copyright (c) libplctag.NET contributors\nhttps://github.com/libplctag/libplctag.NET\n\nThis Source Code Form is subject to the terms of the Mozilla Public\nLicense, v. 2.0. If a copy of the MPL was not distributed with this\nfile, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #### C# Coding Conventions ####
 
