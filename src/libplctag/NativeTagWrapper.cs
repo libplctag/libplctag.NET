@@ -100,6 +100,13 @@ namespace libplctag
             set => SetField(ref _useConnectedMessaging, value);
         }
 
+        private bool? _allowPacking;
+        public bool? AllowPacking
+        {
+            get => GetField(ref _allowPacking);
+            set => SetField(ref _allowPacking, value);
+        }
+
         private int? _readCacheMillisecondDuration;
         public int? ReadCacheMillisecondDuration
         {
@@ -663,6 +670,7 @@ namespace libplctag
                 { "name",                   Name },
                 { "read_cache_ms",          ReadCacheMillisecondDuration?.ToString() },
                 { "use_connected_msg",      FormatNullableBoolean(UseConnectedMessaging) },
+                { "allow_packing",          FormatNullableBoolean(AllowPacking) },
                 { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
                 { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
                 { "debug",                  DebugLevel == DebugLevel.None ? null : ((int)DebugLevel).ToString() },
