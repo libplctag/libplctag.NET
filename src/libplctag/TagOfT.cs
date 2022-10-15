@@ -79,6 +79,13 @@ namespace libplctag
             set => _tag.UseConnectedMessaging = value;
         }
 
+        /// <inheritdoc cref="Tag.AllowPacking">
+        public bool? AllowPacking
+        {
+            get => _tag.AllowPacking;
+            set => _tag.AllowPacking = value;
+        }
+
         /// <inheritdoc cref="Tag.ReadCacheMillisecondDuration"/>
         public int? ReadCacheMillisecondDuration
         {
