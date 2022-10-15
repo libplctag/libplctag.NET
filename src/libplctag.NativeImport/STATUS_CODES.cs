@@ -7,6 +7,10 @@
 
 namespace libplctag.NativeImport
 {
+    /// <summary>
+    /// Most functions return a status code.
+    /// It will be one of these.
+    /// </summary>
     public enum STATUS_CODES
     {
         /// <summary>
