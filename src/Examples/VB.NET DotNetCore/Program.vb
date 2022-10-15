@@ -1,3 +1,10 @@
+' Copyright(c) libplctag.NET contributors
+' https://github.com/libplctag/libplctag.NET
+
+' This Source Code Form Is subject To the terms Of the Mozilla Public
+' License, v. 2.0. If a copy of the MPL was Not distributed with this
+' file, You can obtain one at https: //mozilla.org/MPL/2.0/.
+
 Imports System.Net
 Imports System.Threading
 Imports libplctag
