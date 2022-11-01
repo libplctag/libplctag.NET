@@ -378,11 +378,18 @@ namespace libplctag
         /// <summary>
         /// This function retrieves a segment of raw, unprocessed bytes from the tag buffer.
         /// </summary>
+        /// <remarks>
+        /// Note; initialises a new block of memory.
+        /// If this is problematic, use <see cref="GetBuffer(byte[])"/> instead.
+        /// </remarks>
         public byte[] GetBuffer()                           => _tag.GetBuffer();
 
         /// <summary>
         /// Fills the supplied buffer with the raw, unprocessed bytes from the tag buffer.
         /// </summary>
+        /// <remarks>
+        /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
+        /// </remarks>
         public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
         public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
         public int GetSize()                                => _tag.GetSize();
