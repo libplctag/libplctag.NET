@@ -26,6 +26,7 @@ namespace libplctag
         int? ReadCacheMillisecondDuration { get; set; }
         TimeSpan Timeout { get; set; }
         bool? UseConnectedMessaging { get; set; }
+        bool? AllowPacking { get; set; }
 
         Status GetStatus();
         void Initialize();

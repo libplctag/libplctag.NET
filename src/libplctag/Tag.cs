@@ -155,6 +155,18 @@ namespace libplctag
         }
 
         /// <summary>
+        /// Optional.
+        /// This is specific to individual PLC models.
+        /// Generally only Control Logix-class PLCs support it.
+        /// It is the default for those PLCs that support it as it greatly increases the performance of the communication channel to the PLC.
+        /// </summary>
+        public bool? AllowPacking
+        {
+            get => _tag.AllowPacking;
+            set => _tag.AllowPacking = value;
+        }
+
+        /// <summary>
         /// Optional. An integer number of milliseconds to periodically read data from the PLC.
         /// </summary>
         /// 
