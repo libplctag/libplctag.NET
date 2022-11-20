@@ -475,6 +475,13 @@ namespace libplctag
             return (Status)_native.plc_tag_status(nativeTagHandle);
         }
 
+        public void GetBuffer(byte[] buffer)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            ThrowIfStatusNotOk(result);
+        }
+
         public byte[] GetBuffer()
         {
             ThrowIfAlreadyDisposed();
