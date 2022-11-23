@@ -37,10 +37,8 @@ namespace libplctag.Tests
             var tag = new NativeTagWrapper(nativeTag.Object);
             var cts = new CancellationTokenSource();
 
-            // Act
+            // Act, Assert
             cts.CancelAfter(REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS);
-
-            // Assert
             await Assert.ThrowsAsync<TaskCanceledException>(async () => {
                 await tag.InitializeAsync(cts.Token);
             });
@@ -67,13 +65,11 @@ namespace libplctag.Tests
             };
 
             // Act
-
-
-            // Assert
-            var ex  = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
+            var ex = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
                 await tag.InitializeAsync();
             });
 
+            // Assert
             Assert.Equal(Status.ErrorTimeout.ToString(), ex.Message);
         }
 
@@ -89,10 +85,14 @@ namespace libplctag.Tests
             };
 
             // Act
-            await tag.InitializeAsync();
+            var task = tag.InitializeAsync();
+            var statusWhileWaiting = tag.GetStatus();
+            await task;
+            var statusAfterAwaited = tag.GetStatus();
 
             // Assert
-            Assert.Equal(Status.Ok, tag.GetStatus());
+            Assert.Equal(Status.Pending, statusWhileWaiting);
+            Assert.Equal(Status.Ok, statusAfterAwaited);
         }
 
         [Fact]
@@ -119,29 +119,39 @@ namespace libplctag.Tests
             const int tagId = 11;
 
             NativeImport.plctag.callback_func_ex callback = null;
+            Status? status = null;
 
             var nativeTag = new Mock<INativeTag>();
 
             // The NativeTagWrapper should provide the native tag with a callback.
-            // We will store this locally when a create call occurs, and also fire it shortly after
+            // We will store this locally when a create call occurs, and fire it shortly after ...
             nativeTag
                 .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
                 .Callback<string, NativeImport.plctag.callback_func_ex, IntPtr, int>(async (attributeString, callbackFunc, userData, timeout) =>
                 {
+                    status = Status.Pending;
                     callback = callbackFunc;
                     await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
+                    status = Status.Ok;
                     callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
                 });
 
-            // ... and also fire when a read call occurs
+            // ... as well as when a read call occurs
             nativeTag
                 .Setup(m => m.plc_tag_read(It.IsAny<int>(), 0))
                 .Callback<int, int>(async (tagId, timeout) =>
                 {
+                    status = Status.Pending;
                     callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
                     await Task.Delay(REALISTIC_LATENCY_FOR_READ);
+                    status = Status.Ok;
                     callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
                 });
+
+            // the status was being tracked, so return it if asked
+            nativeTag
+                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+                .Returns(() => (int)status.Value);
 
             return nativeTag;
         }

@@ -334,10 +334,10 @@ namespace libplctag
                     }
                 }))
                 {
+                    SetUpEvents();
+
                     var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     createTasks.Push(createTask);
-
-                    SetUpEvents();
                     
                     var attributeString = GetAttributeString();
 
