@@ -27,7 +27,7 @@ namespace libplctag.Tests
             var nativeTag = new Mock<INativeTag>();
 
             nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
-                .Setup(m => m.plc_tag_create(It.IsAny<string>(), 0))
+                .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
                 .Returns((int)Status.Pending);
 
             nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
@@ -54,7 +54,7 @@ namespace libplctag.Tests
             var nativeTag = new Mock<INativeTag>();
 
             nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
-                .Setup(m => m.plc_tag_create(It.IsAny<string>(), 0))
+                .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
                 .Returns((int)Status.Pending);
 
             nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
