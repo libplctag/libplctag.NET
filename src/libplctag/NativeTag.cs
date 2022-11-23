@@ -7,7 +7,6 @@
 
 using libplctag.NativeImport;
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using static libplctag.NativeImport.plctag;
 

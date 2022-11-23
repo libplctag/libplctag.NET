@@ -22,13 +22,11 @@ namespace libplctag
     class NativeTagWrapper : IDisposable
     {
         private const int TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION = 0;
-        private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
-        private libplctag.NativeImport.plctag.callback_func_ex coreLibCallbackFuncExDelegate;
-
         private int nativeTagHandle;
+        private libplctag.NativeImport.plctag.callback_func_ex coreLibCallbackFuncExDelegate;
 
         private bool _isDisposed = false;
         private bool _isInitialized = false;
