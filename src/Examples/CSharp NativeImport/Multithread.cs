@@ -147,10 +147,8 @@ namespace NativeImport_Examples
             }
 
             /* wait until ^C */
-            while (true)
-            {
-                Thread.Sleep(100);
-            }
+            Console.WriteLine("Press any key to end");
+            Console.ReadKey();
 
             done = true;
 

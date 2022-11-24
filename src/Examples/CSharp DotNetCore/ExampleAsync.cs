@@ -45,7 +45,7 @@ namespace CSharpDotNetCore
         }
 
 
-        public static async void SyncAsyncComparison()
+        public static void SyncAsyncComparison()
         {
 
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
@@ -266,7 +266,7 @@ namespace CSharpDotNetCore
                             await tag.ReadAsync(cts.Token);
                         }
                     }
-                    catch (OperationCanceledException e)
+                    catch (OperationCanceledException)
                     {
                         Console.WriteLine("Successfully Cancelled");
                     }
