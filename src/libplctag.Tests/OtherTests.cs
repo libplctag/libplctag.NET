@@ -47,7 +47,8 @@ namespace libplctag.Tests
 
 
             // Assert
-            nativeTag.Verify(m => m.plc_tag_create("plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
+            var expectedAttributeString = "plc=slc500&elem_size=4&elem_count=10&name=TagName";
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
         }
 
@@ -63,7 +64,8 @@ namespace libplctag.Tests
 
 
             // Assert
-            nativeTag.Verify(m => m.plc_tag_create("", It.IsAny<int>()), Times.Once);
+            var expectedAttributeString = "";
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
         }
     }

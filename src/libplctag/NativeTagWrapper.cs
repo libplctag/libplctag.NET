@@ -21,15 +21,12 @@ namespace libplctag
 
     class NativeTagWrapper : IDisposable
     {
-
-
         private const int TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION = 0;
-        private const int ASYNC_STATUS_POLL_INTERVAL = 2;
         private static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private int nativeTagHandle;
-        private libplctag.NativeImport.plctag.callback_func coreLibCallbackFuncDelegate;
+        private libplctag.NativeImport.plctag.callback_func_ex coreLibCallbackFuncExDelegate;
 
         private bool _isDisposed = false;
         private bool _isInitialized = false;
@@ -281,7 +278,7 @@ namespace libplctag
 
             if (_isInitialized)
             {
-                RemoveEvents();
+                RemoveEventsAndRemoveCallback();
                 var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
                 ThrowIfStatusNotOk(result);
             }
@@ -306,15 +303,16 @@ namespace libplctag
 
             var millisecondTimeout = (int)Timeout.TotalMilliseconds;
 
-            var attributeString = GetAttributeString();
+            SetUpEvents();
 
-            var result = _native.plc_tag_create(attributeString, millisecondTimeout);
+            var attributeString = GetAttributeString();
+            
+            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
                 nativeTagHandle = result;
 
-            SetUpEvents();
 
             _isInitialized = true;
         }
@@ -334,7 +332,7 @@ namespace libplctag
                     if (createTasks.TryPop(out var createTask))
                     {
                         Abort();
-                        RemoveEvents();
+                        RemoveEventsAndRemoveCallback();
 
                         if (token.IsCancellationRequested)
                             createTask.SetCanceled();
@@ -343,17 +341,18 @@ namespace libplctag
                     }
                 }))
                 {
+                    SetUpEvents();
+
                     var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     createTasks.Push(createTask);
-
+                    
                     var attributeString = GetAttributeString();
-                    var result = _native.plc_tag_create(attributeString, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+
+                    var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
                     if (result < 0)
                         throw new LibPlcTagException((Status)result);
                     else
                         nativeTagHandle = result;
-
-                    SetUpEvents();
 
                     if(GetStatus() == Status.Pending)
                         await createTask.Task;
@@ -720,14 +719,11 @@ namespace libplctag
             Created += CreatedTaskCompleter;
 
             // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
-            coreLibCallbackFuncDelegate = new libplctag.NativeImport.plctag.callback_func(coreLibEventCallback);
-
-            var callbackRegistrationResult = (Status)_native.plc_tag_register_callback(nativeTagHandle, coreLibCallbackFuncDelegate);
-            ThrowIfStatusNotOk(callbackRegistrationResult);
+            coreLibCallbackFuncExDelegate = new libplctag.NativeImport.plctag.callback_func_ex(coreLibEventCallback);
 
         }
 
-        void RemoveEvents()
+        void RemoveEventsAndRemoveCallback()
         {
 
             // Used to finalize the  read/write task completion sources
@@ -800,9 +796,8 @@ namespace libplctag
         public event EventHandler<TagEventArgs> Destroyed;
         public event EventHandler<TagEventArgs> Created;
 
-        void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode)
+        void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode, IntPtr userdata)
         {
-
             var @event = (Event)eventCode;
             var status = (Status)statusCode;
             var eventArgs = new TagEventArgs() { Status = status };

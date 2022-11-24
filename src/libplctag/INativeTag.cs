@@ -6,6 +6,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag.NativeImport;
+using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -20,6 +21,7 @@ namespace libplctag
         int plc_tag_abort(int tag);
         int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch);
         int plc_tag_create(string lpString, int timeout);
+        int plc_tag_create_ex(string lpString, plctag.callback_func_ex func, IntPtr userdata, int timeout);
         string plc_tag_decode_error(int err);
         int plc_tag_destroy(int tag);
         int plc_tag_get_bit(int tag, int offset_bit);
