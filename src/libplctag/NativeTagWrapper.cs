@@ -307,7 +307,7 @@ namespace libplctag
 
             var attributeString = GetAttributeString();
             
-            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, millisecondTimeout);
             if (result < 0)
                 throw new LibPlcTagException((Status)result);
             else
