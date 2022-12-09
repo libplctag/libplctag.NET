@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libplctag", "libplctag\libplctag.csproj", "{A488D8F2-712F-440E-9024-F27A75FEB171}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libplctag.Tests", "libplctag.Tests\libplctag.Tests.csproj", "{2FCB9157-85F9-4631-838D-89CAC323397E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp NativeImport", "Examples\CSharp NativeImport\CSharp NativeImport.csproj", "{799EF76B-5519-4FF3-83FB-87EB34653956}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibplctagReadBenchmark", "LibplctagReadBenchmark\LibplctagReadBenchmark.csproj", "{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +143,18 @@ Global
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x64.Build.0 = Release|Any CPU
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x86.ActiveCfg = Release|Any CPU
 		{799EF76B-5519-4FF3-83FB-87EB34653956}.Release|x86.Build.0 = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|x64.Build.0 = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Debug|x86.Build.0 = Debug|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|x64.ActiveCfg = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|x64.Build.0 = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|x86.ActiveCfg = Release|Any CPU
+		{25491EC4-11AD-4A53-9DB0-9D8EAA86A470}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
