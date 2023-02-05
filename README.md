@@ -97,3 +97,10 @@ This bug is tracked in https://github.com/libplctag/libplctag.NET/issues/137
 
 * Package the libplctag functionality in a way that is convenient to use in .NET applications.
 * Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard 2.0
+
+
+## Getting Help
+
+Please review the [Contributions guidance](CONTRIBUTIONS.md).
+
+libplctag.NET is part of the libplctag organization, so the [same policies apply](https://github.com/libplctag/libplctag#contact-and-support).
