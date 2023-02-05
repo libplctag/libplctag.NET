@@ -19,6 +19,7 @@ However, you are in the best position to describe your situation, so when creati
 * Can you provide evidence of what is actually occuring instead of your expectation?
 * Supply a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example).
 * What else have you tried? And why did it not work?
+* Is there anything related to this that _does_ work?
 * Supply [libplctag debug logs](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/LoggingExample.cs).
 * Are external conditions relevant (e.g. network latency)? Document these. 
 
