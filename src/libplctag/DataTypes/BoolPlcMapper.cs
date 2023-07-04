@@ -69,5 +69,9 @@ namespace libplctag.DataTypes
 
         void IPlcMapper<bool[,,]>.Encode(Tag tag, bool[,,] value) => EncodeArray(tag, value.To1DArray());
 
+        public void Configure(Tag tag)
+        {
+            // Do nothing
+        }
     }
 }

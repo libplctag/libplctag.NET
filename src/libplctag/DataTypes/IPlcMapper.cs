@@ -37,6 +37,12 @@ namespace libplctag.DataTypes
         int? GetElementCount();
 
         /// <summary>
+        /// This allows the implementer to configure Tag properties prior to tag Initialization
+        /// </summary>
+        /// <param name="tag"></param>
+        void Configure(Tag tag);
+
+        /// <summary>
         /// This is the method that reads/unpacks the underlying value of the tag
         /// and returns it as a C# type
         /// </summary>

@@ -38,6 +38,11 @@ namespace libplctag.DataTypes
         public int? ElementSize => null;
         public int[] ArrayDimensions { get => null; set => throw new NotImplementedException("This plcMapper can only be used to read"); }
 
+        public void Configure(Tag tag)
+        {
+            // Do nothing
+        }
+
         public UdtInfo Decode(Tag tag)
         {
 
