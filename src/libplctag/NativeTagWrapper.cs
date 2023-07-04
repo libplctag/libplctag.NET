@@ -378,12 +378,11 @@ namespace libplctag
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
+            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-
-                await InitializeAsyncIfRequired(cts.Token);
 
                 using (cts.Token.Register(() =>
                 {
@@ -421,12 +420,11 @@ namespace libplctag
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
+            await InitializeAsyncIfRequired(token);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
                 cts.CancelAfter(Timeout);
-
-                await InitializeAsyncIfRequired(cts.Token);
 
                 using (cts.Token.Register(() =>
                 {
