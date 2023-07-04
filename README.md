@@ -1,10 +1,14 @@
 <img src="https://raw.githubusercontent.com/libplctag/libplctag.NET/master/assets/libplctag-final.svg?sanitize=true" alt="libplctag" width="180"/>
 <p>
 
-# libplctag .NET
+# libplctag.NET
+
+[libplctag](https://github.com/libplctag/libplctag) is an open source C library for Linux, Windows and macOS using EtherNet/IP or Modbus TCP to read and write tags in PLCs.
+
+libplctag.NET is a .NET wrapper for libplctag.
 
 ## Packages
-This repository contains two .NET packages for [libplctag](https://github.com/libplctag/libplctag) that are published to Nuget.org:
+This repository contains two .NET packages that are published to Nuget.org:
 
 | Package | Downloads | Stable | Preview |
 |-|-|-|-|
