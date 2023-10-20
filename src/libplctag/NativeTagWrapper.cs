@@ -355,7 +355,7 @@ namespace libplctag
                         nativeTagHandle = result;
 
                     if(GetStatus() == Status.Pending)
-                        await createTask.Task;
+                        await createTask.Task.ConfigureAwait(false);
 
                     ThrowIfStatusNotOk(createTask.Task.Result);
 
@@ -378,7 +378,7 @@ namespace libplctag
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token);
+            await InitializeAsyncIfRequired(token).ConfigureAwait(false);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
@@ -400,7 +400,7 @@ namespace libplctag
                     var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     readTasks.Push(readTask);
                     _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await readTask.Task;
+                    await readTask.Task.ConfigureAwait(false);
                     ThrowIfStatusNotOk(readTask.Task.Result);
                 }
             }
@@ -420,7 +420,7 @@ namespace libplctag
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token);
+            await InitializeAsyncIfRequired(token).ConfigureAwait(false);
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
@@ -442,7 +442,7 @@ namespace libplctag
                     var writeTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
                     writeTasks.Push(writeTask);
                     _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await writeTask.Task;
+                    await writeTask.Task.ConfigureAwait(false);
                     ThrowIfStatusNotOk(writeTask.Task.Result);
                 }
             }
