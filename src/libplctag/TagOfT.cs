@@ -159,14 +159,14 @@ namespace libplctag
         /// <inheritdoc cref="Tag.InitializeAsync"/>
         public async Task InitializeAsync(CancellationToken token = default)
         {
-            await _tag.InitializeAsync(token);
+            await _tag.InitializeAsync(token).ConfigureAwait(false);
             DecodeAll();
         }
 
         /// <inheritdoc cref="Tag.ReadAsync"/>
         public async Task<T> ReadAsync(CancellationToken token = default)
         {
-            await _tag.ReadAsync(token);
+            await _tag.ReadAsync(token).ConfigureAwait(false);
             DecodeAll();
             return Value;
         }
@@ -181,23 +181,23 @@ namespace libplctag
 
         object ITag.Read() => Read();
 
-        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync();
+        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync().ConfigureAwait(false);
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(CancellationToken token = default)
         {
             if (!_tag.IsInitialized)
-                await _tag.InitializeAsync(token);
+                await _tag.InitializeAsync(token).ConfigureAwait(false);
 
             EncodeAll();
-            await _tag.WriteAsync(token);
+            await _tag.WriteAsync(token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(T value, CancellationToken token = default)
         {
             Value = value;
-            await WriteAsync(token);
+            await WriteAsync(token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="Tag.Write"/>
