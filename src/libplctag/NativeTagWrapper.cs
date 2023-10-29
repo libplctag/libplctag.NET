@@ -518,8 +518,6 @@ namespace libplctag
 
         private int GetIntAttribute(string attributeName)
         {
-            ThrowIfAlreadyDisposed();
-
             var result = _native.plc_tag_get_int_attribute(nativeTagHandle, attributeName, int.MinValue);
             if (result == int.MinValue)
                 ThrowIfStatusNotOk();
@@ -529,8 +527,6 @@ namespace libplctag
 
         private void SetIntAttribute(string attributeName, int value)
         {
-            ThrowIfAlreadyDisposed();
-
             var result = (Status)_native.plc_tag_set_int_attribute(nativeTagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
         }
