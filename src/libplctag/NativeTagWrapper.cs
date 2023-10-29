@@ -175,10 +175,7 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (_isInitialized)
-                    return _debugLevel;
-                else
-                    return GetDebugLevel();
+                return _debugLevel;
             }
             set
             {
@@ -534,11 +531,6 @@ namespace libplctag
         private void SetDebugLevel(DebugLevel level)
         {
             _native.plc_tag_set_debug_level((int)level);
-        }
-
-        private DebugLevel GetDebugLevel()
-        {
-            return (DebugLevel)GetIntAttribute("debug");
         }
 
         public bool GetBit(int offset)
