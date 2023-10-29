@@ -154,7 +154,6 @@ namespace libplctag
             }
         }
 
-
         private TimeSpan? _autoSyncReadInterval;
         public TimeSpan? AutoSyncReadInterval
         {
@@ -172,8 +171,24 @@ namespace libplctag
         private DebugLevel _debugLevel = DebugLevel.None;
         public DebugLevel DebugLevel
         {
-            get => GetField(ref _debugLevel);
-            set => SetField(ref _debugLevel, value);
+            get
+            {
+                ThrowIfAlreadyDisposed();
+
+                if (_isInitialized)
+                    return _debugLevel;
+                else
+                    return GetDebugLevel();
+            }
+            set
+            {
+                ThrowIfAlreadyDisposed();
+
+                _debugLevel = value;
+
+                if (_isInitialized)
+                    SetDebugLevel(value);
+            }
         }
 
         private string _int16ByteOrder;
@@ -518,6 +533,16 @@ namespace libplctag
 
             var result = (Status)_native.plc_tag_set_int_attribute(nativeTagHandle, attributeName, value);
             ThrowIfStatusNotOk(result);
+        }
+
+        private void SetDebugLevel(DebugLevel level)
+        {
+            _native.plc_tag_set_debug_level((int)level);
+        }
+
+        private DebugLevel GetDebugLevel()
+        {
+            return (DebugLevel)GetIntAttribute("debug");
         }
 
         public bool GetBit(int offset)
