@@ -26,6 +26,7 @@ namespace CSharp_DotNetCore
             };
 
             myTag.ValueChanged += (s, e) => Console.WriteLine($"{myTag.Name} changed at {DateTime.Now} to {myTag.Value}");
+            myTag.Initialize();
 
             var myUdtTag = new NotifyValueChangedTag<MyUdtMapper, MyUdt>()
             {
@@ -38,6 +39,7 @@ namespace CSharp_DotNetCore
             };
 
             myUdtTag.ValueChanged += (s, e) => Console.WriteLine($"{myUdtTag.Name} changed at {DateTime.Now} to {myUdtTag.Value.MyDint}|{myUdtTag.Value.MyFloat}");
+            myUdtTag.Initialize();
         }
 
         class NotifyValueChangedTag<M, T> : Tag<M, T>
