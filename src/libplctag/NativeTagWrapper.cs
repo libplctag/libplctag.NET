@@ -591,7 +591,7 @@ namespace libplctag
             var sb = new StringBuilder(stringLength);
             var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
             ThrowIfStatusNotOk(status);
-            return sb.ToString().Substring(0, stringLength);
+            return sb.ToString().Substring(0, stringLength < sb.Length ? stringLength : sb.Length);
         }
 
 
