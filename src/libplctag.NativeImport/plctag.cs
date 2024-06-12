@@ -201,6 +201,12 @@ namespace libplctag.NativeImport
             return NativeMethods.plc_tag_set_int_attribute(tag, attrib_name, new_value);
         }
 
+        public static int plc_tag_get_byte_array_attribute(Int32 tag, string attrib_name, byte[] buffer, int buffer_length)
+        {
+            ExtractLibraryIfRequired();
+            return NativeMethods.plc_tag_get_byte_array_attribute(tag, attrib_name, buffer, buffer_length);
+        }
+
         public static UInt64 plc_tag_get_uint64(Int32 tag, int offset)
         {
             ExtractLibraryIfRequired();
