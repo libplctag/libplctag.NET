@@ -1,4 +1,11 @@
-﻿using libplctag.DataTypes.Extensions;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using libplctag.DataTypes.Extensions;
 using System;
 using System.Linq;
 
@@ -46,7 +53,7 @@ namespace libplctag.DataTypes
             }
         }
 
-        bool IPlcMapper<bool>.Decode(Tag tag) => tag.PlcType == PlcType.Omron ? tag.GetUInt8(0) != 0 : tag.GetUInt8(0) == 255;
+        bool IPlcMapper<bool>.Decode(Tag tag) => tag.GetUInt8(0) != 0;
 
         void IPlcMapper<bool>.Encode(Tag tag, bool value) => tag.SetUInt8(0, value == true ? (byte)255 : (byte)0);
 

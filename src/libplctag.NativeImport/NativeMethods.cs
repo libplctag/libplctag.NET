@@ -1,4 +1,11 @@
-﻿using System;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -42,7 +49,7 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_unregister_callback(Int32 tag_id);
 
 
-        
+
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_logger), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -53,7 +60,7 @@ namespace libplctag.NativeImport
         public static extern int plc_tag_unregister_logger(Int32 tag_id);
 
 
-        
+
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_lock), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -97,6 +104,10 @@ namespace libplctag.NativeImport
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern int plc_tag_set_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int new_value);
+
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_byte_array_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern int plc_tag_get_byte_array_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, [In] byte[] buffer, int buffer_length);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_uint64), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]

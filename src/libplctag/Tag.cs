@@ -1,4 +1,11 @@
-﻿using System;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -145,6 +152,18 @@ namespace libplctag
         {
             get => _tag.UseConnectedMessaging;
             set => _tag.UseConnectedMessaging = value;
+        }
+
+        /// <summary>
+        /// Optional.
+        /// This is specific to individual PLC models.
+        /// Generally only Control Logix-class PLCs support it.
+        /// It is the default for those PLCs that support it as it greatly increases the performance of the communication channel to the PLC.
+        /// </summary>
+        public bool? AllowPacking
+        {
+            get => _tag.AllowPacking;
+            set => _tag.AllowPacking = value;
         }
 
         /// <summary>
@@ -421,10 +440,27 @@ namespace libplctag
         /// <summary>
         /// This function retrieves a segment of raw, unprocessed bytes from the tag buffer.
         /// </summary>
+        /// <remarks>
+        /// Note; allocates a new block of memory.
+        /// If this is problematic, use <see cref="GetBuffer(byte[])"/> instead.
+        /// </remarks>
         public byte[] GetBuffer()                           => _tag.GetBuffer();
+
+        /// <summary>
+        /// Fills the supplied buffer with the raw, unprocessed bytes from the tag buffer.
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
+        /// </remarks>
+        public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
         public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
+
+        /// <summary>
+        /// This function retrieves an attribute of the raw tag byte array.
+        /// </summary>
+        public byte[] GetByteArrayAttribute(string attributeName)   => _tag.GetByteArrayAttribute(attributeName);
         public int GetSize()                                => _tag.GetSize();
-        public void SetSize(int newSize)                    => _tag.SetSize(newSize);
+        public int SetSize(int newSize)                    => _tag.SetSize(newSize);
 
         /// <summary>
         /// Check the operational status of the tag

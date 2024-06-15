@@ -1,4 +1,11 @@
-﻿using libplctag.DataTypes;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using libplctag.DataTypes;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +32,13 @@ namespace libplctag
             };
 
             _tag.ReadStarted += (s, e) => ReadStarted?.Invoke(this, e);
-            _tag.ReadCompleted += (s, e) => ReadCompleted?.Invoke(this, e);
+            _tag.ReadCompleted += (s, e) =>
+            {
+                // If AutoSyncReadInterval is configured, then this event was almost certainly not triggered
+                // by a call to Read/ReadAsync - and therefore the data needs to be decoded.
+                if(AutoSyncReadInterval != null) DecodeAll();
+                ReadCompleted?.Invoke(this, e);
+            };
             _tag.WriteStarted += (s, e) => WriteStarted?.Invoke(this, e);
             _tag.WriteCompleted += (s, e) => WriteCompleted?.Invoke(this, e);
             _tag.Aborted += (s, e) => Aborted?.Invoke(this, e);
@@ -77,6 +90,13 @@ namespace libplctag
         {
             get => _tag.UseConnectedMessaging;
             set => _tag.UseConnectedMessaging = value;
+        }
+
+        /// <inheritdoc cref="Tag.AllowPacking"/>
+        public bool? AllowPacking
+        {
+            get => _tag.AllowPacking;
+            set => _tag.AllowPacking = value;
         }
 
         /// <inheritdoc cref="Tag.ReadCacheMillisecondDuration"/>
@@ -139,14 +159,14 @@ namespace libplctag
         /// <inheritdoc cref="Tag.InitializeAsync"/>
         public async Task InitializeAsync(CancellationToken token = default)
         {
-            await _tag.InitializeAsync(token);
+            await _tag.InitializeAsync(token).ConfigureAwait(false);
             DecodeAll();
         }
 
         /// <inheritdoc cref="Tag.ReadAsync"/>
         public async Task<T> ReadAsync(CancellationToken token = default)
         {
-            await _tag.ReadAsync(token);
+            await _tag.ReadAsync(token).ConfigureAwait(false);
             DecodeAll();
             return Value;
         }
@@ -161,23 +181,23 @@ namespace libplctag
 
         object ITag.Read() => Read();
 
-        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync();
+        async Task<object> ITag.ReadAsync(CancellationToken token) => await ReadAsync().ConfigureAwait(false);
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(CancellationToken token = default)
         {
             if (!_tag.IsInitialized)
-                await _tag.InitializeAsync(token);
+                await _tag.InitializeAsync(token).ConfigureAwait(false);
 
             EncodeAll();
-            await _tag.WriteAsync(token);
+            await _tag.WriteAsync(token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="Tag.WriteAsync"/>
         public async Task WriteAsync(T value, CancellationToken token = default)
         {
             Value = value;
-            await WriteAsync(token);
+            await WriteAsync(token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="Tag.Write"/>
@@ -331,7 +351,6 @@ namespace libplctag
         /// </summary>
         public T Value { get; set; }
         object ITag.Value { get => Value; set => Value = (T)value; }
-
         public event EventHandler<TagEventArgs> ReadStarted;
         public event EventHandler<TagEventArgs> ReadCompleted;
         public event EventHandler<TagEventArgs> WriteStarted;

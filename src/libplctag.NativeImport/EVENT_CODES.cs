@@ -1,5 +1,16 @@
-﻿namespace libplctag.NativeImport
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+namespace libplctag.NativeImport
 {
+    /// <summary>
+    /// The library provides functions to register a callback on a tag.
+    /// These events generate a call to that callback.
+    /// </summary>
     public enum EVENT_CODES
     {
         /// <summary>
