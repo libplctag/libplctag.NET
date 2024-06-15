@@ -175,10 +175,7 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (_isInitialized)
-                    return _debugLevel;
-                else
-                    return GetDebugLevel();
+                return _debugLevel;
             }
             set
             {
@@ -550,11 +547,6 @@ namespace libplctag
             _native.plc_tag_set_debug_level((int)level);
         }
 
-        private DebugLevel GetDebugLevel()
-        {
-            return (DebugLevel)GetIntAttribute("debug");
-        }
-
         public bool GetBit(int offset)
         {
             ThrowIfAlreadyDisposed();
@@ -613,7 +605,7 @@ namespace libplctag
             var sb = new StringBuilder(stringLength);
             var status = (Status)_native.plc_tag_get_string(nativeTagHandle, offset, sb, stringLength);
             ThrowIfStatusNotOk(status);
-            return sb.ToString().Substring(0, stringLength);
+            return sb.ToString().Substring(0, stringLength < sb.Length ? stringLength : sb.Length);
         }
 
 
