@@ -405,10 +405,6 @@ namespace libplctag
         public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
         public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
 
-        /// <summary>
-        /// This function retrieves an attribute of the raw tag byte array.
-        /// </summary>
-        public byte[] GetByteArrayAttribute(string attributeName)   => _tag.GetByteArrayAttribute(attributeName);
         public int GetSize()                                => _tag.GetSize();
         public void SetSize(int newSize)                    => _tag.SetSize(newSize);
 
