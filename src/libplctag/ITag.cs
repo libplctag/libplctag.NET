@@ -27,6 +27,16 @@ namespace libplctag
         TimeSpan Timeout { get; set; }
         bool? UseConnectedMessaging { get; set; }
         bool? AllowPacking { get; set; }
+        TimeSpan? AutoSyncReadInterval { get; set; }
+        TimeSpan? AutoSyncWriteInterval { get; set; }
+        DebugLevel DebugLevel { get; set; }
+
+        event EventHandler<TagEventArgs> ReadStarted;
+        event EventHandler<TagEventArgs> ReadCompleted;
+        event EventHandler<TagEventArgs> WriteStarted;
+        event EventHandler<TagEventArgs> WriteCompleted;
+        event EventHandler<TagEventArgs> Aborted;
+        event EventHandler<TagEventArgs> Destroyed;
 
         Status GetStatus();
         void Initialize();
@@ -36,6 +46,6 @@ namespace libplctag
         void Write();
         Task WriteAsync(CancellationToken token = default);
 
-        Object Value { get; set; }
+        object Value { get; set; }
     }
 }
