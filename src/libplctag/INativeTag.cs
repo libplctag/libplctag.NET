@@ -33,7 +33,6 @@ namespace libplctag
         sbyte plc_tag_get_int8(int tag, int offset);
         int plc_tag_get_int_attribute(int tag, string attrib_name, int default_value);
         int plc_tag_set_int_attribute(int tag, string attrib_name, int new_value);
-        int plc_tag_get_byte_array_attribute(int tag, string attrib_name, byte[] buffer, int buffer_length);
         int plc_tag_get_size(int tag);
         int plc_tag_set_size(int tag, int new_size);
         ushort plc_tag_get_uint16(int tag, int offset);

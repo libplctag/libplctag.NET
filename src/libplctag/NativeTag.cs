@@ -35,7 +35,6 @@ namespace libplctag
         public int plc_tag_abort(Int32 tag)                                                                             => plctag.plc_tag_abort(tag);
         public int plc_tag_get_int_attribute(Int32 tag, string attrib_name, int default_value)                          => plctag.plc_tag_get_int_attribute(tag, attrib_name, default_value);
         public int plc_tag_set_int_attribute(Int32 tag, string attrib_name, int new_value)                              => plctag.plc_tag_set_int_attribute(tag, attrib_name, new_value);
-        public int plc_tag_get_byte_array_attribute(Int32 tag, string attrib_name, byte[] buffer, int buffer_length)    => plctag.plc_tag_get_byte_array_attribute(tag, attrib_name, buffer, buffer_length);
         public UInt64 plc_tag_get_uint64(Int32 tag, int offset)                                                         => plctag.plc_tag_get_uint64(tag, offset);
         public Int64 plc_tag_get_int64(Int32 tag, int offset)                                                           => plctag.plc_tag_get_int64(tag, offset);
         public int plc_tag_set_uint64(Int32 tag, int offset, UInt64 val)                                                => plctag.plc_tag_set_uint64(tag, offset, val);
