@@ -471,11 +471,14 @@ namespace libplctag
                 return result;
         }
 
-        public void SetSize(int newSize)
+        public int SetSize(int newSize)
         {
             ThrowIfAlreadyDisposed();
-            var result = (Status)_native.plc_tag_set_size(nativeTagHandle, newSize);
-            ThrowIfStatusNotOk(result);
+            var result = _native.plc_tag_set_size(nativeTagHandle, newSize);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                return result;
         }
 
         public Status GetStatus()
