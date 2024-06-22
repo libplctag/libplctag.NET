@@ -281,6 +281,13 @@ namespace libplctag
         }
 
 
+        private uint? _maxRequetsInFlight;
+        public uint? MaxRequestsInFlight
+        {
+            get => GetField (ref _maxRequetsInFlight);
+            set => SetField(ref _maxRequetsInFlight, value);
+        }
+
 
 
         public void Dispose()
@@ -728,6 +735,7 @@ namespace libplctag
                 { "str_max_capacity",       StringMaxCapacity?.ToString() },
                 { "str_pad_bytes",          StringPadBytes?.ToString() },
                 { "str_total_length",       StringTotalLength?.ToString() },
+                { "max_requests_in_flight", MaxRequestsInFlight?.ToString() },
             };
 
             string separator = "&";
