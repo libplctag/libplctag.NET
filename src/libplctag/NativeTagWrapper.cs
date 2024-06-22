@@ -117,11 +117,7 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
-
-                if (_isInitialized)
-                    return GetIntAttribute("read_cache_ms");
-                else
-                    return _readCacheMillisecondDuration;
+                return _readCacheMillisecondDuration;
 
             }
             set
@@ -130,8 +126,8 @@ namespace libplctag
 
                 if (_isInitialized)
                     SetIntAttribute("read_cache_ms", value.Value);
-                else
-                    _readCacheMillisecondDuration = value;
+                
+                _readCacheMillisecondDuration = value;
 
             }
         }
@@ -211,17 +207,16 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
-
                 return _debugLevel;
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                _debugLevel = value;
-
                 if (_isInitialized)
                     SetDebugLevel(value);
+
+                _debugLevel = value;
             }
         }
 
