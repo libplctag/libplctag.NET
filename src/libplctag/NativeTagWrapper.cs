@@ -159,11 +159,7 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
-
-                if(_isInitialized)
-                    return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_read_ms"));
-                else
-                    return _autoSyncReadInterval;
+                return _autoSyncReadInterval;
             }
             set
             {
@@ -177,6 +173,8 @@ namespace libplctag
                         SetIntAttribute("auto_sync_read_ms", (int)value.Value.TotalMilliseconds);
                 }
                 
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
                 _autoSyncReadInterval = value;
             }
         }
@@ -187,11 +185,7 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
-
-                if (_isInitialized)
-                    return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_write_ms"));
-                else
-                    return _autoSyncWriteInterval;
+                return _autoSyncWriteInterval;
             }
             set
             {
@@ -205,6 +199,8 @@ namespace libplctag
                         SetIntAttribute("auto_sync_write_ms", (int)value.Value.TotalMilliseconds);
                 }
                 
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
                 _autoSyncWriteInterval = value;
             }
         }
