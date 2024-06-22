@@ -127,6 +127,8 @@ namespace libplctag
                 if (_isInitialized)
                     SetIntAttribute("read_cache_ms", value.Value);
                 
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
                 _readCacheMillisecondDuration = value;
 
             }
@@ -216,6 +218,8 @@ namespace libplctag
                 if (_isInitialized)
                     SetDebugLevel(value);
 
+                // Set after writing to underlying tag in case SetDebugLevel fails.
+                // Ensures the two have the same value.
                 _debugLevel = value;
             }
         }
