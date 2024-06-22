@@ -118,22 +118,21 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
+                if (_isInitialized)
+                    return GetIntAttribute("read_cache_ms");
+                else
                     return _readCacheMillisecondDuration;
 
-                return GetIntAttribute("read_cache_ms");
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
-                {
+                if (_isInitialized)
+                    SetIntAttribute("read_cache_ms", value.Value);
+                else
                     _readCacheMillisecondDuration = value;
-                    return;
-                }
 
-                SetIntAttribute("read_cache_ms", value.Value);
             }
         }
 
@@ -161,25 +160,24 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if(!_isInitialized)
+                if(_isInitialized)
+                    return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_read_ms"));
+                else
                     return _autoSyncReadInterval;
-
-                return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_read_ms"));
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
+                if (_isInitialized)
                 {
-                    _autoSyncReadInterval = value;
-                    return;
+                    if (value is null)
+                        SetIntAttribute("auto_sync_read_ms", 0);    // 0 is a special value that turns off auto sync
+                    else
+                        SetIntAttribute("auto_sync_read_ms", (int)value.Value.TotalMilliseconds);
                 }
-
-                if (value is null)
-                    SetIntAttribute("auto_sync_read_ms", 0);    // 0 is a special value that turns off auto sync
-                else
-                    SetIntAttribute("auto_sync_read_ms", (int)value.Value.TotalMilliseconds);
+                
+                _autoSyncReadInterval = value;
             }
         }
 
@@ -190,25 +188,24 @@ namespace libplctag
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
+                if (_isInitialized)
+                    return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_write_ms"));
+                else
                     return _autoSyncWriteInterval;
-                
-                return TimeSpan.FromMilliseconds(GetIntAttribute("auto_sync_write_ms"));
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
+                if (_isInitialized)
                 {
-                    _autoSyncWriteInterval = value;
-                    return;
+                    if (value is null)
+                        SetIntAttribute("auto_sync_write_ms", 0);    // 0 is a special value that turns off auto sync
+                    else
+                        SetIntAttribute("auto_sync_write_ms", (int)value.Value.TotalMilliseconds);
                 }
-
-                if (value is null)
-                    SetIntAttribute("auto_sync_write_ms", 0);    // 0 is a special value that turns off auto sync
-                else
-                    SetIntAttribute("auto_sync_write_ms", (int)value.Value.TotalMilliseconds);
+                
+                _autoSyncWriteInterval = value;
             }
         }
 
