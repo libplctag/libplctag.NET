@@ -117,23 +117,20 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
+                return _readCacheMillisecondDuration;
 
-                if (!_isInitialized)
-                    return _readCacheMillisecondDuration;
-
-                return GetIntAttribute("read_cache_ms");
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                if (!_isInitialized)
-                {
-                    _readCacheMillisecondDuration = value;
-                    return;
-                }
+                if (_isInitialized)
+                    SetIntAttribute("read_cache_ms", value.Value);
+                
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
+                _readCacheMillisecondDuration = value;
 
-                SetIntAttribute("read_cache_ms", value.Value);
             }
         }
 
@@ -157,15 +154,53 @@ namespace libplctag
         private TimeSpan? _autoSyncReadInterval;
         public TimeSpan? AutoSyncReadInterval
         {
-            get => GetField(ref _autoSyncReadInterval);
-            set => SetField(ref _autoSyncReadInterval, value);
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _autoSyncReadInterval;
+            }
+            set
+            {
+                ThrowIfAlreadyDisposed();
+
+                if (_isInitialized)
+                {
+                    if (value is null)
+                        SetIntAttribute("auto_sync_read_ms", 0);    // 0 is a special value that turns off auto sync
+                    else
+                        SetIntAttribute("auto_sync_read_ms", (int)value.Value.TotalMilliseconds);
+                }
+                
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
+                _autoSyncReadInterval = value;
+            }
         }
 
         private TimeSpan? _autoSyncWriteInterval;
         public TimeSpan? AutoSyncWriteInterval
         {
-            get => GetField(ref _autoSyncWriteInterval);
-            set => SetField(ref _autoSyncWriteInterval, value);
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _autoSyncWriteInterval;
+            }
+            set
+            {
+                ThrowIfAlreadyDisposed();
+
+                if (_isInitialized)
+                {
+                    if (value is null)
+                        SetIntAttribute("auto_sync_write_ms", 0);    // 0 is a special value that turns off auto sync
+                    else
+                        SetIntAttribute("auto_sync_write_ms", (int)value.Value.TotalMilliseconds);
+                }
+                
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
+                _autoSyncWriteInterval = value;
+            }
         }
 
         private DebugLevel _debugLevel = DebugLevel.None;
@@ -174,17 +209,18 @@ namespace libplctag
             get
             {
                 ThrowIfAlreadyDisposed();
-
                 return _debugLevel;
             }
             set
             {
                 ThrowIfAlreadyDisposed();
 
-                _debugLevel = value;
-
                 if (_isInitialized)
                     SetDebugLevel(value);
+
+                // Set after writing to underlying tag in case SetDebugLevel fails.
+                // Ensures the two have the same value.
+                _debugLevel = value;
             }
         }
 
@@ -700,6 +736,14 @@ namespace libplctag
                     return type?.ToString().ToLowerInvariant();
             }
 
+            string FormatTimeSpan(TimeSpan? timespan)
+            {
+                if(timespan.HasValue)
+                    return ((int)timespan.Value.TotalMilliseconds).ToString();
+                else
+                    return null;
+            }
+
             var attributes = new Dictionary<string, string>
             {
                 { "protocol",               Protocol?.ToString() },
@@ -712,8 +756,8 @@ namespace libplctag
                 { "read_cache_ms",          ReadCacheMillisecondDuration?.ToString() },
                 { "use_connected_msg",      FormatNullableBoolean(UseConnectedMessaging) },
                 { "allow_packing",          FormatNullableBoolean(AllowPacking) },
-                { "auto_sync_read_ms",      AutoSyncReadInterval?.TotalMilliseconds.ToString() },
-                { "auto_sync_write_ms",     AutoSyncWriteInterval?.TotalMilliseconds.ToString() },
+                { "auto_sync_read_ms",      FormatTimeSpan(AutoSyncReadInterval) },
+                { "auto_sync_write_ms",     FormatTimeSpan(AutoSyncWriteInterval) },
                 { "debug",                  DebugLevel == DebugLevel.None ? null : ((int)DebugLevel).ToString() },
                 { "int16_byte_order",       Int16ByteOrder },
                 { "int32_byte_order",       Int32ByteOrder },
