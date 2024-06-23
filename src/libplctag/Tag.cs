@@ -319,6 +319,21 @@ namespace libplctag
         }
 
         /// <summary>
+        /// Optional. The Modbus specification allows devices to queue up to 16 requests at once.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The default is 1 and the maximum is 16.
+        /// This allows the host to send multiple requests without waiting for the device to respond.
+        /// Not all devices support up to 16 requests in flight.
+        /// </remarks>
+        public uint? MaxRequestsInFlight
+        {
+            get => _tag.MaxRequestsInFlight;
+            set => _tag.MaxRequestsInFlight = value;
+        }
+
+        /// <summary>
         /// Creates the underlying data structures and references required before tag operations.
         /// </summary>
         /// 
