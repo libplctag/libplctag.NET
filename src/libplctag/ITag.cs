@@ -41,10 +41,18 @@ namespace libplctag
         Status GetStatus();
         void Initialize();
         Task InitializeAsync(CancellationToken token = default);
+        bool TryInitialize();
+        Task<bool> TryInitializeAsync(CancellationToken token = default);
+
         object Read();
         Task<object> ReadAsync(CancellationToken token = default);
+        bool TryRead();
+        Task<bool> TryReadAsync(CancellationToken token = default);
+
         void Write();
         Task WriteAsync(CancellationToken token = default);
+        bool TryWrite();
+        Task<bool> TryWriteAsync(CancellationToken token = default);
 
         object Value { get; set; }
     }

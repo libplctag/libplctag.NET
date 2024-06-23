@@ -65,12 +65,64 @@ namespace libplctag.Tests
             };
 
             // Act
-            var ex = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
+            var ex  = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
                 await tag.InitializeAsync();
             });
 
             // Assert
             Assert.Equal(Status.ErrorTimeout.ToString(), ex.Message);
+        }
+
+        [Fact]
+        public async Task TryInitialize_returns_an_ErrorTimeout()
+        {
+            // Arrange
+            var nativeTag = new Mock<INativeTag>();
+
+            nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
+                .Setup(m => m.plc_tag_create(It.IsAny<string>(), 0))
+                .Returns((int)Status.Pending);
+
+            nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
+                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+                .Returns((int)Status.Pending);
+
+            var tag = new NativeTagWrapper(nativeTag.Object)
+            {
+                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
+            };
+
+            // Act
+            var result = await tag.TryInitializeAsync();
+
+            // Assert
+            Assert.Equal(Status.ErrorTimeout, result);
+        }
+
+        [Fact]
+        public async Task TryInitialize_Cancelled_cancellation_token_throws_a_TaskCanceledException()
+        {
+            // Arrange
+            var nativeTag = new Mock<INativeTag>();
+
+            nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
+                .Setup(m => m.plc_tag_create(It.IsAny<string>(), 0))
+                .Returns((int)Status.Pending);
+
+            nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
+                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+                .Returns((int)Status.Pending);
+
+            var tag = new NativeTagWrapper(nativeTag.Object);
+            var cts = new CancellationTokenSource();
+
+            // Act
+            cts.CancelAfter(REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS);
+
+            // Assert
+            await Assert.ThrowsAsync<TaskCanceledException>(async () => {
+                await tag.TryInitializeAsync(cts.Token);
+            });
         }
 
         [Fact]
