@@ -5,12 +5,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.DataTypes;
+using libplctag;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace libplctag
+namespace CSharpDotNetCore.PlcMapper
 {
     /// <summary>
     /// A class that allows for strongly-typed objects tied to PLC tags
@@ -250,4 +250,96 @@ namespace libplctag
         public event EventHandler<TagEventArgs> Destroyed;
 
     }
+
+    /// <summary>
+    /// An interface to represent any generic tag without
+    /// exposing its value
+    /// </summary>
+    public interface ITag : IDisposable
+    {
+        int[] ArrayDimensions { get; set; }
+        string Gateway { get; set; }
+        string Name { get; set; }
+        string Path { get; set; }
+        PlcType? PlcType { get; set; }
+        Protocol? Protocol { get; set; }
+        int? ReadCacheMillisecondDuration { get; set; }
+        TimeSpan Timeout { get; set; }
+        bool? UseConnectedMessaging { get; set; }
+        bool? AllowPacking { get; set; }
+        TimeSpan? AutoSyncReadInterval { get; set; }
+        TimeSpan? AutoSyncWriteInterval { get; set; }
+        DebugLevel DebugLevel { get; set; }
+
+        event EventHandler<TagEventArgs> ReadStarted;
+        event EventHandler<TagEventArgs> ReadCompleted;
+        event EventHandler<TagEventArgs> WriteStarted;
+        event EventHandler<TagEventArgs> WriteCompleted;
+        event EventHandler<TagEventArgs> Aborted;
+        event EventHandler<TagEventArgs> Destroyed;
+
+        Status GetStatus();
+        void Initialize();
+        Task InitializeAsync(CancellationToken token = default);
+        object Read();
+        Task<object> ReadAsync(CancellationToken token = default);
+        void Write();
+        Task WriteAsync(CancellationToken token = default);
+
+        object Value { get; set; }
+    }
+
+    public class TagBool : Tag<BoolPlcMapper, bool> { }
+    public class TagBool1D : Tag<BoolPlcMapper, bool[]> { }
+    public class TagBool2D : Tag<BoolPlcMapper, bool[,]> { }
+    public class TagBool3D : Tag<BoolPlcMapper, bool[,,]> { }
+
+
+    public class TagDint : Tag<DintPlcMapper, int> { }
+    public class TagDint1D : Tag<DintPlcMapper, int[]> { }
+    public class TagDint2D : Tag<DintPlcMapper, int[,]> { }
+    public class TagDint3D : Tag<DintPlcMapper, int[,,]> { }
+
+
+    public class TagInt : Tag<IntPlcMapper, short> { }
+    public class TagInt1D : Tag<IntPlcMapper, short[]> { }
+    public class TagInt2D : Tag<IntPlcMapper, short[,]> { }
+    public class TagInt3D : Tag<IntPlcMapper, short[,,]> { }
+
+
+    public class TagLint : Tag<LintPlcMapper, long> { }
+    public class TagLint1D : Tag<LintPlcMapper, long[]> { }
+    public class TagLint2D : Tag<LintPlcMapper, long[,]> { }
+    public class TagLint3D : Tag<LintPlcMapper, long[,,]> { }
+
+
+    public class TagLreal : Tag<LrealPlcMapper, double> { }
+    public class TagLreal1D : Tag<LrealPlcMapper, double[]> { }
+    public class TagLreal2D : Tag<LrealPlcMapper, double[,]> { }
+    public class TagLreal3D : Tag<LrealPlcMapper, double[,,]> { }
+
+
+    public class TagReal : Tag<RealPlcMapper, float> { }
+    public class TagReal1D : Tag<RealPlcMapper, float[]> { }
+    public class TagReal2D : Tag<RealPlcMapper, float[,]> { }
+    public class TagReal3D : Tag<RealPlcMapper, float[,,]> { }
+
+
+    public class TagSint : Tag<SintPlcMapper, sbyte> { }
+    public class TagSint1D : Tag<SintPlcMapper, sbyte[]> { }
+    public class TagSint2D : Tag<SintPlcMapper, sbyte[,]> { }
+    public class TagSint3D : Tag<SintPlcMapper, sbyte[,,]> { }
+
+
+    public class TagString : Tag<StringPlcMapper, string> { }
+    public class TagString1D : Tag<StringPlcMapper, string[]> { }
+    public class TagString2D : Tag<StringPlcMapper, string[,]> { }
+    public class TagString3D : Tag<StringPlcMapper, string[,,]> { }
+
+
+    public class TagTagInfo : Tag<TagInfoPlcMapper, TagInfo[]> { }
+
+    public class TagTimer : Tag<TimerPlcMapper, AbTimer> { }
+
+    public class TagUdtInfo : Tag<UdtInfoPlcMapper, UdtInfo> { }
 }

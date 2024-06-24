@@ -1,11 +1,11 @@
-﻿using libplctag.DataTypes.Simple;
+﻿using libplctag;
 using System.Diagnostics;
 
 namespace OptimizedLibplctagReads
 {
     internal static class ReadExamples
     {
-        internal static void ReadForEach(List<TagDint> allTags)
+        internal static void ReadForEach(List<Tag> allTags)
         {
             var stopwatch = new Stopwatch();
 
@@ -18,7 +18,7 @@ namespace OptimizedLibplctagReads
             Console.WriteLine($"Tag ReadForEach = {stopwatch.ElapsedMilliseconds} msec");
         }
 
-        internal static async Task ReadWhenAllAsync(List<TagDint> allTags)
+        internal static async Task ReadWhenAllAsync(List<Tag> allTags)
         {
             var stopwatch = new Stopwatch();
 
@@ -28,7 +28,7 @@ namespace OptimizedLibplctagReads
             Console.WriteLine($"Tag ReadWhenAllAsync = {stopwatch.ElapsedMilliseconds} msec");
         }
 
-        internal static async Task ReadForEachAsync(List<TagDint> allTags)
+        internal static async Task ReadForEachAsync(List<Tag> allTags)
         {
             var stopwatch = new Stopwatch();
 
@@ -41,7 +41,7 @@ namespace OptimizedLibplctagReads
             Console.WriteLine($"Tag ReadForEachAsync = {stopwatch.ElapsedMilliseconds} msec");
         }
 
-        internal static void ReadParallelForEach(List<TagDint> allTags)
+        internal static void ReadParallelForEach(List<Tag> allTags)
         {
             var stopwatch = new Stopwatch();
 
@@ -70,7 +70,7 @@ namespace OptimizedLibplctagReads
         //            Console.WriteLine($"Tag ReadAsyncParallelForEach = {stopwatch.ElapsedMilliseconds} msec");
         //        }
 
-        internal static async Task ReadAsyncParallelForEachAsync(List<TagDint> allTags)
+        internal static async Task ReadAsyncParallelForEachAsync(List<Tag> allTags)
         {
             var stopwatch = new Stopwatch();
             ParallelOptions parallelOptions = new() { MaxDegreeOfParallelism = allTags.Count(), };

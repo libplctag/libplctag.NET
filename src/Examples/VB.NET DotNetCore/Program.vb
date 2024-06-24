@@ -8,13 +8,12 @@
 Imports System.Net
 Imports System.Threading
 Imports libplctag
-Imports libplctag.DataTypes
 
 Module Module1
 
     Sub Main()
 
-        Dim myTag = New Tag(Of DintPlcMapper, Integer)() With
+        Dim myTag = New Tag() With
         {
             .Name = "PROGRAM:SomeProgram.SomeDINT",
             .Gateway = "10.10.10.10",
@@ -25,11 +24,11 @@ Module Module1
         }
         myTag.Initialize()
 
-        myTag.Value = 3737
+        myTag.SetInt32(0, 3737)
         myTag.Write()
 
         myTag.Read()
-        Dim myDint = myTag.Value
+        Dim myDint = myTag.GetInt32(0)
 
         Console.WriteLine(myDint)
         Console.ReadKey()

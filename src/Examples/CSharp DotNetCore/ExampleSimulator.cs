@@ -1,5 +1,4 @@
 ﻿using libplctag;
-using libplctag.DataTypes;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
@@ -96,11 +95,11 @@ namespace CSharp_DotNetCore
         /// </summary>
         private class RealImplementation : ITurnstileGate
         {
-            private readonly Tag<DintPlcMapper, int> CounterTag;
-            private readonly Tag<BoolPlcMapper, bool> ResetTag;
+            private readonly Tag CounterTag;
+            private readonly Tag ResetTag;
             public RealImplementation()
             {
-                CounterTag = new Tag<DintPlcMapper, int>()
+                CounterTag = new Tag()
                 {
                     PlcType = PlcType.ControlLogix,
                     Path = "0,1",
@@ -109,7 +108,7 @@ namespace CSharp_DotNetCore
                     Protocol = Protocol.ab_eip,
                 };
 
-                ResetTag = new Tag<BoolPlcMapper, bool>()
+                ResetTag = new Tag()
                 {
                     PlcType = PlcType.ControlLogix,
                     Path = "0,1",
@@ -124,13 +123,15 @@ namespace CSharp_DotNetCore
             public async Task ResetCounter()
             {
                 // The PLC is expected to have some logic that sets the ResetFlag from true back to false after resetting the counter
-                await ResetTag.WriteAsync(true);
+                ResetTag.SetUInt8(0, 0x01);
+                await ResetTag.WriteAsync();
                 await ReceiveData();
             }
 
             public async Task ReceiveData()
             {
-                Counter = await CounterTag.ReadAsync();
+                await CounterTag.ReadAsync();
+                Counter = CounterTag.GetInt32(0);
             }
         }
 

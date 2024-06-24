@@ -34,7 +34,7 @@ namespace libplctag.Tests
                 .Setup(m => m.plc_tag_status(It.IsAny<int>()))
                 .Returns((int)Status.Pending);
 
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var tag = new Tag(nativeTag.Object);
             var cts = new CancellationTokenSource();
 
             // Act, Assert
@@ -59,7 +59,7 @@ namespace libplctag.Tests
                 .Setup(m => m.plc_tag_status(It.IsAny<int>()))
                 .Returns((int)Status.Pending);
 
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            var tag = new Tag(nativeTag.Object)
             {
                 Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
             };
@@ -79,7 +79,7 @@ namespace libplctag.Tests
             // Arrange
             var nativeTag = GetMock();
 
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            var tag = new Tag(nativeTag.Object)
             {
                 Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
             };
@@ -101,7 +101,7 @@ namespace libplctag.Tests
             // Arrange
             var nativeTag = GetMock();
 
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            var tag = new Tag(nativeTag.Object)
             {
                 Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
             };

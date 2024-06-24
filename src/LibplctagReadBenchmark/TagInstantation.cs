@@ -1,5 +1,4 @@
 ﻿using libplctag;
-using libplctag.DataTypes.Simple;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,17 +10,17 @@ namespace OptimizedLibplctagReads
 {
     internal static class TagInstantation
     {
-        internal static async Task<List<TagDint>> Instantiate(int length, TimeSpan timeout)
+        internal static async Task<List<Tag>> Instantiate(int length, TimeSpan timeout)
         {
             var stopwatch = new Stopwatch();
 
             stopwatch.Start();
 
-            var allTags = new List<TagDint>();
+            var allTags = new List<Tag>();
 
             for (int i = 0; i < length; i++)
             {
-                var myTag = new TagDint()
+                var myTag = new Tag()
                 {
                     //Name is the full path to tag.
                     Name = $"TestDINT{i.ToString("0000")}",

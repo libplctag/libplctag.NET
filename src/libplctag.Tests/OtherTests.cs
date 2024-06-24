@@ -19,7 +19,7 @@ namespace libplctag.Tests
         {
             // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var tag = new Tag(nativeTag.Object);
 
             // Act
 
@@ -33,7 +33,7 @@ namespace libplctag.Tests
         {
             // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            var tag = new Tag(nativeTag.Object)
             {
                 ElementSize = 4,
                 ElementCount = 10,
@@ -57,7 +57,7 @@ namespace libplctag.Tests
         {
             // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Initialize();

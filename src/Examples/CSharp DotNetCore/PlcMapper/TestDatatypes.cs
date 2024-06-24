@@ -7,7 +7,6 @@
 
 using KellermanSoftware.CompareNetObjects;
 using libplctag;
-using libplctag.DataTypes;
 using RandomTestValues;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetCore.PlcMapper
 {
     class TestDatatypes
     {

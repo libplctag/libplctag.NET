@@ -19,7 +19,7 @@ namespace libplctag.Tests
         {
             // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Initialize();
@@ -34,7 +34,7 @@ namespace libplctag.Tests
         {
             // Arrange
             var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Dispose();
@@ -55,7 +55,7 @@ namespace libplctag.Tests
             Action dispose = () =>
             {
                 // This will go out of scope after dispose() is executed, so the garbage collector will be able to call the finalizer
-                var tag = new NativeTagWrapper(nativeTag.Object);
+                var tag = new Tag(nativeTag.Object);
                 tag.Initialize();
             };
 

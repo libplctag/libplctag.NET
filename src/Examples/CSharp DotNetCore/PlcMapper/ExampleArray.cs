@@ -6,12 +6,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag;
-using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetCore.PlcMapper
 {
     class ExampleArray
     {

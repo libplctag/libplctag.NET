@@ -6,7 +6,6 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag;
-using libplctag.DataTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace CSharpDotNetCore
 {
-    class ILoggerExample
+    class ExampleILogger
     {
         public static void Run()
         {
@@ -40,7 +39,7 @@ namespace CSharpDotNetCore
         {
             public async Task StartAsync(CancellationToken cancellationToken)
             {
-                var myTag = new Tag<DintPlcMapper, int>()
+                var myTag = new Tag()
                 {
                     Name = "MyTag[0]",
                     Gateway = "127.0.0.1",

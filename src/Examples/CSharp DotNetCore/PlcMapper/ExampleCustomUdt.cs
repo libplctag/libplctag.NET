@@ -6,13 +6,43 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag;
-using libplctag.DataTypes;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetCore.PlcMapper
 {
+    class ExampleCustomUdt
+    {
+        public static void Run()
+        {
+            const string gateway = "10.10.10.10";
+            const string path = "1,0";
 
+            //This example shows the use of a custom mapper created to match a UDT called "Sequence"
+
+            var sequenceArray = new Tag<SequencePlcMapper, Sequence[]>()
+            {
+                Name = "MY_SEQUENCE_3D[0,0,0]",
+                Gateway = gateway,
+                Path = path,
+                Protocol = Protocol.ab_eip,
+                PlcType = PlcType.ControlLogix,
+                ArrayDimensions = new int[] { 8 },
+            };
+
+            for (int ii = 0; ii < 8; ii++)
+                sequenceArray.Value[ii].Command = ii * 2;
+
+            sequenceArray.Write();
+
+
+            Console.WriteLine("DONE! Check values in RsLogix");
+
+        }
+
+    }
 
     /// <summary>
     /// This is an example plcMapper for a User Defined Type (UDT)
@@ -209,5 +239,71 @@ namespace CSharpDotNetCore
         public AbTimer[] Timer { get; set; }
     }
 
+    public class TimerPlcMapper : PlcMapperBase<AbTimer>
+    {
 
+        public override int? ElementSize => 12;
+
+        public override AbTimer Decode(Tag tag, int offset)
+        {
+
+            // Needed to look at RsLogix documentation for structure of TIMER
+            var DINT2 = tag.GetInt32(offset);
+            var DINT1 = tag.GetInt32(offset + 4);
+            var DINT0 = tag.GetInt32(offset + 8);
+
+            // The third DINT packs a few BOOLs into it
+            var bitArray = new BitArray(new int[] { DINT2 });
+
+            var timer = new AbTimer
+            {
+                Accumulated = DINT0,         // ACC
+                Preset = DINT1,              // PRE
+                Done = bitArray[29],         // DN
+                InProgress = bitArray[30],   // TT
+                Enabled = bitArray[31]       // EN
+            };
+
+            return timer;
+
+        }
+
+        public override void Encode(Tag tag, int offset, AbTimer value)
+        {
+            var DINT0 = value.Accumulated;
+            var DINT1 = value.Preset;
+
+            var asdf = new BitArray(32);
+            asdf[29] = value.Done;
+            asdf[30] = value.InProgress;
+            asdf[31] = value.Enabled;
+            var DINT2 = BitArrayToInt(asdf);
+
+            tag.SetInt32(offset, DINT2);
+            tag.SetInt32(offset + 4, DINT1);
+            tag.SetInt32(offset + 8, DINT0);
+
+        }
+
+        static int BitArrayToInt(BitArray binary)
+        {
+            if (binary == null)
+                throw new ArgumentNullException("binary");
+            if (binary.Length > 32)
+                throw new ArgumentException("Must be at most 32 bits long");
+
+            var result = new int[1];
+            binary.CopyTo(result, 0);
+            return result[0];
+        }
+    }
+
+    public class AbTimer
+    {
+        public int Preset { get; set; }
+        public int Accumulated { get; set; }
+        public bool Enabled { get; set; }
+        public bool InProgress { get; set; }
+        public bool Done { get; set; }
+    }
 }

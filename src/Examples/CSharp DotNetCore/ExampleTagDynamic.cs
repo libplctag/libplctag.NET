@@ -37,7 +37,7 @@ namespace CSharp_DotNetCore
             {
                 _tag = new Tag()
                 {
-                    PlcType = libplctag.PlcType.ControlLogix,   // Only certain types of devices support this, so hard-code this
+                    PlcType = PlcType.ControlLogix,   // Only certain types of devices support this, so hard-code this
                     Protocol = Protocol.ab_eip,                 // Only certain types of devices support this, so hard-code this
                 };
 
