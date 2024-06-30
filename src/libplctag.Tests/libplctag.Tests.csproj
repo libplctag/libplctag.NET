@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\libplctag.NativeImport.Common\libplctag.NativeImport.Common.csproj" />
     <ProjectReference Include="..\libplctag\libplctag.csproj" />
   </ItemGroup>
 

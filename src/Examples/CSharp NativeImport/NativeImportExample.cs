@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using libplctag.NativeImport;
+using libplctag.NativeImport.Common;
 
 namespace NativeImport_Examples
 {
@@ -59,7 +60,7 @@ namespace NativeImport_Examples
                 Console.WriteLine($"Something went wrong {statusBeforeRead}");
             }
 
-            var myCallback = new plctag.callback_func(MyCallback);
+            var myCallback = new Delegates.callback_func(MyCallback);
             var statusAfterRegistration = plctag.plc_tag_register_callback(tagHandle, myCallback);
             if (statusAfterRegistration != 0)
             {
@@ -91,7 +92,7 @@ namespace NativeImport_Examples
 
         public static void RunLoggerExample()
         {
-            var myLogger = new plctag.log_callback_func(MyLogger);
+            var myLogger = new Delegates.log_callback_func(MyLogger);
             var statusAfterRegistration = plctag.plc_tag_register_logger(myLogger);
             if (statusAfterRegistration != 0)
             {

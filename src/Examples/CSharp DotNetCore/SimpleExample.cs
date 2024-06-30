@@ -21,7 +21,8 @@ namespace CSharpDotNetCore
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
                 Protocol = Protocol.ab_eip,
-                Timeout = TimeSpan.FromSeconds(5)
+                Timeout = TimeSpan.FromSeconds(5),
+                DebugLevel = DebugLevel.Info,
             };
 
             //Write value to PLC

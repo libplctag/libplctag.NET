@@ -1,7 +1,7 @@
 ﻿using libplctag.NativeImport;
 using System;
 using System.Text;
-using static libplctag.NativeImport.plctag;
+using static libplctag.NativeImport.Common.Delegates;
 
 namespace libplctag
 {

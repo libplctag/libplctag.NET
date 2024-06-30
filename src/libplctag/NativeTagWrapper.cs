@@ -22,7 +22,7 @@ namespace libplctag
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private int nativeTagHandle;
-        private libplctag.NativeImport.plctag.callback_func coreLibCallbackFuncDelegate;
+        private libplctag.NativeImport.Common.Delegates.callback_func coreLibCallbackFuncDelegate;
 
         private bool _isDisposed = false;
         private bool _isInitialized = false;
@@ -688,7 +688,7 @@ namespace libplctag
             Created += CreatedTaskCompleter;
 
             // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
-            coreLibCallbackFuncDelegate = new libplctag.NativeImport.plctag.callback_func(coreLibEventCallback);
+            coreLibCallbackFuncDelegate = new libplctag.NativeImport.Common.Delegates.callback_func(coreLibEventCallback);
 
             var callbackRegistrationResult = (Status)_native.plc_tag_register_callback(nativeTagHandle, coreLibCallbackFuncDelegate);
             ThrowIfStatusNotOk(callbackRegistrationResult);

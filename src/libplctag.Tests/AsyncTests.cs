@@ -3,6 +3,7 @@ using Xunit;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using libplctag.NativeImport.Common;
 
 namespace libplctag.Tests
 {
@@ -111,15 +112,15 @@ namespace libplctag.Tests
         {
             const int tagId = 11;
 
-            NativeImport.plctag.callback_func callback = null;
+            Delegates.callback_func callback = null;
 
             var nativeTag = new Mock<INativeTag>();
 
             // The NativeTagWrapper should provide the native tag with a callback.
             // We will store this locally and call it ...
             nativeTag
-                .Setup(m => m.plc_tag_register_callback(It.IsAny<int>(), It.IsAny<NativeImport.plctag.callback_func>()))
-                .Callback<int, NativeImport.plctag.callback_func>((tagId, callbackFunc) => callback = callbackFunc);
+                .Setup(m => m.plc_tag_register_callback(It.IsAny<int>(), It.IsAny<Delegates.callback_func>()))
+                .Callback<int, Delegates.callback_func>((tagId, callbackFunc) => callback = callbackFunc);
 
             // ... when a create call occurs, and ..
             nativeTag
@@ -127,7 +128,7 @@ namespace libplctag.Tests
                 .Callback<string, int>(async (attributeString, timeout) =>
                 {
                     await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
+                    callback?.Invoke(tagId, (int)EVENT_CODES.PLCTAG_EVENT_CREATED, (int)STATUS_CODES.PLCTAG_STATUS_OK);
                 });
 
             // ... when a read call occurs
@@ -135,9 +136,9 @@ namespace libplctag.Tests
                 .Setup(m => m.plc_tag_read(It.IsAny<int>(), 0))
                 .Callback<int, int>(async (tagId, timeout) =>
                 {
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
+                    callback?.Invoke(tagId, (int)EVENT_CODES.PLCTAG_EVENT_READ_STARTED, (int)STATUS_CODES.PLCTAG_STATUS_OK);
                     await Task.Delay(REALISTIC_LATENCY_FOR_READ);
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK);
+                    callback?.Invoke(tagId, (int)EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED, (int)STATUS_CODES.PLCTAG_STATUS_OK);
                 });
 
             return nativeTag;

@@ -1,6 +1,6 @@
-﻿using libplctag.NativeImport;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text;
+using static libplctag.NativeImport.Common.Delegates;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
@@ -31,8 +31,8 @@ namespace libplctag
         byte plc_tag_get_uint8(int tag, int offset);
         int plc_tag_lock(int tag);
         int plc_tag_read(int tag, int timeout);
-        int plc_tag_register_callback(int tag_id, plctag.callback_func func);
-        int plc_tag_register_logger(plctag.log_callback_func func);
+        int plc_tag_register_callback(int tag_id, callback_func func);
+        int plc_tag_register_logger(log_callback_func func);
         int plc_tag_set_bit(int tag, int offset_bit, int val);
         void plc_tag_set_debug_level(int debug_level);
         int plc_tag_set_float32(int tag, int offset, float val);

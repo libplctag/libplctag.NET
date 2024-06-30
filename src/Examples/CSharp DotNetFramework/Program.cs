@@ -1,4 +1,5 @@
-﻿using System;
+﻿using libplctag;
+using System;
 
 namespace CSharpDotNetFramework
 {
@@ -6,6 +7,7 @@ namespace CSharpDotNetFramework
     {
         static void Main(string[] args)
         {
+            LibPlcTag.DebugLevel = DebugLevel.Info;
             ExampleRW.Run();
             ExampleArray.Run();
 
