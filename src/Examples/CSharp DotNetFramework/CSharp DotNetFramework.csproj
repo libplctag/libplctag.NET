@@ -48,12 +48,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libplctag, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\libplctag.2.0.0\lib\netstandard2.0\libplctag.dll</HintPath>
-    </Reference>
-    <Reference Include="libplctag.NativeImport, Version=1.0.42.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\libplctag.NativeImport.1.0.42\lib\netstandard2.0\libplctag.NativeImport.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -84,6 +78,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\libplctag\libplctag.csproj">
+      <Project>{a488d8f2-712f-440e-9024-f27a75feb171}</Project>
+      <Name>libplctag</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

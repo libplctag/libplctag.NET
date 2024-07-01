@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--<TargetFrameworks>net47;net471;net472;net48;net481;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>-->
-		<TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
-		<!--<TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>-->
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
 		<AssemblyName>libplctag.NativeImport</AssemblyName>
 		<RootNamespace>libplctag.NativeImport</RootNamespace>
 		<PackageId>libplctag.NativeImport</PackageId>
-		<Version>1.0.43</Version>
+		<Version>1.0.40-alpha.0</Version>
 		<Authors>libplctag</Authors>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
@@ -23,77 +21,71 @@
 		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'net47'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetFramework" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net471'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetFramework" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net472'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetFramework" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net48'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetFramework" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net481'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetFramework" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net5.0'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net7.0'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net8.0'">
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetCore" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="libplctag.NativeImport.NetStandard" Version="1.0.40-alpha.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
 	<ItemGroup>
-		<ProjectReference Include="..\libplctag.NativeImport.Common\libplctag.NativeImport.Common.csproj" />
+		<PackageReference Include="libplctag.NativeImport.Common" Version="1.0.40-alpha.0" />
 	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net47'">
-		<PackageReference Include="libplctag.NativeImport.NetFramework">
-			<Version>1.0.43</Version>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net471'">
-		<PackageReference Include="libplctag.NativeImport.NetFramework">
-			<Version>1.0.43</Version>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-		<PackageReference Include="libplctag.NativeImport.NetFramework">
-			<Version>1.0.43</Version>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-		<PackageReference Include="libplctag.NativeImport.NetFramework">
-			<Version>1.0.43</Version>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-		<PackageReference Include="libplctag.NativeImport.NetFramework">
-			<Version>1.0.43</Version>
-		</PackageReference>
-	</ItemGroup>
-
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-	  <PackageReference Include="libplctag.NativeImport.NetCore">
-	    <Version>1.0.43</Version>
-	  </PackageReference>
-	</ItemGroup>
-
 
 </Project>
-

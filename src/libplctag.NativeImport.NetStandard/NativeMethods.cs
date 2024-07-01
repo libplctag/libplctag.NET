@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static libplctag.NativeImport.Common.Delegates;
 
-namespace libplctag.NativeImport.NetFramework
+namespace libplctag.NativeImport.NetStandard
 {
     static class NativeMethods
     {

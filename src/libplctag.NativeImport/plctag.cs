@@ -16,10 +16,10 @@ namespace libplctag.NativeImport
         {
 #if NETCOREAPP3_0_OR_GREATER
             return libplctag.NativeImport.NetCore.plctag.plc_tag_check_lib_version(req_major, req_minor, req_patch);
-#elif NET47_OR_GREATERREATER
+#elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_check_lib_version(req_major, req_minor, req_patch);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_check_lib_version(req_major, req_minor, req_patch);
 #endif
         }
 
@@ -27,10 +27,10 @@ namespace libplctag.NativeImport
         {
 #if NETCOREAPP3_0_OR_GREATER
             return libplctag.NativeImport.NetCore.plctag.plc_tag_create(lpString, timeout);
-#elif NET47_OR_GREATERREATER
+#elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_create(lpString, timeout);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_create(lpString, timeout);
 #endif
         }
 
@@ -41,7 +41,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_create_ex(lpString, func, userdata, timeout);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_create_ex(lpString, func, userdata, timeout);
 #endif
         }
 
@@ -52,7 +52,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_destroy(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_destroy(tag);
 #endif
         }
 
@@ -63,7 +63,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_shutdown();
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_shutdown();
 #endif
         }
 
@@ -74,7 +74,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_register_callback(tag_id, func);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_register_callback(tag_id, func);
 #endif
         }
 
@@ -85,7 +85,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_register_callback_ex(tag_id, func, userdata);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_register_callback_ex(tag_id, func, userdata);
 #endif
         }
 
@@ -96,7 +96,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_unregister_callback(tag_id);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_unregister_callback(tag_id);
 #endif
         }
 
@@ -107,7 +107,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_register_logger(func);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_register_logger(func);
 #endif
         }
         public static int plc_tag_unregister_logger(Int32 tag_id)
@@ -117,7 +117,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_unregister_logger(tag_id);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_unregister_logger(tag_id);
 #endif
         }
 
@@ -128,7 +128,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_lock(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_lock(tag);
 #endif
         }
 
@@ -139,7 +139,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_unlock(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_unlock(tag);
 #endif
         }
         public static int plc_tag_status(Int32 tag)
@@ -149,7 +149,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_status(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_status(tag);
 #endif
         }
 
@@ -160,7 +160,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_decode_error(err);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_decode_error(err);
 #endif
         }
 
@@ -171,7 +171,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_read(tag, timeout);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_read(tag, timeout);
 #endif
         }
 
@@ -182,7 +182,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_write(tag, timeout);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_write(tag, timeout);
 #endif
         }
 
@@ -193,7 +193,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_size(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_size(tag);
 #endif
         }
 
@@ -204,7 +204,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_size(tag, new_size);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_size(tag, new_size);
 #endif
         }
 
@@ -215,7 +215,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_abort(tag);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_abort(tag);
 #endif
         }
 
@@ -226,7 +226,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_int_attribute(tag, attrib_name, default_value);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_int_attribute(tag, attrib_name, default_value);
 #endif
         }
 
@@ -237,7 +237,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_int_attribute(tag, attrib_name, new_value);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_int_attribute(tag, attrib_name, new_value);
 #endif
         }
 
@@ -248,7 +248,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_uint64(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_uint64(tag, offset);
 #endif
         }
 
@@ -259,7 +259,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_int64(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_int64(tag, offset);
 #endif
         }
 
@@ -270,7 +270,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_uint64(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_uint64(tag, offset, val);
 #endif
         }
 
@@ -281,7 +281,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_int64(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_int64(tag, offset, val);
 #endif
         }
 
@@ -292,7 +292,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_float64(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_float64(tag, offset);
 #endif
         }
 
@@ -303,7 +303,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_float64(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_float64(tag, offset, val);
 #endif
         }
         public static UInt32 plc_tag_get_uint32(Int32 tag, int offset)
@@ -313,7 +313,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_uint32(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_uint32(tag, offset);
 #endif
         }
 
@@ -324,7 +324,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_int32(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_int32(tag, offset);
 #endif
         }
 
@@ -335,7 +335,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_uint32(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_uint32(tag, offset, val);
 #endif
         }
 
@@ -346,7 +346,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_int32(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_int32(tag, offset, val);
 #endif
         }
 
@@ -357,7 +357,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_float32(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_float32(tag, offset);
 #endif
         }
 
@@ -368,7 +368,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_float32(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_float32(tag, offset, val);
 #endif
         }
 
@@ -379,7 +379,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_uint16(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_uint16(tag, offset);
 #endif
         }
 
@@ -390,7 +390,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_int16(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_int16(tag, offset);
 #endif
         }
 
@@ -401,7 +401,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_uint16(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_uint16(tag, offset, val);
 #endif
         }
 
@@ -412,7 +412,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_int16(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_int16(tag, offset, val);
 #endif
         }
 
@@ -423,7 +423,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_uint8(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_uint8(tag, offset);
 #endif
         }
 
@@ -434,7 +434,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_int8(tag, offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_int8(tag, offset);
 #endif
         }
 
@@ -445,7 +445,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_uint8(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_uint8(tag, offset, val);
 #endif
         }
 
@@ -456,7 +456,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_int8(tag, offset, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_int8(tag, offset, val);
 #endif
         }
 
@@ -467,7 +467,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_bit(tag, offset_bit);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_bit(tag, offset_bit);
 #endif
         }
 
@@ -478,7 +478,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_bit(tag, offset_bit, val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_bit(tag, offset_bit, val);
 #endif
         }
         public static void plc_tag_set_debug_level(int debug_level)
@@ -488,7 +488,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             libplctag.NativeImport.NetFramework.plctag.plc_tag_set_debug_level(debug_level);
 #else
-            throw new PlatformNotSupportedException();
+            libplctag.NativeImport.NetStandard.plctag.plc_tag_set_debug_level(debug_level);
 #endif
         }
 
@@ -501,7 +501,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_string(tag_id, string_start_offset, buffer, buffer_length);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_string(tag_id, string_start_offset, buffer, buffer_length);
 #endif
         }
 
@@ -512,7 +512,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_string(tag_id, string_start_offset, string_val);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_string(tag_id, string_start_offset, string_val);
 #endif
         }
 
@@ -523,7 +523,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_string_length(tag_id, string_start_offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_string_length(tag_id, string_start_offset);
 #endif
         }
 
@@ -534,7 +534,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_string_capacity(tag_id, string_start_offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_string_capacity(tag_id, string_start_offset);
 #endif
         }
 
@@ -545,7 +545,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_string_total_length(tag_id, string_start_offset);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_string_total_length(tag_id, string_start_offset);
 #endif
         }
 
@@ -557,7 +557,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_get_raw_bytes(tag_id, start_offset, buffer, buffer_length);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_get_raw_bytes(tag_id, start_offset, buffer, buffer_length);
 #endif
         }
 
@@ -568,7 +568,7 @@ namespace libplctag.NativeImport
 #elif NET47_OR_GREATER
             return libplctag.NativeImport.NetFramework.plctag.plc_tag_set_raw_bytes(tag_id, start_offset, buffer, buffer_length);
 #else
-            throw new PlatformNotSupportedException();
+            return libplctag.NativeImport.NetStandard.plctag.plc_tag_set_raw_bytes(tag_id, start_offset, buffer, buffer_length);
 #endif
         }
 

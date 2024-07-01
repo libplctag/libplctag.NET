@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<AssemblyName>libplctag.NativeImport.NetCore</AssemblyName>
-		<RootNamespace>libplctag.NativeImport.NetCore</RootNamespace>
-		<PackageId>libplctag.NativeImport.NetCore</PackageId>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<AssemblyName>libplctag.NativeImport.NetStandard</AssemblyName>
+		<RootNamespace>libplctag.NativeImport.NetStandard</RootNamespace>
+		<PackageId>libplctag.NativeImport.NetStandard</PackageId>
 		<Version>1.0.40-alpha.0</Version>
 		<Authors>libplctag</Authors>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
@@ -14,15 +14,19 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedFiles>true</EmbedUntrackedFiles>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="runtimes\**" PackagePath="runtimes\" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<EmbeddedResource Include="runtimes\linux-arm64\native\libplctag.so" />
+		<EmbeddedResource Include="runtimes\linux-arm\native\libplctag.so" />
+		<EmbeddedResource Include="runtimes\linux-x64\native\libplctag.so" />
+		<EmbeddedResource Include="runtimes\linux-x86\native\libplctag.so" />
+		<EmbeddedResource Include="runtimes\osx-arm64\native\libplctag.dylib" />
+		<EmbeddedResource Include="runtimes\osx-x64\native\libplctag.dylib" />
+		<EmbeddedResource Include="runtimes\win-arm64\native\plctag.dll" />
+		<EmbeddedResource Include="runtimes\win-arm\native\plctag.dll" />
+		<EmbeddedResource Include="runtimes\win-x64\native\plctag.dll" />
+		<EmbeddedResource Include="runtimes\win-x86\native\plctag.dll" />
 		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
 	</ItemGroup>
 

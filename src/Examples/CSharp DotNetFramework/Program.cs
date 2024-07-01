@@ -7,7 +7,7 @@ namespace CSharpDotNetFramework
     {
         static void Main(string[] args)
         {
-            LibPlcTag.DebugLevel = DebugLevel.Info;
+            //LibPlcTag.DebugLevel = DebugLevel.Info;
             ExampleRW.Run();
             ExampleArray.Run();
 

@@ -5,7 +5,7 @@
 		<AssemblyName>libplctag.NativeImport.NetFramework</AssemblyName>
 		<RootNamespace>libplctag.NativeImport.NetFramework</RootNamespace>
 		<PackageId>libplctag.NativeImport.NetFramework</PackageId>
-		<Version>1.0.43</Version>
+		<Version>1.0.40-alpha.0</Version>
 		<Authors>libplctag</Authors>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
@@ -16,17 +16,14 @@
 		<PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="plctag-x64.dll" />
-    <Content Include="plctag-x86.dll" />
-  </ItemGroup>
-
 	<ItemGroup>
+		<EmbeddedResource Include="runtimes\win-x64\native\plctag.dll" />
+		<EmbeddedResource Include="runtimes\win-x86\native\plctag.dll" />
 		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\libplctag.NativeImport.Common\libplctag.NativeImport.Common.csproj" />
+		<PackageReference Include="libplctag.NativeImport.Common" Version="1.0.40-alpha.0" />
 	</ItemGroup>
 
 </Project>
