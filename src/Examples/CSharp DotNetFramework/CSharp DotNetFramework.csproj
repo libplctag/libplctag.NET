@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.props" Condition="Exists('..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,6 +28,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +51,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="libplctag, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\libplctag.1.4.2-alpha.0\lib\net472\libplctag.dll</HintPath>
+    </Reference>
+    <Reference Include="libplctag.NativeImport, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\lib\net472\libplctag.NativeImport.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -79,11 +88,13 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\libplctag\libplctag.csproj">
-      <Project>{a488d8f2-712f-440e-9024-f27a75feb171}</Project>
-      <Name>libplctag</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.props'))" />
+    <Error Condition="!Exists('..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.targets" Condition="Exists('..\..\packages\libplctag.NativeImport.1.0.40-alpha.2\build\libplctag.NativeImport.targets')" />
 </Project>

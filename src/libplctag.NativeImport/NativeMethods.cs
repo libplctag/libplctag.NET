@@ -1,21 +1,39 @@
-﻿// Copyright (c) libplctag.NET contributors
-// https://github.com/libplctag/libplctag.NET
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at https://mozilla.org/MPL/2.0/.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using static libplctag.NativeImport.Common.Delegates;
+using static libplctag.NativeImport.plctag;
 
-namespace libplctag.NativeImport.NetStandard
+namespace libplctag.NativeImport
 {
     static class NativeMethods
     {
 
         const string DLL_NAME = "plctag";
+
+
+        static NativeMethods()
+        {
+#if NET47_OR_GREATER
+            // Assume we're running on Windows because .NET Framework
+            // is not supported on other platforms
+            string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+			string system = Environment.Is64BitProcess ? "win-x64" : "win-x86";
+			string path = System.IO.Path.Combine (executingDirectory, "runtimes", system, "native");
+            if (System.IO.Directory.Exists(path))
+            {
+                SetDllDirectory(path);
+            }
+            else
+            {
+                SetDllDirectory(executingDirectory);
+            }
+#endif
+        }
+
+
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetDllDirectory(string lpPathName);
 
 
 
@@ -50,7 +68,7 @@ namespace libplctag.NativeImport.NetStandard
         public static extern int plc_tag_unregister_callback(Int32 tag_id);
 
 
-
+        
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_logger), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -61,7 +79,7 @@ namespace libplctag.NativeImport.NetStandard
         public static extern int plc_tag_unregister_logger(Int32 tag_id);
 
 
-
+        
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_lock), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -105,10 +123,6 @@ namespace libplctag.NativeImport.NetStandard
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_int_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern int plc_tag_set_int_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, int new_value);
-
-
-        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_byte_array_attribute), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern int plc_tag_get_byte_array_attribute(Int32 tag, [MarshalAs(UnmanagedType.LPStr)] string attrib_name, [In] byte[] buffer, int buffer_length);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_uint64), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]

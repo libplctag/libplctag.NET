@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--TargetFramework>netstandard2.0</TargetFramework-->
-		<TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
 		<AssemblyName>libplctag</AssemblyName>
 		<RootNamespace>libplctag</RootNamespace>
 		<PackageId>libplctag</PackageId>
@@ -23,8 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="libplctag.NativeImport" Version="1.0.40-alpha.0" />
-		<PackageReference Include="libplctag.NativeImport.Common" Version="1.0.40-alpha.0" />
+	  <PackageReference Include="libplctag.NativeImport" Version="1.0.40-alpha.2" />
 	</ItemGroup>
 
 </Project>

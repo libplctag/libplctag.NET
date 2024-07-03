@@ -1,4 +1,4 @@
-﻿using libplctag.NativeImport.Common;
+﻿using libplctag.NativeImport;
 
 namespace libplctag
 {

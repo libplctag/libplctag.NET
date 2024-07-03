@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
-using static libplctag.NativeImport.Common.Delegates;
+using static libplctag.NativeImport.plctag;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 

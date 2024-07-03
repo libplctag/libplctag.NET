@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\libplctag.NativeImport.Common\libplctag.NativeImport.Common.csproj" />
     <ProjectReference Include="..\..\libplctag.NativeImport\libplctag.NativeImport.csproj" />
   </ItemGroup>
 

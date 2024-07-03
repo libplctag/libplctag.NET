@@ -1,0 +1,12 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Target Name="LibplctagCopyNativeLibraries" AfterTargets="Build">
+		<ItemGroup>
+			<NativeLibraries Include="$(MSBuildThisFileDirectory)\..\runtimes\**\*.*" />
+		</ItemGroup>
+		<Copy
+			SourceFiles="@(NativeLibraries)"
+			DestinationFolder="$(OutDir)runtimes\%(RecursiveDir)" />
+	</Target>
+
+</Project>

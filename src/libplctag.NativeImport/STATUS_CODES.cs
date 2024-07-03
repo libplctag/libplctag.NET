@@ -1,4 +1,4 @@
-﻿namespace libplctag.NativeImport.Common
+﻿namespace libplctag.NativeImport
 {
     public enum STATUS_CODES
     {

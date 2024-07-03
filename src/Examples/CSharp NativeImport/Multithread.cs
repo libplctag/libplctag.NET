@@ -1,5 +1,4 @@
 ﻿using libplctag.NativeImport;
-using libplctag.NativeImport.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

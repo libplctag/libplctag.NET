@@ -3,7 +3,7 @@ using Xunit;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
-using libplctag.NativeImport.Common;
+using libplctag.NativeImport;
 
 namespace libplctag.Tests
 {
@@ -112,15 +112,15 @@ namespace libplctag.Tests
         {
             const int tagId = 11;
 
-            Delegates.callback_func callback = null;
+            plctag.callback_func callback = null;
 
             var nativeTag = new Mock<INativeTag>();
 
             // The NativeTagWrapper should provide the native tag with a callback.
             // We will store this locally and call it ...
             nativeTag
-                .Setup(m => m.plc_tag_register_callback(It.IsAny<int>(), It.IsAny<Delegates.callback_func>()))
-                .Callback<int, Delegates.callback_func>((tagId, callbackFunc) => callback = callbackFunc);
+                .Setup(m => m.plc_tag_register_callback(It.IsAny<int>(), It.IsAny<plctag.callback_func>()))
+                .Callback<int, plctag.callback_func>((tagId, callbackFunc) => callback = callbackFunc);
 
             // ... when a create call occurs, and ..
             nativeTag

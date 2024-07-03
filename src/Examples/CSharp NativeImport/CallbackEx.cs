@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using libplctag.NativeImport;
-using libplctag.NativeImport.Common;
 
 namespace NativeImport_Examples
 {
@@ -36,7 +35,7 @@ namespace NativeImport_Examples
 
 
             // ... so that we can pass it to our callback, 
-            var myCallback = new Delegates.callback_func_ex(MyCallback);
+            var myCallback = new plctag.callback_func_ex(MyCallback);
             var statusAfterRegistration = plctag.plc_tag_register_callback_ex(tagHandle, myCallback, (IntPtr)myUserDataPtr);
             if (statusAfterRegistration != 0)
             {

@@ -1,5 +1,5 @@
-﻿using libplctag.NativeImport.Common;
-using System;
+﻿using System;
+using static libplctag.NativeImport.plctag;
 
 namespace libplctag
 {
@@ -49,13 +49,13 @@ namespace libplctag
         static readonly object logEventSubscriptionLock = new object();
         static private event EventHandler<LogEventArgs> logEvent;
         static bool alreadySubscribedToEvents = false;
-        static Delegates.log_callback_func loggerDelegate;
+        static log_callback_func loggerDelegate;
         static private void ensureSubscribeToEvents()
         {
             if (alreadySubscribedToEvents)
                 return;
 
-            loggerDelegate = new Delegates.log_callback_func(invokeLogEvent);
+            loggerDelegate = new log_callback_func(invokeLogEvent);
             var statusAfterRegistration = (Status)_native.plc_tag_register_logger(loggerDelegate);
             if (statusAfterRegistration != Status.Ok)
                 throw new LibPlcTagException(statusAfterRegistration);
