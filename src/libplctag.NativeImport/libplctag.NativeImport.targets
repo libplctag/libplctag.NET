@@ -1,12 +1,20 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<Target Name="LibplctagCopyNativeLibraries" AfterTargets="Build">
-		<ItemGroup>
-			<NativeLibraries Include="$(MSBuildThisFileDirectory)\..\runtimes\**\*.*" />
-		</ItemGroup>
-		<Copy
-			SourceFiles="@(NativeLibraries)"
-			DestinationFolder="$(OutDir)runtimes\%(RecursiveDir)" />
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build">
+		<Message Text="Copying libplctag native libraries for $(PlatformTarget)" />
 	</Target>
+
+	<ItemGroup Condition=" '$(PlatformTarget)' == 'x86' ">
+		<Content Include="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="$(OutputDir)plctag.dll" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(PlatformTarget)' == 'x64' ">
+		<Content Include="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="$(OutputDir)plctag.dll" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(PlatformTarget)' == 'AnyCPU' ">
+		<Content Include="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="$(OutputDir)X86\plctag.dll" />
+		<Content Include="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" CopyToOutputDirectory="PreserveNewest" TargetPath="$(OutputDir)X64\plctag.dll" />
+	</ItemGroup>
 
 </Project>
