@@ -16,5 +16,5 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Pull in latest libplctag core binaries into repository
-        run: ./build.sh UpdateNativeFiles --native-file-version ${{ github.event.inputs.libplctag_version }}
+        run: ./build.sh UpdateCoreBinaries --native-file-version ${{ github.event.inputs.libplctag_version }}
         
