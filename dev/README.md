@@ -2,20 +2,21 @@
 
 This folder is for storing information regarding the development of libplctag.NET - the .NET wrapper for libplctag.
 
-The term "libplctag" is ambiguous, so for the purposes of this document we will use the following interpretation:
+## Glossary
 
 |  |  |
 |--|--|
-| libplctag | An umbrella term used to refer to the libplctag collective or capability in high-level terms. |
+| libplctag | An umbrella term used to refer to the libplctag collective and/or capability. |
 | [libplctag core](https://github.com/libplctag/libplctag) | The libplctag library developed in C |
-| [libplctag.NET](https://github.com/libplctag/libplctag.NET) | The sub-project of the libplctag organization that provides libplctag for .NET projects. |
-| [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) | The package providing low-level (raw) access to libplctag core |
-| [libplctag ???](https://www.nuget.org/packages/libplctag/) | The package providing an API for libplctag that should feel natural to .NET developers. |
+| [core binaries](https://github.com/libplctag/libplctag) | The library files (e.g. plctag.dll or libplctag.so) from libplctag core |
+| [libplctag.NET](https://github.com/libplctag/libplctag.NET) | The sub-project of the libplctag organization that provides libplctag functionality for .NET projects. |
+| [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) | The libplctag.NET package providing low-level (raw) access to libplctag core. |
+| [libplctag.NET primary](https://www.nuget.org/packages/libplctag/) | The libplctag.NET package providing an API naturalised for .NET developers. |
 
 
 
 
-## Updating libplctag.NativeImport
+## How to update libplctag.NativeImport
 
 When a new version of libplctag core is released, the library binaries need to be updated in libplctag.NativeImport.
 The build script can be used to copy these libraries in the project without error.
