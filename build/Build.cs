@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Nuke.Common;
@@ -16,13 +17,7 @@ using static Nuke.Common.Tools.Git.GitTasks;
 
 class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
-
-    public static int Main() => Execute<Build>(x => x.Test);
+    public static int Main() => Execute<Build>(x => x.ReleaseLibplctag);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -42,9 +37,9 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
+            DotNetClean();
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => dir.DeleteDirectory());
             ArtifactsDirectory.CreateOrCleanDirectory();
-            //DotNetClean();
         });
 
     Target Restore => _ => _
@@ -113,16 +108,7 @@ class Build : NukeBuild
       .Executes(() =>
       {
           var version = libplctag.GetProperty("Version");
-
-          DotNetNuGetPush(s => s
-              .SetTargetPath(ArtifactsDirectory / $"libplctag.{version}.nupkg")
-              .SetSource(NugetApiUrl)
-              .SetApiKey(NugetApiKey)
-          );
-
-          var tag = $"libplctag-v{version}";
-          Git($"tag {tag}");
-          Git($"push origin {tag}");
+          PushAndTag($"libplctag.{version}.nupkg", $"libplctag-v{version}");
       });
 
     Target ReleaseLibplctagNativeImport => _ => _
@@ -133,17 +119,7 @@ class Build : NukeBuild
       .Executes(() =>
       {
           var version = libplctag_NativeImport.GetProperty("Version");
-
-          DotNetNuGetPush(s => s
-              .SetTargetPath(ArtifactsDirectory / $"libplctag.NativeImport.{version}.nupkg")
-              .SetSource(NugetApiUrl)
-              .SetApiKey(NugetApiKey)
-          );
-
-
-          var tag = $"libplctag.NativeImport-v{version}";
-          Git($"tag {tag}");
-          Git($"push origin {tag}");
+          PushAndTag($"libplctag.NativeImport.{version}.nupkg", $"libplctag.NativeImport-v{version}");
       });
 
     Target UpdateCoreBinaries => _ => _
@@ -195,7 +171,6 @@ class Build : NukeBuild
             Git($"commit -m {message}");
             Git($"push origin");
 
-
         });
 
 
@@ -215,4 +190,25 @@ class Build : NukeBuild
             return false;
         }
     }
+
+    private void PushAndTag(string packageFilename, string tag)
+    {
+        // If the tag already exists, go no further
+        if (Git($"tag -l {tag}").Any())
+        {
+            return;
+        }
+
+        // Push the nuget package
+        DotNetNuGetPush(s => s
+            .SetTargetPath(ArtifactsDirectory / packageFilename)
+            .SetSource(NugetApiUrl)
+            .SetApiKey(NugetApiKey)
+        );
+
+        // Add the git tag and push
+        Git($"tag {tag}");
+        Git($"push origin {tag}");
+    }
+
 }
