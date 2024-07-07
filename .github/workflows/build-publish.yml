@@ -5,7 +5,7 @@ on: [push,workflow_dispatch]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -13,7 +13,7 @@ jobs:
         lfs: true 
     
     - name: Publish libplctag on version change
-      run: ./build.sh ReleaseLibplctag --nuget-api-key ${{secrets.NUGET_API_KEY}}
+      run: .\build.cmd ReleaseLibplctag --nuget-api-key ${{secrets.NUGET_API_KEY}}
       
     - name: Publish libplctag.NativeImport on version change
-      run: ./build.sh ReleaseLibplctagNativeImport --nuget-api-key ${{secrets.NUGET_API_KEY}}
+      run: .\build.cmd ReleaseLibplctagNativeImport --nuget-api-key ${{secrets.NUGET_API_KEY}}
