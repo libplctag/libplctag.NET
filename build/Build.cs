@@ -17,13 +17,13 @@ using static Nuke.Common.Tools.Git.GitTasks;
 
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.ReleaseLibplctag);
+    public static int Main() => Execute<Build>(x => x.Test);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] readonly Solution Solution;
-    [Parameter] readonly string NugetApiUrl = "https://nuget.pkg.github.com/timyhac/index.json";
+    [Parameter] readonly string NugetApiUrl;
     [Parameter] readonly string NugetApiKey;
     [Parameter] readonly string LibplctagCoreVersion;
 
