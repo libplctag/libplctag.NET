@@ -1,6 +1,6 @@
-# Developer Readme
+# Developer Documentation
 
-This readme is for developers of libplctag.NET - the .NET wrapper for libplctag.
+This folder is for storing information regarding the development of libplctag.NET - the .NET wrapper for libplctag.
 
 The term "libplctag" is ambiguous, so for the purposes of this document we will use the following interpretation:
 
