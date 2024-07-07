@@ -32,7 +32,7 @@ class Build : NukeBuild
     [Solution] readonly Solution Solution;
     [Parameter] readonly string NugetApiUrl;
     [Parameter] readonly string NugetApiKey;
-    [Parameter] readonly string NativeFileVersion;
+    [Parameter] readonly string LibplctagCoreVersion;
     [GitRepository] readonly GitRepository GitRepository;
     [GitVersion] readonly GitVersion GitVersion;
 
@@ -152,7 +152,7 @@ class Build : NukeBuild
       });
 
     Target UpdateCoreBinaries => _ => _
-        .Requires(() => NativeFileVersion)
+        .Requires(() => LibplctagCoreVersion)
         .Executes(() =>
         {
 
@@ -160,16 +160,16 @@ class Build : NukeBuild
 
             (string zipFileName, string[] unzipPath, AbsolutePath destination)[] releases =
             {
-                ($"libplctag_{NativeFileVersion}_macos_x64.zip",      ["libplctag.dylib"],        runtimesFolder/"osx-x64"/"libplctag.dylib" ),
-                ($"libplctag_{NativeFileVersion}_macos_aarch64.zip",  ["libplctag.dylib"],        runtimesFolder/"osx-ARM64"/"libplctag.dylib" ),
-                ($"libplctag_{NativeFileVersion}_ubuntu_x64.zip",     ["libplctag.so"],           runtimesFolder/"linux-x64"/"libplctag.so" ),
-                ($"libplctag_{NativeFileVersion}_ubuntu_x86.zip",     ["libplctag.so"],           runtimesFolder/"linux-x86"/"libplctag.so" ),
-                ($"libplctag_{NativeFileVersion}_linux_arm7l.zip",    ["libplctag.so"],           runtimesFolder/"linux-ARM"/"libplctag.so" ),
-                ($"libplctag_{NativeFileVersion}_linux_aarch64.zip",  ["libplctag.so"],           runtimesFolder/"linux-ARM64"/"libplctag.so" ),
-                ($"libplctag_{NativeFileVersion}_windows_x64.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x64"/"plctag.dll" ),
-                ($"libplctag_{NativeFileVersion}_windows_x86.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x86"/"plctag.dll" ),
-                ($"libplctag_{NativeFileVersion}_windows_Arm.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-ARM"/"plctag.dll" ),
-                ($"libplctag_{NativeFileVersion}_windows_Arm64.zip",  ["Release", "plctag.dll"],  runtimesFolder/"win-ARM64"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_x64.zip",      ["libplctag.dylib"],        runtimesFolder/"osx-x64"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_aarch64.zip",  ["libplctag.dylib"],        runtimesFolder/"osx-ARM64"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x64.zip",     ["libplctag.so"],           runtimesFolder/"linux-x64"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x86.zip",     ["libplctag.so"],           runtimesFolder/"linux-x86"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_linux_arm7l.zip",    ["libplctag.so"],           runtimesFolder/"linux-ARM"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_linux_aarch64.zip",  ["libplctag.so"],           runtimesFolder/"linux-ARM64"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x64.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x64"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x86.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x86"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_Arm.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-ARM"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_Arm64.zip",  ["Release", "plctag.dll"],  runtimesFolder/"win-ARM64"/"plctag.dll" ),
             };
 
             var downloadFolder = RootDirectory / "downloads";
@@ -178,7 +178,7 @@ class Build : NukeBuild
             releases.ForEach(release =>
             {
                 var localZipFile = downloadFolder / release.zipFileName;
-                HttpDownloadFile($@"https://github.com/libplctag/libplctag/releases/download/v{NativeFileVersion}/{release.zipFileName}", localZipFile);
+                HttpDownloadFile($@"https://github.com/libplctag/libplctag/releases/download/v{LibplctagCoreVersion}/{release.zipFileName}", localZipFile);
 
                 var unzipFolder = downloadFolder / release.zipFileName + ".unzip_folder";
                 unzipFolder.CreateOrCleanDirectory();
@@ -194,11 +194,12 @@ class Build : NukeBuild
             downloadFolder.DeleteDirectory();
 
 
-            var message = $"Updating to libplctag core v{NativeFileVersion}";
+            var message = $"Updating to libplctag core v{LibplctagCoreVersion}";
 
             Git($"add {runtimesFolder}");
             Git($"commit -m {message}");
             Git($"push origin");
+
 
         });
 

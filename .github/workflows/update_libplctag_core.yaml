@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup git user
+        run: |
+            git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+            git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+
       - name: Pull in latest libplctag core binaries into repository
         run: ./build.sh UpdateCoreBinaries --native-file-version ${{ github.event.inputs.libplctag_version }}
         
