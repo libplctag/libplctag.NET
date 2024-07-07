@@ -1,6 +1,6 @@
 name: Build and publish libplctag.NET nuget package
 
-on: push
+on: [push,workflow_dispatch]
 
 jobs:
   build:
