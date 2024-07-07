@@ -4,7 +4,7 @@ on:
 
   workflow_dispatch:
     inputs:
-      libplctag_version:
+      libplctag_core_version:
         required: true
         description: Version of libplctag core to download (e.g. 2.5.0)
 
@@ -17,9 +17,9 @@ jobs:
 
       - name: Setup git user
         run: |
-            git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
-            git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
       - name: Pull in latest libplctag core binaries into repository
-        run: ./build.sh UpdateCoreBinaries --native-file-version ${{ github.event.inputs.libplctag_version }}
+        run: ./build.sh UpdateCoreBinaries --libplctag-core-version ${{ github.event.inputs.libplctag_core_version }}
         
