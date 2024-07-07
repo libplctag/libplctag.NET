@@ -12,19 +12,8 @@ jobs:
       with:
         lfs: true 
     
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1
-      
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-        
-    - name: Build and Test
-      run: build.sh
-
     - name: Publish libplctag on version change
-      run: build.sh ReleaseLibplctag --nuget-key ${{secrets.NUGET_API_KEY}}
+      run: ./build.sh ReleaseLibplctag --nuget-key ${{secrets.NUGET_API_KEY}}
       
     - name: Publish libplctag.NativeImport on version change
-      run: build.sh ReleaseLibplctagNativeImport --nuget-key ${{secrets.NUGET_API_KEY}}
+      run: ./build.sh ReleaseLibplctagNativeImport --nuget-key ${{secrets.NUGET_API_KEY}}
