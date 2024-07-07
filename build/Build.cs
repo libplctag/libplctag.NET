@@ -23,7 +23,7 @@ class Build : NukeBuild
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] readonly Solution Solution;
-    [Parameter] readonly string NugetApiUrl;
+    [Parameter] readonly string NugetApiUrl = "https://api.nuget.org/v3/index.json"; //default;
     [Parameter] readonly string NugetApiKey;
     [Parameter] readonly string LibplctagCoreVersion;
 
