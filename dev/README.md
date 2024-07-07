@@ -17,15 +17,14 @@ The term "libplctag" is ambiguous, so for the purposes of this document we will 
 
 ## Updating libplctag.NativeImport
 
-When a new version of libplctag native is released, the binaries need to be packed into libplctag.NativeImport.
+When a new version of libplctag core is released, the library binaries need to be updated in libplctag.NativeImport.
 The build script can be used to copy these libraries in the project without error.
 
 1. Run the script with the selected version:
-
-   `> build.cmd UpdateCoreBinaries --libplctag-core-version 2.6.0`
-
-2. Verify that the files have been correctly copied
-3. Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required)
-4. Increment version number of libplctag.NativeImport project
-5. Upload to nuget
-   Note there is a github action which automatically builds libplctag.NativeImport and uploads to nuget
+   `> .\build.cmd UpdateCoreBinaries --libplctag-core-version 2.6.0`
+2. Verify that the files have been correctly copied.
+3. Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required).
+4. Increment version number of libplctag.NativeImport project.
+5. Run the build script with `ReleaseLibplctagNativeImport` to upload to nuget.
+   `> .\build.cmd ReleaseLibplctagNatveImport`
+   Note there is a github action which automatically executes this.
