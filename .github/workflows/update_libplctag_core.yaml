@@ -10,19 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Pull in latest libplctag core binaries into repository
-        run: |
-          cd src
-          ls
-          powershell -File copyReleasesIntoNativeImport.ps1 ${{ github.event.inputs.libplctag_version }}
-      
-      - uses: EndBug/add-and-commit@v9
-        with:
-          message: 'Updating to libplctag core v${{ github.event.inputs.libplctag_version }}'
-          default_author: user_info
+        run: build.sh UpdateNativeFiles --native-file-version ${{ github.event.inputs.libplctag_version }}
         
