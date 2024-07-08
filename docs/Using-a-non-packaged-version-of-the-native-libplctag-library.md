@@ -1,13 +1,14 @@
+# Using a non-packaged version of libplctag core library
 
-## Default Behavior
 libplctag.NativeImport provides low-level (raw) access to the [native libplctag library](https://github.com/libplctag/libplctag) (which is written in C).
 The purpose of this package is to expose the [API for this native library](https://github.com/libplctag/libplctag/wiki/API), and handle platform and configuration issues.
 
 During initialization, this package extracts to disk the appropriate native library.
 By default, it will overwrite files with the same filename (plctag.dll, libplctag.so, or libplctag.dylib).
 
-## Using a self-supplied version of the base libplctag library
-If you wish to disable this behaviour and use a different native library (e.g. one that you've compiled yourself, or a pre-release), you can disable the Force Extract feature.
+## Using a copy of the base libplctag library you supply yourself
+
+If you wish to disable this behaviour and use a different core library (e.g. one that you've compiled yourself, or a pre-release), you can disable the Force Extract feature.
 
 ```csharp
 // Before any calls to any libplctag methods
