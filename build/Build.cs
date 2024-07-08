@@ -173,41 +173,20 @@ class Build : NukeBuild
 
         });
 
-
-    private bool PackageExistsInNugetOrg(string packageName)
-    {
-        var nugetSource = "https://api.nuget.org";
-        var uri = $"{nugetSource}/v3-flatcontainer/{packageName.ToLowerInvariant()}/index.json";
-
-        try
-        {
-            HttpDownloadString(uri);
-            return true;
-        }
-        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            // https://github.com/alirezanet/publish-nuget/blob/master/index.js#L118
-            return false;
-        }
-    }
-
     private void PushAndTag(string packageFilename, string tag)
     {
-        // If the tag already exists, go no further
-        if (Git($"tag -l {tag}").Any())
-        {
-            return;
-        }
-
-        // Push the nuget package
-        DotNetNuGetPush(s => s
+        var output = DotNetNuGetPush(s => s
             .SetTargetPath(ArtifactsDirectory / packageFilename)
             .SetSource(NugetApiUrl)
             .SetApiKey(NugetApiKey)
             .EnableSkipDuplicate()
         );
 
-        // Add the git tag and push
+        if (output.Any(line => line.Text.Contains("Conflict", StringComparison.InvariantCultureIgnoreCase))) {
+            Log.Information("{0} already exists in package repository", packageFilename);
+            return;
+        }
+
         Git($"tag {tag}");
         Git($"push origin {tag}");
     }
