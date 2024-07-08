@@ -204,6 +204,7 @@ class Build : NukeBuild
             .SetTargetPath(ArtifactsDirectory / packageFilename)
             .SetSource(NugetApiUrl)
             .SetApiKey(NugetApiKey)
+            .EnableSkipDuplicate()
         );
 
         // Add the git tag and push
