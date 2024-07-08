@@ -4,25 +4,22 @@ on:
 
   workflow_dispatch:
     inputs:
-      libplctag_version:
+      libplctag_core_version:
         required: true
         description: Version of libplctag core to download (e.g. 2.5.0)
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Pull in latest libplctag core binaries into repository
+      - name: Setup git user
         run: |
-          cd src
-          ls
-          powershell -File copyReleasesIntoNativeImport.ps1 ${{ github.event.inputs.libplctag_version }}
-      
-      - uses: EndBug/add-and-commit@v9
-        with:
-          message: 'Updating to libplctag core v${{ github.event.inputs.libplctag_version }}'
-          default_author: user_info
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+      - name: Pull in latest libplctag core binaries into repository
+        run: ./build.sh UpdateCoreBinaries --libplctag-core-version ${{ github.event.inputs.libplctag_core_version }}
         
