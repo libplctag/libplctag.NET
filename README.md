@@ -30,7 +30,7 @@ This package depends on libplctag.NativeImport to gain access to the underlying 
 
 ## libplctag.NativeImport
 
-See here for information on this package.
+See [here](docs/libplctag.NativeImport.md) for information on this package.
 
 ## Getting Started
 
@@ -80,13 +80,11 @@ For more detail and further usage, see the examples in the example projects:
 * Package the libplctag functionality in a way that is convenient to use in .NET applications.
 * Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard 2.0
 
-## Additional Documentation
-
-* [Developing for systems with immutable application directories](docs/Developing-for-systems-with-immutable-application-directories.md)
-* [Using a non-packaged version of libplctag core library](docs/Using-a-non-packaged-version-of-the-native-libplctag-library.md)
-* [libplctag.NativeImport](
 ## Getting Help
 
-Please review the [Contributions guidance](CONTRIBUTIONS.md).
+Please review the [Contributions guidance](CONTRIBUTING.md).
+
+* [libplctag.NET docs](docs)
+* [libplctag Wiki](https://github.com/libplctag/libplctag/wiki)
 
 libplctag.NET is part of the libplctag organization, so the [same policies apply](https://github.com/libplctag/libplctag#contact-and-support).
