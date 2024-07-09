@@ -1,3 +1,10 @@
+// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 using System;
 using Xunit;
 using Moq;
@@ -40,7 +47,8 @@ namespace libplctag.Tests
 
 
             // Assert
-            nativeTag.Verify(m => m.plc_tag_create("plc=slc500&elem_size=4&elem_count=10&name=TagName", It.IsAny<int>()), Times.Once);
+            var expectedAttributeString = "plc=slc500&elem_size=4&elem_count=10&name=TagName";
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
         }
 
@@ -56,7 +64,8 @@ namespace libplctag.Tests
 
 
             // Assert
-            nativeTag.Verify(m => m.plc_tag_create("", It.IsAny<int>()), Times.Once);
+            var expectedAttributeString = "";
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
         }
     }

@@ -1,9 +1,17 @@
-﻿using System;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace libplctag.NativeImport
 {
+#pragma warning disable 1591 // Defer to core documentation for NativeMethods
     /// <summary>
     /// This class provides low-level (raw) access to the native libplctag library (which is written in C).
     /// The purpose of this package is to expose the API for this native library, and handle platform and configuration issues.
@@ -123,6 +131,11 @@ namespace libplctag.NativeImport
         public static int plc_tag_set_int_attribute(Int32 tag, string attrib_name, int new_value)
         {
             return NativeMethods.plc_tag_set_int_attribute(tag, attrib_name, new_value);
+        }
+
+        public static int plc_tag_get_byte_array_attribute(Int32 tag, string attrib_name, byte[] buffer, int buffer_length)
+        {
+            return NativeMethods.plc_tag_get_byte_array_attribute(tag, attrib_name, buffer, buffer_length);
         }
 
         public static UInt64 plc_tag_get_uint64(Int32 tag, int offset)
@@ -278,4 +291,5 @@ namespace libplctag.NativeImport
 
 
     }
+#pragma warning restore 1591
 }

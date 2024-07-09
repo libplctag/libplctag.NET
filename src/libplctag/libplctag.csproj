@@ -17,12 +17,12 @@
 		<PackageTags></PackageTags>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="libplctag.NativeImport" Version="1.0.39" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="libplctag.NativeImport" Version="1.0.40-alpha.2" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

@@ -1,4 +1,12 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 using static libplctag.NativeImport.plctag;
 
@@ -13,6 +21,7 @@ namespace libplctag
         int plc_tag_abort(int tag);
         int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch);
         int plc_tag_create(string lpString, int timeout);
+        int plc_tag_create_ex(string lpString, callback_func_ex func, IntPtr userdata, int timeout);
         string plc_tag_decode_error(int err);
         int plc_tag_destroy(int tag);
         int plc_tag_get_bit(int tag, int offset_bit);
@@ -23,6 +32,8 @@ namespace libplctag
         long plc_tag_get_int64(int tag, int offset);
         sbyte plc_tag_get_int8(int tag, int offset);
         int plc_tag_get_int_attribute(int tag, string attrib_name, int default_value);
+        int plc_tag_set_int_attribute(int tag, string attrib_name, int new_value);
+        int plc_tag_get_byte_array_attribute(int tag, string attrib_name, byte[] buffer, int buffer_length);
         int plc_tag_get_size(int tag);
         int plc_tag_set_size(int tag, int new_size);
         ushort plc_tag_get_uint16(int tag, int offset);
@@ -41,7 +52,6 @@ namespace libplctag
         int plc_tag_set_int32(int tag, int offset, int val);
         int plc_tag_set_int64(int tag, int offset, long val);
         int plc_tag_set_int8(int tag, int offset, sbyte val);
-        int plc_tag_set_int_attribute(int tag, string attrib_name, int new_value);
         int plc_tag_set_uint16(int tag, int offset, ushort val);
         int plc_tag_set_uint32(int tag, int offset, uint val);
         int plc_tag_set_uint64(int tag, int offset, ulong val);

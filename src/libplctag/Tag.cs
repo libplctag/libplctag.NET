@@ -1,4 +1,11 @@
-﻿using System;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,9 +15,19 @@ namespace libplctag
     public sealed class Tag : IDisposable
     {
 
-        readonly NativeTagWrapper _tag = new NativeTagWrapper(new NativeTag());
+        readonly NativeTagWrapper _tag;
 
+        public Tag()
+        {
+            _tag = new NativeTagWrapper(new NativeTag());
 
+            _tag.ReadStarted += (s, e) => ReadStarted?.Invoke(this, e);
+            _tag.ReadCompleted += (s, e) => ReadCompleted?.Invoke(this, e);
+            _tag.WriteStarted += (s, e) => WriteStarted?.Invoke(this, e);
+            _tag.WriteCompleted += (s, e) => WriteCompleted?.Invoke(this, e);
+            _tag.Aborted += (s, e) => Aborted?.Invoke(this, e);
+            _tag.Destroyed += (s, e) => Destroyed?.Invoke(this, e);
+        }
 
 
         /// <summary>
@@ -135,6 +152,18 @@ namespace libplctag
         {
             get => _tag.UseConnectedMessaging;
             set => _tag.UseConnectedMessaging = value;
+        }
+
+        /// <summary>
+        /// Optional.
+        /// This is specific to individual PLC models.
+        /// Generally only Control Logix-class PLCs support it.
+        /// It is the default for those PLCs that support it as it greatly increases the performance of the communication channel to the PLC.
+        /// </summary>
+        public bool? AllowPacking
+        {
+            get => _tag.AllowPacking;
+            set => _tag.AllowPacking = value;
         }
 
         /// <summary>
@@ -361,9 +390,27 @@ namespace libplctag
         /// <summary>
         /// This function retrieves a segment of raw, unprocessed bytes from the tag buffer.
         /// </summary>
+        /// <remarks>
+        /// Note; allocates a new block of memory.
+        /// If this is problematic, use <see cref="GetBuffer(byte[])"/> instead.
+        /// </remarks>
         public byte[] GetBuffer()                           => _tag.GetBuffer();
+
+        /// <summary>
+        /// Fills the supplied buffer with the raw, unprocessed bytes from the tag buffer.
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
+        /// </remarks>
+        public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
+        public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
+
+        /// <summary>
+        /// This function retrieves an attribute of the raw tag byte array.
+        /// </summary>
+        public byte[] GetByteArrayAttribute(string attributeName)   => _tag.GetByteArrayAttribute(attributeName);
         public int GetSize()                                => _tag.GetSize();
-        public void SetSize(int newSize)                    => _tag.SetSize(newSize);
+        public int SetSize(int newSize)                    => _tag.SetSize(newSize);
 
         /// <summary>
         /// Check the operational status of the tag
@@ -411,37 +458,12 @@ namespace libplctag
         public int GetStringCapacity(int offset)            => _tag.GetStringCapacity(offset);
         public string GetString(int offset)                 => _tag.GetString(offset);
 
-
-        public event EventHandler<TagEventArgs> ReadStarted
-        {
-            add => _tag.ReadStarted += value;
-            remove => _tag.ReadStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> ReadCompleted
-        {
-            add => _tag.ReadCompleted += value;
-            remove => _tag.ReadCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteStarted
-        {
-            add => _tag.WriteStarted += value;
-            remove => _tag.WriteStarted -= value;
-        }
-        public event EventHandler<TagEventArgs> WriteCompleted
-        {
-            add => _tag.WriteCompleted += value;
-            remove => _tag.WriteCompleted -= value;
-        }
-        public event EventHandler<TagEventArgs> Aborted
-        {
-            add => _tag.Aborted += value;
-            remove => _tag.Aborted -= value;
-        }
-        public event EventHandler<TagEventArgs> Destroyed
-        {
-            add => _tag.Destroyed += value;
-            remove => _tag.Destroyed -= value;
-        }
+        public event EventHandler<TagEventArgs> ReadStarted;
+        public event EventHandler<TagEventArgs> ReadCompleted;
+        public event EventHandler<TagEventArgs> WriteStarted;
+        public event EventHandler<TagEventArgs> WriteCompleted;
+        public event EventHandler<TagEventArgs> Aborted;
+        public event EventHandler<TagEventArgs> Destroyed;
 
         ~Tag()
         {

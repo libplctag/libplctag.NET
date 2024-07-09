@@ -1,4 +1,11 @@
-﻿using libplctag;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using libplctag;
 using libplctag.DataTypes;
 using System;
 using System.Collections.Generic;
@@ -38,7 +45,7 @@ namespace CSharpDotNetCore
         }
 
 
-        public static async void SyncAsyncComparison()
+        public static void SyncAsyncComparison()
         {
 
             Console.WriteLine("This method measures the speed of synchronous vs asynchronous reads");
@@ -259,7 +266,7 @@ namespace CSharpDotNetCore
                             await tag.ReadAsync(cts.Token);
                         }
                     }
-                    catch (OperationCanceledException e)
+                    catch (OperationCanceledException)
                     {
                         Console.WriteLine("Successfully Cancelled");
                     }
