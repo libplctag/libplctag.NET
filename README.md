@@ -34,7 +34,7 @@ See [here](docs/libplctag.NativeImport.md) for information on this package.
 
 ## Getting Started
 
-In most cases only the  libplctag package will be needed. It can be added in Visual Studio through the package manager or via the commandline:
+Add the libplctag package in the Visual Studio Nuget Package Manager UI or via the commandline:
 
 `> dotnet add package libplctag`
 
@@ -68,6 +68,7 @@ output = myTag.Read();
 // Output to Console
 Console.WriteLine($"Updated value: SomeProgram.SomeDINT = {output}");
 ```
+
 In advanced scenarios, tags can be instantiated using generics (ex. `Tag<DintPlcMapper, int>`, `Tag<BoolPlcMapper, bool>`) and can be referenced via an `ITag` interface.
 
 For more detail and further usage, see the examples in the example projects:
