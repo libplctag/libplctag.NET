@@ -82,9 +82,8 @@ For more detail and further usage, see the examples in the example projects:
 
 ## Getting Help
 
-Please review the [Contributions guidance](CONTRIBUTING.md).
-
-* [libplctag.NET docs](docs)
 * [libplctag Wiki](https://github.com/libplctag/libplctag/wiki)
+* [libplctag.NET docs](docs)
+* [Contributions guidance](CONTRIBUTING.md).
 
 libplctag.NET is part of the libplctag organization, so the [same policies apply](https://github.com/libplctag/libplctag#contact-and-support).
