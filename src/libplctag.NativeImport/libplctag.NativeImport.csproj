@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
-		<AssemblyName>libplctag.NativeImport</AssemblyName>
-		<RootNamespace>libplctag.NativeImport</RootNamespace>
-		<PackageId>libplctag.NativeImport</PackageId>
-		<Version>1.0.39</Version>
-		<Authors>libplctag</Authors>
-		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-		<PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
-		<PackageIcon>packageIcon.png</PackageIcon>
-		<PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AssemblyName>libplctag.NativeImport</AssemblyName>
+    <RootNamespace>libplctag.NativeImport</RootNamespace>
+    <PackageId>libplctag.NativeImport</PackageId>
+    <Version>1.0.39</Version>
+    <Authors>libplctag</Authors>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
+    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />

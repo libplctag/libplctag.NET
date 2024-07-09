@@ -1,4 +1,11 @@
-﻿using System;
+﻿// Copyright (c) libplctag.NET contributors
+// https://github.com/libplctag/libplctag.NET
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +26,17 @@ namespace libplctag
         int? ReadCacheMillisecondDuration { get; set; }
         TimeSpan Timeout { get; set; }
         bool? UseConnectedMessaging { get; set; }
+        bool? AllowPacking { get; set; }
+        TimeSpan? AutoSyncReadInterval { get; set; }
+        TimeSpan? AutoSyncWriteInterval { get; set; }
+        DebugLevel DebugLevel { get; set; }
+
+        event EventHandler<TagEventArgs> ReadStarted;
+        event EventHandler<TagEventArgs> ReadCompleted;
+        event EventHandler<TagEventArgs> WriteStarted;
+        event EventHandler<TagEventArgs> WriteCompleted;
+        event EventHandler<TagEventArgs> Aborted;
+        event EventHandler<TagEventArgs> Destroyed;
 
         Status GetStatus();
         void Initialize();
@@ -28,6 +46,6 @@ namespace libplctag
         void Write();
         Task WriteAsync(CancellationToken token = default);
 
-        Object Value { get; set; }
+        object Value { get; set; }
     }
 }
