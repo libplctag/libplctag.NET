@@ -403,7 +403,17 @@ namespace libplctag
         /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
         /// </remarks>
         public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
-        public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
+
+        /// <summary>
+        /// Fills the supplied buffer with the raw, unprocessed bytes from the tag buffer.
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
+        /// </remarks>
+        public void GetBuffer(int offset, byte[] buffer, int length)    => _tag.GetBuffer(offset, buffer, length);
+
+        public void SetBuffer(byte[] newBuffer)                         => _tag.SetBuffer(newBuffer);
+        public void SetBuffer(int offset, byte[] buffer, int length)    => _tag.SetBuffer(offset, buffer, length);
 
         /// <summary>
         /// This function retrieves an attribute of the raw tag byte array.
