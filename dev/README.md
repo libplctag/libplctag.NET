@@ -2,6 +2,12 @@
 
 This folder is for storing information regarding the development of libplctag.NET - the .NET wrapper for libplctag.
 
+## Project Goals
+
+* Package the libplctag functionality in a way that is convenient to use in .NET applications.
+* Be cross-platform: It should support any platform that libplctag can be built for, and supports .NET Standard 2.0
+
+
 ## Glossary
 
 |  |  |
