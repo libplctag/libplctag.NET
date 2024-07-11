@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+    <PackageReadme>README.md</PackageReadme>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,7 @@
     <EmbeddedResource Include="runtime\win_ARM64\plctag.dll" />
     <EmbeddedResource Include="runtime\win_ARM\plctag.dll" />
     <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+    <None Include="..\..\docs\libplctag.NativeImport.md" Pack="true" PackagePath="\README.md"/>
   </ItemGroup>
 
   <ItemGroup>

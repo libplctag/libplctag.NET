@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+    <PackageReadme>README.md</PackageReadme>
     <PackageTags></PackageTags>
   </PropertyGroup>
 
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+    <None Include="..\..\docs\libplctag.md" Pack="true" PackagePath="\README.md"/>
   </ItemGroup>
 
 </Project>
