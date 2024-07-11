@@ -532,8 +532,13 @@ namespace libplctag
 
         public void GetBuffer(byte[] buffer)
         {
+            GetBuffer(0, buffer, buffer.Length);
+        }
+
+        public void GetBuffer(int offset, byte[] buffer, int length)
+        {
             ThrowIfAlreadyDisposed();
-            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, offset, buffer, length);
             ThrowIfStatusNotOk(result);
         }
 
@@ -552,12 +557,19 @@ namespace libplctag
 
         public void SetBuffer(byte[] buffer)
         {
+            SetBuffer(0, buffer, buffer.Length);
+        }
+
+        public void SetBuffer(int start_offset, byte[] buffer, int length)
+        {
             ThrowIfAlreadyDisposed();
 
             GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_set_size, buffer.Length);
-            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, start_offset, buffer, length);
             ThrowIfStatusNotOk(result);
         }
+
+
 
         private int GetIntAttribute(string attributeName)
         {
