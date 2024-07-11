@@ -1,6 +1,6 @@
 # Developer Documentation
 
-This folder is for storing information regarding the development of libplctag.NET - the .NET wrapper for libplctag.
+This folder is for storing information regarding the development of libplctag.NET.
 
 ## Glossary
 
@@ -15,17 +15,24 @@ This folder is for storing information regarding the development of libplctag.NE
 
 
 
+## Build Automation
 
-## How to update libplctag.NativeImport
+GitHub Actions have been created to automate some common activities such as updating the core binaries and release nuget packages.
+
+These workflows delegate the actual automation logic to the [`_build`](../build) [NUKE](https://nuke.build/) project.
+
+### How to release Nuget packages
+
+1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects.
+2. Trigger the "Build and publish libplctag.NET nuget package" workflow.
+4. Create a GitHub "Release" with details of the new release.
+
+## How to update the core binaries libplctag.NativeImport
 
 When a new version of libplctag core is released, the library binaries need to be updated in libplctag.NativeImport.
 The build script can be used to copy these libraries in the project without error.
 
-1. Run the script with the selected version:
-   `> .\build.cmd UpdateCoreBinaries --libplctag-core-version 2.6.0`
+1. Trigger the "Update libplctag core" workflow.
 2. Verify that the files have been correctly copied.
 3. Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required).
-4. Increment version number of libplctag.NativeImport project.
-5. Run the build script with `ReleaseLibplctagNativeImport` to upload to nuget.
-   `> .\build.cmd ReleaseLibplctagNatveImport`
-   Note there is a github action which automatically executes this.
+4. Finally, release the updated project as a new Nuget packages.
