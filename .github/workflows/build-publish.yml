@@ -1,6 +1,6 @@
 name: Build and publish libplctag.NET nuget package
 
-on: [push,workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -8,12 +8,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         lfs: true 
     
-    - name: Publish libplctag on version change
-      run: .\build.cmd ReleaseLibplctag --nuget-api-key ${{secrets.NUGET_API_KEY}}
-      
-    - name: Publish libplctag.NativeImport on version change
-      run: .\build.cmd ReleaseLibplctagNativeImport --nuget-api-key ${{secrets.NUGET_API_KEY}}
+    - name: Publish all packages on version change
+      run: .\build.cmd ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}
