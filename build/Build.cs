@@ -122,6 +122,21 @@ class Build : NukeBuild
           PushAndTag($"libplctag.NativeImport.{version}.nupkg", $"libplctag.NativeImport-v{version}");
       });
 
+    Target ReleaseAll => _ => _
+      .DependsOn(PackLibplctag)
+      .DependsOn(PackLibplctagNativeImport)
+      .Requires(() => NugetApiUrl)
+      .Requires(() => NugetApiKey)
+      .Requires(() => Configuration.Equals(Configuration.Release))
+      .Executes(() =>
+      {
+          var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("Version");
+          PushAndTag($"libplctag.NativeImport.{libplctagNativeImportVersion}.nupkg", $"libplctag.NativeImport-v{libplctagNativeImportVersion}");
+
+          var libplctagVersion = libplctag.GetProperty("Version");
+          PushAndTag($"libplctag.{libplctagVersion}.nupkg", $"libplctag-v{libplctagVersion}");
+      });
+
     Target UpdateCoreBinaries => _ => _
         .Requires(() => LibplctagCoreVersion)
         .Executes(() =>
