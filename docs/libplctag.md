@@ -1,4 +1,16 @@
-# libplctag
+# libplctag.NET
+
+[libplctag](https://github.com/libplctag/libplctag) is a library provides a portable and simple API for accessing Allen-Bradley and Modbus PLC data over Ethernet.
+
+[libplctag.NET](https://www.nuget.org/packages/libplctag/) provides wrapper packages for libplctag, with an API naturalised to .NET by supporting the following features:
+
+* Values are strongly-typed (both Atomic types and User-Defined Types).
+* Errors are thrown as Exceptions
+* Async/Await
+* Native resource cleanup
+
+Except for the above, all of the libplctag functionality is provided by the core libplctag library.
+
 
 ## Getting Started
 
@@ -29,30 +41,86 @@ output = myTag.Read();
 Console.WriteLine($"Updated value: {output}");
 ```
 
-## Concepts
 
-### Tag
+## Introduction
 
-A tag is the key concept exposed by libplctag.
-It provides an interface to read and write to PLC memory.
-PLC memory is exposed as a byte array, which can be read from the PLC with `Read(..)`, manipulated through the getter/setter functions, and then written back to the PLC with `Write(..)`.
+Libplctag does a great job at abstracting many of the details of Ethernet/IP and Modbus, there are still some aspects of these network protocols that library users must understand.
 
-### Mapper
-A mapper (an implementation of [`IPlcMapper`](https://github.com/libplctag/libplctag.NET/blob/master/src/libplctag/DataTypes/IPlcMapper.cs) handles the translation between a .NET type and the Plc type.
+The manuals provided by your device manufacturer are the best source of information on these details.
+
+### Gateway and Path
+Gateway refers to the IP Address or hostname 
+Usually this is the IP Address of the PLC CPU or network module.
+Ethernet/IP communication is routed through a series of devices, so the `path` configures that routing.
+
+### Name
+libplctag converts the `name` string into a format appropriate for the network protocol.
+
+Some examples where 
+* Program tags
+* Array elements
+* Unions
+* Struct members
+
+### Memory layout
+For 
+
+
+
+
 
 ### Network Protocol (Ethernet/IP Explicit Messaging and Modbus)
 
 Ethernet/IP explicit messaging is the protocol used by libplctag to communicate
-It is important to note that using libplctag does not preclude you from understanding the Ethernet/IP API offered by your PLC.
+It is important to note that using libplctag does not preclude you from understanding the Ethernet/IP API offered by your PLC system.
+
+The most obvious example of this is how to connect to the target device; i.e. `Gateway` and `Path`.
+
 
 One common example of this is accessing String tags.
 String tags are a special case of a STRUCT that vary significantly across devices and so it is necessary to know how the String is encoded in memory.
 
-When working with any UDTs you will need to reverse-engineer the structure.
+In general, when working with any UDTs you will need to reverse-engineer the structure.
 An example can be found [here](src/Examples/CSharp%20DotNetCore/SequencePlcMapper.cs).
 
 Another example of this is how the Tag name influences the memory layout.
 For example, a BOOL Array Tag on Omron PLCs will present different memory layout when the name is `MyBoolArray` versus `MyBoolArray[0]`.
+
+## Concepts
+
+### Tag
+
+A tag is the primary concept in libplctag.
+It provides a way to read and write to tags in a PLC.
+
+The Tag value is exposed as a byte array, which can be
+* Read from the PLC to the client with `Read()`.
+* Manipulated on the client through the getter/setter functions such as `GetInt32(int offset)` / `SetInt32(int offset, int value)`.
+* Written back to the PLC with `Write()`.
+
+### Mapper
+A mapper handles the mapping between a .NET type (e.g. `int`, `float`) and the PLC type (e.g. `DINT`, `REAL`) by calling the appropriate functions on a Tag.
+For example, in a PLC a tag could be defined of type `DINT` - a 32bit signed integer, and the natural counterpart in C# would be an `int` type.
+The Mapper would encapsulate the calls to `GetInt32(int offset)` and `SetInt32(int offset, int value)` as well as providing other information that libplctag needs for this mapping.
+
+Mappers are implemented as an [`IPlcMapper`](src/libplctag/DataTypes/IPlcMapper.cs) and are used in a `Tag<M,T>` to provide an interface that is convenient for application developers to to work with.
+
+```csharp
+class DintPlcMapper : IPlcMapper<int>
+{
+    public PlcType PlcType { get; set; }
+    public int? ElementSize => 4;
+    public int[] ArrayDimensions { get; set; }
+    public int? GetElementCount() => 1;
+    public int Decode(Tag tag, int offset) => tag.GetInt32(offset);
+    public void Encode(Tag tag, int offset, int value) => tag.SetInt32(offset, value);
+}
+
+var myTag = new Tag<DintPlcMapper, int>(){...configuration...};
+myTag.Initialize();
+myTag.Value = 1234;
+myTag.Write();
+```
 
 ## `libplctag` namepsace
 * `Tag` - A wrapper around the core libplctag library tag by providing an interface naturalised to .NET.
@@ -73,7 +141,8 @@ Of note are [TagInfoPlcMapper](src/libplctag/DataTypes/TagInfoPlcMapper.cs) and 
 * [`TagLreal2D`](src/libplctag/DataTypes/Simple/Definitions.cs#L41)
 * ... and so on
 
-## Further Examples
+
+## Example
 
 For more detail and further usage, see the examples in the example projects:
 
