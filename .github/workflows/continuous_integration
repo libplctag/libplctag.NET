@@ -1,0 +1,16 @@
+name: Build and publish libplctag.NET nuget package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        lfs: true 
+    
+    - name: Build all and run tests
+      run: .\build.cmd Test
