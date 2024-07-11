@@ -1,4 +1,4 @@
-name: Build and publish libplctag.NET nuget package
+name: Continuous Integration - Build all and run tests
 
 on: [push]
 
