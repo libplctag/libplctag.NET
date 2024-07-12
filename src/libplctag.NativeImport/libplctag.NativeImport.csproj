@@ -14,7 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
-    <PackageReadme>README.md</PackageReadme>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>plc modbus netstandard rockwell allen-bradley libplctag</PackageTags>
   </PropertyGroup>
 
