@@ -1,4 +1,4 @@
-﻿// Copyright (c) libplctag.NET contributors
+// Copyright (c) libplctag.NET contributors
 // https://github.com/libplctag/libplctag.NET
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -37,7 +37,8 @@ namespace libplctag
 
 
         /// <summary>
-        /// Optional An integer number of elements per tag .
+        /// [OPTIONAL]
+        /// An integer number of elements per tag.
         /// </summary>
         /// 
         /// <remarks>
@@ -54,7 +55,8 @@ namespace libplctag
 
 
         /// <summary>
-        /// Optional An integer number of bytes per element
+        /// [REQUIRED/OPTIONAL]
+        /// An integer number of bytes per element
         /// </summary>
         /// 
         /// <remarks>
@@ -69,9 +71,21 @@ namespace libplctag
 
 
         /// <summary>
-        /// This tells the library what host name or IP address to use for the PLC 
-        /// or the gateway to the PLC (in the case that the PLC is remote).
+        /// [REQUIRED]
+        /// IP address or host name
         /// </summary>
+        ///
+        /// <remarks>
+        /// <para>
+        /// This tells the library what host name or IP address to use for the PLC or the gateway to the PLC (in the case that the PLC is remote).
+        /// </para>
+        /// <para>
+        /// [AB-SPECIFIC]
+        /// Only for PLCs with additional routing.
+        /// This attribute is required for CompactLogix/ControlLogix tags and for tags using a DH+ protocol bridge (i.e. a DHRIO module) to get to a PLC/5, SLC 500, or MicroLogix PLC on a remote DH+ link. The attribute is ignored if it is not a DH+ bridge route, but will generate a warning if debugging is active.
+        /// Note that Micro800 connections must not have a path attribute.
+        /// </para>
+        /// </remarks>
         public string Gateway
         {
             get => _tag.Gateway;
@@ -80,9 +94,32 @@ namespace libplctag
 
 
         /// <summary>
-        /// This is the full name of the tag.
-        /// For program tags, prepend `Program:{ProgramName}.` 
-        /// where {ProgramName} is the name of the program in which the tag is created.
+        /// <list type="table">
+        /// <listheader>
+        ///    <term>REQUIRED | AB-SPECIFIC</term>
+        ///    <description>
+        ///     The full name of the tag, e.g. <c>`TestBigTag[10,42]`</c> for CIP-based PLCs.
+        ///     <para>
+        ///         For program tags, prepend <c>`Program:{program name}.`</c> where {program name} is the name of the program in which the tag is created.
+        ///         Example: <c>`Program:MyProgram.MyTag`</c>.
+        ///         This will access the tag MyTag in the program MyProgram.
+        ///         For PCCC-based PLCs, examples include <c>`N7:4`</c>, <c>`ST18:26`</c>, <c>`L20:2`</c>, <c>`B3:4/2`</c>, <c>`MG14:6.en`</c> etc.
+        ///         Many common field name abbeviations are supported. 
+        ///     </para>
+        /// </description>
+        /// </listheader>
+        /// <listheader>
+        ///    <term>REQUIRED | MODBUS-SPECIFIC</term>
+        ///    <description>
+        ///     The type and first register number of a tag, e.g. co42 for coil 42 (counts from zero).
+        ///     <para>
+        ///         The supported register type prefixes are co for coil, di for discrete inputs, hr for holding registers and ir for input registers.
+        ///         The type prefix must be present and the register number must be greater than or equal to zero and less than or equal to 65535.
+        ///         Modbus examples: co21 - coil 21, di22 - discrete input 22, hr66 - holding register 66, ir64000 - input register 64000.
+        ///     </para>
+        /// </description>
+        /// </listheader>
+        /// </list>
         /// </summary>
         public string Name
         {
@@ -92,10 +129,29 @@ namespace libplctag
 
 
         /// <summary>
-        /// This attribute is required for CompactLogix/ControlLogix tags 
-        /// and for tags using a DH+ protocol bridge (i.e. a DHRIO module) to get to a PLC/5, SLC 500, or MicroLogix PLC on a remote DH+ link. 
-        /// The attribute is ignored if it is not a DH+ bridge route, but will generate a warning if debugging is active. 
-        /// Note that Micro800 connections must not have a path attribute.
+        /// <list type="table">
+        /// <listheader>
+        ///     <term>OPTIONAL | AB-SPECIFIC</term>
+        ///     <description>
+        ///     Only for PLCs with additional routing.
+        ///     <para>
+        ///         This attribute is required for CompactLogix/ControlLogix tags and for tags using a DH+ protocol bridge (i.e. a DHRIO module) to get to a PLC/5, SLC 500, or MicroLogix PLC on a remote DH+ link. 
+        ///         The attribute is ignored if it is not a DH+ bridge route, but will generate a warning if debugging is active. 
+        ///         Note that Micro800 connections must not have a path attribute.
+        ///     </para>
+        ///     </description>
+        /// </listheader>
+        /// <listheader>
+        ///     <term>OPTIONAL | MODBUS-SPECIFIC</term>
+        ///     <description>
+        ///     The server/unit ID.
+        ///     Must be an integer value between 0 and 255.
+        ///     <para>
+        ///         Servers may support more than one unit or may bridge to other units. Example: path=4 for accessing device unit ID 4.
+        ///     </para>
+        ///     </description>
+        /// </listheader>
+        /// </list>
         /// </summary>
         public string Path
         {
@@ -104,7 +160,8 @@ namespace libplctag
         }
 
         /// <summary>
-        /// The type of PLC
+        /// [REQUIRED | AB-SPECIFIC]
+        /// Determines the type of the PLC.
         /// </summary>
         public PlcType? PlcType
         {
@@ -114,6 +171,7 @@ namespace libplctag
 
 
         /// <summary>
+        /// [REQUIRED]
         /// Determines the type of the PLC Protocol.
         /// </summary>
         public Protocol? Protocol
@@ -123,10 +181,14 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Use this attribute to cause the tag read operations to cache data the requested number of milliseconds. 
+        /// [OPTIONAL]
+        /// Use this attribute to cause the tag read operations to cache data the requested number of milliseconds. 
+        /// </summary>
+        /// 
+        /// <remarks>
         /// This can be used to lower the actual number of requests against the PLC. 
         /// Example read_cache_ms=100 will result in read operations no more often than once every 100 milliseconds.
-        /// </summary>
+        /// </remarks>
         public int? ReadCacheMillisecondDuration
         {
             get => _tag.ReadCacheMillisecondDuration;
@@ -144,10 +206,17 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Control whether to use connected or unconnected messaging. 
-        /// Only valid on Logix-class PLCs. Connected messaging is required on Micro800 and DH+ bridged links. 
-        /// Default is PLC-specific and link-type specific. Generally you do not need to set this.
+        /// [OPTIONAL | AB-SPECIFIC]
+        /// True = use CIP connection.
+        /// False = use UCMM.
         /// </summary>
+        /// <remarks>
+        /// Control whether to use connected or unconnected messaging. 
+        /// Only valid on Logix-class PLCs.
+        /// Connected messaging is required on Micro800 and DH+ bridged links. 
+        /// Default is PLC-specific and link-type specific.
+        /// Generally you do not need to set this.
+        /// </remarks>
         public bool? UseConnectedMessaging
         {
             get => _tag.UseConnectedMessaging;
@@ -155,11 +224,15 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional.
+        /// [OPTIONAL | AB-SPECIFIC]
+        /// True = (default) allow use of multi-request CIP command.
+        /// False = use only one CIP request per packet.
+        /// </summary>
+        /// <remarks>
         /// This is specific to individual PLC models.
         /// Generally only Control Logix-class PLCs support it.
         /// It is the default for those PLCs that support it as it greatly increases the performance of the communication channel to the PLC.
-        /// </summary>
+        /// </remarks>
         public bool? AllowPacking
         {
             get => _tag.AllowPacking;
@@ -167,7 +240,8 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. An integer number of milliseconds to periodically read data from the PLC.
+        /// [OPTIONAL]
+        /// An integer number of milliseconds to periodically read data from the PLC.
         /// </summary>
         /// 
         /// <remarks>
@@ -181,7 +255,8 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. An integer number of milliseconds to buffer tag data changes before writing to the PLC.
+        /// [OPTIONAL]
+        /// An integer number of milliseconds to buffer tag data changes before writing to the PLC.
         /// </summary>
         /// 
         /// <remarks>
@@ -202,8 +277,14 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Configures. the byte order of 16-bit integers.
+        /// [OPTIONAL]
+        /// A string indicating the byte order of 16-bit integers.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Allowable values include `01` (little-endian) and `10` (big-endian).
+        /// Defaults to `10` for Modbus and `01` for Allen-Bradley.
+        /// </remarks>
         public string Int16ByteOrder
         {
             get => _tag.Int16ByteOrder;
@@ -211,8 +292,13 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Configures the byte order of 32-bit integers.
+        /// [OPTIONAL]
+        /// A string indicating the byte order of 32-bit integers.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults to `3210`, strict big-endian, for Modbus and `0123` for Allen-Bradley PLCs.
+        /// </remarks>
         public string Int32ByteOrder
         {
             get => _tag.Int32ByteOrder;
@@ -220,8 +306,13 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Configures the byte order of 64-bit integers.
+        /// [OPTIONAL]
+        /// A string indicating the byte order of 64-bit integers.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults to `76543210`, strict big-endian, for Modbus and `01234567` for Allen-Bradley PLCs.
+        /// </remarks>
         public string Int64ByteOrder
         {
             get => _tag.Int64ByteOrder;
@@ -229,8 +320,13 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Configures the byte order of 32-bit floating point values.
+        /// [OPTIONAL]
+        /// A string indicating the byte order of 32-bit floating point values.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults to `3210`, strict big-endian, for Modbus. Allen-Bradley PLCs default to the PLC-native order.
+        /// </remarks>
         public string Float32ByteOrder
         {
             get => _tag.Float32ByteOrder;
@@ -238,8 +334,13 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Configures the byte order of 64-bit floating point values.
+        /// [OPTIONAL]
+        /// A string indicating the byte order of 64-bit floating point values.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults to `76543210`, strict big-endian, for Modbus and `01234567` for Allen-Bradley PLCs.
+        /// </remarks>
         public string Float64ByteOrder
         {
             get => _tag.Float64ByteOrder;
@@ -247,8 +348,16 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. A positive integer value of 1, 2, 4, or 8 determining how big the leading count word is in a string.
+        /// [OPTIONAL]
+        /// A positive integer value of 1, 2, 4, or 8 determining how big the leading count word is in a string.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB Logix PLCs default to 4.
+        /// AB PCCC PLCs default to 2.
+        /// Must be used with <see cref="StringIsCounted"/>.
+        /// </remarks>
         public uint? StringCountWordBytes
         {
             get => _tag.StringCountWordBytes;
@@ -256,8 +365,14 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Determines whether character bytes are swapped within 16-bit words.
+        /// [OPTIONAL]
+        /// Determines whether character bytes are swapped within 16-bit words.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB Logix PLCs default to false and PCCC PLCs default to true.
+        /// </remarks>
         public bool? StringIsByteSwapped
         {
             get => _tag.StringIsByteSwapped;
@@ -265,8 +380,15 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Determines whether strings have a count word or not.
+        /// [OPTIONAL]
+        /// Determines whether strings have a count word or not.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB PLCs default to true.
+        /// If set true, must be used with <see cref="StringCountWordBytes"/>.
+        /// </remarks>
         public bool? StringIsCounted
         {
             get => _tag.StringIsCounted;
@@ -274,8 +396,15 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Determines whether strings have a fixed length that they occupy.
+        /// [OPTIONAL]
+        /// Determines whether strings have a fixed length that they occupy.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC and tag type.
+        /// AB defaults to true for ControlLogix and CompactLogix and 84 for PCCC-based PLCs.
+        /// Listing tags is an exception as the tag names are counted, but not fixed length.
+        /// </remarks>
         public bool? StringIsFixedLength
         {
             get => _tag.StringIsFixedLength;
@@ -283,8 +412,14 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Determines whether strings are zero-terminated as is done in C.
+        /// [OPTIONAL]
+        /// Determines whether strings are zero-terminated as is done in C.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB defaults to false.
+        /// </remarks>
         public bool? StringIsZeroTerminated
         {
             get => _tag.StringIsZeroTerminated;
@@ -292,8 +427,14 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. Determines the maximum number of character bytes in a string.
+        /// [OPTIONAL]
+        /// Determines the maximum number of character bytes in a string.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB Logix and PCCC PLCs default to 82.
+        /// </remarks>
         public uint? StringMaxCapacity
         {
             get => _tag.StringMaxCapacity;
@@ -301,8 +442,15 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. A positive integer value determining the total number of padding bytes at the end of a string.
+        /// [OPTIONAL]
+        /// A positive integer value determining the total number of padding bytes at the end of a string.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB Logix PLCs default to 2.
+        /// AB PCCC PLCs default to 0.
+        /// </remarks>
         public uint? StringPadBytes
         {
             get => _tag.StringPadBytes;
@@ -310,8 +458,16 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. A positive integer value determining the total number of bytes used in the tag buffer by a string. Must be used with str_is_fixed_length.
+        /// [OPTIONAL]
+        /// A positive integer value determining the total number of bytes used in the tag buffer by a string.
+        /// Must be used with <see cref="StringIsFixedLength"/>.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// Defaults are set per PLC type.
+        /// AB Logix PLCs default to 88.
+        /// AB PCCC PLCs default to 84.
+        /// </remarks>
         public uint? StringTotalLength
         {
             get => _tag.StringTotalLength;
@@ -319,7 +475,8 @@ namespace libplctag
         }
 
         /// <summary>
-        /// Optional. The Modbus specification allows devices to queue up to 16 requests at once.
+        /// [OPTIONAL | MODBUS-SPECIFIC]
+        /// The Modbus specification allows devices to queue up to 16 requests at once.
         /// </summary>
         ///
         /// <remarks>
