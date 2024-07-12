@@ -319,6 +319,21 @@ namespace libplctag
         }
 
         /// <summary>
+        /// Optional. The Modbus specification allows devices to queue up to 16 requests at once.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The default is 1 and the maximum is 16.
+        /// This allows the host to send multiple requests without waiting for the device to respond.
+        /// Not all devices support up to 16 requests in flight.
+        /// </remarks>
+        public uint? MaxRequestsInFlight
+        {
+            get => _tag.MaxRequestsInFlight;
+            set => _tag.MaxRequestsInFlight = value;
+        }
+
+        /// <summary>
         /// Creates the underlying data structures and references required before tag operations.
         /// </summary>
         /// 
@@ -403,7 +418,17 @@ namespace libplctag
         /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
         /// </remarks>
         public void GetBuffer(byte[] buffer)                => _tag.GetBuffer(buffer);
-        public void SetBuffer(byte[] newBuffer)             => _tag.SetBuffer(newBuffer);
+
+        /// <summary>
+        /// Fills the supplied buffer with the raw, unprocessed bytes from the tag buffer.
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of <see cref="GetBuffer()"/> to avoid creating a new block of memory.
+        /// </remarks>
+        public void GetBuffer(int offset, byte[] buffer, int length)    => _tag.GetBuffer(offset, buffer, length);
+
+        public void SetBuffer(byte[] newBuffer)                         => _tag.SetBuffer(newBuffer);
+        public void SetBuffer(int offset, byte[] buffer, int length)    => _tag.SetBuffer(offset, buffer, length);
 
         /// <summary>
         /// This function retrieves an attribute of the raw tag byte array.
