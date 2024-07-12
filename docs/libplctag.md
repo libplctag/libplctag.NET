@@ -32,6 +32,12 @@ output = myTag.Read();
 Console.WriteLine($"Updated value: {output}");
 ```
 
+See the examples projects for further detail and usage:
+
+* [C# (.NET)](src/Examples/CSharp%20DotNetCore)
+* [C# (.NET Framework)](src/Examples/CSharp%20DotNetFramework)
+* [VB.NET](src/Examples/VB.NET%20DotNetCore/Program.vb)
+
 ## Introduction
 
 A tag is a local reference to a region of PLC memory.
@@ -135,11 +141,3 @@ The libplctag package depends on the core libplctag libraries which are written 
 The delivery of these files, and the interop to the .NET environment is provided by the [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) package.
 
 Information on this package can be found [here](libplctag.NativeImport.md).
-
-## Examples
-
-For more detail and further usage, see the examples in the example projects:
-
-* [C# (.NET)](src/Examples/CSharp%20DotNetCore)
-* [C# (.NET Framework)](src/Examples/CSharp%20DotNetFramework)
-* [VB.NET](src/Examples/VB.NET%20DotNetCore/Program.vb)
