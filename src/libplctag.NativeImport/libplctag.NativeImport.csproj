@@ -33,8 +33,4 @@
     <None Include="..\..\docs\libplctag.NativeImport.md" Pack="true" PackagePath="\README.md"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
-  </ItemGroup>
-
 </Project>
