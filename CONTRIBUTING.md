@@ -2,8 +2,6 @@
 
 First off, welcome and thanks for taking the time to contribute!
 
-libplctag.NET is a wrapper for libplctag, and as such is intended to expose libplctag functionality in a way that is convenient to use in .NET applications.
-
 ## How can I contribute?
 
 ### Reporting bugs
