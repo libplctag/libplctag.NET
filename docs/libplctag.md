@@ -53,7 +53,7 @@ Read more on the [libplctag wiki](https://github.com/libplctag/libplctag/wiki/AP
 
 ## `Tag`
 
-libplctag.NET provides a wrapper for the C API naturalised for .NET
+libplctag.NET provides a wrapper for the C API naturalised for .NET.
 The `Tag` class is intended to be functionally equivalent to the C API.
 
 For example:
@@ -113,6 +113,7 @@ The manuals provided by your device manufacturer are the best source of informat
 All types are shipped with XML documentation, so the full API is discoverable in your IDE.
 
 ### `libplctag.DataTypes` namespace
+
 * [`IPlcMapper`](src/libplctag/DataTypes/IPlcMapper.cs)
 * [`DintPlcMapper`](src/libplctag/DataTypes/DintPlcMapper.cs)
 * [`LrealPlcMapper`](src/libplctag/DataTypes/LrealPlcMapper.cs)
@@ -121,6 +122,9 @@ All types are shipped with XML documentation, so the full API is discoverable in
 Of note are [TagInfoPlcMapper](src/libplctag/DataTypes/TagInfoPlcMapper.cs) and [UdtInfoMapper](src/libplctag/DataTypes/UdtInfoPlcMapper.cs), which can be used to [list the tags in a ControlLogix PLC](src/Examples/CSharp%20DotNetCore/ListUdtDefinitions.cs).
 
 ### `libplctag.DataTypes.Simple` namespace
+
+In simple cases such as atomic tags (e.g.`DINT`) or arrays of atomic tags (e.g. `LREAL[x,y]`), we provide classes that pair a built-in `IPlcMapper` with the natural .NET type:
+
 * [`TagDint`](src/libplctag/DataTypes/Simple/Definitions.cs#L21)
 * [`TagLreal2D`](src/libplctag/DataTypes/Simple/Definitions.cs#L41)
 * ... and so on
