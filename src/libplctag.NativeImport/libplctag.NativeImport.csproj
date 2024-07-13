@@ -5,7 +5,7 @@
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
     <PackageId>libplctag.NativeImport</PackageId>
-    <Version>1.0.39</Version>
+    <Version>1.0.41</Version>
     <Authors>libplctag</Authors>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageDescription>libplctag.NativeImport provides low-level (raw) access to the native libplctag library. This package does not provide an API which is friendly to app developers. Rather, it provides an API which handles platform and configuration issues, upon which a friendlier API can be built.</PackageDescription>
@@ -14,21 +14,35 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>plc modbus netstandard rockwell allen-bradley libplctag</PackageTags>
   </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Content Include="runtimes\**" PackagePath="runtimes\" />
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
+    <None Include="..\..\docs\libplctag.NativeImport.md" Pack="true" PackagePath="\README.md"/>
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Content Include="runtimes\**" PackagePath="runtimes\" />
-	</ItemGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
 
-	<ItemGroup>
-	  <Content Include="libplctag.NativeImport.targets" PackagePath="build\" />
-	  <Content Include="libplctag.NativeImport.targets" PackagePath="buildTransitive\" />
-	  <Content Include="libplctag.NativeImport.props" PackagePath="build\" />
-	  <Content Include="libplctag.NativeImport.props" PackagePath="buildTransitive\" />
-	</ItemGroup>
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="libplctag.NativeImport.targets" PackagePath="build\" />
+    <Content Include="libplctag.NativeImport.targets" PackagePath="buildTransitive\" />
+    <Content Include="libplctag.NativeImport.props" PackagePath="build\" />
+    <Content Include="libplctag.NativeImport.props" PackagePath="buildTransitive\" />
+  </ItemGroup>
 
 </Project>

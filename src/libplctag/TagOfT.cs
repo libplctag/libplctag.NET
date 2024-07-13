@@ -134,6 +134,13 @@ namespace libplctag
             set => _tag.DebugLevel = value;
         }
 
+        /// <inheritdoc cref="Tag.MaxRequestsInFlight"/>
+        public uint? MaxRequestsInFlight
+        {
+            get => _tag.MaxRequestsInFlight;
+            set => _tag.MaxRequestsInFlight = value;
+        }
+
         /// <summary>
         /// Dimensions of Value if it is an array
         /// Ex. {2, 10} for a 2 column, 10 row array
