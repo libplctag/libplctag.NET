@@ -1,11 +1,11 @@
-name: Continuous Integration - Build all and run tests
+name: CI - Run all tests
 
 on: [push]
 
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -13,4 +13,4 @@ jobs:
         lfs: true 
     
     - name: Build all and run tests
-      run: .\build.cmd Test
+      run: ./build.sh Test
