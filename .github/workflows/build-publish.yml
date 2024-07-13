@@ -5,7 +5,7 @@ on: [workflow_dispatch]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -13,4 +13,4 @@ jobs:
         lfs: true 
     
     - name: Publish all packages on version change
-      run: .\build.cmd ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}
+      run: ./build.sh ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}
