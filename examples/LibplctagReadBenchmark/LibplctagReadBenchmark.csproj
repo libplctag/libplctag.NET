@@ -3,11 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>NativeImport_Examples</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\libplctag.NativeImport\libplctag.NativeImport.csproj" />
+    <PackageReference Include="libplctag" Version="1.5.1" />
   </ItemGroup>
 
 </Project>

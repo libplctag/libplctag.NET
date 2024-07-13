@@ -29,7 +29,7 @@ Console.WriteLine(theValue);
 plctag.plc_tag_destroy(tagHandle);
 ```
 
-Further examples of its usage can be found [here](src/Examples/CSharp%20DotNetCore/NativeImportExample.cs).
+Further examples can be found [here](../examples/CSharp%20NativeImport/).
 
 ## How it works
 
