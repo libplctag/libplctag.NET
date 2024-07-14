@@ -34,40 +34,50 @@ class Build : NukeBuild
 
 
     Target Clean => _ => _
-        .Before(Restore)
         .Executes(() =>
         {
-            DotNetClean();
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => dir.DeleteDirectory());
-            ArtifactsDirectory.CreateOrCleanDirectory();
-        });
-
-    Target Restore => _ => _
-        .Executes(() =>
-        {
-            DotNetRestore(s => s
-                .SetProjectFile(Solution));
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => {
+                Log.Debug("Deleting {0}", dir);
+                dir.DeleteDirectory();
+            });
+            ArtifactsDirectory.DeleteDirectory();
         });
 
     Target Compile => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetBuild(s => s
-                .SetProjectFile(Solution)
+                .SetProjectFile(libplctag)
                 .SetConfiguration(Configuration)
-                .EnableNoRestore()
+                );
+
+            DotNetBuild(s => s
+                .SetProjectFile(libplctag_NativeImport)
+                .SetConfiguration(Configuration)
                 );
         });
 
     Target Test => _ => _
-        .DependsOn(Compile)
+        .DependsOn(PackLibplctagNativeImport)
         .Executes(() =>
         {
+            var testProject = Solution.GetProject("libplctag.NativeImport.Tests");
+
+            DotNetRestore(s => s
+                .SetProjectFile(testProject)
+                .SetNoCache(true)
+                .SetConfigFile(testProject.Directory / "nuget.config")
+                );
+
+            DotNetBuild(s => s
+                .SetProjectFile(testProject)
+                .SetConfiguration(Configuration)
+                .SetNoRestore(true)
+                );
+
             DotNetTest(s => s
-            .SetProjectFile(Solution)
-            .SetConfiguration(Configuration)
-            .EnableNoRestore()
+                .SetProjectFile(testProject)
             );
         });
 
@@ -83,11 +93,10 @@ class Build : NukeBuild
                 .EnableNoRestore()
                 .SetOutputDirectory(ArtifactsDirectory)
             );
-
         });
 
     Target PackLibplctagNativeImport => _ => _
-        .DependsOn(Test)
+        .DependsOn(Compile)
         .Executes(() =>
         {
             DotNetPack(s => s
