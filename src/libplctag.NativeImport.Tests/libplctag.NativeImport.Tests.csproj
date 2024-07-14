@@ -2,8 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
+	  
+	<!-- This allows us to use a PackageReference instead of a ProjectReference for libplctag.NativeImport -->
+	<!-- which we need to test the Nuget package restore feature for the libplctag core files located in /runtimes -->
+	<RestoreAdditionalProjectSources>../libplctag.NativeImport/bin/Release/</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libplctag.NativeImport\libplctag.NativeImport.csproj" />
+	<!-- Use the highest available version on 1.x -->
+	<PackageReference Include="libplctag.NativeImport" Version="1.*" />
   </ItemGroup>
 
 </Project>

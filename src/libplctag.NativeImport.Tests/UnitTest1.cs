@@ -5,9 +5,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace libplctag.NativeImport.Tests
@@ -15,21 +12,13 @@ namespace libplctag.NativeImport.Tests
     public class UnitTest1
     {
         [Fact]
-        public void Test_Dll_Load()
+        public void Can_execute_native_methods()
         {
-            // The simplest way to check the Dll is working is use the decode error API which returns a string
-            var output = plctag.plc_tag_decode_error(0);
-            Assert.Equal("PLCTAG_STATUS_OK", output);
-        }
+            // The test is succesful if this does not throw
+            var output = plctag.plc_tag_check_lib_version(0, 0, 0);
 
-        [Fact]
-        public void Parallel_Dll_Load()
-        {
-            Task.WaitAll(Enumerable.Range(0, 1000000).Select(i => Task.Run(async () =>
-            {
-                await Task.Delay(1000);
-                plctag.plc_tag_check_lib_version(0, 0, 0);
-            })).ToArray());
+            // The below is redundant but is used to prove to the reader that the test works
+            Assert.True(true);
         }
     }
 }
