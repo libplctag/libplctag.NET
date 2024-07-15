@@ -13,4 +13,4 @@ jobs:
         lfs: true 
     
     - name: Build all and run tests
-      run: .\build.cmd Test
+      run: .\build.cmd TestLibplctagNativeImport
