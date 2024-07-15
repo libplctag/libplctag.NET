@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.props" Condition="Exists('..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.props')" />
   <Import Project="..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.props')" />
   <Import Project="..\packages\Microsoft.Testing.Extensions.Telemetry.1.2.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props" Condition="Exists('..\packages\Microsoft.Testing.Extensions.Telemetry.1.2.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" />
   <Import Project="..\packages\Microsoft.Testing.Platform.MSBuild.1.2.1\build\netstandard2.0\Microsoft.Testing.Platform.MSBuild.props" Condition="Exists('..\packages\Microsoft.Testing.Platform.MSBuild.1.2.1\build\netstandard2.0\Microsoft.Testing.Platform.MSBuild.props')" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <Reference Include="libplctag.NativeImport, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\libplctag.NativeImport.1.0.41\lib\netstandard2.0\libplctag.NativeImport.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.22.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
@@ -132,7 +134,10 @@
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Extensions.Telemetry.1.2.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Extensions.Telemetry.1.2.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props'))" />
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.targets'))" />
+    <Error Condition="!Exists('..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.props'))" />
+    <Error Condition="!Exists('..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Testing.Platform.MSBuild.1.2.1\build\netstandard2.0\Microsoft.Testing.Platform.MSBuild.targets" Condition="Exists('..\packages\Microsoft.Testing.Platform.MSBuild.1.2.1\build\netstandard2.0\Microsoft.Testing.Platform.MSBuild.targets')" />
   <Import Project="..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.3.4.3\build\net462\MSTest.TestAdapter.targets')" />
+  <Import Project="..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.targets" Condition="Exists('..\packages\libplctag.NativeImport.1.0.41\build\libplctag.NativeImport.targets')" />
 </Project>

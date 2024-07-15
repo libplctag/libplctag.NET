@@ -88,7 +88,8 @@
               "ReleaseAll",
               "ReleaseLibplctag",
               "ReleaseLibplctagNativeImport",
-              "Test",
+              "TestLibplctag",
+              "TestLibplctagNativeImport",
               "UpdateCoreBinaries"
             ]
           }
@@ -110,7 +111,8 @@
               "ReleaseAll",
               "ReleaseLibplctag",
               "ReleaseLibplctagNativeImport",
-              "Test",
+              "TestLibplctag",
+              "TestLibplctagNativeImport",
               "UpdateCoreBinaries"
             ]
           }

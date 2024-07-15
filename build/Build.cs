@@ -19,7 +19,7 @@ using static Nuke.Common.Tools.Git.GitTasks;
 
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Test);
+    public static int Main() => Execute<Build>(x => x.TestLibplctagNativeImport);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -31,6 +31,7 @@ class Build : NukeBuild
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath PackageRestoreDirectory => SourceDirectory / "packages";
     Project libplctag => Solution.GetProject("libplctag");
     Project libplctag_NativeImport => Solution.GetProject("libplctag.NativeImport");
 
@@ -38,12 +39,14 @@ class Build : NukeBuild
     Target Clean => _ => _
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir =>
+            SourceDirectory.GlobDirectories("**/bin", "**/obj")
+            .Concat(ArtifactsDirectory)
+            .Concat(PackageRestoreDirectory)
+            .ForEach(dir =>
             {
                 Log.Debug("Deleting {0}", dir);
                 dir.DeleteDirectory();
             });
-            ArtifactsDirectory.DeleteDirectory();
         });
 
     Target Compile => _ => _
@@ -61,7 +64,18 @@ class Build : NukeBuild
                 );
         });
 
-    Target Test => _ => _
+    Target TestLibplctag => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            DotNetTest(s => s
+                .SetProjectFile(libplctag)
+                .SetConfiguration(Configuration)
+                );
+        });
+
+
+    Target TestLibplctagNativeImport => _ => _
         .DependsOn(PackLibplctagNativeImport)
         .DependsOn(PackLibplctag)
         .Executes(() =>
@@ -75,7 +89,7 @@ class Build : NukeBuild
             {
                 NuGetTasks.NuGetRestore(s => s
                     .SetTargetPath(proj)
-                    .SetPackagesDirectory(SourceDirectory / "packages")
+                    .SetPackagesDirectory(PackageRestoreDirectory)
                     .SetConfigFile(nuget_config)
                     .SetVerbosity(NuGetVerbosity.Detailed)
                     );
@@ -96,7 +110,7 @@ class Build : NukeBuild
             {
                 DotNetRestore(s => s
                     .SetProjectFile(proj)
-                    .SetPackageDirectory(SourceDirectory / "packages")
+                    .SetPackageDirectory(PackageRestoreDirectory)
                     .SetConfigFile(nuget_config)
                     );
 
@@ -142,7 +156,7 @@ class Build : NukeBuild
         });
 
     Target ReleaseLibplctag => _ => _
-      .DependsOn(Test)
+      .DependsOn(TestLibplctag)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -153,7 +167,7 @@ class Build : NukeBuild
       });
 
     Target ReleaseLibplctagNativeImport => _ => _
-      .DependsOn(Test)
+      .DependsOn(TestLibplctagNativeImport)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -164,7 +178,8 @@ class Build : NukeBuild
       });
 
     Target ReleaseAll => _ => _
-      .DependsOn(Test)
+      .DependsOn(TestLibplctag)
+      .DependsOn(TestLibplctagNativeImport)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
