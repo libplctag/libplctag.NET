@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build">
-		<Message Text="Copying libplctag native libraries for $(PlatformTarget)" />
+		<Message Text="Copying libplctag native libraries for $(PlatformTarget)" Importance="high" />
 	</Target>
 
 	<ItemGroup Condition=" '$(PlatformTarget)' == 'x86' ">

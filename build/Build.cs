@@ -8,6 +8,8 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.NuGet;
+using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -36,7 +38,8 @@ class Build : NukeBuild
     Target Clean => _ => _
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => {
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir =>
+            {
                 Log.Debug("Deleting {0}", dir);
                 dir.DeleteDirectory();
             });
@@ -60,30 +63,59 @@ class Build : NukeBuild
 
     Target Test => _ => _
         .DependsOn(PackLibplctagNativeImport)
+        .DependsOn(PackLibplctag)
         .Executes(() =>
         {
-            var testProject = Solution.GetProject("libplctag.NativeImport.Tests");
+            var testsNetCore = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetCore.*");
+            var testsNetFramework = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetFramework.*");
 
-            DotNetRestore(s => s
-                .SetProjectFile(testProject)
-                .SetNoCache(true)
-                .SetConfigFile(testProject.Directory / "nuget.config")
+            var nuget_config = SourceDirectory / "libplctag.NativeImport.Tests.nuget.config";
+
+            foreach (var proj in testsNetFramework)
+            {
+                NuGetTasks.NuGetRestore(s => s
+                    .SetTargetPath(proj)
+                    .SetPackagesDirectory(SourceDirectory / "packages")
+                    .SetConfigFile(nuget_config)
+                    .SetVerbosity(NuGetVerbosity.Detailed)
+                    );
+
+                DotNetMSBuild(s => s
+                    .SetTargetPath(proj)
+                    .SetConfiguration(Configuration)
+                    .SetVerbosity(DotNetVerbosity.diagnostic)
+                    );
+
+                var outDir = proj.GetMSBuildProject(Configuration).GetPropertyValue("OutputPath");
+                var assembly = proj.Directory / outDir / proj.Name + ".dll";
+
+                VSTestTasks.VSTest(assembly.ToString());
+            }
+
+            foreach (var proj in testsNetCore)
+            {
+                DotNetRestore(s => s
+                    .SetProjectFile(proj)
+                    .SetPackageDirectory(SourceDirectory / "packages")
+                    .SetConfigFile(nuget_config)
+                    );
+
+                DotNetBuild(s => s
+                    .SetProjectFile(proj)
+                    .SetConfiguration(Configuration)
+                    .SetNoRestore(true)
+                    );
+
+                DotNetTest(s => s
+                    .SetProjectFile(proj)
+                    .SetNoRestore(true)
                 );
+            }
 
-            DotNetBuild(s => s
-                .SetProjectFile(testProject)
-                .SetConfiguration(Configuration)
-                .SetNoRestore(true)
-                );
-
-            DotNetTest(s => s
-                .SetProjectFile(testProject)
-            );
         });
 
 
     Target PackLibplctag => _ => _
-        .DependsOn(Test)
         .Executes(() =>
         {
             DotNetPack(s => s
@@ -110,7 +142,7 @@ class Build : NukeBuild
         });
 
     Target ReleaseLibplctag => _ => _
-      .DependsOn(PackLibplctag)
+      .DependsOn(Test)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -121,7 +153,7 @@ class Build : NukeBuild
       });
 
     Target ReleaseLibplctagNativeImport => _ => _
-      .DependsOn(PackLibplctagNativeImport)
+      .DependsOn(Test)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -132,8 +164,7 @@ class Build : NukeBuild
       });
 
     Target ReleaseAll => _ => _
-      .DependsOn(PackLibplctag)
-      .DependsOn(PackLibplctagNativeImport)
+      .DependsOn(Test)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -206,7 +237,8 @@ class Build : NukeBuild
             .EnableSkipDuplicate()
         );
 
-        if (output.Any(line => line.Text.Contains("Conflict", StringComparison.InvariantCultureIgnoreCase))) {
+        if (output.Any(line => line.Text.Contains("Conflict", StringComparison.InvariantCultureIgnoreCase)))
+        {
             Log.Information("{0} already exists in package repository", packageFilename);
             return;
         }
