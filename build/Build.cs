@@ -83,7 +83,39 @@ class Build : NukeBuild
             var testsNetCore = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetCore.*");
             var testsNetFramework = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetFramework.*");
 
-            var nuget_config = SourceDirectory / "libplctag.NativeImport.Tests.nuget.config";
+            // This nuget.config file ensures that libplctag and libplctag.NativeImport are restored from the 
+            // newly created and packed packages on disk, but still allows all other packages to be
+            // downloaded from the remote nuget feed.
+            var nuget_config_contents = $"""
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<packageSources>
+		<clear />
+		<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+		<add key="buildArtifacts" value="{ArtifactsDirectory}" />
+	</packageSources>
+
+	<packageSourceMapping>
+		<packageSource key="nuget.org">
+			<package pattern="Microsoft.*" />
+			<package pattern="System.*" />
+			<package pattern="xunit*" />
+			<package pattern="coverlet*" />
+			<package pattern="runtime.*" />
+			<package pattern="newtonsoft.json" />
+			<package pattern="nuget.*" />
+			<package pattern="mstest.*" />
+		</packageSource>
+		<packageSource key="buildArtifacts">			
+			<package pattern="libplctag" />
+			<package pattern="libplctag.NativeImport" />
+		</packageSource>
+	</packageSourceMapping>
+</configuration>
+""";
+
+            var nuget_config = Path.GetTempFileName() + ".nuget.config";
+            File.WriteAllText(nuget_config, nuget_config_contents);
 
             foreach (var proj in testsNetFramework)
             {
@@ -124,6 +156,8 @@ class Build : NukeBuild
                     .SetNoRestore(true)
                 );
             }
+
+            File.Delete(nuget_config);
         });
 
 
