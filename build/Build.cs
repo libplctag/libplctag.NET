@@ -87,6 +87,9 @@ class Build : NukeBuild
 
             foreach (var proj in testsNetFramework)
             {
+                var outDir = proj.GetMSBuildProject(Configuration).GetPropertyValue("OutputPath");
+                var assembly = proj.Directory / outDir / proj.Name + ".dll";
+
                 NuGetTasks.NuGetRestore(s => s
                     .SetTargetPath(proj)
                     .SetPackagesDirectory(PackageRestoreDirectory)
@@ -96,16 +99,15 @@ class Build : NukeBuild
                 DotNetMSBuild(s => s
                     .SetTargetPath(proj)
                     .SetConfiguration(Configuration)
+                    .SetBinaryLog(assembly + ".binlog")     // VIew with https://msbuildlog.com/
                     );
-
-                var outDir = proj.GetMSBuildProject(Configuration).GetPropertyValue("OutputPath");
-                var assembly = proj.Directory / outDir / proj.Name + ".dll";
 
                 VSTestTasks.VSTest(assembly.ToString());
             }
 
             foreach (var proj in testsNetCore)
             {
+
                 DotNetRestore(s => s
                     .SetProjectFile(proj)
                     .SetPackageDirectory(PackageRestoreDirectory)

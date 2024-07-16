@@ -1,19 +1,20 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" '$(Platform)' == 'x86' ">
-		<Message Text="Copying libplctag native libraries for $(Platform) into $(OutDir)" Importance="high" />
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)"></Copy>
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" >
+		<Message Text="TargetFrameworkVersion:$(TargetFrameworkVersion) TargetFramework:$(TargetFramework) Platform:$(Platform)" Importance="high" />
 	</Target>
 
-	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" '$(Platform)' == 'x86' ">
-		<Message Text="Copying libplctag native libraries for $(Platform) into $(OutDir)" Importance="high" />
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)"></Copy>
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND '$(Platform)' == 'x86' ">
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)" />
 	</Target>
 
-	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" '$(Platform)' == 'AnyCPU' ">
-		<Message Text="Copying libplctag native libraries for $(Platform) into $(OutDir)" Importance="high" />
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)X86\"></Copy>
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)X64\"></Copy>
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND '$(Platform)' == 'x86' ">
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
+	</Target>
+	
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'AnyCPU') ">
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)X86\" />
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)X64\" />
 	</Target>
 
 </Project>
