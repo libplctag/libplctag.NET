@@ -48,7 +48,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="libplctag.NativeImport, Version=1.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\libplctag.NativeImport.1.0.41\lib\netstandard2.0\libplctag.NativeImport.dll</HintPath>
+      <HintPath>..\packages\libplctag.NativeImport.1.0.41\lib\net472\libplctag.NativeImport.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

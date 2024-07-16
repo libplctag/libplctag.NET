@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
     <AssemblyName>libplctag</AssemblyName>
     <RootNamespace>libplctag</RootNamespace>
     <PackageId>libplctag</PackageId>
