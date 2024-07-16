@@ -19,7 +19,7 @@ using static Nuke.Common.Tools.Git.GitTasks;
 
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.TestLibplctagNativeImport);
+    public static int Main() => Execute<Build>(x => x.TestLibplctag);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -107,7 +107,6 @@ class Build : NukeBuild
 
             foreach (var proj in testsNetCore)
             {
-
                 DotNetRestore(s => s
                     .SetProjectFile(proj)
                     .SetPackageDirectory(PackageRestoreDirectory)
@@ -125,7 +124,6 @@ class Build : NukeBuild
                     .SetNoRestore(true)
                 );
             }
-
         });
 
 
@@ -154,28 +152,6 @@ class Build : NukeBuild
             );
 
         });
-
-    Target ReleaseLibplctag => _ => _
-      .DependsOn(TestLibplctag)
-      .Requires(() => NugetApiUrl)
-      .Requires(() => NugetApiKey)
-      .Requires(() => Configuration.Equals(Configuration.Release))
-      .Executes(() =>
-      {
-          var version = libplctag.GetProperty("Version");
-          PushAndTag($"libplctag.{version}.nupkg", $"libplctag-v{version}");
-      });
-
-    Target ReleaseLibplctagNativeImport => _ => _
-      .DependsOn(TestLibplctagNativeImport)
-      .Requires(() => NugetApiUrl)
-      .Requires(() => NugetApiKey)
-      .Requires(() => Configuration.Equals(Configuration.Release))
-      .Executes(() =>
-      {
-          var version = libplctag_NativeImport.GetProperty("Version");
-          PushAndTag($"libplctag.NativeImport.{version}.nupkg", $"libplctag.NativeImport-v{version}");
-      });
 
     Target ReleaseAll => _ => _
       .DependsOn(TestLibplctag)
