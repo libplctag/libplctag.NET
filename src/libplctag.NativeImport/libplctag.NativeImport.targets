@@ -1,14 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" >
-		<Message Text="TargetFrameworkVersion:$(TargetFrameworkVersion) TargetFramework:$(TargetFramework) Platform:$(Platform)" Importance="high" />
-	</Target>
-
 	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND '$(Platform)' == 'x86' ">
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)" />
 	</Target>
 
-	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND '$(Platform)' == 'x86' ">
+	<Target Name="LibplctagNetFrameworkTarget" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND '$(Platform)' == 'x64' ">
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
 	</Target>
 	
