@@ -20,7 +20,6 @@ namespace libplctag.NativeImport
 
         static NativeMethods()
         {
-#if NET47_OR_GREATER
             // Assume we're running on Windows because .NET Framework is not supported on other platforms
             string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
 			string system = Environment.Is64BitProcess ? "X64" : "X86";
@@ -33,7 +32,6 @@ namespace libplctag.NativeImport
             {
                 SetDllDirectory(executingDirectory);
             }
-#endif
         }
 
 

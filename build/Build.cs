@@ -91,13 +91,11 @@ class Build : NukeBuild
                     .SetTargetPath(proj)
                     .SetPackagesDirectory(PackageRestoreDirectory)
                     .SetConfigFile(nuget_config)
-                    .SetVerbosity(NuGetVerbosity.Detailed)
                     );
 
                 DotNetMSBuild(s => s
                     .SetTargetPath(proj)
                     .SetConfiguration(Configuration)
-                    .SetVerbosity(DotNetVerbosity.diagnostic)
                     );
 
                 var outDir = proj.GetMSBuildProject(Configuration).GetPropertyValue("OutputPath");
