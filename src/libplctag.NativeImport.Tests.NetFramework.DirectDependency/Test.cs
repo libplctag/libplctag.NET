@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace libplctag.NativeImport.Tests.NetFramework.DirectDependency
 {
     [TestClass]
-    public class UnitTest1
+    public class Test
     {
         [TestMethod]
         public void Can_execute_native_methods()
