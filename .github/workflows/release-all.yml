@@ -1,11 +1,11 @@
-name: Build and publish libplctag.NET nuget package
+name: Release all
 
 on: [workflow_dispatch]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -13,4 +13,4 @@ jobs:
         lfs: true 
     
     - name: Publish all packages on version change
-      run: ./build.sh ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}
+      run: .\build.cmd ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}

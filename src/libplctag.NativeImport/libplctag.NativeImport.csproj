@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
     <PackageId>libplctag.NativeImport</PackageId>
@@ -19,16 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="runtime\osx_x64\libplctag.dylib" />
-    <EmbeddedResource Include="runtime\osx_ARM64\libplctag.dylib" />
-    <EmbeddedResource Include="runtime\linux_x64\libplctag.so" />
-    <EmbeddedResource Include="runtime\linux_x86\libplctag.so" />
-    <EmbeddedResource Include="runtime\linux_ARM64\libplctag.so" />
-    <EmbeddedResource Include="runtime\linux_ARM\libplctag.so" />
-    <EmbeddedResource Include="runtime\win_x64\plctag.dll" />
-    <EmbeddedResource Include="runtime\win_x86\plctag.dll" />
-    <EmbeddedResource Include="runtime\win_ARM64\plctag.dll" />
-    <EmbeddedResource Include="runtime\win_ARM\plctag.dll" />
+    <Content Include="runtimes\**" PackagePath="runtimes\" />
     <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\" />
     <None Include="..\..\docs\libplctag.NativeImport.md" Pack="true" PackagePath="\README.md"/>
   </ItemGroup>
@@ -45,6 +36,13 @@
 
   <ItemGroup>
 	  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="libplctag.NativeImport.targets" PackagePath="build\" />
+    <Content Include="libplctag.NativeImport.targets" PackagePath="buildTransitive\" />
+    <Content Include="libplctag.NativeImport.props" PackagePath="build\" />
+    <Content Include="libplctag.NativeImport.props" PackagePath="buildTransitive\" />
   </ItemGroup>
 
 </Project>

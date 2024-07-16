@@ -1,4 +1,4 @@
-name: CI - Run all tests
+name: Test libplctag
 
 on: [push]
 
@@ -13,4 +13,4 @@ jobs:
         lfs: true 
     
     - name: Build all and run tests
-      run: ./build.sh Test
+      run: ./build.sh TestLibplctag

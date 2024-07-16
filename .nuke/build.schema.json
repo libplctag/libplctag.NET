@@ -86,10 +86,8 @@
               "PackLibplctag",
               "PackLibplctagNativeImport",
               "ReleaseAll",
-              "ReleaseLibplctag",
-              "ReleaseLibplctagNativeImport",
-              "Restore",
-              "Test",
+              "TestLibplctag",
+              "TestLibplctagNativeImport",
               "UpdateCoreBinaries"
             ]
           }
@@ -109,10 +107,8 @@
               "PackLibplctag",
               "PackLibplctagNativeImport",
               "ReleaseAll",
-              "ReleaseLibplctag",
-              "ReleaseLibplctagNativeImport",
-              "Restore",
-              "Test",
+              "TestLibplctag",
+              "TestLibplctagNativeImport",
               "UpdateCoreBinaries"
             ]
           }

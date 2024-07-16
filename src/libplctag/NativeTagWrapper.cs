@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static libplctag.NativeImport.plctag;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
@@ -26,7 +27,7 @@ namespace libplctag
         private static readonly TimeSpan maxTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
 
         private int nativeTagHandle;
-        private libplctag.NativeImport.plctag.callback_func_ex coreLibCallbackFuncExDelegate;
+        private callback_func_ex coreLibCallbackFuncExDelegate;
 
         private bool _isDisposed = false;
         private bool _isInitialized = false;
@@ -811,7 +812,7 @@ namespace libplctag
             Created += CreatedTaskCompleter;
 
             // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
-            coreLibCallbackFuncExDelegate = new libplctag.NativeImport.plctag.callback_func_ex(coreLibEventCallback);
+            coreLibCallbackFuncExDelegate = new callback_func_ex(coreLibEventCallback);
 
         }
 
