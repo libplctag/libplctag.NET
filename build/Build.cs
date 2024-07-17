@@ -1,9 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Xml;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -118,18 +115,18 @@ class Build : NukeBuild
             var netFrameworkDirect = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.DirectDependency");
             var netFrameworkTransitive = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.TransitiveDependency");
 
-            var nuget_config = Path.GetTempFileName() + ".nuget.config";
-            File.WriteAllText(nuget_config, nuget_config_contents);
+            var nugetConfigPath = Path.GetTempFileName() + ".nuget.config";
+            File.WriteAllText(nugetConfigPath, nuget_config_contents);
 
-            NetCoreInstallRestoreBuildTest(netCoreDirect, isTransitive: false, nuget_config);
-            NetCoreInstallRestoreBuildTest(netCoreTransitive, isTransitive: true, nuget_config);
+            NetCoreInstallRestoreBuildTest(netCoreDirect, isTransitive: false, nugetConfigPath);
+            NetCoreInstallRestoreBuildTest(netCoreTransitive, isTransitive: true, nugetConfigPath);
             // Future - figure out how to test for packges.config projects
             // The issue I ran into is that there is no way to add packages using the CLI
             // dotnet CLI does not work for packages.config projects - https://github.com/dotnet/sdk/issues/7922
             // Nuget does not modify project/solution files - https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli#install-a-package
             // And this is known to not be supported - https://github.com/NuGet/Home/issues/1512
 
-            File.Delete(nuget_config_contents);
+            File.Delete(nugetConfigPath);
 
         });
 
