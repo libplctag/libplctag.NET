@@ -5,10 +5,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.NativeImport;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using static libplctag.NativeImport.plctag;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
@@ -21,7 +21,7 @@ namespace libplctag
         int plc_tag_abort(int tag);
         int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch);
         int plc_tag_create(string lpString, int timeout);
-        int plc_tag_create_ex(string lpString, plctag.callback_func_ex func, IntPtr userdata, int timeout);
+        int plc_tag_create_ex(string lpString, callback_func_ex func, IntPtr userdata, int timeout);
         string plc_tag_decode_error(int err);
         int plc_tag_destroy(int tag);
         int plc_tag_get_bit(int tag, int offset_bit);
@@ -42,8 +42,8 @@ namespace libplctag
         byte plc_tag_get_uint8(int tag, int offset);
         int plc_tag_lock(int tag);
         int plc_tag_read(int tag, int timeout);
-        int plc_tag_register_callback(int tag_id, plctag.callback_func func);
-        int plc_tag_register_logger(plctag.log_callback_func func);
+        int plc_tag_register_callback(int tag_id, callback_func func);
+        int plc_tag_register_logger(log_callback_func func);
         int plc_tag_set_bit(int tag, int offset_bit, int val);
         void plc_tag_set_debug_level(int debug_level);
         int plc_tag_set_float32(int tag, int offset, float val);

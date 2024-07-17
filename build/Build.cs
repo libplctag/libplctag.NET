@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.NuGet;
+using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -17,7 +17,7 @@ using static Nuke.Common.Tools.Git.GitTasks;
 
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Test);
+    public static int Main() => Execute<Build>(x => x.TestLibplctag);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -29,51 +29,136 @@ class Build : NukeBuild
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath PackageRestoreDirectory => SourceDirectory / "packages";
     Project libplctag => Solution.GetProject("libplctag");
     Project libplctag_NativeImport => Solution.GetProject("libplctag.NativeImport");
 
 
     Target Clean => _ => _
-        .Before(Restore)
         .Executes(() =>
         {
-            DotNetClean();
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => dir.DeleteDirectory());
-            ArtifactsDirectory.CreateOrCleanDirectory();
-        });
-
-    Target Restore => _ => _
-        .Executes(() =>
-        {
-            DotNetRestore(s => s
-                .SetProjectFile(Solution));
+            SourceDirectory.GlobDirectories("**/bin", "**/obj")
+            .Concat(ArtifactsDirectory)
+            .Concat(PackageRestoreDirectory)
+            .ForEach(dir =>
+            {
+                Log.Debug("Deleting {0}", dir);
+                dir.DeleteDirectory();
+            });
         });
 
     Target Compile => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetBuild(s => s
-                .SetProjectFile(Solution)
+                .SetProjectFile(libplctag)
                 .SetConfiguration(Configuration)
-                .EnableNoRestore()
+                );
+
+            DotNetBuild(s => s
+                .SetProjectFile(libplctag_NativeImport)
+                .SetConfiguration(Configuration)
                 );
         });
 
-    Target Test => _ => _
+    Target TestLibplctag => _ => _
         .DependsOn(Compile)
         .Executes(() =>
         {
             DotNetTest(s => s
-            .SetProjectFile(Solution)
-            .SetConfiguration(Configuration)
-            .EnableNoRestore()
-            );
+                .SetProjectFile(libplctag)
+                .SetConfiguration(Configuration)
+                );
         });
 
 
+    Target TestLibplctagNativeImport => _ => _
+        .DependsOn(PackLibplctagNativeImport)
+        .DependsOn(PackLibplctag)
+        .Executes(() =>
+        {
+
+            // This nuget.config file ensures that libplctag and libplctag.NativeImport are restored from the 
+            // newly created and packed packages on disk, but still allows all other packages to be
+            // downloaded from the remote nuget feed.
+            var nuget_config_contents = $"""
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<packageSources>
+		<clear />
+		<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+		<add key="buildArtifacts" value="{ArtifactsDirectory}" />
+	</packageSources>
+
+	<packageSourceMapping>
+		<packageSource key="nuget.org">
+			<package pattern="Microsoft.*" />
+			<package pattern="System.*" />
+			<package pattern="xunit*" />
+			<package pattern="coverlet*" />
+			<package pattern="runtime.*" />
+			<package pattern="newtonsoft.json" />
+			<package pattern="nuget.*" />
+			<package pattern="mstest.*" />
+		</packageSource>
+		<packageSource key="buildArtifacts">			
+			<package pattern="libplctag" />
+			<package pattern="libplctag.NativeImport" />
+		</packageSource>
+	</packageSourceMapping>
+</configuration>
+""";
+
+            var netCoreDirect = Solution.GetProject("libplctag.NativeImport.Tests.NetCore.DirectDependency");
+            var netCoreTransitive = Solution.GetProject("libplctag.NativeImport.Tests.NetCore.TransitiveDependency");
+            var netFrameworkDirect = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.DirectDependency");
+            var netFrameworkTransitive = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.TransitiveDependency");
+
+            var nugetConfigPath = Path.GetTempFileName() + ".nuget.config";
+            File.WriteAllText(nugetConfigPath, nuget_config_contents);
+
+            NetCoreInstallRestoreBuildTest(netCoreDirect, isTransitive: false, nugetConfigPath);
+            NetCoreInstallRestoreBuildTest(netCoreTransitive, isTransitive: true, nugetConfigPath);
+            // Future - figure out how to test for packges.config projects
+            // The issue I ran into is that there is no way to add packages using the CLI
+            // dotnet CLI does not work for packages.config projects - https://github.com/dotnet/sdk/issues/7922
+            // Nuget does not modify project/solution files - https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli#install-a-package
+            // And this is known to not be supported - https://github.com/NuGet/Home/issues/1512
+
+            File.Delete(nugetConfigPath);
+
+        });
+
+    void NetCoreInstallRestoreBuildTest(Project proj, bool isTransitive, string nugetConfigPath)
+    {
+        DotNetRestore(s => s
+             .SetProjectFile(proj)
+             .SetPackageDirectory(PackageRestoreDirectory)
+             .SetConfigFile(nugetConfigPath)
+             );
+
+        var libplctagVersion = libplctag.GetProperty("version");
+        var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("version");
+
+        DotNet($"add {proj.Path} package {libplctag_NativeImport.Name} -s {ArtifactsDirectory} --version {libplctagNativeImportVersion} --package-directory {PackageRestoreDirectory}");
+
+        if (isTransitive)
+            DotNet($"add {proj.Path} package {libplctag.Name} -s {ArtifactsDirectory} --version {libplctagVersion} --package-directory {PackageRestoreDirectory}");
+
+        DotNetBuild(s => s
+            .SetProjectFile(proj)
+            .SetConfiguration(Configuration)
+            .SetNoRestore(true)
+            );
+
+        DotNetTest(s => s
+            .SetProjectFile(proj)
+            .SetNoRestore(true)
+        );
+    }
+
     Target PackLibplctag => _ => _
-        .DependsOn(Test)
         .Executes(() =>
         {
             DotNetPack(s => s
@@ -83,11 +168,10 @@ class Build : NukeBuild
                 .EnableNoRestore()
                 .SetOutputDirectory(ArtifactsDirectory)
             );
-
         });
 
     Target PackLibplctagNativeImport => _ => _
-        .DependsOn(Test)
+        .DependsOn(Compile)
         .Executes(() =>
         {
             DotNetPack(s => s
@@ -100,31 +184,9 @@ class Build : NukeBuild
 
         });
 
-    Target ReleaseLibplctag => _ => _
-      .DependsOn(PackLibplctag)
-      .Requires(() => NugetApiUrl)
-      .Requires(() => NugetApiKey)
-      .Requires(() => Configuration.Equals(Configuration.Release))
-      .Executes(() =>
-      {
-          var version = libplctag.GetProperty("Version");
-          PushAndTag($"libplctag.{version}.nupkg", $"libplctag-v{version}");
-      });
-
-    Target ReleaseLibplctagNativeImport => _ => _
-      .DependsOn(PackLibplctagNativeImport)
-      .Requires(() => NugetApiUrl)
-      .Requires(() => NugetApiKey)
-      .Requires(() => Configuration.Equals(Configuration.Release))
-      .Executes(() =>
-      {
-          var version = libplctag_NativeImport.GetProperty("Version");
-          PushAndTag($"libplctag.NativeImport.{version}.nupkg", $"libplctag.NativeImport-v{version}");
-      });
-
     Target ReleaseAll => _ => _
-      .DependsOn(PackLibplctag)
-      .DependsOn(PackLibplctagNativeImport)
+      .DependsOn(TestLibplctag)
+      .DependsOn(TestLibplctagNativeImport)
       .Requires(() => NugetApiUrl)
       .Requires(() => NugetApiKey)
       .Requires(() => Configuration.Equals(Configuration.Release))
@@ -142,20 +204,20 @@ class Build : NukeBuild
         .Executes(() =>
         {
 
-            var runtimesFolder = RootDirectory / "src" / "libplctag.NativeImport" / "runtime";
+            var runtimesFolder = RootDirectory / "src" / "libplctag.NativeImport" / "runtimes";
 
             (string zipFileName, string[] unzipPath, AbsolutePath destination)[] releases =
             {
-                ($"libplctag_{LibplctagCoreVersion}_macos_x64.zip",      ["libplctag.dylib"],        runtimesFolder/"osx_x64"/"libplctag.dylib" ),
-                ($"libplctag_{LibplctagCoreVersion}_macos_aarch64.zip",  ["libplctag.dylib"],        runtimesFolder/"osx_ARM64"/"libplctag.dylib" ),
-                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x64.zip",     ["libplctag.so"],           runtimesFolder/"linux_x64"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x86.zip",     ["libplctag.so"],           runtimesFolder/"linux_x86"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_linux_arm7l.zip",    ["libplctag.so"],           runtimesFolder/"linux_ARM"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_linux_aarch64.zip",  ["libplctag.so"],           runtimesFolder/"linux_ARM64"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_x64.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win_x64"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_x86.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win_x86"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_Arm.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win_ARM"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_Arm64.zip",  ["Release", "plctag.dll"],  runtimesFolder/"win_ARM64"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_x64.zip",      ["libplctag.dylib"],        runtimesFolder/"osx-x64"/"native"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_aarch64.zip",  ["libplctag.dylib"],        runtimesFolder/"osx-arm64"/"native"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x64.zip",     ["libplctag.so"],           runtimesFolder/"linux-x64"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x86.zip",     ["libplctag.so"],           runtimesFolder/"linux-x86"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_linux_arm7l.zip",    ["libplctag.so"],           runtimesFolder/"linux-arm"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_linux_aarch64.zip",  ["libplctag.so"],           runtimesFolder/"linux-arm64"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x64.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x64"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x86.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x86"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_Arm.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-arm"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_Arm64.zip",  ["Release", "plctag.dll"],  runtimesFolder/"win-arm64"/"native"/"plctag.dll" ),
             };
 
             var downloadFolder = RootDirectory / "downloads";
@@ -197,7 +259,8 @@ class Build : NukeBuild
             .EnableSkipDuplicate()
         );
 
-        if (output.Any(line => line.Text.Contains("Conflict", StringComparison.InvariantCultureIgnoreCase))) {
+        if (output.Any(line => line.Text.Contains("Conflict", StringComparison.InvariantCultureIgnoreCase)))
+        {
             Log.Information("{0} already exists in package repository", packageFilename);
             return;
         }

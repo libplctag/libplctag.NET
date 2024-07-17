@@ -15,7 +15,7 @@ It provides an API for libplctag that should feel natural to .NET developers by 
 * Async/Await
 * Native resource cleanup
 
-See [here](docs/libplctag.md#getting-started) for more information.
+See [examples](examples/) and [the docs](docs/libplctag.md#getting-started) for more information.
 
 ## [libplctag.NativeImport](https://www.nuget.org/packages/libplctag.NativeImport/) ![Nuget](https://img.shields.io/nuget/dt/libplctag.NativeImport) ![Nuget version](https://img.shields.io/nuget/v/libplctag.NativeImport)
 

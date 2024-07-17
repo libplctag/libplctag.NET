@@ -15,4 +15,9 @@
     <PackageReference Include="Nuke.Common" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.TestPlatform" Version="[17.10.0]" />
+    <PackageDownload Include="Nuget.CommandLine" Version="[6.10.1]" />
+  </ItemGroup>
+
 </Project>

@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using static libplctag.NativeImport.plctag;
 
 namespace libplctag.NativeImport
 {
@@ -15,6 +16,30 @@ namespace libplctag.NativeImport
     {
 
         const string DLL_NAME = "plctag";
+
+
+        static NativeMethods()
+        {
+#if NET472_OR_GREATER
+            // Assume we're running on Windows because .NET Framework is not supported on other platforms
+            string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+			string system = Environment.Is64BitProcess ? "X64" : "X86";
+			string libDirectory = System.IO.Path.Combine (executingDirectory, system);
+            if (System.IO.Directory.Exists(libDirectory))
+            {
+                SetDllDirectory(libDirectory);
+            }
+            else
+            {
+                SetDllDirectory(executingDirectory);
+            }
+#endif
+        }
+
+
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetDllDirectory(string lpPathName);
 
 
 
@@ -26,7 +51,7 @@ namespace libplctag.NativeImport
         public static extern Int32 plc_tag_create([MarshalAs(UnmanagedType.LPStr)] string lpString, int timeout);
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_create_ex), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern Int32 plc_tag_create_ex([MarshalAs(UnmanagedType.LPStr)] string lpString, plctag.callback_func_ex func, IntPtr userdata, int timeout);
+        public static extern Int32 plc_tag_create_ex([MarshalAs(UnmanagedType.LPStr)] string lpString, callback_func_ex func, IntPtr userdata, int timeout);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_destroy), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -38,11 +63,11 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_callback), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_register_callback(Int32 tag_id, plctag.callback_func func);
+        public static extern int plc_tag_register_callback(Int32 tag_id, callback_func func);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_callback_ex), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_register_callback_ex(Int32 tag_id, plctag.callback_func_ex func, IntPtr userdata);
+        public static extern int plc_tag_register_callback_ex(Int32 tag_id, callback_func_ex func, IntPtr userdata);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_unregister_callback), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -53,7 +78,7 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_logger), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_register_logger(plctag.log_callback_func func);
+        public static extern int plc_tag_register_logger(log_callback_func func);
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_unregister_logger), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]

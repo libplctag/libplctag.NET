@@ -34,9 +34,9 @@ Console.WriteLine($"Updated value: {output}");
 
 See the examples projects for further detail and usage:
 
-* [C# (.NET)](src/Examples/CSharp%20DotNetCore)
-* [C# (.NET Framework)](src/Examples/CSharp%20DotNetFramework)
-* [VB.NET](src/Examples/VB.NET%20DotNetCore/Program.vb)
+* [C# (.NET)](../examples/CSharp%20DotNetCore/)
+* [C# (.NET Framework)](../examples/CSharp%20DotNetFramework/)
+* [VB.NET](../examples/VB.NET%20DotNetCore/Program.vb)
 
 ## Introduction
 
@@ -101,7 +101,7 @@ myTag.Write();
 ```
 
 In general, you will need prior knowedge of the structure of the tag data, and you may need to reverse-engineer it.
-An example for reverse engineering a UDT can be found [here](src/Examples/CSharp%20DotNetCore/SequencePlcMapper.cs).
+An example for reverse engineering a UDT can be found [here](../examples/CSharp%20DotNetCore/SequencePlcMapper.cs).
 
 Because the structure of the data depends on many factors (PLC Make/model, Protocol, and even the tag Name), libplctag.NET does not provide built-in Mappers for all types.
 The manuals provided by your device manufacturer are the best source of information on these details.
@@ -125,7 +125,7 @@ All types are shipped with XML documentation, so the full API is discoverable in
 * [`LrealPlcMapper`](src/libplctag/DataTypes/LrealPlcMapper.cs)
 * ... and so on
 
-Of note are [TagInfoPlcMapper](src/libplctag/DataTypes/TagInfoPlcMapper.cs) and [UdtInfoMapper](src/libplctag/DataTypes/UdtInfoPlcMapper.cs), which can be used to [list the tags in a ControlLogix PLC](src/Examples/CSharp%20DotNetCore/ListUdtDefinitions.cs).
+Of note are [TagInfoPlcMapper](src/libplctag/DataTypes/TagInfoPlcMapper.cs) and [UdtInfoMapper](src/libplctag/DataTypes/UdtInfoPlcMapper.cs), which can be used to [list the tags in a ControlLogix PLC](../examples/CSharp%20DotNetCore/ListUdtDefinitions.cs).
 
 ### `libplctag.DataTypes.Simple` namespace
 
