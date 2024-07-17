@@ -21,9 +21,6 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 
-		<!-- Instead, use the Nuget package which is built - as long as it is still version 1.x -->
-		<PackageReference Include="libplctag.NativeImport" Version="1.*" />
-
 	</ItemGroup>
 
 	<ItemGroup>

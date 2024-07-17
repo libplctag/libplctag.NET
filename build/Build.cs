@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Xml;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -80,8 +81,6 @@ class Build : NukeBuild
         .DependsOn(PackLibplctag)
         .Executes(() =>
         {
-            var testsNetCore = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetCore.*");
-            var testsNetFramework = Solution.GetAllProjects("libplctag.NativeImport.Tests.NetFramework.*");
 
             // This nuget.config file ensures that libplctag and libplctag.NativeImport are restored from the 
             // newly created and packed packages on disk, but still allows all other packages to be
@@ -114,52 +113,53 @@ class Build : NukeBuild
 </configuration>
 """;
 
+            var netCoreDirect = Solution.GetProject("libplctag.NativeImport.Tests.NetCore.DirectDependency");
+            var netCoreTransitive = Solution.GetProject("libplctag.NativeImport.Tests.NetCore.TransitiveDependency");
+            var netFrameworkDirect = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.DirectDependency");
+            var netFrameworkTransitive = Solution.GetProject("libplctag.NativeImport.Tests.NetFramework.TransitiveDependency");
+
             var nuget_config = Path.GetTempFileName() + ".nuget.config";
             File.WriteAllText(nuget_config, nuget_config_contents);
 
-            foreach (var proj in testsNetFramework)
-            {
-                var outDir = proj.GetMSBuildProject(Configuration).GetPropertyValue("OutputPath");
-                var assembly = proj.Directory / outDir / proj.Name + ".dll";
+            NetCoreInstallRestoreBuildTest(netCoreDirect, isTransitive: false, nuget_config);
+            NetCoreInstallRestoreBuildTest(netCoreTransitive, isTransitive: true, nuget_config);
+            // Future - figure out how to test for packges.config projects
+            // The issue I ran into is that there is no way to add packages using the CLI
+            // dotnet CLI does not work for packages.config projects - https://github.com/dotnet/sdk/issues/7922
+            // Nuget does not modify project/solution files - https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli#install-a-package
+            // And this is known to not be supported - https://github.com/NuGet/Home/issues/1512
 
-                NuGetTasks.NuGetRestore(s => s
-                    .SetTargetPath(proj)
-                    .SetPackagesDirectory(PackageRestoreDirectory)
-                    .SetConfigFile(nuget_config)
-                    );
+            File.Delete(nuget_config_contents);
 
-                DotNetMSBuild(s => s
-                    .SetTargetPath(proj)
-                    .SetConfiguration(Configuration)
-                    .SetBinaryLog(assembly + ".binlog")     // VIew with https://msbuildlog.com/
-                    );
-
-                VSTestTasks.VSTest(assembly.ToString());
-            }
-
-            foreach (var proj in testsNetCore)
-            {
-                DotNetRestore(s => s
-                    .SetProjectFile(proj)
-                    .SetPackageDirectory(PackageRestoreDirectory)
-                    .SetConfigFile(nuget_config)
-                    );
-
-                DotNetBuild(s => s
-                    .SetProjectFile(proj)
-                    .SetConfiguration(Configuration)
-                    .SetNoRestore(true)
-                    );
-
-                DotNetTest(s => s
-                    .SetProjectFile(proj)
-                    .SetNoRestore(true)
-                );
-            }
-
-            File.Delete(nuget_config);
         });
 
+    void NetCoreInstallRestoreBuildTest(Project proj, bool isTransitive, string nugetConfigPath)
+    {
+        DotNetRestore(s => s
+             .SetProjectFile(proj)
+             .SetPackageDirectory(PackageRestoreDirectory)
+             .SetConfigFile(nugetConfigPath)
+             );
+
+        var libplctagVersion = libplctag.GetProperty("version");
+        var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("version");
+
+        DotNet($"add {proj.Path} package {libplctag_NativeImport.Name} -s {ArtifactsDirectory} --version {libplctagNativeImportVersion} --package-directory {PackageRestoreDirectory}");
+
+        if (isTransitive)
+            DotNet($"add {proj.Path} package {libplctag.Name} -s {ArtifactsDirectory} --version {libplctagVersion} --package-directory {PackageRestoreDirectory}");
+
+        DotNetBuild(s => s
+            .SetProjectFile(proj)
+            .SetConfiguration(Configuration)
+            .SetNoRestore(true)
+            );
+
+        DotNetTest(s => s
+            .SetProjectFile(proj)
+            .SetNoRestore(true)
+        );
+    }
 
     Target PackLibplctag => _ => _
         .Executes(() =>
