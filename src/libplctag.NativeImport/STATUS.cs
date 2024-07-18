@@ -11,7 +11,7 @@ namespace libplctag.NativeImport
     /// Most functions return a status code.
     /// It will be one of these.
     /// </summary>
-    public enum STATUS_CODE
+    public enum STATUS
     {
         /// <summary>
         /// Operation in progress. Not an error.
