@@ -16,7 +16,7 @@ namespace libplctag
     public static class LibPlcTag
     {
 
-        static INativeTag _native = new NativeTag();
+        static INative _native = new Native();
 
         private const int LIB_ATTRIBUTE_POINTER = 0;
 

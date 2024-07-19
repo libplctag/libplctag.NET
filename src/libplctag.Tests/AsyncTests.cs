@@ -24,7 +24,7 @@ namespace libplctag.Tests
         public async Task Cancelled_cancellation_token_throws_a_TaskCanceledException()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
+            var nativeTag = new Mock<INative>();
 
             nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
                 .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
@@ -49,7 +49,7 @@ namespace libplctag.Tests
         public async Task Timeout_throws_a_LibPlcTagException()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
+            var nativeTag = new Mock<INative>();
 
             nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
                 .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
@@ -114,14 +114,14 @@ namespace libplctag.Tests
         }
 
 
-        Mock<INativeTag> GetMock()
+        Mock<INative> GetMock()
         {
             const int tagId = 11;
 
             NativeImport.plctag.callback_func_ex callback = null;
             Status? status = null;
 
-            var nativeTag = new Mock<INativeTag>();
+            var nativeTag = new Mock<INative>();
 
             // The NativeTagWrapper should provide the native tag with a callback.
             // We will store this locally when a create call occurs, and fire it shortly after ...

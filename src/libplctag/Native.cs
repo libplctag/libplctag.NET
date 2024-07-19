@@ -5,16 +5,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.NativeImport;
 using System;
 using System.Text;
+using libplctag.NativeImport;
 using static libplctag.NativeImport.plctag;
 
 namespace libplctag
 {
-    class NativeTag : INativeTag
+    class Native : INative
     {
-
         public int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch)                               => plctag.plc_tag_check_lib_version(req_major, req_minor, req_patch);
         public Int32 plc_tag_create(string lpString, int timeout)                                                       => plctag.plc_tag_create(lpString, timeout);
         public Int32 plc_tag_create_ex(string lpString, callback_func_ex func, IntPtr userdata, int timeout)            => plctag.plc_tag_create_ex(lpString, func, userdata, timeout);
