@@ -5,7 +5,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.NativeImport;
 using System;
 using static libplctag.NativeImport.plctag;
 
@@ -17,7 +16,7 @@ namespace libplctag
     public static class LibPlcTag
     {
 
-        static INativeTag _native = new NativeTag();
+        static INative _native = new Native();
 
         private const int LIB_ATTRIBUTE_POINTER = 0;
 

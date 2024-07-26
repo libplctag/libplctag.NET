@@ -18,8 +18,8 @@ namespace libplctag.Tests
         public void Status_ok_when_first_created()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
 
             // Act
 
@@ -32,8 +32,8 @@ namespace libplctag.Tests
         public void Attribute_string_formatted_correctly()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object)
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object)
             {
                 ElementSize = 4,
                 ElementCount = 10,
@@ -56,8 +56,8 @@ namespace libplctag.Tests
         public void Attribute_string_does_not_contain_unset_properties()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Initialize();

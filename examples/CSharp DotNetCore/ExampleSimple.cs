@@ -8,13 +8,12 @@
 using libplctag;
 using System;
 
-namespace CSharpDotNetFramework
+namespace CSharpDotNetCore
 {
-    class Program
+    class ExampleSimple
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-
             // Example tag configuration for a global DINT tag in an Allen-Bradley CompactLogix/ControlLogix PLC
             var myTag = new Tag()
             {
@@ -37,4 +36,4 @@ namespace CSharpDotNetFramework
             Console.WriteLine($"Updated value: {updatedValue}");
         }
     }
-} 
+}

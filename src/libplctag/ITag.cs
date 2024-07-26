@@ -15,6 +15,7 @@ namespace libplctag
     /// An interface to represent any generic tag without
     /// exposing its value
     /// </summary>
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public interface ITag : IDisposable
     {
         int[] ArrayDimensions { get; set; }

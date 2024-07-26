@@ -6,14 +6,13 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag;
-using libplctag.DataTypes;
 using System;
 using System.Net;
 using System.Threading;
 
 namespace CSharpDotNetCore
 {
-    class LoggingExample
+    class ExampleLogging
     {
         public static void Run()
         {
@@ -21,7 +20,7 @@ namespace CSharpDotNetCore
             LibPlcTag.DebugLevel = DebugLevel.Detail;
 
             //Instantiate the tag with the proper mapper and datatype
-            var myTag = new Tag<DintPlcMapper, int>()
+            var myTag = new Tag()
             {
                 Name = "MyTag[0]",
                 Gateway = "127.0.0.1",
@@ -37,7 +36,7 @@ namespace CSharpDotNetCore
             myTag.Initialize();
 
             //The value is held locally and only synchronized on Read() or Write()
-            myTag.Value = 3737;
+            myTag.SetInt32(0, 3737);
 
             //Transfer Value to PLC
             myTag.Write();
@@ -46,7 +45,7 @@ namespace CSharpDotNetCore
             myTag.Read();
 
             //Write to console
-            int myDint = myTag.Value;
+            int myDint = myTag.GetInt32(0);
             Console.WriteLine(myDint);
         }
 

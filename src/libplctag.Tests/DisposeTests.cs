@@ -18,8 +18,8 @@ namespace libplctag.Tests
         public void Destroy_is_called_if_initialized_and_disposed()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Initialize();
@@ -33,8 +33,8 @@ namespace libplctag.Tests
         public void Can_not_use_if_already_disposed()
         {
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
-            var tag = new NativeTagWrapper(nativeTag.Object);
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
 
             // Act
             tag.Dispose();
@@ -51,11 +51,11 @@ namespace libplctag.Tests
 
 
             // Arrange
-            var nativeTag = new Mock<INativeTag>();
+            var nativeTag = new Mock<INative>();
             Action dispose = () =>
             {
                 // This will go out of scope after dispose() is executed, so the garbage collector will be able to call the finalizer
-                var tag = new NativeTagWrapper(nativeTag.Object);
+                var tag = new Tag(nativeTag.Object);
                 tag.Initialize();
             };
 

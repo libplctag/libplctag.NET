@@ -13,6 +13,7 @@ using System.Text;
 namespace libplctag.DataTypes
 {
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TagInfo
     {
         public uint Id { get; set; }
@@ -22,6 +23,7 @@ namespace libplctag.DataTypes
         public uint[] Dimensions { get; set; }
     }
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TagInfoPlcMapper : IPlcMapper<TagInfo[]>
     {
 

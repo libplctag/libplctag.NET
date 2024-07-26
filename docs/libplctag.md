@@ -4,7 +4,7 @@
 
 [libplctag.NET](https://www.nuget.org/packages/libplctag/) provides wrapper packages for libplctag, with an API naturalised to .NET by adding the following features:
 
-* Values are strongly-typed (both Atomic types and User-Defined Types).
+* Values are strongly-typed
 * Errors are thrown as Exceptions
 * Async/Await
 * Native resource cleanup
@@ -13,7 +13,7 @@
 
 ```csharp
 // Example tag configuration for a global DINT tag in an Allen-Bradley CompactLogix/ControlLogix PLC
-var myTag = new TagDint()
+var myTag = new Tag()
 {
     Name = "SomeDINT",
     Gateway = "10.10.10.10",
@@ -22,14 +22,16 @@ var myTag = new TagDint()
     Protocol = Protocol.ab_eip
 };
 
-// Read the value from the PLC and output to console
-int output = myTag.Read();        
-Console.WriteLine($"Original value: {output}");
+// Read the value from the PLC
+myTag.Read();
+int originalValue = myTag.GetInt32(0);        
+Console.WriteLine($"Original value: {originalValue}");
 
-// Write a new value to the PLC, then read it back, and output to console
-myTag.Write(37);    
-output = myTag.Read();
-Console.WriteLine($"Updated value: {output}");
+// Write a new value to the PLC
+int updatedValue = 1234;
+myTag.SetInt32(0, updatedValue);
+myTag.Write();    
+Console.WriteLine($"Updated value: {updatedValue}");
 ```
 
 See the examples projects for further detail and usage:
@@ -57,7 +59,7 @@ Just tags.
 
 Read more on the [libplctag wiki](https://github.com/libplctag/libplctag/wiki/API).
 
-## `Tag`
+## `libplctag.Tag`
 
 libplctag.NET provides a wrapper for the C API naturalised for .NET.
 The `Tag` class is intended to be functionally equivalent to the C API.
@@ -71,69 +73,17 @@ For example:
 Some methods are presented slightly differently due to the differences in languages and language idioms.
 For example, the counterpart to `Initialize(..)` is [`plc_tag_create(..)`](https://github.com/libplctag/libplctag/wiki/API#creating-a-tag-handle) and the tag attributes are specified as properties (e.g. `Tag.Path`).
 
+### Data Accessors
 
-## `Tag<M,T>` and Mappers
+Mapping the raw tag buffer to some typed value (e.g. `int`) and vice-versa can be achieved using the built-in [Data Accessor methods](https://github.com/libplctag/libplctag/wiki/API#tag-data-accessors).
+Alternatively, get a copy of the byte array with `GetBuffer(..)` and do the conversion yourself (e.g. with [`BitConverter`](https://learn.microsoft.com/en-us/dotnet/api/system.bitconverter), [`BinaryPrimities`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.binary.binaryprimitives), [`Encoding`](https://learn.microsoft.com/en-us/dotnet/api/system.text.encoding), or manually).
 
-In your .NET application, you will usually need to convert the raw bytes into a .NET type.
-It is possible to use `GetInt32()` and `SetInt32()` (and [others](https://github.com/libplctag/libplctag/wiki/API#tag-data-accessors)) provided by the `Tag` class to perform this conversion, and most of the time, there will only be one sensible way to interpret these bytes for a given tag.
-
-For example, a `DINT` tag defined in a PLC is a 32bit signed integer, and this would be exposed as a little-endian encoded 4-byte array.
-The natural choice for a C# type would be `int` - it would be rare to want to work with this data as a `float` or a 4-byte ASCII string for example.
-
-To this end, libplctag.NET offers a typed tag class `Tag<M,T>` that exposes the tag value as a C# type instead of the complete set of Getter/Setter functions.
-This class pairs with an [`IPlcMapper`](src/libplctag/DataTypes/IPlcMapper.cs), which encapsulates the mapping between a .NET type (e.g. `int`, `float`) and the PLC type (e.g. `DINT`, `REAL`) by calling the appropriate functions on a Tag (as well as providing other information that libplctag needs for this mapping).
-
-```csharp
-class DintPlcMapper : IPlcMapper<int>
-{
-    public PlcType PlcType { get; set; }
-    public int? ElementSize => 4;
-    public int[] ArrayDimensions { get; set; }
-    public int? GetElementCount() => 1;
-    public int Decode(Tag tag, int offset) => tag.GetInt32(offset);
-    public void Encode(Tag tag, int offset, int value) => tag.SetInt32(offset, value);
-}
-
-var myTag = new Tag<DintPlcMapper, int>(){...configuration...};
-myTag.Initialize();
-myTag.Value = 1234;
-myTag.Write();
-```
-
-In general, you will need prior knowedge of the structure of the tag data, and you may need to reverse-engineer it.
-An example for reverse engineering a UDT can be found [here](../examples/CSharp%20DotNetCore/SequencePlcMapper.cs).
-
-Because the structure of the data depends on many factors (PLC Make/model, Protocol, and even the tag Name), libplctag.NET does not provide built-in Mappers for all types.
+In general, you will need prior knowedge of the binary format of the tag data, and you may need to reverse-engineer it.
 The manuals provided by your device manufacturer are the best source of information on these details.
 
-## Types
+## `libplctag.LibPlcTag`
 
-### `libplctag` namepsace
-* `Tag` - A wrapper around the core libplctag library tag with an interface naturalised to .NET.
-* `Tag<M,T>` - A wrapper that exposes a .NET type (generic parameter `T`) instead of Data Accessors. The data access logic is delegated to an `IPlcMapper` (generic parameter `M`).
-* `ITag` - an interface that is implemented by `Tag<M,T>`.
-* `Libplctag` - A static class used to access some additional features of the libplctag base library such as global debug levels and logging.
-* Enum types such as `DebugLevel`.
-* Supporting types such as `TagEventArgs`.
-
-All types are shipped with XML documentation, so the full API is discoverable in your IDE.
-
-### `libplctag.DataTypes` namespace
-
-* [`IPlcMapper`](src/libplctag/DataTypes/IPlcMapper.cs)
-* [`DintPlcMapper`](src/libplctag/DataTypes/DintPlcMapper.cs)
-* [`LrealPlcMapper`](src/libplctag/DataTypes/LrealPlcMapper.cs)
-* ... and so on
-
-Of note are [TagInfoPlcMapper](src/libplctag/DataTypes/TagInfoPlcMapper.cs) and [UdtInfoMapper](src/libplctag/DataTypes/UdtInfoPlcMapper.cs), which can be used to [list the tags in a ControlLogix PLC](../examples/CSharp%20DotNetCore/ListUdtDefinitions.cs).
-
-### `libplctag.DataTypes.Simple` namespace
-
-In simple cases such as atomic tags (e.g.`DINT`) or arrays of atomic tags (e.g. `LREAL[x,y]`), we provide classes that pair a built-in `IPlcMapper` with the natural .NET type:
-
-* [`TagDint`](src/libplctag/DataTypes/Simple/Definitions.cs#L21)
-* [`TagLreal2D`](src/libplctag/DataTypes/Simple/Definitions.cs#L41)
-* ... and so on
+This is a static class used to access some utility features of the libplctag base library such as global debug levels and logging.
 
 ## libplctag.NativeImport
 

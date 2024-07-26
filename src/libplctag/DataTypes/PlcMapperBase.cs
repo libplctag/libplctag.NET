@@ -13,6 +13,7 @@ using libplctag.DataTypes.Extensions;
 
 namespace libplctag.DataTypes
 {
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public abstract class PlcMapperBase<T> : IPlcMapper<T>, IPlcMapper<T[]>, IPlcMapper<T[,]>, IPlcMapper<T[,,]>
     {
         public PlcType PlcType { get; set; }
