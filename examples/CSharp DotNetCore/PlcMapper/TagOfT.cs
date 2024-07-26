@@ -5,19 +5,18 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.DataTypes;
+using libplctag;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace libplctag
+namespace CSharpDotNetCore.PlcMapper
 {
     /// <summary>
     /// A class that allows for strongly-typed objects tied to PLC tags
     /// </summary>
     /// <typeparam name="M">A <see cref="IPlcMapper{T}"/> class that handles data conversion</typeparam>
     /// <typeparam name="T">The desired C# type of Tag.Value</typeparam>
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class Tag<M, T> : IDisposable, ITag where M : IPlcMapper<T>, new()
     {
 
@@ -258,4 +257,88 @@ namespace libplctag
         public event EventHandler<TagEventArgs> Destroyed;
 
     }
+
+    public interface IPlcMapper<T>
+    {
+        /// <summary>
+        /// You can define different marshalling behaviour for different types
+        /// The PlcType is injected during PlcMapper instantiation, and
+        /// will be available to you in your marshalling logic
+        /// </summary>
+        PlcType PlcType { get; set; }
+
+
+        /// <summary>
+        /// Provide an integer value for ElementSize if you
+        /// want to pass this into the tag constructor
+        /// </summary>
+        int? ElementSize { get; }
+
+        /// <summary>
+        /// The dimensions of the array. Null if not an array.
+        /// </summary>
+        int[] ArrayDimensions { get; set; }
+
+        /// <summary>
+        /// This is used to convert the number of array elements
+        /// into the raw element count, which is used by the library.
+        /// Most of the time, this will be the dimensions multiplied, but occasionally
+        /// it is not (e.g. BOOL arrays).
+        /// </summary>
+        int? GetElementCount();
+
+        /// <summary>
+        /// This is the method that reads/unpacks the underlying value of the tag
+        /// and returns it as a C# type
+        /// </summary>
+        /// <param name="tag">Tag to be Decoded</param>
+        /// <returns>C# value of tag</returns>
+        T Decode(Tag tag);
+
+        /// <summary>
+        /// This is the method that transforms the C# type into the underlying value of the tag
+        /// </summary>
+        /// <param name="tag">Tag to be encoded to</param>
+        /// <param name="value">C# value to be transformed</param>
+        void Encode(Tag tag, T value);
+    }
+
+    /// <summary>
+    /// An interface to represent any generic tag without
+    /// exposing its value
+    /// </summary>
+    public interface ITag : IDisposable
+    {
+        int[] ArrayDimensions { get; set; }
+        string Gateway { get; set; }
+        string Name { get; set; }
+        string Path { get; set; }
+        PlcType? PlcType { get; set; }
+        Protocol? Protocol { get; set; }
+        int? ReadCacheMillisecondDuration { get; set; }
+        TimeSpan Timeout { get; set; }
+        bool? UseConnectedMessaging { get; set; }
+        bool? AllowPacking { get; set; }
+        TimeSpan? AutoSyncReadInterval { get; set; }
+        TimeSpan? AutoSyncWriteInterval { get; set; }
+        DebugLevel DebugLevel { get; set; }
+
+        event EventHandler<TagEventArgs> ReadStarted;
+        event EventHandler<TagEventArgs> ReadCompleted;
+        event EventHandler<TagEventArgs> WriteStarted;
+        event EventHandler<TagEventArgs> WriteCompleted;
+        event EventHandler<TagEventArgs> Aborted;
+        event EventHandler<TagEventArgs> Destroyed;
+
+        Status GetStatus();
+        void Initialize();
+        Task InitializeAsync(CancellationToken token = default);
+        object Read();
+        Task<object> ReadAsync(CancellationToken token = default);
+        void Write();
+        Task WriteAsync(CancellationToken token = default);
+
+        object Value { get; set; }
+    }
+    
 }

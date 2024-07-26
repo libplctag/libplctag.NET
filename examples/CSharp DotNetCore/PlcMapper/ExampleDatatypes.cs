@@ -6,16 +6,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using libplctag;
-using libplctag.DataTypes.Simple;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 
-namespace CSharpDotNetCore
+namespace CSharpDotNetCore.PlcMapper
 {
-    class ExampleDatatypesSimple
+    class ExampleDatatypes
     {
         const string gateway = "10.10.10.10";
         const string path = "1,0";
@@ -25,7 +20,7 @@ namespace CSharpDotNetCore
         {
 
             //Bool
-            var boolTag = new TagBool()
+            var boolTag = new Tag<BoolPlcMapper, bool>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
@@ -37,7 +32,7 @@ namespace CSharpDotNetCore
 
 
             //Signed Numbers
-            var sintTag = new TagSint()
+            var sintTag = new Tag<SintPlcMapper, sbyte>()
             {
                 Name = "TestSINT",
                 Gateway = gateway,
@@ -47,7 +42,7 @@ namespace CSharpDotNetCore
             };
             sintTag.Read();
 
-            var intTag = new TagInt()
+            var intTag = new Tag<IntPlcMapper, short>()
             {
                 Name = "TestINT",
                 Gateway = gateway,
@@ -58,7 +53,7 @@ namespace CSharpDotNetCore
             intTag.Read();
 
 
-            var dintTag = new TagDint()
+            var dintTag = new Tag<DintPlcMapper, int>()
             {
                 Name = "TestBOOL",
                 Gateway = gateway,
@@ -69,7 +64,7 @@ namespace CSharpDotNetCore
             dintTag.Read();
 
 
-            var lintTag = new TagLint()
+            var lintTag = new Tag<LintPlcMapper, long>()
             {
                 Name = "TestLINT",
                 Gateway = gateway,
@@ -81,7 +76,7 @@ namespace CSharpDotNetCore
 
 
             //Floating Points
-            var realTag = new TagReal()
+            var realTag = new Tag<RealPlcMapper, float>()
             {
                 Name = "TestREAL",
                 Gateway = gateway,
@@ -91,8 +86,9 @@ namespace CSharpDotNetCore
             };
             realTag.Read();
 
+
             //Strings and String Arrays
-            var stringTag = new TagString1D()
+            var stringTag = new Tag<StringPlcMapper, string[]>()
             {
                 Name = "MY_STRING_1D[0]",
                 Gateway = gateway,

@@ -11,6 +11,7 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class StringPlcMapper : PlcMapperBase<string>
     {
 

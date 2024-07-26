@@ -12,6 +12,7 @@ using System.Text;
 
 namespace libplctag.DataTypes
 {
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TimerPlcMapper : PlcMapperBase<AbTimer>
     {
 
@@ -71,6 +72,7 @@ namespace libplctag.DataTypes
         }
     }
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class AbTimer
     {
         public int Preset { get; set; }

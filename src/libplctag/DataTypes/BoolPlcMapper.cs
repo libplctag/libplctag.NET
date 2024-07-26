@@ -12,6 +12,7 @@ using System.Linq;
 namespace libplctag.DataTypes
 {
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class BoolPlcMapper : IPlcMapper<bool>, IPlcMapper<bool[]>, IPlcMapper<bool[,]>, IPlcMapper<bool[,,]>
     {
         public int? ElementSize => 1;

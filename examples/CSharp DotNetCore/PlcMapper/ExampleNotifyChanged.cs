@@ -5,11 +5,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-using libplctag.DataTypes;
 using libplctag;
 using System;
 
-namespace CSharp_DotNetCore
+namespace CSharpDotNetCore.PlcMapper
 {
     internal class ExampleNotifyChanged
     {
