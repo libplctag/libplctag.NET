@@ -22,12 +22,12 @@ var myTag = new Tag()
     Protocol = Protocol.ab_eip
 };
 
-// Read the value from the PLC and output to console
+// Read the value from the PLC
 myTag.Read();
 int originalValue = myTag.GetInt32(0);        
 Console.WriteLine($"Original value: {originalValue}");
 
-// Write a new value to the PLC, then read it back, and output to console
+// Write a new value to the PLC
 int updatedValue = 1234;
 myTag.SetInt32(0, updatedValue);
 myTag.Write();    
@@ -40,7 +40,7 @@ See the examples projects for further detail and usage:
 * [C# (.NET Framework)](../examples/CSharp%20DotNetFramework/)
 * [VB.NET](../examples/VB.NET%20DotNetCore/Program.vb)
 
-## Explanation
+## Introduction
 
 A tag is a local reference to a region of PLC memory.
 Depending on the PLC type and protocol the region may be named.
@@ -76,7 +76,7 @@ For example, the counterpart to `Initialize(..)` is [`plc_tag_create(..)`](https
 ### Data Accessors
 
 Mapping the raw tag buffer to some typed value (e.g. `int`) and vice-versa can be achieved using the built-in [Data Accessor methods](https://github.com/libplctag/libplctag/wiki/API#tag-data-accessors).
-Alternatively, get a copy of the byte array and do the conversion yourself (e.g. with [`BitConverter`](https://learn.microsoft.com/en-us/dotnet/api/system.bitconverter), [`BinaryPrimities`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.binary.binaryprimitives), [`Encoding`](https://learn.microsoft.com/en-us/dotnet/api/system.text.encoding), among others).
+Alternatively, get a copy of the byte array with `GetBuffer(..)` and do the conversion yourself (e.g. with [`BitConverter`](https://learn.microsoft.com/en-us/dotnet/api/system.bitconverter), [`BinaryPrimities`](https://learn.microsoft.com/en-us/dotnet/api/system.buffers.binary.binaryprimitives), [`Encoding`](https://learn.microsoft.com/en-us/dotnet/api/system.text.encoding), or manually).
 
 In general, you will need prior knowedge of the binary format of the tag data, and you may need to reverse-engineer it.
 The manuals provided by your device manufacturer are the best source of information on these details.
