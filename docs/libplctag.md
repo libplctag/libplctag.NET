@@ -24,12 +24,12 @@ var myTag = new Tag()
 
 // Read the value from the PLC and output to console
 myTag.Read();
-int originalValue = myTag.GetInt32();        
+int originalValue = myTag.GetInt32(0);        
 Console.WriteLine($"Original value: {originalValue}");
 
 // Write a new value to the PLC, then read it back, and output to console
 int updatedValue = 1234;
-myTag.SetInt32(updatedValue);
+myTag.SetInt32(0, updatedValue);
 myTag.Write();    
 Console.WriteLine($"Updated value: {updatedValue}");
 ```

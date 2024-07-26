@@ -7,8 +7,6 @@
 
 using libplctag;
 using System;
-using System.Net;
-using System.Threading;
 
 namespace CSharpDotNetCore
 {
@@ -16,32 +14,26 @@ namespace CSharpDotNetCore
     {
         public static void Run()
         {
-            //This is the absolute most simplified example code
-            //Please see the other examples for more features/optimizations
-
-            //Instantiate the tag with the proper mapper and datatype
+            // Example tag configuration for a global DINT tag in an Allen-Bradley CompactLogix/ControlLogix PLC
             var myTag = new Tag()
             {
-                Name = "PROGRAM:SomeProgram.SomeDINT",
+                Name = "SomeDINT",
                 Gateway = "10.10.10.10",
                 Path = "1,0",
                 PlcType = PlcType.ControlLogix,
-                Protocol = Protocol.ab_eip,
-                Timeout = TimeSpan.FromSeconds(5)
+                Protocol = Protocol.ab_eip
             };
 
-            //Write value to PLC
-            //This will call Initialize internally since it's the first use of this tag
-            //myTag.Value will be set to 3737 before being transferred to PLC
-            myTag.SetInt32(0, 3737);
-
-            //Read value from PLC
-            //Value will also be accessible at myTag.Value
+            // Read the value from the PLC and output to console
             myTag.Read();
-            int myDint = myTag.GetInt32(0);
+            int originalValue = myTag.GetInt32(0);
+            Console.WriteLine($"Original value: {originalValue}");
 
-            //Write to console
-            Console.WriteLine(myDint);
+            // Write a new value to the PLC, then read it back, and output to console
+            int updatedValue = 1234;
+            myTag.SetInt32(0, updatedValue);
+            myTag.Write();
+            Console.WriteLine($"Updated value: {updatedValue}");
         }
     }
 }

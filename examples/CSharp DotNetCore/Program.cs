@@ -14,7 +14,6 @@ namespace CSharpDotNetCore
         static void Main(string[] args)
         {
             ExampleSimple.Run();
-            ExampleListPlc.Run();
             Console.ReadKey();
         }
     }
