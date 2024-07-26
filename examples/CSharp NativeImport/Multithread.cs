@@ -7,11 +7,7 @@
 
 using libplctag.NativeImport;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NativeImport_Examples
 {
@@ -47,7 +43,7 @@ namespace NativeImport_Examples
                         Console.WriteLine($"Locking in {tid}");
                         rc = plctag.plc_tag_lock(tag);
 
-                        if (rc != (int)STATUS_CODES.PLCTAG_STATUS_OK)
+                        if (rc != (int)STATUS.PLCTAG_STATUS_OK)
                         {
                             value = 1000;
                             break; /* punt, no lock */
@@ -56,7 +52,7 @@ namespace NativeImport_Examples
                         Console.WriteLine($"Reading in {tid}");
                         rc = plctag.plc_tag_read(tag, DATA_TIMEOUT);
 
-                        if (rc != (int)STATUS_CODES.PLCTAG_STATUS_OK)
+                        if (rc != (int)STATUS.PLCTAG_STATUS_OK)
                         {
                             value = 1001;
                         }
@@ -93,13 +89,13 @@ namespace NativeImport_Examples
 
         static public int main()
         {
-            int rc = (int)STATUS_CODES.PLCTAG_STATUS_OK;
+            int rc = (int)STATUS.PLCTAG_STATUS_OK;
             Thread[] thread = new Thread[MAX_THREADS];
             int num_threads;
             int thread_id = 0;
 
             /* check the library version. */
-            if (plctag.plc_tag_check_lib_version(2,1,0) != (int)STATUS_CODES.PLCTAG_STATUS_OK)
+            if (plctag.plc_tag_check_lib_version(2,1,0) != (int)STATUS.PLCTAG_STATUS_OK)
             {
                 Console.WriteLine("Required compatible library version 2.1.0 not available!");
                 return 1;
@@ -130,7 +126,7 @@ namespace NativeImport_Examples
                 return 0;
             }
 
-            if ((rc = plctag.plc_tag_status(tag)) != (int)STATUS_CODES.PLCTAG_STATUS_OK)
+            if ((rc = plctag.plc_tag_status(tag)) != (int)STATUS.PLCTAG_STATUS_OK)
             {
                 Console.WriteLine($"Error setting up tag internal state. {plctag.plc_tag_decode_error(rc)}");
                 plctag.plc_tag_destroy(tag);
