@@ -24,6 +24,11 @@ namespace CSharpDotNetCore.PlcMapper
         //Multiply all the dimensions to get total elements
         virtual public int? GetElementCount() => ArrayDimensions?.Aggregate(1, (x, y) => x * y);
 
+        public virtual void Configure(Tag tag)
+        {
+            // Do nothing
+        }
+
         virtual protected T[] DecodeArray(Tag tag)
         {
             if (ElementSize is null)
@@ -97,6 +102,11 @@ namespace CSharpDotNetCore.PlcMapper
             //Multiply dimensions for total elements
             var totalElements = ArrayDimensions.Aggregate(1, (x, y) => x * y);
             return (int)Math.Ceiling((double)totalElements / 32.0);
+        }
+
+        public virtual void Configure(Tag tag)
+        {
+            // Do nothing
         }
 
         public int? SetArrayLength(int? elementCount) => (int)Math.Ceiling((double)elementCount.Value / 32.0);

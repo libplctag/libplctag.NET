@@ -209,6 +209,11 @@ namespace CSharpDotNetCore.PlcMapper
             //TODO: We know this value after we decode once. SHould we trigger a decode or cache the value after first decode?
             return null;
         }
+
+        public virtual void Configure(Tag tag)
+        {
+            // Do nothing
+        }
     }
 
     public class UdtFieldInfo
@@ -301,6 +306,11 @@ namespace CSharpDotNetCore.PlcMapper
         {
             //TODO: We know this value after we decode once. SHould we trigger a decode or cache the value after first decode?
             return null;
+        }
+
+        public virtual void Configure(Tag tag)
+        {
+            // Do nothing
         }
     }
 }
