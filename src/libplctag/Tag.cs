@@ -718,12 +718,12 @@ namespace libplctag
                     }
 
                     // Await while Pending
-                    if(result == (int)Status.Pending)
+                    if(GetStatus() == Status.Pending)
                     {
                         await createTask.Task.ConfigureAwait(false);
                     }
 
-                    // Tear down and throw on error
+                    // On error, tear down and throw
                     if(createTask.Task.Result != Status.Ok)
                     {
                         RemoveEventsAndRemoveCallback();
