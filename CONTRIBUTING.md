@@ -12,13 +12,13 @@ However, you are in the best position to describe your situation, so when creati
 
 #### Guidance when creating an issue
 
-* Review the [documentation](https://github.com/libplctag/libplctag.NET/tree/master/docs), [examples](https://github.com/libplctag/libplctag.NET/tree/master/src/Examples), [previous Github issues](https://github.com/libplctag/libplctag.NET/issues?q=is%3Aissue) and [previous Google Groups discussions](https://groups.google.com/g/libplctag) for similar questions.
+* Review the [documentation](https://github.com/libplctag/libplctag.NET/tree/master/docs), [examples](https://github.com/libplctag/libplctag.NET/tree/main/examples), [previous Github issues](https://github.com/libplctag/libplctag.NET/issues?q=is%3Aissue) and [previous Google Groups discussions](https://groups.google.com/g/libplctag) for similar questions.
 * What are you expecting to occur, or what do you need to occur?
 * Can you provide evidence of what is actually occuring instead of your expectation?
 * Supply a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example).
 * What else have you tried? And why did it not work?
 * Is there anything related to this that _does_ work?
-* Supply [libplctag debug logs](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/LoggingExample.cs).
+* Supply [libplctag debug logs](https://github.com/libplctag/libplctag.NET/blob/main/examples/CSharp%20DotNetCore/ExampleLogging.cs).
 * Are external conditions relevant (e.g. network latency)? Document these. 
 
 As the conversation progresses, you may be asked to try various things.
@@ -30,8 +30,8 @@ Keeping track of what is being tested can be very difficult, so please post deta
 * Use a simulator or a PLC Fake to eliminate calls to libplctag and/or the hardware.
   * [ab_server](https://github.com/libplctag/libplctag/releases/)
   * [Modbus server docker image](https://hub.docker.com/r/oitc/modbus-server)
-  * Develop your own [PLC Fake](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/ExampleSimulator.cs)
-* Enable and read the [libplctag debug logs](https://github.com/libplctag/libplctag.NET/blob/master/src/Examples/CSharp%20DotNetCore/LoggingExample.cs).
+  * Develop your own [PLC Fake](https://github.com/libplctag/libplctag.NET/blob/main/examples/CSharp%20DotNetCore/ExampleSimulator.cs)
+* Enable and read the [libplctag debug logs](https://github.com/libplctag/libplctag.NET/blob/main/examples/CSharp%20DotNetCore/ExampleLogging.cs).
 
 
 #### Pull Requests
