@@ -595,11 +595,10 @@ namespace libplctag
                 return;
 
             if (_isInitialized)
-            {
                 RemoveEventsAndRemoveCallback();
-                var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
-                ThrowIfStatusNotOk(result);
-            }
+
+            var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
+            ThrowIfStatusNotOk(result);
 
             _isDisposed = true;
         }
@@ -636,9 +635,14 @@ namespace libplctag
             
             var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, millisecondTimeout);
             if (result < 0)
+            {
+                RemoveEventsAndRemoveCallback();
                 throw new LibPlcTagException((Status)result);
+            }
             else
+            {
                 nativeTagHandle = result;
+            }
 
 
             _isInitialized = true;
@@ -701,15 +705,30 @@ namespace libplctag
                     var attributeString = GetAttributeString();
 
                     var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+
+                    // Something went wrong locally
                     if (result < 0)
+                    {
+                        RemoveEventsAndRemoveCallback();
                         throw new LibPlcTagException((Status)result);
+                    }
                     else
+                    {
                         nativeTagHandle = result;
+                    }
 
-                    if(GetStatus() == Status.Pending)
+                    // Await while Pending
+                    if(result == (int)Status.Pending)
+                    {
                         await createTask.Task.ConfigureAwait(false);
+                    }
 
-                    ThrowIfStatusNotOk(createTask.Task.Result);
+                    // Tear down and throw on error
+                    if(createTask.Task.Result != Status.Ok)
+                    {
+                        RemoveEventsAndRemoveCallback();
+                        throw new LibPlcTagException(createTask.Task.Result);
+                    }
 
                     _isInitialized = true;
                 }

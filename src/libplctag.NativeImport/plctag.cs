@@ -50,9 +50,9 @@ namespace libplctag.NativeImport
             return NativeMethods.plc_tag_destroy(tag);
         }
 
-        public static int plc_tag_shutdown()
+        public static void plc_tag_shutdown()
         {
-            return NativeMethods.plc_tag_shutdown();
+            NativeMethods.plc_tag_shutdown();
         }
 
         public static int plc_tag_register_callback(Int32 tag_id, callback_func func)
