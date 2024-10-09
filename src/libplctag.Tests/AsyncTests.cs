@@ -133,7 +133,7 @@ namespace libplctag.Tests
                     callback = callbackFunc;
                     await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
                     status = Status.Ok;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
+                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
                 });
 
             // ... as well as when a read call occurs
@@ -142,10 +142,10 @@ namespace libplctag.Tests
                 .Callback<int, int>(async (tagId, timeout) =>
                 {
                     status = Status.Pending;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
+                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
                     await Task.Delay(REALISTIC_LATENCY_FOR_READ);
                     status = Status.Ok;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT_CODES.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS_CODES.PLCTAG_STATUS_OK, IntPtr.Zero);
+                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
                 });
 
             // the status was being tracked, so return it if asked

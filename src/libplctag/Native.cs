@@ -18,7 +18,7 @@ namespace libplctag
         public Int32 plc_tag_create(string lpString, int timeout)                                                       => plctag.plc_tag_create(lpString, timeout);
         public Int32 plc_tag_create_ex(string lpString, callback_func_ex func, IntPtr userdata, int timeout)            => plctag.plc_tag_create_ex(lpString, func, userdata, timeout);
         public int plc_tag_destroy(Int32 tag)                                                                           => plctag.plc_tag_destroy(tag);
-        public int plc_tag_shutdown()                                                                                   => plctag.plc_tag_shutdown();
+        public void plc_tag_shutdown()                                                                                  => plctag.plc_tag_shutdown();
         public int plc_tag_register_callback(Int32 tag_id, callback_func func)                                          => plctag.plc_tag_register_callback(tag_id, func);
         public int plc_tag_unregister_callback(Int32 tag_id)                                                            => plctag.plc_tag_unregister_callback(tag_id);
         public int plc_tag_register_logger(log_callback_func func)                                                      => plctag.plc_tag_register_logger(func);

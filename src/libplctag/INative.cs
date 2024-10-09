@@ -56,7 +56,7 @@ namespace libplctag
         int plc_tag_set_uint32(int tag, int offset, uint val);
         int plc_tag_set_uint64(int tag, int offset, ulong val);
         int plc_tag_set_uint8(int tag, int offset, byte val);
-        int plc_tag_shutdown();
+        void plc_tag_shutdown();
         int plc_tag_status(int tag);
         int plc_tag_unlock(int tag);
         int plc_tag_unregister_callback(int tag_id);

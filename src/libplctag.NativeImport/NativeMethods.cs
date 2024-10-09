@@ -59,7 +59,7 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_shutdown), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_shutdown();
+        public static extern void plc_tag_shutdown();
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_register_callback), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
