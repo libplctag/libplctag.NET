@@ -926,11 +926,7 @@ namespace libplctag
         public void GetBuffer(int offset, byte[] buffer, int length)
         {
             ThrowIfAlreadyDisposed();
-
-            var tagSize = GetSize();
-            var temp = new byte[tagSize];
-
-            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, offset, temp, length);
+            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, offset, buffer, length);
             ThrowIfStatusNotOk(result);
         }
 
@@ -939,12 +935,10 @@ namespace libplctag
             SetBuffer(0, buffer, buffer.Length);
         }
 
-        public void SetBuffer(int offset, byte[] buffer, int length)
+        public void SetBuffer(int start_offset, byte[] buffer, int length)
         {
             ThrowIfAlreadyDisposed();
-
-            GetNativeValueAndThrowOnNegativeResult(_native.plc_tag_set_size, buffer.Length);
-            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, 0, buffer, buffer.Length);
+            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, start_offset, buffer, length);
             ThrowIfStatusNotOk(result);
         }
 
