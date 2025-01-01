@@ -970,10 +970,11 @@ namespace libplctag
             var bufferLength = GetIntAttribute(bufferLengthAttributeName);
             var buffer = new byte[bufferLength];
 
-            var result = (Status)_native.plc_tag_get_byte_array_attribute(nativeTagHandle, attributeName, buffer, buffer.Length);
-            ThrowIfStatusNotOk(result);
-
-            return buffer;
+            var result = _native.plc_tag_get_byte_array_attribute(nativeTagHandle, attributeName, buffer, buffer.Length);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            else
+                return buffer;
         }
 
         private void SetDebugLevel(DebugLevel level)
