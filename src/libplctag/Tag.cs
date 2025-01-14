@@ -43,6 +43,7 @@ namespace libplctag
         private int? _elementCount;
         private bool? _useConnectedMessaging;
         private bool? _allowPacking;
+        private bool? _allowFieldResize;
         private int? _readCacheMillisecondDuration;
         private uint? _maxRequestsInFlight;
         private TimeSpan _timeout = defaultTimeout;
@@ -264,6 +265,23 @@ namespace libplctag
         {
             get => GetField(ref _allowPacking);
             set => SetField(ref _allowPacking, value);
+        }
+
+        /// <summary>
+        /// [OPTIONAL]
+        /// True = Allow data functions to change the tag’s buffer size.
+        /// False = Prevent functions like plc_tag_set_string() from changing the tag’s buffer size.
+        /// </summary>
+        /// <remarks>
+        /// When set allows the library to resize a tag’s data buffer when a field within it changes size.
+        /// This is the case when a string is set to a different size than it was when first read.
+        /// When a resize happens, the buffer is split at the site of the field and the part before the field is not changed.
+        /// The part after the field does not have changed contents, but the location of that contents will shift.
+        /// </remarks>
+        public bool? AllowFieldResize
+        {
+            get => GetField(ref _allowFieldResize);
+            set => SetField(ref _allowFieldResize, value);
         }
 
         /// <summary>
@@ -1169,6 +1187,7 @@ namespace libplctag
                 { "str_pad_bytes",          StringPadBytes?.ToString() },
                 { "str_total_length",       StringTotalLength?.ToString() },
                 { "max_requests_in_flight", MaxRequestsInFlight?.ToString() },
+                { "allow_field_resize",     FormatNullableBoolean(AllowFieldResize) },
             };
 
             string separator = "&";
