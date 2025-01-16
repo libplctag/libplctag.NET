@@ -281,12 +281,37 @@ namespace libplctag.NativeImport
 
         public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
         {
-            return NativeMethods.plc_tag_get_raw_bytes(tag_id, start_offset, buffer, buffer_length);
+            int returnValue = plc_tag_get_raw_bytes(tag_id, start_offset, out Span<byte> span);
+            span.CopyTo(buffer);
+            return returnValue;
+        }
+
+        public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, out Span<byte> buffer)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = buffer)
+                {
+                    return NativeMethods.plc_tag_get_raw_bytes(tag_id, 0, ptr, buffer.Length);
+                }
+            }
         }
 
         public static int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
         {
-            return NativeMethods.plc_tag_set_raw_bytes(tag_id, start_offset, buffer, buffer_length);
+            ReadOnlySpan<byte> span = buffer.AsSpan().Slice(start_offset, buffer_length);
+            return plc_tag_set_raw_bytes(tag_id, span);
+        }
+
+        public static int plc_tag_set_raw_bytes(Int32 tag_id, ReadOnlySpan<byte> buffer)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = buffer)
+                {
+                    return NativeMethods.plc_tag_set_raw_bytes(tag_id, 0, ptr, buffer.Length);
+                }
+            }
         }
 
 
