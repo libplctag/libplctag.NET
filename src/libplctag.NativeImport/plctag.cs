@@ -281,35 +281,36 @@ namespace libplctag.NativeImport
 
         public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
         {
-            int returnValue = plc_tag_get_raw_bytes(tag_id, start_offset, out Span<byte> span);
+            Span<byte> span = buffer.AsSpan().Slice(0, buffer_length);
+            int returnValue = plc_tag_get_raw_bytes(tag_id, start_offset, span);
             span.CopyTo(buffer);
             return returnValue;
         }
 
-        public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, out Span<byte> buffer)
+        public static int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, Span<byte> buffer)
         {
             unsafe
             {
                 fixed (byte* ptr = buffer)
                 {
-                    return NativeMethods.plc_tag_get_raw_bytes(tag_id, 0, ptr, buffer.Length);
+                    return NativeMethods.plc_tag_get_raw_bytes(tag_id, start_offset, ptr, buffer.Length);
                 }
             }
         }
 
         public static int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, byte[] buffer, int buffer_length)
         {
-            ReadOnlySpan<byte> span = buffer.AsSpan().Slice(start_offset, buffer_length);
-            return plc_tag_set_raw_bytes(tag_id, span);
+            ReadOnlySpan<byte> span = buffer.AsSpan();
+            return plc_tag_set_raw_bytes(tag_id, start_offset, span);
         }
 
-        public static int plc_tag_set_raw_bytes(Int32 tag_id, ReadOnlySpan<byte> buffer)
+        public static int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, ReadOnlySpan<byte> buffer)
         {
             unsafe
             {
                 fixed (byte* ptr = buffer)
                 {
-                    return NativeMethods.plc_tag_set_raw_bytes(tag_id, 0, ptr, buffer.Length);
+                    return NativeMethods.plc_tag_set_raw_bytes(tag_id, start_offset, ptr, buffer.Length);
                 }
             }
         }

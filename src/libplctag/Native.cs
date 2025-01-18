@@ -59,7 +59,9 @@ namespace libplctag
         public int plc_tag_set_bit(Int32 tag, int offset_bit, int val)                                                  => plctag.plc_tag_set_bit(tag, offset_bit, val);
         public void plc_tag_set_debug_level(int debug_level)                                                            => plctag.plc_tag_set_debug_level(debug_level);
         public int plc_tag_get_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length)                   => plctag.plc_tag_get_raw_bytes(tag, start_offset, buffer, buffer_length);
+        public int plc_tag_get_raw_bytes(int tag, int start_offset, Span<byte> buffer)                                  => plctag.plc_tag_get_raw_bytes(tag, start_offset, buffer);
         public int plc_tag_set_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length)                   => plctag.plc_tag_set_raw_bytes(tag, start_offset, buffer, buffer_length);
+        public int plc_tag_set_raw_bytes(int tag, int start_offset, ReadOnlySpan<byte> buffer)                          => plctag.plc_tag_set_raw_bytes(tag, start_offset, buffer);
         public int plc_tag_get_string_length(int tag, int string_start_offset)                                          => plctag.plc_tag_get_string_length(tag, string_start_offset);
         public int plc_tag_get_string(int tag, int string_start_offset, StringBuilder buffer, int buffer_length)        => plctag.plc_tag_get_string(tag, string_start_offset, buffer, buffer_length);
         public int plc_tag_get_string_total_length(int tag, int string_start_offset)                                    => plctag.plc_tag_get_string_total_length(tag, string_start_offset);
