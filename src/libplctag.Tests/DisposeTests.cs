@@ -64,7 +64,7 @@ namespace libplctag.Tests
                 {
                     await tag.InitializeAsync();
                 }
-                catch (Exception e) when (e.Message == "ErrorNotFound") // we are expecting this exception
+                catch (LibPlcTagException e) when (e.Status == Status.ErrorNotFound) // we are expecting this exception
                 {
                 }
             }

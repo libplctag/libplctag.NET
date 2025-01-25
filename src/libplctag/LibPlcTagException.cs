@@ -15,6 +15,8 @@ namespace libplctag
     /// </summary>
     public class LibPlcTagException : Exception
     {
+        public Status Status { get; }
+
         public LibPlcTagException()
         {
         }
@@ -32,6 +34,7 @@ namespace libplctag
         public LibPlcTagException(Status status)
             : base(status.ToString())
         {
+            Status = status;
         }
     }
 }
