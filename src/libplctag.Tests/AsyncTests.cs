@@ -70,7 +70,7 @@ namespace libplctag.Tests
             });
 
             // Assert
-            Assert.Equal(Status.ErrorTimeout.ToString(), ex.Message);
+            Assert.Equal(Status.ErrorTimeout, ex.Status);
         }
 
         [Fact]
