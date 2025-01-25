@@ -11,7 +11,6 @@ using System.Text;
 
 namespace libplctag.NativeImport
 {
-#pragma warning disable 1591 // Defer to core documentation for NativeMethods
     /// <summary>
     /// This class provides low-level (raw) access to the native libplctag library (which is written in C).
     /// The purpose of this package is to expose the API for this native library, and handle platform and configuration issues.
@@ -291,5 +290,4 @@ namespace libplctag.NativeImport
 
 
     }
-#pragma warning restore 1591
 }

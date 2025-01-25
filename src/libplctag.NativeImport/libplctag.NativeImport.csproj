@@ -16,6 +16,7 @@
     <PackageProjectUrl>https://github.com/libplctag/libplctag.NET</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>plc modbus netstandard rockwell allen-bradley libplctag</PackageTags>
+	<NoWarn>$(NoWarn);8981;IDE1006</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
