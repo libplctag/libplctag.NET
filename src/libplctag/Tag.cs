@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -637,8 +638,14 @@ namespace libplctag
 
             if (_isInitialized)
             {
-                RemoveCallback();
-                _native.plc_tag_destroy(nativeTagHandle);
+                var removeCallbackResult = RemoveCallback();
+                var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
+
+                // These should always succeed unless bugs exist in the core library or this wrapper
+                // If these calls fail, we cannot recover so ignore except during development
+                Debug.Assert(removeCallbackResult == Status.Ok);
+                Debug.Assert(destroyResult == Status.Ok);
+
                 RemoveEvents();
             }
 
