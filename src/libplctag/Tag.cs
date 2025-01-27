@@ -638,11 +638,11 @@ namespace libplctag
 
             if (_isInitialized)
             {
+                // These should always succeed unless bugs exist in this wrapper or the core library
                 var removeCallbackResult = RemoveCallback();
                 var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
 
-                // These should always succeed unless bugs exist in the core library or this wrapper
-                // If these calls fail, we cannot recover so ignore except during development
+                // However, we cannot recover if they do fail, so ignore except during development
                 Debug.Assert(removeCallbackResult == Status.Ok);
                 Debug.Assert(destroyResult == Status.Ok);
 
