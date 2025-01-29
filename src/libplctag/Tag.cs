@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -63,14 +64,16 @@ namespace libplctag
         private uint? _stringPadBytes;
         private uint? _stringTotalLength;
 
-        public Tag()
+        public Tag() : this(new Native())
         {
-            _native = new Native();
         }
 
         internal Tag(INative nativeMethods)
         {
             _native = nativeMethods;
+
+            // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
+            coreLibCallbackFuncExDelegate = new callback_func_ex(coreLibEventCallback);
         }
 
         ~Tag()
@@ -79,9 +82,16 @@ namespace libplctag
         }
 
         /// <summary>
-        /// True if <see cref="Initialize"/> or <see cref="InitializeAsync"/> has been called.
+        /// True if <see cref="Initialize"/> or <see cref="InitializeAsync"/> has completed succesfully.
         /// </summary>
-        public bool IsInitialized => _isInitialized;
+        public bool IsInitialized
+        {
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _isInitialized;
+            }
+        }
 
         /// <summary>
         /// <list type="table">
@@ -604,7 +614,21 @@ namespace libplctag
             set => SetField(ref _stringTotalLength, value);
         }
 
-
+        /// <summary>
+        /// [OPTIONAL | MODBUS-SPECIFIC]
+        /// The Modbus specification allows devices to queue up to 16 requests at once.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// The default is 1 and the maximum is 16.
+        /// This allows the host to send multiple requests without waiting for the device to respond.
+        /// Not all devices support up to 16 requests in flight.
+        /// </remarks>
+        public uint? MaxRequestsInFlight
+        {
+            get => GetField(ref _maxRequestsInFlight);
+            set => SetField(ref _maxRequestsInFlight, value);
+        }
 
 
         public void Dispose()
@@ -613,10 +637,17 @@ namespace libplctag
                 return;
 
             if (_isInitialized)
-                RemoveEventsAndRemoveCallback();
+            {
+                // These should always succeed unless bugs exist in this wrapper or the core library
+                var removeCallbackResult = RemoveCallback();
+                var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
 
-            var result = (Status)_native.plc_tag_destroy(nativeTagHandle);
-            ThrowIfStatusNotOk(result);
+                // However, we cannot recover if they do fail, so ignore except during development
+                Debug.Assert(removeCallbackResult == Status.Ok);
+                Debug.Assert(destroyResult == Status.Ok);
+
+                RemoveEvents();
+            }
 
             _isDisposed = true;
         }
@@ -654,7 +685,7 @@ namespace libplctag
             var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, millisecondTimeout);
             if (result < 0)
             {
-                RemoveEventsAndRemoveCallback();
+                RemoveEvents();
                 throw new LibPlcTagException((Status)result);
             }
             else
@@ -664,22 +695,6 @@ namespace libplctag
 
 
             _isInitialized = true;
-        }
-
-        /// <summary>
-        /// [OPTIONAL | MODBUS-SPECIFIC]
-        /// The Modbus specification allows devices to queue up to 16 requests at once.
-        /// </summary>
-        ///
-        /// <remarks>
-        /// The default is 1 and the maximum is 16.
-        /// This allows the host to send multiple requests without waiting for the device to respond.
-        /// Not all devices support up to 16 requests in flight.
-        /// </remarks>
-        public uint? MaxRequestsInFlight
-        {
-            get => GetField(ref _maxRequestsInFlight);
-            set => SetField(ref _maxRequestsInFlight, value);
         }
 
         /// <summary>
@@ -706,7 +721,8 @@ namespace libplctag
                     if (createTasks.TryPop(out var createTask))
                     {
                         Abort();
-                        RemoveEventsAndRemoveCallback();
+                        RemoveCallback();
+                        RemoveEvents();
 
                         if (token.IsCancellationRequested)
                             createTask.SetCanceled();
@@ -727,7 +743,7 @@ namespace libplctag
                     // Something went wrong locally
                     if (result < 0)
                     {
-                        RemoveEventsAndRemoveCallback();
+                        RemoveEvents();
                         throw new LibPlcTagException((Status)result);
                     }
                     else
@@ -744,7 +760,8 @@ namespace libplctag
                     // On error, tear down and throw
                     if(createTask.Task.Result != Status.Ok)
                     {
-                        RemoveEventsAndRemoveCallback();
+                        RemoveCallback();
+                        RemoveEvents();
                         throw new LibPlcTagException(createTask.Task.Result);
                     }
 
@@ -1206,22 +1223,21 @@ namespace libplctag
             WriteCompleted += WriteTaskCompleter;
             Created += CreatedTaskCompleter;
 
-            // Need to keep a reference to the delegate in memory so it doesn't get garbage collected
-            coreLibCallbackFuncExDelegate = new callback_func_ex(coreLibEventCallback);
 
         }
 
-        void RemoveEventsAndRemoveCallback()
+        void RemoveEvents()
         {
 
             // Used to finalize the  read/write task completion sources
             ReadCompleted -= ReadTaskCompleter;
             WriteCompleted -= WriteTaskCompleter;
             Created -= CreatedTaskCompleter;
+        }
 
-            var callbackRemovalResult = (Status)_native.plc_tag_unregister_callback(nativeTagHandle);
-            ThrowIfStatusNotOk(callbackRemovalResult);
-
+        Status RemoveCallback()
+        {
+            return (Status)_native.plc_tag_unregister_callback(nativeTagHandle);
         }
 
         private readonly ConcurrentStack<TaskCompletionSource<Status>> createTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
