@@ -66,6 +66,8 @@ namespace libplctag
             var statusAfterRegistration = (Status)_native.plc_tag_register_logger(loggerDelegate);
             if (statusAfterRegistration != Status.Ok)
                 throw new LibPlcTagException(statusAfterRegistration);
+
+            alreadySubscribedToEvents = true;
         }
 
         static void invokeLogEvent(int tag_id, int debug_level, string message)
