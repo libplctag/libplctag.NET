@@ -108,7 +108,7 @@ namespace libplctag.DataTypes.Extensions
                 {
                     for (int k = 0; k < length; k++)
                     {
-                        output[i, j, k] = input[i * height * width + j * width + k];
+                        output[i, j, k] = input[i * width * length + j * length + k];
                     }
                 }
             }
