@@ -63,7 +63,9 @@ namespace libplctag
         int plc_tag_unregister_logger(int tag_id);
         int plc_tag_write(int tag, int timeout);
         int plc_tag_get_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
+        int plc_tag_get_raw_bytes(int tag, int start_offset, Span<byte> buffer);
         int plc_tag_set_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
+        int plc_tag_set_raw_bytes(int tag, int start_offset, ReadOnlySpan<byte> buffer);
         int plc_tag_get_string_length(int tag, int string_start_offset);
         int plc_tag_get_string(int tag, int string_start_offset, StringBuilder buffer, int buffer_length);
         int plc_tag_get_string_total_length(int tag, int string_start_offset);
