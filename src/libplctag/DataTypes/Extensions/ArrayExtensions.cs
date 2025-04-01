@@ -57,7 +57,7 @@ namespace libplctag.DataTypes.Extensions
             {
                 for (int j = 0; j <= input.GetUpperBound(1); j++)
                 {
-                    for (int k = 0; k < input.GetUpperBound(2); k++)
+                    for (int k = 0; k <= input.GetUpperBound(2); k++)
                     {
                         result[write++] = input[i, j, k];
                     }
