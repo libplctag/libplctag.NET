@@ -708,9 +708,28 @@ namespace libplctag
         /// </remarks>
         public async Task InitializeAsync(CancellationToken token = default)
         {
-
             ThrowIfAlreadyDisposed();
             ThrowIfAlreadyInitialized();
+
+            SetUpEvents();
+
+            var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
+            createTasks.Push(createTask);
+
+            var attributeString = GetAttributeString();
+            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+
+            // Something went wrong locally
+            if (result < 0)
+            {
+                // shouldn't we pop here ?!?
+                RemoveEvents();
+                throw new LibPlcTagException((Status)result);
+            }
+            else
+            {
+                nativeTagHandle = result;
+            }
 
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
@@ -718,10 +737,12 @@ namespace libplctag
 
                 using (cts.Token.Register(() =>
                 {
-                    if (createTasks.TryPop(out var createTask))
+                    if (createTasks.TryPop(out _))
                     {
-                        Abort();
                         RemoveCallback();
+                        Abort();
+                        var destroyResult = (Status)_native.plc_tag_destroy(result);
+                        Debug.Assert(destroyResult == Status.Ok);
                         RemoveEvents();
 
                         if (token.IsCancellationRequested)
@@ -731,43 +752,25 @@ namespace libplctag
                     }
                 }))
                 {
-                    SetUpEvents();
-
-                    var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    createTasks.Push(createTask);
-                    
-                    var attributeString = GetAttributeString();
-
-                    var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-
-                    // Something went wrong locally
-                    if (result < 0)
-                    {
-                        RemoveEvents();
-                        throw new LibPlcTagException((Status)result);
-                    }
-                    else
-                    {
-                        nativeTagHandle = result;
-                    }
-
                     // Await while Pending
-                    if(GetStatus() == Status.Pending)
+                    if (GetStatus() == Status.Pending) // wouldn't it be safer to await anyway to avoid possible race conditions?
                     {
                         await createTask.Task.ConfigureAwait(false);
                     }
-
-                    // On error, tear down and throw
-                    if(createTask.Task.Result != Status.Ok)
-                    {
-                        RemoveCallback();
-                        RemoveEvents();
-                        throw new LibPlcTagException(createTask.Task.Result);
-                    }
-
-                    _isInitialized = true;
                 }
             }
+
+            // On error, tear down and throw
+            if (createTask.Task.Result != Status.Ok)
+            {
+                RemoveCallback();
+                var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
+                Debug.Assert(destroyResult == Status.Ok);
+                RemoveEvents();
+                throw new LibPlcTagException(createTask.Task.Result);
+            }
+
+            _isInitialized = true;
         }
 
         /// <summary>
