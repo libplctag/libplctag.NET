@@ -245,9 +245,9 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_raw_bytes), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, [Out] byte[] buffer, int buffer_length);
+        public unsafe static extern int plc_tag_get_raw_bytes(Int32 tag_id, int start_offset, byte* buffer, int buffer_length);
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_raw_bytes), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, [In] byte[] buffer, int buffer_length);
+        public unsafe static extern int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, byte* buffer, int buffer_length);
     }
 }

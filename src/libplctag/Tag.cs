@@ -968,6 +968,30 @@ namespace libplctag
             ThrowIfStatusNotOk(result);
         }
 
+        public void GetBuffer(Span<byte> buffer)
+        {
+            GetBuffer(0, buffer);
+        }
+
+        public void GetBuffer(int offset, Span<byte> buffer)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = (Status)_native.plc_tag_get_raw_bytes(nativeTagHandle, offset, buffer);
+            ThrowIfStatusNotOk(result);
+        }
+
+        public void SetBuffer(ReadOnlySpan<byte> buffer)
+        {
+            SetBuffer(0, buffer);
+        }
+
+        public void SetBuffer(int start_offset, ReadOnlySpan<byte> buffer)
+        {
+            ThrowIfAlreadyDisposed();
+            var result = (Status)_native.plc_tag_set_raw_bytes(nativeTagHandle, start_offset, buffer);
+            ThrowIfStatusNotOk(result);
+        }
+
         public void SetBuffer(byte[] buffer)
         {
             SetBuffer(0, buffer, buffer.Length);
