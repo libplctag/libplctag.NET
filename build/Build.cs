@@ -132,19 +132,20 @@ class Build : NukeBuild
 
     void NetCoreInstallRestoreBuildTest(Project proj, bool isTransitive, string nugetConfigPath)
     {
+
+        var libplctagVersion = libplctag.GetProperty("version");
+        var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("version");
+
+        DotNet($"add {proj.Path} package {libplctag_NativeImport.Name} -s {ArtifactsDirectory} --version {libplctagNativeImportVersion} --package-directory {PackageRestoreDirectory} --no-restore");
+
+        if (isTransitive)
+            DotNet($"add {proj.Path} package {libplctag.Name} -s {ArtifactsDirectory} --version {libplctagVersion} --package-directory {PackageRestoreDirectory} --no-restore");
+
         DotNetRestore(s => s
              .SetProjectFile(proj)
              .SetPackageDirectory(PackageRestoreDirectory)
              .SetConfigFile(nugetConfigPath)
              );
-
-        var libplctagVersion = libplctag.GetProperty("version");
-        var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("version");
-
-        DotNet($"add {proj.Path} package {libplctag_NativeImport.Name} -s {ArtifactsDirectory} --version {libplctagNativeImportVersion} --package-directory {PackageRestoreDirectory}");
-
-        if (isTransitive)
-            DotNet($"add {proj.Path} package {libplctag.Name} -s {ArtifactsDirectory} --version {libplctagVersion} --package-directory {PackageRestoreDirectory}");
 
         DotNetBuild(s => s
             .SetProjectFile(proj)
