@@ -1166,7 +1166,7 @@ namespace libplctag
             field = value;
         }
 
-        private string GetAttributeString()
+        public string GetAttributeString()
         {
 
             string FormatNullableBoolean(bool? value)
