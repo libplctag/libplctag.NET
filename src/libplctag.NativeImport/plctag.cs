@@ -73,9 +73,9 @@ namespace libplctag.NativeImport
         {
             return NativeMethods.plc_tag_register_logger(func);
         }
-        public static int plc_tag_unregister_logger(Int32 tag_id)
+        public static int plc_tag_unregister_logger()
         {
-            return NativeMethods.plc_tag_unregister_logger(tag_id);
+            return NativeMethods.plc_tag_unregister_logger();
         }
 
         public static int plc_tag_lock(Int32 tag)

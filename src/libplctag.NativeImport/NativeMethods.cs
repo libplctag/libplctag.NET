@@ -82,7 +82,7 @@ namespace libplctag.NativeImport
 
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_unregister_logger), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int plc_tag_unregister_logger(Int32 tag_id);
+        public static extern int plc_tag_unregister_logger();
 
 
 
