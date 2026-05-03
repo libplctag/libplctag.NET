@@ -208,16 +208,15 @@ class Build : NukeBuild
 
             (string zipFileName, string[] unzipPath, AbsolutePath destination)[] releases =
             {
-                ($"libplctag_{LibplctagCoreVersion}_macos_x64.zip",      ["libplctag.dylib"],        runtimesFolder/"osx-x64"/"native"/"libplctag.dylib" ),
-                ($"libplctag_{LibplctagCoreVersion}_macos_aarch64.zip",  ["libplctag.dylib"],        runtimesFolder/"osx-arm64"/"native"/"libplctag.dylib" ),
-                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x64.zip",     ["libplctag.so"],           runtimesFolder/"linux-x64"/"native"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x86.zip",     ["libplctag.so"],           runtimesFolder/"linux-x86"/"native"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_linux_arm7l.zip",    ["libplctag.so"],           runtimesFolder/"linux-arm"/"native"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_linux_aarch64.zip",  ["libplctag.so"],           runtimesFolder/"linux-arm64"/"native"/"libplctag.so" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_x64.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x64"/"native"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_x86.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-x86"/"native"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_Arm.zip",    ["Release", "plctag.dll"],  runtimesFolder/"win-arm"/"native"/"plctag.dll" ),
-                ($"libplctag_{LibplctagCoreVersion}_windows_Arm64.zip",  ["Release", "plctag.dll"],  runtimesFolder/"win-arm64"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_x64.zip",         ["libplctag.dylib"],        runtimesFolder/"osx-x64"/"native"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_macos_aarch64.zip",     ["libplctag.dylib"],        runtimesFolder/"osx-arm64"/"native"/"libplctag.dylib" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x64.zip",        ["libplctag.so"],           runtimesFolder/"linux-x64"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_x86.zip",        ["libplctag.so"],           runtimesFolder/"linux-x86"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_armv7_hf.zip",   ["libplctag.so"],           runtimesFolder/"linux-arm"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_ubuntu_arm64.zip",      ["libplctag.so"],           runtimesFolder/"linux-arm64"/"native"/"libplctag.so" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x64.zip",       ["plctag.dll"],             runtimesFolder/"win-x64"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_x86.zip",       ["plctag.dll"],             runtimesFolder/"win-x86"/"native"/"plctag.dll" ),
+                ($"libplctag_{LibplctagCoreVersion}_windows_arm64.zip",     ["plctag.dll"],             runtimesFolder/"win-arm64"/"native"/"plctag.dll" ),
             };
 
             var downloadFolder = RootDirectory / "downloads";
