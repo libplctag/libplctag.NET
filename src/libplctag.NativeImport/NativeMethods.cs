@@ -227,6 +227,18 @@ namespace libplctag.NativeImport
         public static extern void plc_tag_set_debug_level(int debug_level);
 
 
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_debug_level), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int plc_tag_get_debug_level();
+
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_debug_module_level), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int plc_tag_set_debug_module_level(int module, int debug_level);
+
+
+        [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_debug_module_level), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int plc_tag_get_debug_module_level(int module);
+
+
 
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_get_string), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern int plc_tag_get_string(Int32 tag_id, int string_start_offset, StringBuilder buffer, int buffer_length);
