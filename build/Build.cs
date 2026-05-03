@@ -203,6 +203,7 @@ class Build : NukeBuild
         .Requires(() => LibplctagCoreVersion)
         .Executes(() =>
         {
+            HttpTasks.DefaultTimeout = TimeSpan.FromSeconds(30);
 
             var runtimesFolder = RootDirectory / "src" / "libplctag.NativeImport" / "runtimes";
 
