@@ -250,6 +250,21 @@ namespace libplctag.NativeImport
             NativeMethods.plc_tag_set_debug_level(debug_level);
         }
 
+        public static int plc_tag_get_debug_level()
+        {
+            return NativeMethods.plc_tag_get_debug_level();
+        }
+
+        public static int plc_tag_set_debug_module_level(int module, int debug_level)
+        {
+            return NativeMethods.plc_tag_set_debug_module_level(module, debug_level);
+        }
+
+        public static int plc_tag_get_debug_module_level(int module)
+        {
+            return NativeMethods.plc_tag_get_debug_module_level(module);
+        }
+
 
 
         public static int plc_tag_get_string(Int32 tag_id, int string_start_offset, StringBuilder buffer, int buffer_length)
