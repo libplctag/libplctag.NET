@@ -19,7 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="libplctag.NativeImport" Version="2.0.0-alpha.5" />
+    <ProjectReference Include="..\libplctag.NativeImport\libplctag.NativeImport.csproj">
+      <PrivateAssets>contentfiles;analyzers</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
