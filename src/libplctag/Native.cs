@@ -22,7 +22,7 @@ namespace libplctag
         public int plc_tag_register_callback(Int32 tag_id, callback_func func)                                          => plctag.plc_tag_register_callback(tag_id, func);
         public int plc_tag_unregister_callback(Int32 tag_id)                                                            => plctag.plc_tag_unregister_callback(tag_id);
         public int plc_tag_register_logger(log_callback_func func)                                                      => plctag.plc_tag_register_logger(func);
-        public int plc_tag_unregister_logger(Int32 tag_id)                                                              => plctag.plc_tag_unregister_logger(tag_id);
+        public int plc_tag_unregister_logger()                                                                          => plctag.plc_tag_unregister_logger();
         public int plc_tag_lock(Int32 tag)                                                                              => plctag.plc_tag_lock(tag);
         public int plc_tag_unlock(Int32 tag)                                                                            => plctag.plc_tag_unlock(tag);
         public int plc_tag_status(Int32 tag)                                                                            => plctag.plc_tag_status(tag);

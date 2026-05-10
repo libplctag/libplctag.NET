@@ -60,7 +60,7 @@ namespace libplctag
         int plc_tag_status(int tag);
         int plc_tag_unlock(int tag);
         int plc_tag_unregister_callback(int tag_id);
-        int plc_tag_unregister_logger(int tag_id);
+        int plc_tag_unregister_logger();
         int plc_tag_write(int tag, int timeout);
         int plc_tag_get_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
         int plc_tag_set_raw_bytes(int tag, int start_offset, byte[] buffer, int buffer_length);
