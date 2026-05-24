@@ -54,6 +54,36 @@ namespace libplctag.NativeImport
         /// The final status of the creation is passed to the callback as well.
         /// This is not as well supported in some cases, so only depend on this for normal tags and not tags like @tags.
         /// </summary>
-        PLCTAG_EVENT_CREATED = 7
+        PLCTAG_EVENT_CREATED = 7,
+
+        /// <summary>
+        /// The underlying connection is established and ready for operations.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_UP = 100,
+
+        /// <summary>
+        /// The connection is not established.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_DOWN = 101,
+
+        /// <summary>
+        /// The connection is in the process of disconnecting.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_DISCONNECTING = 102,
+
+        /// <summary>
+        /// The connection is in the process of being established.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_CONNECTING = 103,
+
+        /// <summary>
+        /// Waiting to reconnect after an idle disconnect.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_IDLE_WAIT = 104,
+
+        /// <summary>
+        /// Waiting to reconnect after an error.
+        /// </summary>
+        PLCTAG_EVENT_CONN_STATUS_ERR_WAIT = 105,
     }
 }
