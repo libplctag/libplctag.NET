@@ -46,7 +46,7 @@ namespace libplctag.NativeImport
 
         public static Int32 plc_tag_create_from_tag(Int32 src_tag_id, string attrib_str, callback_func_ex func, IntPtr userdata, int timeout)
         {
-            return plc_tag_create_from_tag(src_tag_id, attrib_str, func, userdata, timeout);
+            return NativeMethods.plc_tag_create_from_tag(src_tag_id, attrib_str, func, userdata, timeout);
         }
 
         public static int plc_tag_destroy(Int32 tag)
