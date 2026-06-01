@@ -11,8 +11,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using libplctag.DataTypes.Extensions;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public abstract class PlcMapperBase<T> : IPlcMapper<T>, IPlcMapper<T[]>, IPlcMapper<T[,]>, IPlcMapper<T[,,]>
     {
@@ -81,5 +81,3 @@ namespace libplctag.DataTypes
 
         void IPlcMapper<T[,,]>.Encode(Tag tag, T[,,] value) => EncodeArray(tag, value.To1DArray());
     }
-
-}

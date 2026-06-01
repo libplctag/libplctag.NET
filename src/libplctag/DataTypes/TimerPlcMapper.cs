@@ -10,8 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TimerPlcMapper : PlcMapperBase<AbTimer>
     {
@@ -81,4 +81,3 @@ namespace libplctag.DataTypes
         public bool InProgress { get; set; }
         public bool Done { get; set; }
     }
-}

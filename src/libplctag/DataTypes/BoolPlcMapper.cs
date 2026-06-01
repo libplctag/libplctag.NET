@@ -9,8 +9,7 @@ using libplctag.DataTypes.Extensions;
 using System;
 using System.Linq;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
 
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class BoolPlcMapper : IPlcMapper<bool>, IPlcMapper<bool[]>, IPlcMapper<bool[,]>, IPlcMapper<bool[,,]>
@@ -71,4 +70,3 @@ namespace libplctag.DataTypes
         void IPlcMapper<bool[,,]>.Encode(Tag tag, bool[,,] value) => EncodeArray(tag, value.To1DArray());
 
     }
-}

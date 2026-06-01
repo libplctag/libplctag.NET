@@ -7,8 +7,8 @@
 
 using System;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public interface IPlcMapper<T>
     {
@@ -54,4 +54,3 @@ namespace libplctag.DataTypes
         /// <param name="value">C# value to be transformed</param>
         void Encode(Tag tag, T value);
     }
-}

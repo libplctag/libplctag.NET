@@ -7,8 +7,8 @@
 
 using libplctag.NativeImport;
 
-namespace libplctag
-{
+namespace libplctag;
+
     /// <summary>
     /// Events returned by the base libplctag library
     /// </summary>
@@ -35,4 +35,3 @@ namespace libplctag
         /// <inheritdoc cref="EVENT.PLCTAG_EVENT_CREATED"/>
         Created =           EVENT.PLCTAG_EVENT_CREATED
     }
-}

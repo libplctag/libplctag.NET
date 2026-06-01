@@ -10,8 +10,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace libplctag
-{
+namespace libplctag;
+
     /// <summary>
     /// A class that allows for strongly-typed objects tied to PLC tags
     /// </summary>
@@ -258,4 +258,3 @@ namespace libplctag
         public event EventHandler<TagEventArgs> Destroyed;
 
     }
-}

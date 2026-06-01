@@ -8,8 +8,8 @@
 using System;
 using static libplctag.NativeImport.plctag;
 
-namespace libplctag
-{
+namespace libplctag;
+
     /// <summary>
     /// A static class used to access some additional features of the libplctag base library
     /// </summary>
@@ -119,4 +119,3 @@ namespace libplctag
         }
 
     }
-}

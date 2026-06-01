@@ -7,8 +7,8 @@
 
 using libplctag.NativeImport;
 
-namespace libplctag
-{
+namespace libplctag;
+
     /// <summary>
     /// Debug levels available in the base libplctag library
     /// </summary>
@@ -32,4 +32,3 @@ namespace libplctag
         /// <inheritdoc cref="DEBUG_LEVEL.PLCTAG_DEBUG_SPEW"/>
         Spew =      DEBUG_LEVEL.PLCTAG_DEBUG_SPEW
     }
-}

@@ -7,8 +7,8 @@
 
 using libplctag.NativeImport;
 
-namespace libplctag
-{
+namespace libplctag;
+
     public enum Status
     {
         /// <inheritdoc cref="STATUS.PLCTAG_STATUS_PENDING"/>
@@ -134,4 +134,3 @@ namespace libplctag
         /// <inheritdoc cref="STATUS.PLCTAG_ERR_BUSY"/>
         ErrorBusy =             STATUS.PLCTAG_ERR_BUSY
     }
-}

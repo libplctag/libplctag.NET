@@ -10,8 +10,8 @@ using System.Text;
 using libplctag.NativeImport;
 using static libplctag.NativeImport.plctag;
 
-namespace libplctag
-{
+namespace libplctag;
+
     class Native : INative
     {
         public int plc_tag_check_lib_version(int req_major, int req_minor, int req_patch)                               => plctag.plc_tag_check_lib_version(req_major, req_minor, req_patch);
@@ -66,4 +66,3 @@ namespace libplctag
         public int plc_tag_get_string_capacity(int tag, int string_start_offset)                                        => plctag.plc_tag_get_string_capacity(tag, string_start_offset);
         public int plc_tag_set_string(int tag, int string_start_offset, string string_val)                              => plctag.plc_tag_set_string(tag, string_start_offset, string_val);
     }
-}

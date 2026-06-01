@@ -11,8 +11,8 @@ using Moq;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace libplctag.Tests
-{
+namespace libplctag.Tests;
+
     public class DisposeTests
     {
 
@@ -89,4 +89,3 @@ namespace libplctag.Tests
         }
 
     }
-}

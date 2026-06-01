@@ -14,8 +14,8 @@ using static libplctag.NativeImport.plctag;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
-namespace libplctag
-{
+namespace libplctag;
+
     interface INative
     {
         int plc_tag_abort(int tag);
@@ -70,4 +70,3 @@ namespace libplctag
         int plc_tag_get_string_capacity(int tag, int string_start_offset);
         int plc_tag_set_string(int tag, int string_start_offset, string string_val);
     }
-}

@@ -7,8 +7,8 @@
 
 using System;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class SintPlcMapper : PlcMapperBase<sbyte>
     {
@@ -20,4 +20,3 @@ namespace libplctag.DataTypes
         override public void Encode(Tag tag, int offset, sbyte value) => tag.SetInt8(offset, value);
 
     }
-}

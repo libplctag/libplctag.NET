@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static libplctag.NativeImport.plctag;
 
-namespace libplctag.NativeImport
-{
+namespace libplctag.NativeImport;
+
     static class NativeMethods
     {
 
@@ -264,4 +264,3 @@ namespace libplctag.NativeImport
         [DllImport(DLL_NAME, EntryPoint = nameof(plc_tag_set_raw_bytes), CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public unsafe static extern int plc_tag_set_raw_bytes(Int32 tag_id, int start_offset, byte* buffer, int buffer_length);
     }
-}

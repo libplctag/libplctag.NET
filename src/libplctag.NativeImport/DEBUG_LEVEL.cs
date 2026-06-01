@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-namespace libplctag.NativeImport
-{
+namespace libplctag.NativeImport;
+
     /// <summary>
     /// The library provides debugging output when enabled.
     /// There are three ways to set the debug level (for historical reasons):
@@ -53,4 +53,3 @@ namespace libplctag.NativeImport
         /// </summary>
         PLCTAG_DEBUG_SPEW = 5
     }
-}

@@ -11,8 +11,8 @@ using Moq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace libplctag.Tests
-{
+namespace libplctag.Tests;
+
     public class AsyncTests
     {
 
@@ -157,4 +157,3 @@ namespace libplctag.Tests
         }
 
     }
-}

@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace libplctag.DataTypes.Extensions
-{
+namespace libplctag.DataTypes.Extensions;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public static class ArrayExtensions
     {
@@ -116,4 +116,3 @@ namespace libplctag.DataTypes.Extensions
         }
 
     }
-}

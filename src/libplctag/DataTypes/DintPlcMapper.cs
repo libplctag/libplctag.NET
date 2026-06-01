@@ -7,8 +7,8 @@
 
 using System;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class DintPlcMapper : PlcMapperBase<int>
     {
@@ -19,4 +19,3 @@ namespace libplctag.DataTypes
         override public void Encode(Tag tag, int offset, int value) => tag.SetInt32(offset, value);
 
     }
-}

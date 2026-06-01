@@ -9,8 +9,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace libplctag.NativeImport
-{
+namespace libplctag.NativeImport;
+
     /// <summary>
     /// This class provides low-level (raw) access to the native libplctag library (which is written in C).
     /// The purpose of this package is to expose the API for this native library, and handle platform and configuration issues.
@@ -332,4 +332,3 @@ namespace libplctag.NativeImport
 
 
     }
-}

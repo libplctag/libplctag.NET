@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-namespace libplctag.NativeImport
-{
+namespace libplctag.NativeImport;
+
     /// <summary>
     /// You can query the connection status of a tag using the <c>connection_status</c> attribute
     /// with <see cref="plctag.plc_tag_get_int_attribute"/>:
@@ -51,4 +51,3 @@ namespace libplctag.NativeImport
         /// </summary>
         PLCTAG_CONN_STATUS_ERR_WAIT = 5
     }
-}

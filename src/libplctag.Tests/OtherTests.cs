@@ -9,8 +9,8 @@ using System;
 using Xunit;
 using Moq;
 
-namespace libplctag.Tests
-{
+namespace libplctag.Tests;
+
     public class OtherTests
     {
 
@@ -69,4 +69,3 @@ namespace libplctag.Tests
 
         }
     }
-}

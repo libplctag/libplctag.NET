@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
+
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class StringPlcMapper : PlcMapperBase<string>
     {
@@ -37,4 +37,3 @@ namespace libplctag.DataTypes
         override public void Encode(Tag tag, int offset, string value) => tag.SetString(offset, value);
 
     }
-}

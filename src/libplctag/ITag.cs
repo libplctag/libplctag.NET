@@ -9,8 +9,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace libplctag
-{
+namespace libplctag;
+
     /// <summary>
     /// An interface to represent any generic tag without
     /// exposing its value
@@ -49,4 +49,3 @@ namespace libplctag
 
         object Value { get; set; }
     }
-}
