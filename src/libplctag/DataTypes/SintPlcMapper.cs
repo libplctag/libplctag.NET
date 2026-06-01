@@ -9,14 +9,14 @@ using System;
 
 namespace libplctag.DataTypes;
 
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public class SintPlcMapper : PlcMapperBase<sbyte>
-    {
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public class SintPlcMapper : PlcMapperBase<sbyte>
+{
 
-        override public int? ElementSize => 1;
+    override public int? ElementSize => 1;
 
-        override public sbyte Decode(Tag tag, int offset) => tag.GetInt8(offset);
+    override public sbyte Decode(Tag tag, int offset) => tag.GetInt8(offset);
 
-        override public void Encode(Tag tag, int offset, sbyte value) => tag.SetInt8(offset, value);
+    override public void Encode(Tag tag, int offset, sbyte value) => tag.SetInt8(offset, value);
 
-    }
+}

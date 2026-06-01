@@ -9,13 +9,13 @@ using System;
 
 namespace libplctag.DataTypes;
 
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public class LrealPlcMapper : PlcMapperBase<double>
-    {
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public class LrealPlcMapper : PlcMapperBase<double>
+{
 
-        override public int? ElementSize => 8;
+    override public int? ElementSize => 8;
 
-        override public double Decode(Tag tag, int offset) => tag.GetFloat64(offset);
+    override public double Decode(Tag tag, int offset) => tag.GetFloat64(offset);
 
-        override public void Encode(Tag tag, int offset, double value)=> tag.SetFloat64(offset, value);
-    }
+    override public void Encode(Tag tag, int offset, double value)=> tag.SetFloat64(offset, value);
+}

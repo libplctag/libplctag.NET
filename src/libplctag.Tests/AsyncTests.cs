@@ -13,147 +13,147 @@ using System.Threading.Tasks;
 
 namespace libplctag.Tests;
 
-    public class AsyncTests
+public class AsyncTests
+{
+
+    readonly TimeSpan REALISTIC_LATENCY_FOR_CREATE = TimeSpan.FromMilliseconds(50);
+    readonly TimeSpan REALISTIC_LATENCY_FOR_READ = TimeSpan.FromMilliseconds(50);
+    readonly TimeSpan REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS = TimeSpan.FromMilliseconds(1000);
+
+    [Fact]
+    public async Task Cancelled_cancellation_token_throws_a_TaskCanceledException()
     {
+        // Arrange
+        var nativeTag = new Mock<INative>();
 
-        readonly TimeSpan REALISTIC_LATENCY_FOR_CREATE = TimeSpan.FromMilliseconds(50);
-        readonly TimeSpan REALISTIC_LATENCY_FOR_READ = TimeSpan.FromMilliseconds(50);
-        readonly TimeSpan REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS = TimeSpan.FromMilliseconds(1000);
+        nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
+            .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
+            .Returns((int)Status.Pending);
 
-        [Fact]
-        public async Task Cancelled_cancellation_token_throws_a_TaskCanceledException()
-        {
-            // Arrange
-            var nativeTag = new Mock<INative>();
+        nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
+            .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+            .Returns((int)Status.Pending);
 
-            nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
-                .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
-                .Returns((int)Status.Pending);
+        var tag = new Tag(nativeTag.Object);
+        var cts = new CancellationTokenSource();
 
-            nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
-                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
-                .Returns((int)Status.Pending);
-
-            var tag = new Tag(nativeTag.Object);
-            var cts = new CancellationTokenSource();
-
-            // Act, Assert
-            cts.CancelAfter(REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS);
-            await Assert.ThrowsAsync<TaskCanceledException>(async () => {
-                await tag.InitializeAsync(cts.Token);
-            });
-        }
-
-
-        [Fact]
-        public async Task Timeout_throws_a_LibPlcTagException()
-        {
-            // Arrange
-            var nativeTag = new Mock<INative>();
-
-            nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
-                .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
-                .Returns((int)Status.Pending);
-
-            nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
-                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
-                .Returns((int)Status.Pending);
-
-            var tag = new Tag(nativeTag.Object)
-            {
-                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
-            };
-
-            // Act
-            var ex = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
-                await tag.InitializeAsync();
-            });
-
-            // Assert
-            Assert.Equal(Status.ErrorTimeout, ex.Status);
-        }
-
-        [Fact]
-        public async Task Timeout_returns_pending_but_eventually_ok()
-        {
-            // Arrange
-            var nativeTag = GetMock();
-
-            var tag = new Tag(nativeTag.Object)
-            {
-                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
-            };
-
-            // Act
-            var task = tag.InitializeAsync();
-            var statusWhileWaiting = tag.GetStatus();
-            await task;
-            var statusAfterAwaited = tag.GetStatus();
-
-            // Assert
-            Assert.Equal(Status.Pending, statusWhileWaiting);
-            Assert.Equal(Status.Ok, statusAfterAwaited);
-        }
-
-        [Fact]
-        public async Task AsyncRead_completes_within_timeout_period()
-        {
-            // Arrange
-            var nativeTag = GetMock();
-
-            var tag = new Tag(nativeTag.Object)
-            {
-                Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
-            };
-
-            // Act
-            await tag.ReadAsync();
-
-            // Assert
-            Assert.Equal(Status.Ok, tag.GetStatus());
-        }
-
-
-        Mock<INative> GetMock()
-        {
-            const int tagId = 11;
-
-            NativeImport.plctag.callback_func_ex callback = null;
-            Status? status = null;
-
-            var nativeTag = new Mock<INative>();
-
-            // The NativeTagWrapper should provide the native tag with a callback.
-            // We will store this locally when a create call occurs, and fire it shortly after ...
-            nativeTag
-                .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
-                .Callback<string, NativeImport.plctag.callback_func_ex, IntPtr, int>(async (attributeString, callbackFunc, userData, timeout) =>
-                {
-                    status = Status.Pending;
-                    callback = callbackFunc;
-                    await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
-                    status = Status.Ok;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
-                });
-
-            // ... as well as when a read call occurs
-            nativeTag
-                .Setup(m => m.plc_tag_read(It.IsAny<int>(), 0))
-                .Callback<int, int>(async (tagId, timeout) =>
-                {
-                    status = Status.Pending;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
-                    await Task.Delay(REALISTIC_LATENCY_FOR_READ);
-                    status = Status.Ok;
-                    callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
-                });
-
-            // the status was being tracked, so return it if asked
-            nativeTag
-                .Setup(m => m.plc_tag_status(It.IsAny<int>()))
-                .Returns(() => (int)status.Value);
-
-            return nativeTag;
-        }
-
+        // Act, Assert
+        cts.CancelAfter(REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS);
+        await Assert.ThrowsAsync<TaskCanceledException>(async () => {
+            await tag.InitializeAsync(cts.Token);
+        });
     }
+
+
+    [Fact]
+    public async Task Timeout_throws_a_LibPlcTagException()
+    {
+        // Arrange
+        var nativeTag = new Mock<INative>();
+
+        nativeTag                                                       // The initial creation of the tag object returns a status, so we return pending
+            .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
+            .Returns((int)Status.Pending);
+
+        nativeTag                                                       // Subsequent calls to determine the tag status should still return pending
+            .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+            .Returns((int)Status.Pending);
+
+        var tag = new Tag(nativeTag.Object)
+        {
+            Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
+        };
+
+        // Act
+        var ex = await Assert.ThrowsAsync<LibPlcTagException>(async () => {
+            await tag.InitializeAsync();
+        });
+
+        // Assert
+        Assert.Equal(Status.ErrorTimeout, ex.Status);
+    }
+
+    [Fact]
+    public async Task Timeout_returns_pending_but_eventually_ok()
+    {
+        // Arrange
+        var nativeTag = GetMock();
+
+        var tag = new Tag(nativeTag.Object)
+        {
+            Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
+        };
+
+        // Act
+        var task = tag.InitializeAsync();
+        var statusWhileWaiting = tag.GetStatus();
+        await task;
+        var statusAfterAwaited = tag.GetStatus();
+
+        // Assert
+        Assert.Equal(Status.Pending, statusWhileWaiting);
+        Assert.Equal(Status.Ok, statusAfterAwaited);
+    }
+
+    [Fact]
+    public async Task AsyncRead_completes_within_timeout_period()
+    {
+        // Arrange
+        var nativeTag = GetMock();
+
+        var tag = new Tag(nativeTag.Object)
+        {
+            Timeout = REALISTIC_TIMEOUT_FOR_ALL_OPERATIONS
+        };
+
+        // Act
+        await tag.ReadAsync();
+
+        // Assert
+        Assert.Equal(Status.Ok, tag.GetStatus());
+    }
+
+
+    Mock<INative> GetMock()
+    {
+        const int tagId = 11;
+
+        NativeImport.plctag.callback_func_ex callback = null;
+        Status? status = null;
+
+        var nativeTag = new Mock<INative>();
+
+        // The NativeTagWrapper should provide the native tag with a callback.
+        // We will store this locally when a create call occurs, and fire it shortly after ...
+        nativeTag
+            .Setup(m => m.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), 0))
+            .Callback<string, NativeImport.plctag.callback_func_ex, IntPtr, int>(async (attributeString, callbackFunc, userData, timeout) =>
+            {
+                status = Status.Pending;
+                callback = callbackFunc;
+                await Task.Delay(REALISTIC_LATENCY_FOR_CREATE);
+                status = Status.Ok;
+                callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_CREATED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
+            });
+
+        // ... as well as when a read call occurs
+        nativeTag
+            .Setup(m => m.plc_tag_read(It.IsAny<int>(), 0))
+            .Callback<int, int>(async (tagId, timeout) =>
+            {
+                status = Status.Pending;
+                callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_STARTED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
+                await Task.Delay(REALISTIC_LATENCY_FOR_READ);
+                status = Status.Ok;
+                callback?.Invoke(tagId, (int)NativeImport.EVENT.PLCTAG_EVENT_READ_COMPLETED, (int)NativeImport.STATUS.PLCTAG_STATUS_OK, IntPtr.Zero);
+            });
+
+        // the status was being tracked, so return it if asked
+        nativeTag
+            .Setup(m => m.plc_tag_status(It.IsAny<int>()))
+            .Returns(() => (int)status.Value);
+
+        return nativeTag;
+    }
+
+}

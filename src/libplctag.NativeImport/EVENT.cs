@@ -7,82 +7,82 @@
 
 namespace libplctag.NativeImport;
 
+/// <summary>
+/// The library provides functions to register a callback on a tag.
+/// These events generate a call to that callback.
+/// </summary>
+public enum EVENT
+{
     /// <summary>
-    /// The library provides functions to register a callback on a tag.
-    /// These events generate a call to that callback.
+    /// A read of the tag has been requested.
+    /// The callback is called immediately before the underlying protocol implementation is called.
     /// </summary>
-    public enum EVENT
-    {
-        /// <summary>
-        /// A read of the tag has been requested.
-        /// The callback is called immediately before the underlying protocol implementation is called.
-        /// </summary>
-        PLCTAG_EVENT_READ_STARTED = 1,
+    PLCTAG_EVENT_READ_STARTED = 1,
 
-        /// <summary>
-        /// The callback is called after a read completes.
-        /// The final status of the read is passed to the callback as well.
-        /// </summary>
-        PLCTAG_EVENT_READ_COMPLETED = 2,
+    /// <summary>
+    /// The callback is called after a read completes.
+    /// The final status of the read is passed to the callback as well.
+    /// </summary>
+    PLCTAG_EVENT_READ_COMPLETED = 2,
 
-        /// <summary>
-        /// As with reads, the callback is called when a write is requested.
-        /// The callback can change the data in the tag and the changes will be sent to the PLC.
-        /// </summary>
-        PLCTAG_EVENT_WRITE_STARTED = 3,
+    /// <summary>
+    /// As with reads, the callback is called when a write is requested.
+    /// The callback can change the data in the tag and the changes will be sent to the PLC.
+    /// </summary>
+    PLCTAG_EVENT_WRITE_STARTED = 3,
 
-        /// <summary>
-        /// The callback is called when the PLC indicates that the write has completed.
-        /// The status of the write is passed to the callback.
-        /// </summary>
-        PLCTAG_EVENT_WRITE_COMPLETED = 4,
+    /// <summary>
+    /// The callback is called when the PLC indicates that the write has completed.
+    /// The status of the write is passed to the callback.
+    /// </summary>
+    PLCTAG_EVENT_WRITE_COMPLETED = 4,
 
-        /// <summary>
-        /// The callback function is called when something calls <see cref="plctag.plc_tag_abort"/> on the tag.
-        /// </summary>
-        PLCTAG_EVENT_ABORTED = 5,
+    /// <summary>
+    /// The callback function is called when something calls <see cref="plctag.plc_tag_abort"/> on the tag.
+    /// </summary>
+    PLCTAG_EVENT_ABORTED = 5,
 
-        /// <summary>
-        /// The callback function is called when the tag is being destroyed.
-        /// It is not safe to call any API functions on the tag at this time.
-        /// This is purely for the callback to manage any application state.
-        /// </summary>
-        PLCTAG_EVENT_DESTROYED = 6,
+    /// <summary>
+    /// The callback function is called when the tag is being destroyed.
+    /// It is not safe to call any API functions on the tag at this time.
+    /// This is purely for the callback to manage any application state.
+    /// </summary>
+    PLCTAG_EVENT_DESTROYED = 6,
 
-        /// <summary>
-        /// The callback is called after a tag creation completes.
-        /// The final status of the creation is passed to the callback as well.
-        /// This is not as well supported in some cases, so only depend on this for normal tags and not tags like @tags.
-        /// </summary>
-        PLCTAG_EVENT_CREATED = 7,
+    /// <summary>
+    /// The callback is called after a tag creation completes.
+    /// The final status of the creation is passed to the callback as well.
+    /// This is not as well supported in some cases, so only depend on this for normal tags and not tags like @tags.
+    /// </summary>
+    PLCTAG_EVENT_CREATED = 7,
 
-        /// <summary>
-        /// The underlying connection is established and ready for operations.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_UP = 100,
+    /// <summary>
+    /// The underlying connection is established and ready for operations.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_UP = 100,
 
-        /// <summary>
-        /// The connection is not established.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_DOWN = 101,
+    /// <summary>
+    /// The connection is not established.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_DOWN = 101,
 
-        /// <summary>
-        /// The connection is in the process of disconnecting.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_DISCONNECTING = 102,
+    /// <summary>
+    /// The connection is in the process of disconnecting.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_DISCONNECTING = 102,
 
-        /// <summary>
-        /// The connection is in the process of being established.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_CONNECTING = 103,
+    /// <summary>
+    /// The connection is in the process of being established.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_CONNECTING = 103,
 
-        /// <summary>
-        /// Waiting to reconnect after an idle disconnect.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_IDLE_WAIT = 104,
+    /// <summary>
+    /// Waiting to reconnect after an idle disconnect.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_IDLE_WAIT = 104,
 
-        /// <summary>
-        /// Waiting to reconnect after an error.
-        /// </summary>
-        PLCTAG_EVENT_CONN_STATUS_ERR_WAIT = 105,
-    }
+    /// <summary>
+    /// Waiting to reconnect after an error.
+    /// </summary>
+    PLCTAG_EVENT_CONN_STATUS_ERR_WAIT = 105,
+}

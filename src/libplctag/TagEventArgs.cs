@@ -9,7 +9,7 @@ using System;
 
 namespace libplctag;
 
-    public class TagEventArgs : EventArgs
-    {
-        public Status Status { get; set; }
-    }
+public class TagEventArgs : EventArgs
+{
+    public Status Status { get; set; }
+}

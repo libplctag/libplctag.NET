@@ -9,13 +9,13 @@ using System;
 
 namespace libplctag.DataTypes;
 
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public class IntPlcMapper : PlcMapperBase<short>
-    {
-        public override int? ElementSize => 2;
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public class IntPlcMapper : PlcMapperBase<short>
+{
+    public override int? ElementSize => 2;
 
-        override public short Decode(Tag tag, int offset) => tag.GetInt16(offset);
+    override public short Decode(Tag tag, int offset) => tag.GetInt16(offset);
 
-        override public void Encode(Tag tag, int offset, short value) => tag.SetInt16(offset, value);
+    override public void Encode(Tag tag, int offset, short value) => tag.SetInt16(offset, value);
 
-    }
+}

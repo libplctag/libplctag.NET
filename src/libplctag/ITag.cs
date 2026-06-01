@@ -11,41 +11,41 @@ using System.Threading.Tasks;
 
 namespace libplctag;
 
-    /// <summary>
-    /// An interface to represent any generic tag without
-    /// exposing its value
-    /// </summary>
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public interface ITag : IDisposable
-    {
-        int[] ArrayDimensions { get; set; }
-        string Gateway { get; set; }
-        string Name { get; set; }
-        string Path { get; set; }
-        PlcType? PlcType { get; set; }
-        Protocol? Protocol { get; set; }
-        int? ReadCacheMillisecondDuration { get; set; }
-        TimeSpan Timeout { get; set; }
-        bool? UseConnectedMessaging { get; set; }
-        bool? AllowPacking { get; set; }
-        TimeSpan? AutoSyncReadInterval { get; set; }
-        TimeSpan? AutoSyncWriteInterval { get; set; }
-        DebugLevel DebugLevel { get; set; }
+/// <summary>
+/// An interface to represent any generic tag without
+/// exposing its value
+/// </summary>
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public interface ITag : IDisposable
+{
+    int[] ArrayDimensions { get; set; }
+    string Gateway { get; set; }
+    string Name { get; set; }
+    string Path { get; set; }
+    PlcType? PlcType { get; set; }
+    Protocol? Protocol { get; set; }
+    int? ReadCacheMillisecondDuration { get; set; }
+    TimeSpan Timeout { get; set; }
+    bool? UseConnectedMessaging { get; set; }
+    bool? AllowPacking { get; set; }
+    TimeSpan? AutoSyncReadInterval { get; set; }
+    TimeSpan? AutoSyncWriteInterval { get; set; }
+    DebugLevel DebugLevel { get; set; }
 
-        event EventHandler<TagEventArgs> ReadStarted;
-        event EventHandler<TagEventArgs> ReadCompleted;
-        event EventHandler<TagEventArgs> WriteStarted;
-        event EventHandler<TagEventArgs> WriteCompleted;
-        event EventHandler<TagEventArgs> Aborted;
-        event EventHandler<TagEventArgs> Destroyed;
+    event EventHandler<TagEventArgs> ReadStarted;
+    event EventHandler<TagEventArgs> ReadCompleted;
+    event EventHandler<TagEventArgs> WriteStarted;
+    event EventHandler<TagEventArgs> WriteCompleted;
+    event EventHandler<TagEventArgs> Aborted;
+    event EventHandler<TagEventArgs> Destroyed;
 
-        Status GetStatus();
-        void Initialize();
-        Task InitializeAsync(CancellationToken token = default);
-        object Read();
-        Task<object> ReadAsync(CancellationToken token = default);
-        void Write();
-        Task WriteAsync(CancellationToken token = default);
+    Status GetStatus();
+    void Initialize();
+    Task InitializeAsync(CancellationToken token = default);
+    object Read();
+    Task<object> ReadAsync(CancellationToken token = default);
+    void Write();
+    Task WriteAsync(CancellationToken token = default);
 
-        object Value { get; set; }
-    }
+    object Value { get; set; }
+}
