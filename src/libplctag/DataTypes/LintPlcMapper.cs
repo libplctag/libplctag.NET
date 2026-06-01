@@ -7,16 +7,15 @@
 
 using System;
 
-namespace libplctag.DataTypes
+namespace libplctag.DataTypes;
+
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public class LintPlcMapper : PlcMapperBase<long>
 {
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public class LintPlcMapper : PlcMapperBase<long>
-    {
-        public override int? ElementSize => 8;
+    public override int? ElementSize => 8;
 
-        override public long Decode(Tag tag, int offset) => tag.GetInt64(offset);
+    override public long Decode(Tag tag, int offset) => tag.GetInt64(offset);
 
-        override public void Encode(Tag tag, int offset, long value) => tag.SetInt64(offset, value);
+    override public void Encode(Tag tag, int offset, long value) => tag.SetInt64(offset, value);
 
-    }
 }

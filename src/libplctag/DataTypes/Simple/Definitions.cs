@@ -9,8 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace libplctag.DataTypes.Simple
-{
+namespace libplctag.DataTypes.Simple;
 
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TagBool : Tag<BoolPlcMapper, bool> { }
@@ -100,5 +99,3 @@ namespace libplctag.DataTypes.Simple
     
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class TagUdtInfo : Tag<UdtInfoPlcMapper, UdtInfo> { }
-
-}

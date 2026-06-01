@@ -18,8 +18,7 @@ using static libplctag.NativeImport.plctag;
 
 [assembly: InternalsVisibleTo("libplctag.Tests")]
 
-namespace libplctag
-{
+namespace libplctag;
 
     public sealed class Tag : IDisposable
     {
@@ -1338,5 +1337,3 @@ namespace libplctag
         }
 
     }
-
-}

@@ -9,64 +9,63 @@ using System;
 using Xunit;
 using Moq;
 
-namespace libplctag.Tests
+namespace libplctag.Tests;
+
+public class OtherTests
 {
-    public class OtherTests
+
+    [Fact]
+    public void Status_ok_when_first_created()
     {
+        // Arrange
+        var nativeTag = new Mock<INative>();
+        var tag = new Tag(nativeTag.Object);
 
-        [Fact]
-        public void Status_ok_when_first_created()
+        // Act
+
+        // Assert
+        var status = tag.GetStatus();
+        Assert.Equal(Status.Ok, status);
+    }
+
+    [Fact]
+    public void Attribute_string_formatted_correctly()
+    {
+        // Arrange
+        var nativeTag = new Mock<INative>();
+        var tag = new Tag(nativeTag.Object)
         {
-            // Arrange
-            var nativeTag = new Mock<INative>();
-            var tag = new Tag(nativeTag.Object);
-
-            // Act
-
-            // Assert
-            var status = tag.GetStatus();
-            Assert.Equal(Status.Ok, status);
-        }
-
-        [Fact]
-        public void Attribute_string_formatted_correctly()
-        {
-            // Arrange
-            var nativeTag = new Mock<INative>();
-            var tag = new Tag(nativeTag.Object)
-            {
-                ElementSize = 4,
-                ElementCount = 10,
-                PlcType = PlcType.Slc500,
-                Name = "TagName",
-            };
+            ElementSize = 4,
+            ElementCount = 10,
+            PlcType = PlcType.Slc500,
+            Name = "TagName",
+        };
 
 
-            // Act
-            tag.Initialize();
+        // Act
+        tag.Initialize();
 
 
-            // Assert
-            var expectedAttributeString = "plc=slc500&elem_size=4&elem_count=10&name=TagName";
-            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
+        // Assert
+        var expectedAttributeString = "plc=slc500&elem_size=4&elem_count=10&name=TagName";
+        nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
-        }
+    }
 
-        [Fact]
-        public void Attribute_string_does_not_contain_unset_properties()
-        {
-            // Arrange
-            var nativeTag = new Mock<INative>();
-            var tag = new Tag(nativeTag.Object);
+    [Fact]
+    public void Attribute_string_does_not_contain_unset_properties()
+    {
+        // Arrange
+        var nativeTag = new Mock<INative>();
+        var tag = new Tag(nativeTag.Object);
 
-            // Act
-            tag.Initialize();
+        // Act
+        tag.Initialize();
 
 
-            // Assert
-            var expectedAttributeString = "";
-            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
+        // Assert
+        var expectedAttributeString = "";
+        nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
-        }
     }
 }
