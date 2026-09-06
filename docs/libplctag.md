@@ -34,6 +34,32 @@ myTag.Write();
 Console.WriteLine($"Updated value: {updatedValue}");
 ```
 
+To force separate channels to the same PLC from one process, set different `ConnectionGroupId` values:
+
+```csharp
+var channel1Tag = new Tag()
+{
+    Name = "SomeDINT",
+    Gateway = "10.10.10.10",
+    Path = "1,0",
+    PlcType = PlcType.ControlLogix,
+    Protocol = Protocol.ab_eip,
+    ConnectionGroupId = 1
+};
+
+var channel2Tag = new Tag()
+{
+    Name = "SomeOtherDINT",
+    Gateway = "10.10.10.10",
+    Path = "1,0",
+    PlcType = PlcType.ControlLogix,
+    Protocol = Protocol.ab_eip,
+    ConnectionGroupId = 2
+};
+```
+
+If `ConnectionGroupId` is not set, the channel is shared.
+
 See the examples projects for further detail and usage:
 
 * [C# (.NET)](../examples/CSharp%20DotNetCore/)

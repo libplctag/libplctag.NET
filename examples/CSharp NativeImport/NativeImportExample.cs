@@ -21,7 +21,8 @@ namespace NativeImport_Examples
             //Please reference the libplctag documentation for API and usage
 
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            // Optional: set connection_group_id to create a separate channel to the same PLC when needed.
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT&connection_group_id=1", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {
@@ -54,7 +55,7 @@ namespace NativeImport_Examples
         public static void RunCallbackExample()
         {
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT&connection_group_id=1", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {
@@ -105,7 +106,7 @@ namespace NativeImport_Examples
                 Console.WriteLine($"Something went wrong {statusAfterRegistration}");
             }
 
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=127.0.0.1&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MyTag&debug=4", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=127.0.0.1&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MyTag&debug=4&connection_group_id=1", 1000);
 
             while (plctag.plc_tag_status(tagHandle) == 1)
             {
