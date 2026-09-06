@@ -68,5 +68,23 @@ namespace libplctag.Tests
             nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
 
         }
+
+        [Fact]
+        public void Attribute_string_contains_connection_group_id_when_set()
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object)
+            {
+                ConnectionGroupId = 7,
+            };
+
+            // Act
+            tag.Initialize();
+
+            // Assert
+            var expectedAttributeString = "connection_group_id=7";
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
+        }
     }
 }
