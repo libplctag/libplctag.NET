@@ -47,6 +47,7 @@ namespace libplctag
         private bool? _allowFieldResize;
         private int? _readCacheMillisecondDuration;
         private uint? _maxRequestsInFlight;
+        private int? _connectionGroupId;
         private TimeSpan _timeout = defaultTimeout;
         private TimeSpan? _autoSyncReadInterval;
         private TimeSpan? _autoSyncWriteInterval;
@@ -630,6 +631,27 @@ namespace libplctag
             set => SetField(ref _maxRequestsInFlight, value);
         }
 
+        /// <summary>
+        /// [OPTIONAL]
+        /// A user-defined identifier, in the form of an integer, used to separate PLC connections into distinct groups.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// By default, tags that share the same <see cref="Gateway"/> and <see cref="Path"/> are
+        /// multiplexed over a single shared connection/session to the PLC.
+        /// Setting <see cref="ConnectionGroupId"/> to a distinct value forces those tags onto their
+        /// own, independent connection, even when the gateway and path are otherwise identical.
+        /// This allows a single process to maintain multiple simultaneous connections to the same PLC,
+        /// for example to isolate latency-sensitive polling from bulk/background requests.
+        /// Like the other connection attributes, this cannot be changed after the tag is initialized.
+        /// Note: Leave unset to preserve existing connection sharing behavior.
+        /// </remarks>
+        public int? ConnectionGroupId
+        {
+            get => GetField(ref _connectionGroupId);
+            set => SetField(ref _connectionGroupId, value);
+        }
+
 
         public void Dispose()
         {
@@ -1207,6 +1229,7 @@ namespace libplctag
                 { "str_pad_bytes",          StringPadBytes?.ToString() },
                 { "str_total_length",       StringTotalLength?.ToString() },
                 { "max_requests_in_flight", MaxRequestsInFlight?.ToString() },
+                { "connection_group_id",    ConnectionGroupId?.ToString() },
                 { "allow_field_resize",     FormatNullableBoolean(AllowFieldResize) },
             };
 
