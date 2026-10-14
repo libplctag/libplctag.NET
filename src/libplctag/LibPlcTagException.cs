@@ -7,8 +7,7 @@
 
 using System;
 
-namespace libplctag
-{
+namespace libplctag;
 
     /// <summary>
     /// An exception thrown by the underlying libplctag library
@@ -37,4 +36,3 @@ namespace libplctag
             Status = status;
         }
     }
-}

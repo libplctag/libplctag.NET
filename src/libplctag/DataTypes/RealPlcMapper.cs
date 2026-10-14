@@ -7,17 +7,16 @@
 
 using System;
 
-namespace libplctag.DataTypes
+namespace libplctag.DataTypes;
+
+[Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
+public class RealPlcMapper : PlcMapperBase<float>
 {
-    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
-    public class RealPlcMapper : PlcMapperBase<float>
-    {
 
-        override public int? ElementSize => 4;
+    override public int? ElementSize => 4;
 
-        override public float Decode(Tag tag, int offset) => tag.GetFloat32(offset);
+    override public float Decode(Tag tag, int offset) => tag.GetFloat32(offset);
 
-        override public void Encode(Tag tag, int offset, float value) => tag.SetFloat32(offset, value);
+    override public void Encode(Tag tag, int offset, float value) => tag.SetFloat32(offset, value);
 
-    }
 }

@@ -10,8 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace libplctag.DataTypes
-{
+namespace libplctag.DataTypes;
 
     [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class UdtFieldInfo
@@ -108,5 +107,3 @@ namespace libplctag.DataTypes
             return null;
         }
     }
-
-}
