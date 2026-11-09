@@ -633,18 +633,13 @@ namespace libplctag
 
         /// <summary>
         /// [OPTIONAL]
-        /// A user-defined identifier, in the form of an integer, used to separate PLC connections into distinct groups.
+        /// The ID of the connection group to which the tag belongs.
         /// </summary>
         ///
         /// <remarks>
-        /// By default, tags that share the same <see cref="Gateway"/> and <see cref="Path"/> are
-        /// multiplexed over a single shared connection/session to the PLC.
-        /// Setting <see cref="ConnectionGroupId"/> to a distinct value forces those tags onto their
-        /// own, independent connection, even when the gateway and path are otherwise identical.
-        /// This allows a single process to maintain multiple simultaneous connections to the same PLC,
-        /// for example to isolate latency-sensitive polling from bulk/background requests.
-        /// Like the other connection attributes, this cannot be changed after the tag is initialized.
-        /// Note: Leave unset to preserve existing connection sharing behavior.
+        /// Tags with the same connection group ID share the same underlying PLC session/connection.
+        /// You can have more than one connection group ID per PLC session/connection.
+        /// This attribute can be set during tag creation only.
         /// </remarks>
         public int? ConnectionGroupId
         {
