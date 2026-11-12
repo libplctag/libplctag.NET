@@ -47,6 +47,7 @@ namespace libplctag
         private bool? _allowFieldResize;
         private int? _readCacheMillisecondDuration;
         private uint? _maxRequestsInFlight;
+        private int? _connectionGroupId;
         private TimeSpan _timeout = defaultTimeout;
         private TimeSpan? _autoSyncReadInterval;
         private TimeSpan? _autoSyncWriteInterval;
@@ -630,6 +631,22 @@ namespace libplctag
             set => SetField(ref _maxRequestsInFlight, value);
         }
 
+        /// <summary>
+        /// [OPTIONAL]
+        /// The ID of the connection group to which the tag belongs.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Tags with the same connection group ID share the same underlying PLC session/connection.
+        /// You can have more than one connection group ID per PLC session/connection.
+        /// This attribute can be set during tag creation only.
+        /// </remarks>
+        public int? ConnectionGroupId
+        {
+            get => GetField(ref _connectionGroupId);
+            set => SetField(ref _connectionGroupId, value);
+        }
+
 
         public void Dispose()
         {
@@ -1207,6 +1224,7 @@ namespace libplctag
                 { "str_pad_bytes",          StringPadBytes?.ToString() },
                 { "str_total_length",       StringTotalLength?.ToString() },
                 { "max_requests_in_flight", MaxRequestsInFlight?.ToString() },
+                { "connection_group_id",    ConnectionGroupId?.ToString() },
                 { "allow_field_resize",     FormatNullableBoolean(AllowFieldResize) },
             };
 

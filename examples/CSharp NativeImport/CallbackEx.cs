@@ -29,7 +29,7 @@ namespace NativeImport_Examples
         {
 
             // Create the tag handle
-            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=127.0.0.1&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MyTag[0]", 1000);
+            var tagHandle = plctag.plc_tag_create("protocol=ab_eip&gateway=127.0.0.1&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MyTag[0]&connection_group_id=1", 1000);
             var statusBeforeRead = plctag.plc_tag_status(tagHandle);
             if (statusBeforeRead != 0)
             {

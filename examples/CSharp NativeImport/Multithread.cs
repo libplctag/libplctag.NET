@@ -13,7 +13,8 @@ namespace NativeImport_Examples
 {
     class Multithread
     {
-        const string TAG_PATH = "protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT";
+        // Optional: set connection_group_id to isolate this tag's channel from other tags in the same process.
+        const string TAG_PATH = "protocol=ab_eip&gateway=192.168.0.10&path=1,0&plc=LGX&elem_size=4&elem_count=1&name=MY_DINT&connection_group_id=1";
         const int ELEM_COUNT = 1;
         const int ELEM_SIZE = 4;
         const int DATA_TIMEOUT = 2000;
