@@ -69,6 +69,31 @@ namespace libplctag.Tests
 
         }
 
+        [Theory]
+        [InlineData(null, true, "str_is_zero_terminated=1")]
+        [InlineData(null, false, "str_is_zero_terminated=0")]
+        [InlineData(true, null, "str_is_fixed_length=1")]
+        [InlineData(false, null, "str_is_fixed_length=0")]
+        [InlineData(true, false, "str_is_fixed_length=1&str_is_zero_terminated=0")]
+        [InlineData(false, true, "str_is_fixed_length=0&str_is_zero_terminated=1")]
+        [InlineData(null, null, "")]
+        public void Attribute_string_formats_string_flags_independently(bool? fixedLength, bool? zeroTerminated, string expectedAttributeString)
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object)
+            {
+                StringIsFixedLength = fixedLength,
+                StringIsZeroTerminated = zeroTerminated,
+            };
+
+            // Act
+            tag.Initialize();
+
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
+        }
+
         [Fact]
         public void Attribute_string_contains_connection_group_id_when_set()
         {

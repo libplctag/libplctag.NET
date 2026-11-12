@@ -1219,7 +1219,7 @@ namespace libplctag
                 { "str_is_byte_swapped",    FormatNullableBoolean(StringIsByteSwapped)  },
                 { "str_is_counted",         FormatNullableBoolean(StringIsCounted) },
                 { "str_is_fixed_length",    FormatNullableBoolean(StringIsFixedLength)  },
-                { "str_is_zero_terminated", FormatNullableBoolean(StringIsFixedLength)  },
+                { "str_is_zero_terminated", FormatNullableBoolean(StringIsZeroTerminated)  },
                 { "str_max_capacity",       StringMaxCapacity?.ToString() },
                 { "str_pad_bytes",          StringPadBytes?.ToString() },
                 { "str_total_length",       StringTotalLength?.ToString() },
