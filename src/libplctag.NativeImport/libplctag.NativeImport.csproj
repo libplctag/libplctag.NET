@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net47;net471;net472;net48;net481</TargetFrameworks>
+    <!--
+      net462 is the oldest supported .NET Framework and the minimum for System.Memory.
+      net10.0 enables modern APIs; netstandard2.0 covers everything else.
+    -->
+    <TargetFrameworks>netstandard2.0;net462;net10.0</TargetFrameworks>
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
     <PackageId>libplctag.NativeImport</PackageId>
