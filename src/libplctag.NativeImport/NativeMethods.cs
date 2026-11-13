@@ -25,7 +25,7 @@ namespace libplctag.NativeImport
 #if NETFRAMEWORK
             SetFrameworkDllDirectory();
 #elif NETSTANDARD
-            // A netstandard2.0 consumer may still be running on .NET Framework (e.g. 4.6.1)
+            // .NET Framework versions older than the net47 build use this one
             if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
             {
                 SetFrameworkDllDirectory();
