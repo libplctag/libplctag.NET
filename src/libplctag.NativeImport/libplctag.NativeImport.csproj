@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <!--
-      net462 is the oldest supported .NET Framework and the minimum for System.Memory.
+      net47 is the oldest .NET Framework without an end-of-support date (4.6.2 ends Jan 2027).
       net10.0 enables modern APIs; netstandard2.0 covers everything else.
     -->
-    <TargetFrameworks>netstandard2.0;net462;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net47;net10.0</TargetFrameworks>
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
     <PackageId>libplctag.NativeImport</PackageId>
