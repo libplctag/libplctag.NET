@@ -22,27 +22,17 @@ namespace libplctag.NativeImport
         {
             // .NET Core / .NET 5+ resolve runtimes/{rid}/native via deps.json, so only .NET Framework needs help.
             // The package's build targets copy plctag.dll to X86/X64 subfolders (AnyCPU) or the output root.
-#if NETFRAMEWORK
-            SetFrameworkDllDirectory();
-#elif NETSTANDARD
-            // .NET Framework versions older than the net47 build use this one
+#if NETSTANDARD
             if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
             {
-                SetFrameworkDllDirectory();
+                // .NET Framework only runs on Windows
+                string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+                string system = Environment.Is64BitProcess ? "X64" : "X86";
+                string libDirectory = System.IO.Path.Combine(executingDirectory, system);
+                SetDllDirectory(System.IO.Directory.Exists(libDirectory) ? libDirectory : executingDirectory);
             }
 #endif
         }
-
-#if !NETCOREAPP
-        static void SetFrameworkDllDirectory()
-        {
-            // .NET Framework only runs on Windows
-            string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
-            string system = Environment.Is64BitProcess ? "X64" : "X86";
-            string libDirectory = System.IO.Path.Combine(executingDirectory, system);
-            SetDllDirectory(System.IO.Directory.Exists(libDirectory) ? libDirectory : executingDirectory);
-        }
-#endif
 
 
 
