@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--
-      net47 is the oldest .NET Framework without an end-of-support date (4.6.2 ends Jan 2027).
-      net10.0 enables modern APIs; netstandard2.0 covers everything else.
-    -->
     <TargetFrameworks>netstandard2.0;net47;net10.0</TargetFrameworks>
     <AssemblyName>libplctag.NativeImport</AssemblyName>
     <RootNamespace>libplctag.NativeImport</RootNamespace>
