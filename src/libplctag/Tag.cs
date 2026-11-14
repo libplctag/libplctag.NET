@@ -48,6 +48,7 @@ namespace libplctag
         private int? _readCacheMillisecondDuration;
         private uint? _maxRequestsInFlight;
         private int? _connectionGroupId;
+        private TimeSpan? _connectionInactivityTimeout;
         private TimeSpan _timeout = defaultTimeout;
         private TimeSpan? _autoSyncReadInterval;
         private TimeSpan? _autoSyncWriteInterval;
@@ -392,6 +393,36 @@ namespace libplctag
                 // Set after writing to underlying tag in case SetIntAttribute fails.
                 // Ensures the two have the same value.
                 _autoSyncWriteInterval = value;
+            }
+        }
+
+        /// <summary>
+        /// [OPTIONAL]
+        /// The number of milliseconds before an idle connection is automatically disconnected.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Can be set during tag creation as an attribute (e.g., <c>&amp;connection_inactivity_timeout_ms=23000</c>) or at runtime.
+        /// Valid range and defaults are protocol-specific: AB EIP sessions allow 1-31000 ms (default 31000),
+        /// Omron EIP connections allow 1-31000 ms (default 31000), Modbus TCP allows 1-30000 ms (default 30000).
+        /// </remarks>
+        public TimeSpan? ConnectionInactivityTimeout
+        {
+            get
+            {
+                ThrowIfAlreadyDisposed();
+                return _connectionInactivityTimeout;
+            }
+            set
+            {
+                ThrowIfAlreadyDisposed();
+
+                if (_isInitialized)
+                    SetIntAttribute("connection_inactivity_timeout_ms", (int)value.Value.TotalMilliseconds);
+
+                // Set after writing to underlying tag in case SetIntAttribute fails.
+                // Ensures the two have the same value.
+                _connectionInactivityTimeout = value;
             }
         }
 
@@ -1225,6 +1256,7 @@ namespace libplctag
                 { "str_total_length",       StringTotalLength?.ToString() },
                 { "max_requests_in_flight", MaxRequestsInFlight?.ToString() },
                 { "connection_group_id",    ConnectionGroupId?.ToString() },
+                { "connection_inactivity_timeout_ms", FormatTimeSpan(ConnectionInactivityTimeout) },
                 { "allow_field_resize",     FormatNullableBoolean(AllowFieldResize) },
             };
 
