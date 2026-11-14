@@ -7,10 +7,15 @@
 	<Target Name="LibplctagNetFrameworkTarget_x64_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x64') ">
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
 	</Target>
-	
+
+	<Target Name="LibplctagNetFrameworkTarget_ARM64_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'ARM64') ">
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" DestinationFolder="$(OutDir)" />
+	</Target>
+
 	<Target Name="LibplctagNetFrameworkTarget_AnyCPU_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'AnyCPU') ">
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)X86\" />
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)X64\" />
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" DestinationFolder="$(OutDir)ARM64\" />
 	</Target>
 
 	<Target Name="LibplctagNetFrameworkTarget_x86_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x86') ">
@@ -20,10 +25,15 @@
 	<Target Name="LibplctagNetFrameworkTarget_x64_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x64') ">
 		<Delete Files="$(OutDir)\plctag.dll" />
 	</Target>
+
+	<Target Name="LibplctagNetFrameworkTarget_ARM64_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'ARM64') ">
+		<Delete Files="$(OutDir)\plctag.dll" />
+	</Target>
 	
 	<Target Name="LibplctagNetFrameworkTarget_AnyCPU_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'AnyCPU') ">
 		<Delete Files="$(OutDir)X86\plctag.dll" />
 		<Delete Files="$(OutDir)X64\plctag.dll" />
+		<Delete Files="$(OutDir)ARM64\plctag.dll" />
 	</Target>
 
 </Project>
