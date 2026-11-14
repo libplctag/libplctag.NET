@@ -20,18 +20,21 @@ namespace libplctag.NativeImport
 
         static NativeMethods()
         {
-#if NET472_OR_GREATER
-            // Assume we're running on Windows because .NET Framework is not supported on other platforms
-            string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
-			string system = Environment.Is64BitProcess ? "X64" : "X86";
-			string libDirectory = System.IO.Path.Combine (executingDirectory, system);
-            if (System.IO.Directory.Exists(libDirectory))
+#if NETSTANDARD
+            // .NET Core/5+ resolve runtimes/{rid}/native via deps.json; .NET Framework (Windows-only) needs SetDllDirectory
+            if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
             {
-                SetDllDirectory(libDirectory);
-            }
-            else
-            {
-                SetDllDirectory(executingDirectory);
+                string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+                string system = Environment.Is64BitProcess ? "X64" : "X86";
+                string libDirectory = System.IO.Path.Combine (executingDirectory, system);
+                if (System.IO.Directory.Exists(libDirectory))
+                {
+                    SetDllDirectory(libDirectory);
+                }
+                else
+                {
+                    SetDllDirectory(executingDirectory);
+                }
             }
 #endif
         }
