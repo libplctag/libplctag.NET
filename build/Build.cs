@@ -31,7 +31,6 @@ class Build : NukeBuild
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
     Project libplctag => Solution.GetProject("libplctag");
     Project libplctag_NativeImport => Solution.GetProject("libplctag.NativeImport");
-    Project libplctag_Tests => Solution.GetProject("libplctag.Tests");
 
 
     Target Clean => _ => _
@@ -66,7 +65,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(libplctag_Tests)
+                .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 );
         });
