@@ -65,7 +65,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(libplctag)
+                .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 );
         });
