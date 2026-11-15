@@ -39,8 +39,10 @@ Different versions of .NET use packages differently (see [PackageReference vs pa
 ## How to release Nuget packages
 
 1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects (see [libplctag.NativeImport versioning](#libplctagnativeimport-versioning)).
-2. Trigger the "Build and publish libplctag.NET nuget package" workflow.
-4. Create a GitHub "Release" with details of the new release.
+2. Trigger the "Release all" workflow.
+3. Create a GitHub "Release" with details of the new release.
+
+Packages are published using [nuget.org trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing).
 
 ## How to update the libplctag core binaries
 
