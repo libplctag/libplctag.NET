@@ -38,7 +38,7 @@ Different versions of .NET use packages differently (see [PackageReference vs pa
 
 ## How to release Nuget packages
 
-1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects.
+1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects (see [libplctag.NativeImport versioning](#libplctagnativeimport-versioning)).
 2. Trigger the "Build and publish libplctag.NET nuget package" workflow.
 4. Create a GitHub "Release" with details of the new release.
 
@@ -47,8 +47,15 @@ Different versions of .NET use packages differently (see [PackageReference vs pa
 When a new version of libplctag core is released, the library binaries need to be updated in libplctag.NativeImport.
 The build script can be used to copy these libraries in the project without error.
 
-1. Trigger the "Update libplctag core" workflow.
+1. Trigger the "Update libplctag core" workflow. This also sets `<LibplctagCoreVersion>` in the libplctag.NativeImport csproj.
 2. Verify that the files have been correctly copied.
 3. Make relevant modifications to libplctag.NativeImport such as modifying the method signatures (if required).
 4. Release the updated project as a new Nuget package.
 5. Finally, update the libplctag.NativeImport `<PackageReference>` version in the libplctag package, and release that.
+
+## libplctag.NativeImport versioning
+
+The bundled core version is appended to the package version as [SemVer build metadata](https://semver.org/#spec-item-10), e.g. `2.0.0-alpha.9+core.2.7.2`.
+`<LibplctagCoreVersion>` in the csproj is set by `UpdateCoreBinaries`; edit only the `x.y.z` part of `<Version>` by hand.
+
+NuGet ignores build metadata for uniqueness, so every core update needs a version bump. For core-only updates, bump the same part (patch, minor or major) that changed in the core.

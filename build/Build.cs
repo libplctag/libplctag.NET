@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -107,11 +109,8 @@ class Build : NukeBuild
       .Requires(() => Configuration.Equals(Configuration.Release))
       .Executes(() =>
       {
-          var libplctagNativeImportVersion = libplctag_NativeImport.GetProperty("Version");
-          PushAndTag($"libplctag.NativeImport.{libplctagNativeImportVersion}.nupkg", $"libplctag.NativeImport-v{libplctagNativeImportVersion}");
-
-          var libplctagVersion = libplctag.GetProperty("Version");
-          PushAndTag($"libplctag.{libplctagVersion}.nupkg", $"libplctag-v{libplctagVersion}");
+          PushAndTag(libplctag_NativeImport);
+          PushAndTag(libplctag);
       });
 
     Target UpdateCoreBinaries => _ => _
@@ -156,17 +155,31 @@ class Build : NukeBuild
 
             downloadFolder.DeleteDirectory();
 
+            // Record the bundled core version so it appears in the package version as build metadata (+core.x.y.z)
+            var nativeImportProjectFile = libplctag_NativeImport.Path;
+            var projectXml = nativeImportProjectFile.ReadAllText();
+            var updatedXml = Regex.Replace(projectXml, @"<LibplctagCoreVersion>[^<]*</LibplctagCoreVersion>", $"<LibplctagCoreVersion>{LibplctagCoreVersion}</LibplctagCoreVersion>");
+            nativeImportProjectFile.WriteAllText(updatedXml, Encoding.UTF8); // Encoding.UTF8 keeps the csproj's existing BOM
+            Log.Information("Set <LibplctagCoreVersion> to {0} in {1}", LibplctagCoreVersion, nativeImportProjectFile);
+
 
             var message = $"Updating to libplctag core v{LibplctagCoreVersion}";
 
-            Git($"add {runtimesFolder}");
+            Git($"add {runtimesFolder} {nativeImportProjectFile}");
             Git($"commit -m {message}");
             Git($"push origin");
 
         });
 
-    private void PushAndTag(string packageFilename, string tag)
+    private void PushAndTag(Project project)
     {
+        var packageId = project.GetProperty("PackageId");
+        var version = project.GetProperty("Version");
+
+        // NuGet omits SemVer build metadata (e.g. "+core.2.7.2") from the package filename, but we keep it in the tag
+        var packageFilename = $"{packageId}.{version.Split('+')[0]}.nupkg";
+        var tag = $"{packageId}-v{version}";
+
         var output = DotNetNuGetPush(s => s
             .SetTargetPath(ArtifactsDirectory / packageFilename)
             .SetSource(NugetApiUrl)
