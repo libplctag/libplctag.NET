@@ -7,10 +7,20 @@ jobs:
 
     runs-on: windows-latest
 
+    permissions:
+      contents: write
+      id-token: write
+
     steps:
     - uses: actions/checkout@v4
       with:
-        lfs: true 
-    
+        lfs: true
+
+    - name: NuGet login (OIDC to temporary API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Publish all packages on version change
-      run: .\build.cmd ReleaseAll --nuget-api-key ${{secrets.NUGET_API_KEY}}
+      run: .\build.cmd ReleaseAll --nuget-api-key ${{ steps.login.outputs.NUGET_API_KEY }}
