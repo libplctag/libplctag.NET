@@ -31,7 +31,9 @@ These workflows delegate the actual automation logic to the [`_build`](../build)
 
 1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects (see [libplctag.NativeImport versioning](#libplctagnativeimport-versioning)).
 2. Trigger the "Release all" workflow (for 1.x bridge releases, select the `bridge-release` branch under "Use workflow from").
-4. Create a GitHub "Release" with details of the new release.
+3. Create a GitHub "Release" with details of the new release.
+
+Packages are published using [nuget.org trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing).
 
 ## How to update the core binaries libplctag.NativeImport
 
