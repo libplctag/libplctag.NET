@@ -21,10 +21,13 @@ namespace libplctag.NativeImport
         static NativeMethods()
         {
 #if NETSTANDARD
-            // .NET Core/5+ resolve runtimes/{rid}/native via deps.json; .NET Framework (Windows-only) needs SetDllDirectory
+            // .NET Core/5+ resolve runtimes/{rid}/native via deps.json; on .NET Framework load X86\, X64\ or ARM64\plctag.dll
+            // by full path, and the [DllImport]s below bind to the already-loaded module.
             if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
             {
-                string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+                // The assembly's original folder: Assembly.Location is the shadow-copy cache under shadow copying (ASP.NET, xUnit).
+                // EscapedCodeBase, not CodeBase: CodeBase leaves '#' unescaped (#157).
+                string assemblyDirectory = System.IO.Path.GetDirectoryName(new Uri(typeof(NativeMethods).Assembly.EscapedCodeBase).LocalPath);
                 string system;
                 switch (RuntimeInformation.ProcessArchitecture)
                 {
@@ -33,14 +36,9 @@ namespace libplctag.NativeImport
                     case Architecture.Arm64: system = "ARM64"; break;
                     default: system = null; break;
                 }
-                string libDirectory = system == null ? null : System.IO.Path.Combine(executingDirectory, system);
-                if (libDirectory != null && System.IO.Directory.Exists(libDirectory))
+                if (system != null)
                 {
-                    SetDllDirectory(libDirectory);
-                }
-                else
-                {
-                    SetDllDirectory(executingDirectory);
+                    LoadLibrary(System.IO.Path.Combine(assemblyDirectory, system, "plctag.dll"));
                 }
             }
 #endif
@@ -48,8 +46,10 @@ namespace libplctag.NativeImport
 
 
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool SetDllDirectory(string lpPathName);
+        // CharSet.Unicode calls LoadLibraryW (UTF-16 path). The default (Ansi) would call LoadLibraryA, which converts the path
+        // to the system code page and fails for characters outside it (e.g. non-ASCII user names in the install path).
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
 
 
 
