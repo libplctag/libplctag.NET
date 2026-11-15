@@ -25,9 +25,16 @@ namespace libplctag.NativeImport
             if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
             {
                 string executingDirectory = System.IO.Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
-                string system = Environment.Is64BitProcess ? "X64" : "X86";
-                string libDirectory = System.IO.Path.Combine (executingDirectory, system);
-                if (System.IO.Directory.Exists(libDirectory))
+                string system;
+                switch (RuntimeInformation.ProcessArchitecture)
+                {
+                    case Architecture.X86: system = "X86"; break;
+                    case Architecture.X64: system = "X64"; break;
+                    case Architecture.Arm64: system = "ARM64"; break;
+                    default: system = null; break;
+                }
+                string libDirectory = system == null ? null : System.IO.Path.Combine(executingDirectory, system);
+                if (libDirectory != null && System.IO.Directory.Exists(libDirectory))
                 {
                     SetDllDirectory(libDirectory);
                 }
