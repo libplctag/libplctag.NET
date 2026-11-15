@@ -30,7 +30,7 @@ These workflows delegate the actual automation logic to the [`_build`](../build)
 ### How to release Nuget packages
 
 1. Update the version number in the csproj files of the libplctag or libplctag.NativeImport projects (see [libplctag.NativeImport versioning](#libplctagnativeimport-versioning)).
-2. Trigger the "Build and publish libplctag.NET nuget package" workflow.
+2. Trigger the "Release all" workflow (for 1.x bridge releases, select the `bridge-release` branch under "Use workflow from").
 4. Create a GitHub "Release" with details of the new release.
 
 ## How to update the core binaries libplctag.NativeImport
