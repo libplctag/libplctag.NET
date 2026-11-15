@@ -1,39 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<Target Name="LibplctagNetFrameworkTarget_x86_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x86') ">
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_x64_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x64') ">
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_ARM64_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'ARM64') ">
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" DestinationFolder="$(OutDir)" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_AnyCPU_Build" AfterTargets="Build" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'AnyCPU') ">
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\plctag.dll" DestinationFolder="$(OutDir)X86\" />
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" DestinationFolder="$(OutDir)X64\" />
-		<Copy SourceFiles="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" DestinationFolder="$(OutDir)ARM64\" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_x86_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x86') ">
-		<Delete Files="$(OutDir)\plctag.dll" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_x64_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'x64') ">
-		<Delete Files="$(OutDir)\plctag.dll" />
-	</Target>
-
-	<Target Name="LibplctagNetFrameworkTarget_ARM64_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'ARM64') ">
-		<Delete Files="$(OutDir)\plctag.dll" />
-	</Target>
-	
-	<Target Name="LibplctagNetFrameworkTarget_AnyCPU_Clean" AfterTargets="Clean" Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework') AND ('$(Platform)' == 'AnyCPU') ">
-		<Delete Files="$(OutDir)X86\plctag.dll" />
-		<Delete Files="$(OutDir)X64\plctag.dll" />
-		<Delete Files="$(OutDir)ARM64\plctag.dll" />
-	</Target>
+	<!--
+		.NET Framework has no runtime selection of native NuGet assets, so ship every architecture's plctag.dll in its own
+		subfolder; NativeMethods loads the one matching the process at runtime. As items (rather than a post-build Copy)
+		they flow through ProjectReferences and are included by publish / Web Deploy; Content rather than None because
+		ClickOnce only publishes Content.
+		.NET Core / .NET 5+ use runtimes/{rid}/native via deps.json instead.
+	-->
+	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\plctag.dll" Link="X86\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" Link="X64\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" Link="ARM64\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+	</ItemGroup>
 
 </Project>
