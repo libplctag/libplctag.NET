@@ -13,6 +13,7 @@ using System.Text;
 namespace libplctag.DataTypes
 {
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class UdtFieldInfo
     {
         public string Name { get; set; }
@@ -21,6 +22,7 @@ namespace libplctag.DataTypes
         public uint Offset { get; set; }
     }
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class UdtInfo
     {
         public uint Size { get; set; }
@@ -31,6 +33,7 @@ namespace libplctag.DataTypes
         public UdtFieldInfo[] Fields { get; set; }
     }
 
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class UdtInfoPlcMapper : IPlcMapper<UdtInfo>
     {
         public PlcType PlcType { get; set; }

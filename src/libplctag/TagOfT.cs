@@ -17,6 +17,7 @@ namespace libplctag
     /// </summary>
     /// <typeparam name="M">A <see cref="IPlcMapper{T}"/> class that handles data conversion</typeparam>
     /// <typeparam name="T">The desired C# type of Tag.Value</typeparam>
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public class Tag<M, T> : IDisposable, ITag where M : IPlcMapper<T>, new()
     {
 

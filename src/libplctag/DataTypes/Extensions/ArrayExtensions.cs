@@ -11,6 +11,7 @@ using System.Text;
 
 namespace libplctag.DataTypes.Extensions
 {
+    [Obsolete("see - https://github.com/libplctag/libplctag.NET/issues/406")]
     public static class ArrayExtensions
     {
         /// <summary>
