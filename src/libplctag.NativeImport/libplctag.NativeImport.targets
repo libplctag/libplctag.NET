@@ -8,6 +8,12 @@
 		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\plctag.dll" Link="X86\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
 		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\plctag.dll" Link="X64\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
 		<Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-arm64\native\plctag.dll" Link="ARM64\plctag.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+
+		<!--
+			ASP.NET web application publishing (Web Deploy, File System) puts Content at its Link path in the site root as well as in bin\.
+			Only bin\ is needed; exclude the site-root copies so they aren't deployed (and served).
+		-->
+		<ExcludeFromPackageFiles Include="X86\plctag.dll;X64\plctag.dll;ARM64\plctag.dll" FromTarget="libplctag.NativeImport.targets" />
 	</ItemGroup>
 
 </Project>
