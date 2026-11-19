@@ -111,5 +111,41 @@ namespace libplctag.Tests
             var expectedAttributeString = "connection_group_id=7";
             nativeTag.Verify(m => m.plc_tag_create_ex(expectedAttributeString, It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
         }
+
+        [Fact]
+        public void Connection_inactivity_timeout_reports_value_in_effect_after_initialization()
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            nativeTag
+                .Setup(m => m.plc_tag_get_int_attribute(It.IsAny<int>(), "connection_inactivity_timeout_ms", It.IsAny<int>()))
+                .Returns(31000);
+            var tag = new Tag(nativeTag.Object)
+            {
+                ConnectionInactivityTimeout = TimeSpan.FromMilliseconds(50000),
+            };
+
+            // Act
+            tag.Initialize();
+
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_create_ex("connection_inactivity_timeout_ms=50000", It.IsAny<NativeImport.plctag.callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
+            Assert.Equal(TimeSpan.FromMilliseconds(31000), tag.ConnectionInactivityTimeout);
+        }
+
+        [Fact]
+        public void Connection_inactivity_timeout_set_after_initialization_is_written_to_native_tag()
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
+            tag.Initialize();
+
+            // Act
+            tag.ConnectionInactivityTimeout = TimeSpan.FromMilliseconds(5000);
+
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_set_int_attribute(It.IsAny<int>(), "connection_inactivity_timeout_ms", 5000), Times.Once);
+        }
     }
 }
