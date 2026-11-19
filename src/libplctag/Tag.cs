@@ -403,14 +403,18 @@ namespace libplctag
         ///
         /// <remarks>
         /// Can be set during tag creation as an attribute (e.g., <c>&amp;connection_inactivity_timeout_ms=23000</c>) or at runtime.
-        /// Valid range and defaults are protocol-specific: AB EIP sessions allow 1-31000 ms (default 31000),
-        /// Omron EIP connections allow 1-31000 ms (default 31000), Modbus TCP allows 1-30000 ms (default 30000).
+        /// Valid range and defaults are protocol-specific: AB EIP sessions allow 100-31000 ms (default 31000),
+        /// Omron EIP connections allow 100-31000 ms (default 31000), Modbus TCP allows 100-30000 ms (default 30000).
         /// </remarks>
         public TimeSpan? ConnectionInactivityTimeout
         {
             get
             {
                 ThrowIfAlreadyDisposed();
+
+                if (_isInitialized)
+                    return TimeSpan.FromMilliseconds(GetIntAttribute("connection_inactivity_timeout_ms"));
+
                 return _connectionInactivityTimeout;
             }
             set
@@ -419,10 +423,8 @@ namespace libplctag
 
                 if (_isInitialized)
                     SetIntAttribute("connection_inactivity_timeout_ms", (int)value.Value.TotalMilliseconds);
-
-                // Set after writing to underlying tag in case SetIntAttribute fails.
-                // Ensures the two have the same value.
-                _connectionInactivityTimeout = value;
+                else
+                    _connectionInactivityTimeout = value;
             }
         }
 
