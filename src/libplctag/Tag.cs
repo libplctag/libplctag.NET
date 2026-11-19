@@ -318,7 +318,7 @@ namespace libplctag
                 ThrowIfAlreadyDisposed();
 
                 if (_isInitialized)
-                    SetIntAttribute("read_cache_ms", value.Value);
+                    SetIntAttribute("read_cache_ms", value ?? 0);    // 0 disables the cache
                 
                 // Set after writing to underlying tag in case SetIntAttribute fails.
                 // Ensures the two have the same value.
@@ -422,7 +422,7 @@ namespace libplctag
                 ThrowIfAlreadyDisposed();
 
                 if (_isInitialized)
-                    SetIntAttribute("connection_inactivity_timeout_ms", (int)value.Value.TotalMilliseconds);
+                    SetIntAttribute("connection_inactivity_timeout_ms", (int)(value?.TotalMilliseconds ?? int.MaxValue));    // High value effectively turns the timeout off
                 else
                     _connectionInactivityTimeout = value;
             }

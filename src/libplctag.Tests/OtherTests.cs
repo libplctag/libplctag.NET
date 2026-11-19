@@ -147,5 +147,36 @@ namespace libplctag.Tests
             // Assert
             nativeTag.Verify(m => m.plc_tag_set_int_attribute(It.IsAny<int>(), "connection_inactivity_timeout_ms", 5000), Times.Once);
         }
+
+        [Fact]
+        public void Read_cache_set_to_null_after_initialization_disables_cache()
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object) { ReadCacheMillisecondDuration = 100 };
+            tag.Initialize();
+
+            // Act
+            tag.ReadCacheMillisecondDuration = null;
+
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_set_int_attribute(It.IsAny<int>(), "read_cache_ms", 0), Times.Once);
+            Assert.Null(tag.ReadCacheMillisecondDuration);
+        }
+
+        [Fact]
+        public void Connection_inactivity_timeout_set_to_null_after_initialization_is_passed_to_core_as_max_int()
+        {
+            // Arrange
+            var nativeTag = new Mock<INative>();
+            var tag = new Tag(nativeTag.Object);
+            tag.Initialize();
+
+            // Act
+            tag.ConnectionInactivityTimeout = null;
+
+            // Assert
+            nativeTag.Verify(m => m.plc_tag_set_int_attribute(It.IsAny<int>(), "connection_inactivity_timeout_ms", int.MaxValue), Times.Once);
+        }
     }
 }
