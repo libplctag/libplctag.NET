@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Microsoft.Coyote" Version="1.7.11" />
+    <PackageReference Include="Microsoft.Coyote.Tool" Version="1.7.11" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.9.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
@@ -23,5 +25,11 @@
   <ItemGroup>
     <ProjectReference Include="..\libplctag\libplctag.csproj" />
   </ItemGroup>
+
+  <!-- TagRaceTests run under Coyote, which needs the assemblies it controls rewritten. -->
+  <Target Name="CoyoteRewrite" AfterTargets="Build">
+    <Exec Command="dotnet &quot;$(PkgMicrosoft_Coyote_Tool)/tools/net8.0/coyote.dll&quot; rewrite &quot;$(TargetDir)libplctag.dll&quot;" />
+    <Exec Command="dotnet &quot;$(PkgMicrosoft_Coyote_Tool)/tools/net8.0/coyote.dll&quot; rewrite &quot;$(TargetPath)&quot;" />
+  </Target>
 
 </Project>

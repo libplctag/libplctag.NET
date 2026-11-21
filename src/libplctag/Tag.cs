@@ -6,7 +6,6 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +20,16 @@ using static libplctag.NativeImport.plctag;
 namespace libplctag
 {
 
+    /// <summary>A tag in a PLC, accessed through the libplctag core.</summary>
+    /// <remarks>
+    /// Threading: the same as the libplctag core's. Any member may be called from any thread at any time, including
+    /// <see cref="Dispose"/>. A tag has one status and one data buffer, shared by every caller, and results reflect
+    /// that shared state: an operation's outcome is the tag's status when it finishes, as with the core's own blocking
+    /// read and write, so overlapping callers (or automatic reads and writes) can see each other's results. A read or
+    /// write that overlaps another fails with <see cref="Status.ErrorBusy"/>, from the core. Events are raised on a
+    /// core thread. The one rule the wrapper adds concerns creating the native tag, which the core does not have:
+    /// two calls never both create one, and the second fails with <see cref="Status.ErrorBusy"/>.
+    /// </remarks>
     public sealed class Tag : IDisposable
     {
         private const int TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION = 0;
@@ -32,7 +41,16 @@ namespace libplctag
         private int nativeTagHandle;
         private callback_func_ex coreLibCallbackFuncExDelegate;
 
-        private bool _isDisposed = false;
+        private int _isDisposed;
+        private int _isNativeTagDestroyed;
+
+        // 1 while a call is creating the native tag, so that two calls never both create one. This is the one piece of
+        // state the core does not have: a Tag exists before its native tag does.
+        private int _creating;
+
+        // Every waiting async operation waits for this to complete, then checks plc_tag_status again. Each wake-up
+        // completes it and puts a fresh one in its place, so any number of operations can wait at once.
+        private TaskCompletionSource<bool> _wake = NewWake();
         private bool _isInitialized = false;
 
         private string _name;
@@ -683,23 +701,30 @@ namespace libplctag
 
         public void Dispose()
         {
-            if (_isDisposed)
+            if (Interlocked.Exchange(ref _isDisposed, 1) != 0)
                 return;
 
-            if (_isInitialized)
-            {
-                // These should always succeed unless bugs exist in this wrapper or the core library
-                var removeCallbackResult = RemoveCallback();
-                var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
+            if (IsInitializedNow)
+                DestroyNativeTag();
 
-                // However, we cannot recover if they do fail, so ignore except during development
-                Debug.Assert(removeCallbackResult == Status.Ok);
-                Debug.Assert(destroyResult == Status.Ok);
+            // Async operations that are waiting will throw ObjectDisposedException.
+            WakeWaitingOperations();
+        }
 
-                RemoveEvents();
-            }
+        private bool IsDisposed => Volatile.Read(ref _isDisposed) != 0;
 
-            _isDisposed = true;
+        private void DestroyNativeTag()
+        {
+            if (Interlocked.Exchange(ref _isNativeTagDestroyed, 1) != 0)
+                return;
+
+            // These should always succeed unless bugs exist in this wrapper or the core library
+            var removeCallbackResult = RemoveCallback();
+            var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
+
+            // However, we cannot recover if they do fail, so ignore except during development
+            Debug.Assert(removeCallbackResult == Status.Ok);
+            Debug.Assert(destroyResult == Status.Ok);
         }
 
         public void Abort()
@@ -722,29 +747,17 @@ namespace libplctag
         /// </remarks>
         public void Initialize()
         {
-
             ThrowIfAlreadyDisposed();
-            ThrowIfAlreadyInitialized();
-
-            var millisecondTimeout = (int)Timeout.TotalMilliseconds;
-
-            SetUpEvents();
-
-            var attributeString = GetAttributeString();
-            
-            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, millisecondTimeout);
-            if (result < 0)
+            BeginCreation();
+            try
             {
-                RemoveEvents();
-                throw new LibPlcTagException((Status)result);
+                ThrowIfAlreadyInitialized();
+                CreateNativeTag();
             }
-            else
+            finally
             {
-                nativeTagHandle = result;
+                EndCreation();
             }
-
-
-            _isInitialized = true;
         }
 
         /// <summary>
@@ -759,68 +772,17 @@ namespace libplctag
         public async Task InitializeAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            ThrowIfAlreadyInitialized();
-
-            SetUpEvents();
-
-            var createTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
-            createTasks.Push(createTask);
-
-            var attributeString = GetAttributeString();
-            var result = _native.plc_tag_create_ex(attributeString, coreLibCallbackFuncExDelegate, IntPtr.Zero, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-
-            // Something went wrong locally
-            if (result < 0)
+            token.ThrowIfCancellationRequested();
+            BeginCreation();
+            try
             {
-                // shouldn't we pop here ?!?
-                RemoveEvents();
-                throw new LibPlcTagException((Status)result);
+                ThrowIfAlreadyInitialized();
+                await CreateNativeTagAsync(token).ConfigureAwait(false);
             }
-            else
+            finally
             {
-                nativeTagHandle = result;
+                EndCreation();
             }
-
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
-            {
-                cts.CancelAfter(Timeout);
-
-                using (cts.Token.Register(() =>
-                {
-                    if (createTasks.TryPop(out _))
-                    {
-                        RemoveCallback();
-                        Abort();
-                        var destroyResult = (Status)_native.plc_tag_destroy(result);
-                        Debug.Assert(destroyResult == Status.Ok);
-                        RemoveEvents();
-
-                        if (token.IsCancellationRequested)
-                            createTask.SetCanceled();
-                        else
-                            createTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
-                    }
-                }))
-                {
-                    // Await while Pending
-                    if (GetStatus() == Status.Pending) // wouldn't it be safer to await anyway to avoid possible race conditions?
-                    {
-                        await createTask.Task.ConfigureAwait(false);
-                    }
-                }
-            }
-
-            // On error, tear down and throw
-            if (createTask.Task.Result != Status.Ok)
-            {
-                RemoveCallback();
-                var destroyResult = (Status)_native.plc_tag_destroy(nativeTagHandle);
-                Debug.Assert(destroyResult == Status.Ok);
-                RemoveEvents();
-                throw new LibPlcTagException(createTask.Task.Result);
-            }
-
-            _isInitialized = true;
         }
 
         /// <summary>
@@ -857,32 +819,11 @@ namespace libplctag
         public async Task ReadAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token).ConfigureAwait(false);
+            token.ThrowIfCancellationRequested();
+            await InitializeIfRequiredAsync(token).ConfigureAwait(false);
 
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
-            {
-                cts.CancelAfter(Timeout);
-
-                using (cts.Token.Register(() =>
-                {
-                    if (readTasks.TryPop(out var readTask))
-                    {
-                        Abort();
-
-                        if (token.IsCancellationRequested)
-                            readTask.SetCanceled();
-                        else
-                            readTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
-                    }
-                }))
-                {
-                    var readTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    readTasks.Push(readTask);
-                    _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await readTask.Task.ConfigureAwait(false);
-                    ThrowIfStatusNotOk(readTask.Task.Result);
-                }
-            }
+            var result = _native.plc_tag_read(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+            await CompleteAsync((Status)result, token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -915,33 +856,153 @@ namespace libplctag
         public async Task WriteAsync(CancellationToken token = default)
         {
             ThrowIfAlreadyDisposed();
-            await InitializeAsyncIfRequired(token).ConfigureAwait(false);
+            token.ThrowIfCancellationRequested();
+            await InitializeIfRequiredAsync(token).ConfigureAwait(false);
 
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+            var result = _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+            await CompleteAsync((Status)result, token).ConfigureAwait(false);
+        }
+
+        private bool IsInitializedNow => Volatile.Read(ref _isInitialized);
+
+        /// <summary>Only one call at a time may create the native tag; another gets ErrorBusy, as the core answers an overlapping call.</summary>
+        private void BeginCreation()
+        {
+            if (Interlocked.CompareExchange(ref _creating, 1, 0) != 0)
+                throw new LibPlcTagException(Status.ErrorBusy);
+        }
+
+        private void EndCreation() => Volatile.Write(ref _creating, 0);
+
+        private void InitializeIfRequired()
+        {
+            if (IsInitializedNow)
+                return;
+            BeginCreation();
+            try
             {
-                cts.CancelAfter(Timeout);
-
-                using (cts.Token.Register(() =>
-                {
-                    if (writeTasks.TryPop(out var writeTask))
-                    {
-                        Abort();
-
-                        if (token.IsCancellationRequested)
-                            writeTask.SetCanceled();
-                        else
-                            writeTask.SetException(new LibPlcTagException(Status.ErrorTimeout));
-                    }
-                }))
-                {
-                    var writeTask = new TaskCompletionSource<Status>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    writeTasks.Push(writeTask);
-                    _native.plc_tag_write(nativeTagHandle, TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
-                    await writeTask.Task.ConfigureAwait(false);
-                    ThrowIfStatusNotOk(writeTask.Task.Result);
-                }
+                if (!IsInitializedNow)
+                    CreateNativeTag();
+            }
+            finally
+            {
+                EndCreation();
             }
         }
+
+        private async Task InitializeIfRequiredAsync(CancellationToken token)
+        {
+            if (IsInitializedNow)
+                return;
+            BeginCreation();
+            try
+            {
+                if (!IsInitializedNow)
+                    await CreateNativeTagAsync(token).ConfigureAwait(false);
+            }
+            finally
+            {
+                EndCreation();
+            }
+        }
+
+        // Call while holding the creation flag.
+        private void CreateNativeTag()
+        {
+            // If the core's blocking create fails it destroys the tag itself, so there is nothing to clean up.
+            nativeTagHandle = CreateHandle((int)Timeout.TotalMilliseconds);
+            MarkInitialized();
+        }
+
+        // Call while holding the creation flag.
+        private async Task CreateNativeTagAsync(CancellationToken token)
+        {
+            nativeTagHandle = CreateHandle(TIMEOUT_VALUE_THAT_INDICATES_ASYNC_OPERATION);
+            try
+            {
+                await CompleteAsync(Status.Pending, token).ConfigureAwait(false);
+            }
+            catch
+            {
+                // Destroy it, so that a later call can try again. Not DestroyNativeTag: that runs only once per Tag.
+                RemoveCallback();
+                _native.plc_tag_destroy(nativeTagHandle);
+                throw;
+            }
+
+            MarkInitialized();
+        }
+
+        private int CreateHandle(int millisecondTimeout)
+        {
+            var result = _native.plc_tag_create_ex(GetAttributeString(), coreLibCallbackFuncExDelegate, IntPtr.Zero, millisecondTimeout);
+            if (result < 0)
+                throw new LibPlcTagException((Status)result);
+            return result;
+        }
+
+        /// <summary>Records that the native tag exists. If Dispose ran meanwhile it may not have seen that, so one of the two destroys the tag.</summary>
+        private void MarkInitialized()
+        {
+            Volatile.Write(ref _isInitialized, true);
+            Interlocked.MemoryBarrier();
+            if (IsDisposed)
+            {
+                DestroyNativeTag();
+                throw new ObjectDisposedException(GetType().FullName);
+            }
+        }
+
+        /// <summary>
+        /// Waits until the operation that the core returned <paramref name="status"/> for has finished.
+        /// </summary>
+        /// <remarks>
+        /// The outcome comes from plc_tag_status. Events from the core only prompt a check: they do not say
+        /// which operation they belong to, and the core can merge them or deliver them late.
+        /// If the core never raises an event after an operation finishes, this waits until <see cref="Timeout"/>.
+        /// </remarks>
+        private async Task CompleteAsync(Status status, CancellationToken token)
+        {
+            if (status == Status.Pending)
+            {
+                using (var cts = CancellationTokenSource.CreateLinkedTokenSource(token))
+                {
+                    cts.CancelAfter(Timeout);
+                    using (cts.Token.Register(WakeWaitingOperations))
+                    {
+                        while (true)
+                        {
+                            // Take the wake-up before checking, so an event in between is not missed.
+                            var wake = Volatile.Read(ref _wake);
+
+                            ThrowIfAlreadyDisposed();
+                            status = (Status)_native.plc_tag_status(nativeTagHandle);
+                            if (status != Status.Pending)
+                                break;
+
+                            if (cts.IsCancellationRequested)
+                            {
+                                _native.plc_tag_abort(nativeTagHandle);
+                                if (token.IsCancellationRequested)
+                                    throw new TaskCanceledException();
+                                throw new LibPlcTagException(Status.ErrorTimeout);
+                            }
+
+                            await wake.Task.ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+
+            ThrowIfAlreadyDisposed();
+            ThrowIfStatusNotOk(status);
+        }
+
+        // Runs on a core thread with the core's mutex held (from the event callback), so it must not call into
+        // the core or run user code: the continuations run asynchronously.
+        private void WakeWaitingOperations() => Interlocked.Exchange(ref _wake, NewWake()).TrySetResult(true);
+
+        private static TaskCompletionSource<bool> NewWake() => new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public int GetSize()
         {
@@ -1134,23 +1195,10 @@ namespace libplctag
 
         private void ThrowIfAlreadyDisposed()
         {
-            if (_isDisposed)
+            if (IsDisposed)
                 throw new ObjectDisposedException(GetType().FullName);
         }
 
-        private void InitializeIfRequired()
-        {
-            if (!_isInitialized)
-                Initialize();
-        }
-
-        private Task InitializeAsyncIfRequired(CancellationToken token)
-        {
-            if (!_isInitialized)
-                return InitializeAsync(token);
-            else
-                return Task.CompletedTask;
-        }
 
         private void ThrowIfAlreadyInitialized()
         {
@@ -1162,7 +1210,11 @@ namespace libplctag
         {
             var statusToCheck = status ?? GetStatus();
             if (statusToCheck != Status.Ok)
+            {
+                // A call that raced Dispose fails because the core no longer knows the tag: report the disposal.
+                ThrowIfAlreadyDisposed();
                 throw new LibPlcTagException(statusToCheck);
+            }
         }
 
 
@@ -1189,7 +1241,13 @@ namespace libplctag
             ThrowIfAlreadyDisposed();
             var result = nativeMethod(nativeTagHandle, offset);
             if (result.Equals(valueIndicatingPossibleError))
-                ThrowIfStatusNotOk();
+            {
+                // The value may be real. The get set the status: an error if it failed. PENDING means it succeeded
+                // and an operation (such as an automatic read) is in flight.
+                var status = GetStatus();
+                if (status != Status.Pending)
+                    ThrowIfStatusNotOk(status);
+            }
             return result;
         }
 
@@ -1270,81 +1328,9 @@ namespace libplctag
 
 
 
-        void SetUpEvents()
-        {
-
-            // Used to finalize the asynchronous read/write task completion sources
-            ReadCompleted += ReadTaskCompleter;
-            WriteCompleted += WriteTaskCompleter;
-            Created += CreatedTaskCompleter;
-
-
-        }
-
-        void RemoveEvents()
-        {
-
-            // Used to finalize the  read/write task completion sources
-            ReadCompleted -= ReadTaskCompleter;
-            WriteCompleted -= WriteTaskCompleter;
-            Created -= CreatedTaskCompleter;
-        }
-
         Status RemoveCallback()
         {
             return (Status)_native.plc_tag_unregister_callback(nativeTagHandle);
-        }
-
-        private readonly ConcurrentStack<TaskCompletionSource<Status>> createTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
-        void CreatedTaskCompleter(object sender, TagEventArgs e)
-        {
-            if (createTasks.TryPop(out var createTask))
-            {
-                switch (e.Status)
-                {
-                    case Status.Pending:
-                        // Do nothing, wait for another ReadCompleted callback
-                        break;
-                    default:
-                        createTask?.SetResult(e.Status);
-                        break;
-                }
-            }
-        }
-
-        private readonly ConcurrentStack<TaskCompletionSource<Status>> readTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
-        void ReadTaskCompleter(object sender, TagEventArgs e)
-        {
-            if (readTasks.TryPop(out var readTask))
-            {
-                switch (e.Status)
-                {
-                    case Status.Pending:
-                        // Do nothing, wait for another ReadCompleted callback
-                        break;
-                    default:
-                        readTask?.SetResult(e.Status);
-                        break;
-                }
-            }
-        }
-
-        private readonly ConcurrentStack<TaskCompletionSource<Status>> writeTasks = new ConcurrentStack<TaskCompletionSource<Status>>();
-        void WriteTaskCompleter(object sender, TagEventArgs e)
-        {
-            if (writeTasks.TryPop(out var writeTask))
-            {
-                switch (e.Status)
-                {
-                    case Status.Pending:
-                        // Do nothing, wait for another WriteCompleted callback
-                        break;
-                    default:
-                        writeTask?.SetResult(e.Status);
-                        break;
-
-                }
-            }
         }
 
         public event EventHandler<TagEventArgs> ReadStarted;
@@ -1357,8 +1343,20 @@ namespace libplctag
 
         void coreLibEventCallback(int eventTagHandle, int eventCode, int statusCode, IntPtr userdata)
         {
-            var @event = (Event)eventCode;
-            var status = (Status)statusCode;
+            WakeWaitingOperations();
+
+            // This runs on a core thread. An exception from a handler must not unwind into native code.
+            try
+            {
+                RaiseEvent((Event)eventCode, (Status)statusCode);
+            }
+            catch
+            {
+            }
+        }
+
+        void RaiseEvent(Event @event, Status status)
+        {
             var eventArgs = new TagEventArgs() { Status = status };
 
             switch (@event)
@@ -1385,7 +1383,7 @@ namespace libplctag
                     Created?.Invoke(this, eventArgs);
                     break;
                 default:
-                    throw new NotImplementedException();
+                    break; // an event this version does not know; throwing here would unwind into native code
             }
         }
 
