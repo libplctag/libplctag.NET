@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        lfs: true 
-    
+        lfs: true
+
     - name: Build all and run tests
-      run: ./build.sh TestLibplctag
+      run: dotnet test src/libplctag.sln --configuration Release

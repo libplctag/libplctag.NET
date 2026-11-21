@@ -25,8 +25,6 @@ This folder is for storing information regarding the development of libplctag.NE
 
 GitHub Actions have been created to automate some common activities such as updating the core binaries and release nuget packages.
 
-These workflows delegate the actual automation logic to the [`_build`](../build) [NUKE](https://nuke.build/) project.
-
 ## Testing libplctag.NativeImport
 
 libplctag.NativeImport uses features of Nuget and MSBuild to distribute the libplctag core binaries.
