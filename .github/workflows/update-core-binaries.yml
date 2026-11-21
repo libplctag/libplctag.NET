@@ -21,5 +21,31 @@ jobs:
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
       - name: Pull in latest libplctag core binaries into repository
-        run: ./build.sh UpdateCoreBinaries --libplctag-core-version ${{ github.event.inputs.libplctag_core_version }}
-        
+        env:
+          VERSION: ${{ github.event.inputs.libplctag_core_version }}
+        run: |
+          runtimes=src/libplctag.NativeImport/runtimes
+          project=src/libplctag.NativeImport/libplctag.NativeImport.csproj
+
+          # Usage: fetch <release asset suffix> <file in zip> <runtime identifier>
+          fetch() {
+            curl -fsSL -o "$RUNNER_TEMP/core.zip" "https://github.com/libplctag/libplctag/releases/download/v$VERSION/libplctag_${VERSION}_$1.zip"
+            unzip -p "$RUNNER_TEMP/core.zip" "$2" > "$runtimes/$3/native/$2"
+          }
+
+          fetch macos_x64       libplctag.dylib osx-x64
+          fetch macos_aarch64   libplctag.dylib osx-arm64
+          fetch ubuntu_x64      libplctag.so    linux-x64
+          fetch ubuntu_x86      libplctag.so    linux-x86
+          fetch ubuntu_armv7_hf libplctag.so    linux-arm
+          fetch ubuntu_arm64    libplctag.so    linux-arm64
+          fetch windows_x64     plctag.dll      win-x64
+          fetch windows_x86     plctag.dll      win-x86
+          fetch windows_arm64   plctag.dll      win-arm64
+
+          # Record the bundled core version so it appears in the package version as build metadata (+core.x.y.z)
+          sed -i "s|<LibplctagCoreVersion>[^<]*</LibplctagCoreVersion>|<LibplctagCoreVersion>$VERSION</LibplctagCoreVersion>|" "$project"
+
+          git add "$runtimes" "$project"
+          git commit -m "Updating to libplctag core v$VERSION"
+          git push origin

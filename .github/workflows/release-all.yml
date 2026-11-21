@@ -5,7 +5,7 @@ on: [workflow_dispatch]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write
@@ -16,6 +16,12 @@ jobs:
       with:
         lfs: true
 
+    - name: Build all and run tests
+      run: dotnet test src/libplctag.sln --configuration Release
+
+    - name: Pack
+      run: dotnet pack src/libplctag.sln --configuration Release --no-build --output artifacts
+
     - name: NuGet login (OIDC to temporary API key)
       uses: NuGet/login@v1
       id: login
@@ -23,4 +29,20 @@ jobs:
         user: ${{ secrets.NUGET_USER }}
 
     - name: Publish all packages on version change
-      run: .\build.cmd ReleaseAll --nuget-api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+      run: |
+        dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+
+        # Usage: tag <package id> <project>. Tags the project's version the first time it is released.
+        tag() {
+          tag="$1-v$(dotnet msbuild "$2" -getProperty:Version)"
+          existing=$(git ls-remote --tags origin "$tag")
+          if [ -z "$existing" ]; then
+            git tag "$tag"
+            git push origin "$tag"
+          fi
+        }
+
+        tag libplctag.NativeImport src/libplctag.NativeImport/libplctag.NativeImport.csproj
+        tag libplctag              src/libplctag/libplctag.csproj
