@@ -15,15 +15,9 @@ using static libplctag.NativeImport.plctag;
 
 namespace libplctag.Tests
 {
-    /// <summary>
-    /// What the wrapper does for each part of the core's contract it depends on. Test names carry the IDs of the
-    /// call steps (read3) and transitions (F3) they exercise (docs/core-contract).
-    /// </summary>
     public class TagContractTests
     {
-        const Status AnyError = Status.ErrorBadConnection;   // which error does not matter
-
-        // ---- creation ------------------------------------------------------------------------------
+        const Status AnyError = Status.ErrorBadConnection;
 
         [Fact(Timeout = 2000)]
         public async Task create_ex1_InitializeAsync_throws_the_error_when_create_ex_fails()
@@ -157,8 +151,8 @@ namespace libplctag.Tests
 
             // Assert
             Assert.True(tag.IsInitialized);
-            core.Native.Verify(n => n.plc_tag_destroy(1), Times.Once);    // the first try's tag
-            core.Native.Verify(n => n.plc_tag_destroy(2), Times.Never);   // the second try's tag
+            core.Native.Verify(n => n.plc_tag_destroy(1), Times.Once);
+            core.Native.Verify(n => n.plc_tag_destroy(2), Times.Never);
         }
 
         [Fact]
@@ -192,8 +186,6 @@ namespace libplctag.Tests
             Assert.Equal(Status.ErrorBusy, Assert.IsType<LibPlcTagException>(ex).Status);
             core.Native.Verify(n => n.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<callback_func_ex>(), It.IsAny<IntPtr>(), It.IsAny<int>()), Times.Once);
         }
-
-        // ---- reading and writing -------------------------------------------------------------------
 
         [Fact(Timeout = 2000)]
         public async Task read3_F3_ReadAsync_completes_when_the_read_succeeds()
@@ -268,7 +260,7 @@ namespace libplctag.Tests
             var core = new MockCore();
             var tag = core.NewTag();
             tag.Initialize();
-            core.Native.Setup(n => n.plc_tag_read(MockCore.Handle, 0)).Returns((int)Status.Ok);   // no READ_COMPLETED follows
+            core.Native.Setup(n => n.plc_tag_read(MockCore.Handle, 0)).Returns((int)Status.Ok);
 
             // Act
             var read = tag.ReadAsync();
@@ -280,7 +272,6 @@ namespace libplctag.Tests
         [Fact(Timeout = 2000)]
         public async Task read8_ReadAsync_throws_ErrorBusy_at_once_when_the_tag_has_unwritten_changes()
         {
-            // With auto write on, set_* marks the tag dirty; a read then returns ERR_BUSY. Nothing is in flight.
 
             // Arrange
             var core = new MockCore();
@@ -366,14 +357,9 @@ namespace libplctag.Tests
             Assert.Equal(Status.ErrorBusy, ex.Status);
         }
 
-        // ---- shared status: an outcome is the tag's status, as with the core's own blocking read -------
-        // Another caller's read stands in for the core's automatic read too: the wrapper cannot tell them apart.
-
         [Fact(Timeout = 2000)]
         public async Task A2_ReadAsync_aborted_by_another_caller_ends()
         {
-            // The status an abort leaves is not documented, so the read reports whatever it is: success or the error.
-            // All that can be relied on is that it ends. Callers that need to know should not abort each other.
 
             // Arrange
             var core = new MockCore();
@@ -389,12 +375,9 @@ namespace libplctag.Tests
             Assert.True(ex == null || ex is LibPlcTagException, $"unexpected {ex}");
         }
 
-        // ---- events: only a hint; the outcome comes from the status ---------------------------------
-
         [Fact(Timeout = 2000)]
         public async Task An_event_that_does_not_end_the_operation_is_ignored()
         {
-            // READ_STARTED, or a late completed event of an earlier operation: the read is still in flight.
 
             // Arrange
             var core = new MockCore();
@@ -414,7 +397,6 @@ namespace libplctag.Tests
         [Fact(Timeout = 2000)]
         public async Task An_event_delivered_inside_the_read_call_does_not_end_the_read()
         {
-            // The core dispatches READ_STARTED at the end of plc_tag_read, on the calling thread.
 
             // Arrange
             var core = new MockCore();
@@ -432,7 +414,6 @@ namespace libplctag.Tests
         [Fact(Timeout = 2000)]
         public async Task An_exception_from_a_user_event_handler_does_not_reach_the_core()
         {
-            // The callback runs on a core thread; an exception escaping it would cross into native code.
 
             // Arrange
             var core = new MockCore();
@@ -465,8 +446,6 @@ namespace libplctag.Tests
             // Assert
             Assert.Null(ex);
         }
-
-        // ---- cancellation, timeout, abort ----------------------------------------------------------
 
         [Fact(Timeout = 2000)]
         public async Task A2_cancelling_ReadAsync_aborts_the_read()
@@ -510,7 +489,7 @@ namespace libplctag.Tests
             // Arrange
             var core = new MockCore();
             var tag = core.NewTag();
-            tag.Timeout = TimeSpan.FromMilliseconds(100);   // only settable before Initialize
+            tag.Timeout = TimeSpan.FromMilliseconds(100);
             tag.Initialize();
 
             // Act
@@ -604,8 +583,6 @@ namespace libplctag.Tests
             core.Native.Verify(n => n.plc_tag_abort(MockCore.Handle), Times.Once);
         }
 
-        // ---- Dispose -------------------------------------------------------------------------------
-
         [Fact]
         public void destroy3_Dispose_unregisters_the_callback_then_destroys_the_tag()
         {
@@ -655,13 +632,11 @@ namespace libplctag.Tests
             Assert.IsType<ObjectDisposedException>(ex);
         }
 
-        // ---- synchronous Read and Write --------------------------------------------------------------
-
         [Theory]
-        [InlineData(Status.Ok)]             // read.6: the read completes OK (F3)
-        [InlineData(AnyError)]              // read.6: the read fails (F3)
-        [InlineData(Status.ErrorTimeout)]   // read.5: the core's timeout expires
-        [InlineData(Status.ErrorBusy)]      // read.2: another read is in flight
+        [InlineData(Status.Ok)]   // read.6 F3
+        [InlineData(AnyError)]   // read.6 F3
+        [InlineData(Status.ErrorTimeout)]   // read.5
+        [InlineData(Status.ErrorBusy)]   // read.2
         public void Read_returns_or_throws_what_the_blocking_read_returns(Status result)
         {
             // Arrange
@@ -669,7 +644,7 @@ namespace libplctag.Tests
             var tag = core.NewTag();
             tag.Initialize();
             if (result == Status.ErrorBusy) _ = tag.ReadAsync();
-            else core.Choose.BlockedCallEndsWith = result == Status.ErrorTimeout ? null : result;   // null: nothing ends the read
+            else core.Choose.BlockedCallEndsWith = result == Status.ErrorTimeout ? null : result;
 
             // Act
             var ex = Record.Exception(() => tag.Read());
@@ -679,10 +654,10 @@ namespace libplctag.Tests
         }
 
         [Theory]
-        [InlineData(Status.Ok)]             // write.6 (F4)
-        [InlineData(AnyError)]              // write.6 (F4)
+        [InlineData(Status.Ok)]   // write.6 F4
+        [InlineData(AnyError)]   // write.6 F4
         [InlineData(Status.ErrorTimeout)]   // write.5
-        [InlineData(Status.ErrorBusy)]      // write.2
+        [InlineData(Status.ErrorBusy)]   // write.2
         public void Write_returns_or_throws_what_the_blocking_write_returns(Status result)
         {
             // Arrange
@@ -690,7 +665,7 @@ namespace libplctag.Tests
             var tag = core.NewTag();
             tag.Initialize();
             if (result == Status.ErrorBusy) _ = tag.ReadAsync();
-            else core.Choose.BlockedCallEndsWith = result == Status.ErrorTimeout ? null : result;   // null: nothing ends the write
+            else core.Choose.BlockedCallEndsWith = result == Status.ErrorTimeout ? null : result;
 
             // Act
             var ex = Record.Exception(() => tag.Write());
@@ -713,8 +688,6 @@ namespace libplctag.Tests
             core.Native.Verify(n => n.plc_tag_create_ex(It.IsAny<string>(), It.IsAny<callback_func_ex>(), It.IsAny<IntPtr>(), It.Is<int>(t => t > 0)), Times.Once);
         }
 
-        // ---- data accessors ----------------------------------------------------------------------------
-
         [Fact]
         public void get1_a_getter_throws_the_status_when_it_fails()
         {
@@ -723,7 +696,7 @@ namespace libplctag.Tests
             var tag = core.NewTag();
             tag.Initialize();
             core.Native.Setup(n => n.plc_tag_get_int32(MockCore.Handle, 99)).Returns(int.MinValue);
-            core.Native.Setup(n => n.plc_tag_status(MockCore.Handle)).Returns((int)Status.ErrorOutOfBounds);   // get.1: the getter set it
+            core.Native.Setup(n => n.plc_tag_status(MockCore.Handle)).Returns((int)Status.ErrorOutOfBounds);
 
             // Act
             var ex = Record.Exception(() => tag.GetInt32(99));
@@ -751,8 +724,6 @@ namespace libplctag.Tests
         [Fact]
         public void status2_a_getter_returns_int_MinValue_while_a_read_is_in_flight()
         {
-            // int.MinValue is a real value here (the last read was OK), but the status says PENDING because another
-            // read is in flight: another caller's, or the core's automatic read.
 
             // Arrange
             var core = new MockCore();

@@ -14,14 +14,9 @@ using static libplctag.NativeImport.plctag;
 
 namespace libplctag.Tests
 {
-    /// <summary>
-    /// A core made of <see cref="CoreModel"/>s: create_ex makes one per handle (1, 2, ...) and every call goes to it.
-    /// The test plays the core's side on <see cref="Model"/>, the latest tag. It can still override a setup on
-    /// <see cref="Native"/> for an outcome the model does not choose (a read served from the cache, ...).
-    /// </summary>
     sealed class MockCore
     {
-        public const int Handle = 1;   // the first tag created
+        public const int Handle = 1;
         public readonly Mock<INative> Native = new Mock<INative>();
         public readonly CoreChoices Choose = new CoreChoices();
 
@@ -36,7 +31,7 @@ namespace libplctag.Tests
                       var handle = Interlocked.Increment(ref _created);
                       var tag = new CoreModel(handle, callback, Choose);
                       var result = tag.Create(timeout);
-                      if (result != Status.Ok) return (int)result;   // create_ex.1: no handle
+                      if (result != Status.Ok) return (int)result;   // create_ex.1
                       _tags[handle] = tag;
                       return handle;
                   });
@@ -48,17 +43,10 @@ namespace libplctag.Tests
             Native.Setup(n => n.plc_tag_destroy(It.IsAny<int>())).Returns<int>(h => (int)On(h, t => t.Destroy()));
         }
 
-        /// <summary>A handle create_ex never returned is not found, like a destroyed one.</summary>
         Status On(int handle, Func<CoreModel, Status> call) => _tags.TryGetValue(handle, out var t) ? call(t) : Status.ErrorNotFound;
 
-        /// <summary>The latest native tag, or null before create_ex has returned one.</summary>
         public CoreModel Model => _tags.TryGetValue(Volatile.Read(ref _created), out var t) ? t : null;
 
-        /// <summary>
-        /// The tickler, on a task of its own: it finishes the next <paramref name="count"/> creations or operations
-        /// with <paramref name="s"/> as each starts, and stops early once <paramref name="call"/> has ended. It then
-        /// stops for good, so a call left waiting is a deadlock that Coyote reports.
-        /// </summary>
         public Task Tickler(Task call, int count = 1, Status s = Status.Ok) => Task.Run(async () =>
         {
             for (var i = 0; i < count; i++)
@@ -72,7 +60,6 @@ namespace libplctag.Tests
             }
         });
 
-        /// <summary>A new tag on this core. Its Timeout is long, so that a test that hangs fails by its xUnit Timeout instead.</summary>
         public Tag NewTag() => new Tag(Native.Object) { Timeout = TimeSpan.FromDays(1) };
     }
 }

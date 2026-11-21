@@ -19,12 +19,7 @@ namespace libplctag.Tests
     [CollectionDefinition(nameof(TagRaceTests), DisableParallelization = true)]
     public class TagRaceTestsCollection { }
 
-    /// <summary>
-    /// Calls that run at the same time. Each test starts them concurrently and states what must hold however they
-    /// interleave; Coyote runs it under many schedules (it controls the tasks, locks, Interlocked and Volatile
-    /// operations of the rewritten assemblies, see the csproj) and fails with the schedule that broke it.
-    /// </summary>
-    [Collection(nameof(TagRaceTests))]   // alone: Coyote's hang detection is timing-based for the code it cannot control
+    [Collection(nameof(TagRaceTests))]
     public class TagRaceTests
     {
         static void UnderManySchedules(Func<Task> test, bool reportHangs = true)
@@ -57,7 +52,6 @@ namespace libplctag.Tests
         [Fact]
         public void A_ReadAsync_whose_read_finishes_meanwhile_completes() => UnderManySchedules(async () =>
         {
-            // A missed wake-up leaves the read waiting forever, which Coyote reports as a deadlock.
 
             // Arrange
             var core = new MockCore();
@@ -131,8 +125,6 @@ namespace libplctag.Tests
         [Fact]
         public void Dispose_and_a_getter_give_the_value_or_ObjectDisposedException() => UnderManySchedules(async () =>
         {
-            // int.MinValue may mean an error, so the getter asks for the status, which Dispose may have destroyed
-            // by then (status.1).
 
             // Arrange
             var core = new MockCore();
@@ -159,7 +151,7 @@ namespace libplctag.Tests
 
             // Act
             var read = Task.Run(() => tag.ReadAsync());
-            await core.Tickler(read, count: 2);   // the creation, then the read
+            await core.Tickler(read, count: 2);
             var ex = await Record.ExceptionAsync(() => read);
 
             // Assert
@@ -176,7 +168,7 @@ namespace libplctag.Tests
 
             // Act
             var write = Task.Run(() => tag.WriteAsync());
-            await core.Tickler(write, count: 2);   // the creation, then the write
+            await core.Tickler(write, count: 2);
             var ex = await Record.ExceptionAsync(() => write);
 
             // Assert
@@ -187,8 +179,6 @@ namespace libplctag.Tests
         [Fact]
         public void Two_ReadAsyncs_both_end() => UnderManySchedules(async () =>
         {
-            // The second either finds the first in flight (ERR_BUSY), or starts after it, possibly before the first
-            // caller has seen its read end; then both wait, and both must be woken.
 
             // Arrange
             var core = new MockCore();
@@ -210,10 +200,6 @@ namespace libplctag.Tests
         [Fact]
         public void A1_A5_cancelling_InitializeAsync_while_the_creation_fails_destroys_the_tag() => UnderManySchedules(async () =>
         {
-            // The abort may find the tag creating (A1) or already failed (A5).
-            // Hangs are not reported here: disposing a token registration waits for a cancellation callback that is
-            // still running, inside .NET where Coyote cannot see it, so Coyote mistakes some schedules for deadlocks.
-            // Real threads do not hang (checked 20,000 times); the other races cover hangs.
 
             // Arrange
             var core = new MockCore();
@@ -235,7 +221,6 @@ namespace libplctag.Tests
         [Fact]
         public void Dispose_and_a_blocking_Read_give_success_or_ObjectDisposedException() => UnderManySchedules(async () =>
         {
-            // Dispose may destroy the tag after Read's own check, so that the core no longer knows the handle (read.1), or while it waits (D4, read.6).
 
             // Arrange
             var core = new MockCore();

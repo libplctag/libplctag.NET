@@ -20,33 +20,13 @@ namespace libplctag.Tests
 
     enum Transition { Create, StartRead, StartWrite, Finish, Abort, Destroy }
 
-    /// <summary>The outcomes the contract leaves open, chosen by the test.</summary>
     sealed class CoreChoices
     {
-        /// <summary>create_ex returns this error and no handle (create_ex.1), instead of a handle.</summary>
         public Status? CreateFails;
 
-        /// <summary>
-        /// What the tickler does while a blocking read or write waits: it finishes the operation with this status
-        /// (F3, F4), or, if null, nothing, so that the call's timeout expires and the call aborts it (read.5, write.5).
-        /// </summary>
         public Status? BlockedCallEndsWith = Status.Ok;
     }
 
-    /// <summary>
-    /// One native tag, as the core's contract describes it (docs/core-contract), in two parts:
-    /// <list type="number">
-    /// <item>its <see cref="Transitions"/>: how the tag changes, whoever makes it change (a caller, the tickler, a
-    /// timeout). Each happens atomically, under the tag's mutex. The diagram is these.</item>
-    /// <item>the core's calls: each a short script of transitions, plus what the call returns. A blocking call
-    /// releases the mutex while it waits, so other threads' transitions can happen in between.</item>
-    /// </list>
-    /// The assumptions behind both (docs/core-contract): transitions are atomic, in any interleaving; callbacks are
-    /// hints, with no promise of sequence: a transition only raises events, and each call ends by delivering some of them
-    /// as callbacks (see <see cref="Deliver"/>).
-    /// Deliberately not realistic: no threads of its own, no timers. Nothing happens unless the wrapper calls in, or
-    /// the test plays the tickler. A transition the contract does not allow throws, which fails the test.
-    /// </summary>
     sealed class CoreModel
     {
         sealed record Row(string Id, State From, Transition Transition, Condition If, State To, Action<CoreModel> Does, string Note);
@@ -79,7 +59,6 @@ namespace libplctag.Tests
             new("A4", Idle,      Transition.Abort,       Always,            Idle,       m => m.Aborted(null, Status.Ok),                      "raises ABORTED(OK)"),
             new("A5", Failed,    Transition.Abort,       Always,            Failed,     m => m.Raised(Event.Aborted, Status.Ok),             "raises ABORTED(OK), the status stays"),
 
-            // the handle goes first, so no other call finds the tag; then what was in flight is aborted
             new("D1", Idle,      Transition.Destroy,     Always,            Destroyed,  m => m.Raised(Event.Destroyed, Status.Ok),             "raises DESTROYED"),
             new("D2", Failed,    Transition.Destroy,     Always,            Destroyed,  m => m.Raised(Event.Destroyed, Status.Ok),             "raises DESTROYED"),
             new("D3", Creating,  Transition.Destroy,     Always,            Destroyed,  m => m.AbortedThenDestroyed(Event.Created, Status.Ok), "raises CREATED(OK), ABORTED(OK), DESTROYED"),
@@ -87,14 +66,14 @@ namespace libplctag.Tests
             new("D5", Writing,   Transition.Destroy,     Always,            Destroyed,  m => m.AbortedThenDestroyed(Event.WriteCompleted, Status.ErrorAbort), "raises WRITE_COMPLETED(ERR_ABORT), ABORTED(OK), DESTROYED"),
         };
 
-        readonly object _gate = new object();   // the tag's mutex
+        readonly object _gate = new object();
         readonly int _handle;
         readonly CoreChoices _choose;
-        readonly List<(Event Event, Status Status)> _raised = new List<(Event, Status)>();   // raised, not yet delivered
+        readonly List<(Event Event, Status Status)> _raised = new List<(Event, Status)>();
         callback_func_ex _callback;
         State _state = NoTag;
-        Status _stored;                         // the tag's one status; any call can overwrite it
-        Status _finishWith;                     // the finish's status
+        Status _stored;
+        Status _finishWith;
 
         public CoreModel(int handle, callback_func_ex callback, CoreChoices choose)
         {
@@ -114,7 +93,6 @@ namespace libplctag.Tests
             row.Does(this);
         }
 
-        /// <summary>A call: <paramref name="body"/> under the tag's mutex, then a delivery of raised events.</summary>
         T Call<T>(Func<T> body)
         {
             lock (_gate)
@@ -124,114 +102,98 @@ namespace libplctag.Tests
             }
         }
 
-        // ---- the core's calls: each a script of transitions, its steps numbered (call.step) ------------------
-
         public Status Create(int timeout) => Call(() =>
         {
             if (_choose.CreateFails is Status error)
-                return error;                                      // create_ex.1  fails: returns the error, no handle
-            Apply(Transition.Create);                              // create_ex.2  C1
+                return error;   // create_ex.1
+            Apply(Transition.Create);   // create_ex.2 C1
             if (timeout == 0)
-                return Status.Ok;                                  //              timeout 0: returns the handle, the creation goes on
-            Apply(Transition.Finish, Status.Ok);                   // create_ex.3  blocks until the tickler has created it (F1),
-            return Status.Ok;                                      //              returns the handle; no other thread has it until then
+                return Status.Ok;
+            Apply(Transition.Finish, Status.Ok);   // create_ex.3 F1
+            return Status.Ok;
         });
 
         public Status GetStatus() => Call(() =>
         {
             if (_state == Destroyed)
-                return Status.ErrorNotFound;                                       // status.1  ERR_NOT_FOUND
-            return InFlight && _stored == Status.Ok ? Status.Pending : _stored;    // status.2  the stored status, PENDING while in flight
+                return Status.ErrorNotFound;   // status.1
+            return InFlight && _stored == Status.Ok ? Status.Pending : _stored;   // status.2
         });
 
         public Status Read(int timeout) => Start(Transition.StartRead, timeout);
         public Status Write(int timeout) => Start(Transition.StartWrite, timeout);
 
-        /// <summary>read() and write(): the same steps, read.N and write.N.</summary>
         Status Start(Transition start, int timeout)
         {
             var returned = Call<Status?>(() =>
             {
                 if (_state == Destroyed)
-                    return Status.ErrorNotFound;                   // .1  ERR_NOT_FOUND
+                    return Status.ErrorNotFound;   // read.1 write.1
                 if (InFlight)
-                    return Status.ErrorBusy;                       // .2  something in flight: ERR_BUSY
-                Apply(start);                                      // .3  R1, W1 (from Failed: not in the contract)
+                    return Status.ErrorBusy;   // read.2 write.2
+                Apply(start);   // read.3 write.3 R1 W1
                 if (timeout == 0)
-                    return Status.Pending;                         //     timeout 0: returns PENDING
+                    return Status.Pending;
                 return null;
             });
             if (returned is Status status)
                 return status;
 
-            Thread.Yield();                                        // .4  blocks: waits with the mutex released, so other
-                                                                   //     threads' calls and the tickler can move the tag
+            Thread.Yield();   // read.4 write.4
             return Call(() =>
             {
                 if (InFlight)
                 {
                     if (_choose.BlockedCallEndsWith is Status s)
-                        Apply(Transition.Finish, s);               //     (the tickler finishes it during the wait: F3, F4)
+                        Apply(Transition.Finish, s);   // F3 F4
                     else
                     {
-                        Apply(Transition.Abort);                   // .5  the timeout expires: aborts it (A2, A3), ERR_TIMEOUT
+                        Apply(Transition.Abort);   // read.5 write.5 A2 A3
                         return Status.ErrorTimeout;
                     }
                 }
-                return _stored;                                    // .6  ended, by whoever (the tickler, an abort, a destroy:
-            });                                                    //     the call holds the tag, not its handle): returns the status
+                return _stored;   // read.6 write.6
+            });
         }
 
         public Status Abort() => Call(() =>
         {
             if (_state == Destroyed)
-                return Status.ErrorNotFound;                       // abort.1  ERR_NOT_FOUND
-            Apply(Transition.Abort);                               // abort.2  A1-A5, returns OK
+                return Status.ErrorNotFound;   // abort.1
+            Apply(Transition.Abort);   // abort.2 A1-A5
             return Status.Ok;
         });
 
         public Status UnregisterCallback() => Call(() =>
         {
             if (_state == Destroyed || _callback == null)
-                return Status.ErrorNotFound;                       // unregister_callback.1  ERR_NOT_FOUND
-            _callback = null;                                      // unregister_callback.2  drops the callback and
-            _raised.Clear();                                       //                        undelivered events, returns OK
+                return Status.ErrorNotFound;   // unregister_callback.1
+            _callback = null;   // unregister_callback.2
+            _raised.Clear();
             return Status.Ok;
         });
 
         public Status Destroy() => Call(() =>
         {
             if (_state == Destroyed)
-                return Status.ErrorNotFound;                       // destroy.1  ERR_NOT_FOUND
-            Apply(Transition.Destroy);                             // destroy.2  D1-D5, returns OK
+                return Status.ErrorNotFound;   // destroy.1
+            Apply(Transition.Destroy);   // destroy.2 D1-D5
             return Status.Ok;
         });
 
-        // ---- the tickler, played by the test ----------------------------------------------------------------
-
-        /// <summary>The tickler finishes the creation or operation in flight with <paramref name="s"/> (F1-F4). With nothing in flight it does nothing.</summary>
         public void Finish(Status s) => Call(() =>
         {
             if (InFlight) Apply(Transition.Finish, s);
             return 0;
         });
 
-        /// <summary>The test delivers an event now, of its choosing.</summary>
         public void Raise(Event e, Status s)
         {
             lock (_gate) _callback?.Invoke(_handle, (int)e, (int)s, IntPtr.Zero);
         }
 
-        // ---- events -----------------------------------------------------------------------------------------
-
         void Raised(Event e, Status s) => _raised.Add((e, s));
 
-        /// <summary>
-        /// Delivers raised events, as assumption 3 allows: some of them (at least one), each type once with its last
-        /// status, in any order; the rest stay raised for a later delivery. Which ones and in what order are random:
-        /// Coyote's choices under Coyote, so that it explores late, merged and reordered deliveries.
-        /// Every call ends with one, so after any transition at least one event is delivered (assumption 3).
-        /// </summary>
         void Deliver()
         {
             if (_raised.Count == 0)
@@ -253,8 +215,6 @@ namespace libplctag.Tests
             foreach (var (e, s) in delivered)
                 _callback?.Invoke(_handle, (int)e, (int)s, IntPtr.Zero);
         }
-
-        // ---- what the transitions do ------------------------------------------------------------------------
 
         void Started(Event e)
         {
@@ -278,13 +238,10 @@ namespace libplctag.Tests
         {
             if (completed is Event e) Raised(e, completedWith);
             Raised(Event.Aborted, Status.Ok);
-            _stored = AnyOf(Status.Ok, Status.ErrorAbort);         // the status an abort leaves is not documented: any final one
+            _stored = AnyOf(Status.Ok, Status.ErrorAbort);
         }
 
-        /// <summary>One of <paramref name="possibilities"/>, at random: where the documentation does not say, the model allows every possibility, so that nothing comes to rely on one (Coyote's choice under Coyote).</summary>
         static T AnyOf<T>(params T[] possibilities) => possibilities[Generator.Create().NextInteger(possibilities.Length)];
-
-        // ---- the diagram ------------------------------------------------------------------------------------
 
         static string Name(Transition t) => t switch
         {
