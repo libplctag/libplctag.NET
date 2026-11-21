@@ -32,13 +32,17 @@ jobs:
       env:
         NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
       run: |
-        set -euo pipefail
-
         dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
 
-        # Tag each version the first time it is released
-        nativeimport_tag="libplctag.NativeImport-v$(dotnet msbuild src/libplctag.NativeImport/libplctag.NativeImport.csproj -getProperty:Version)"
-        libplctag_tag="libplctag-v$(dotnet msbuild src/libplctag/libplctag.csproj -getProperty:Version)"
+        # Usage: tag <package id> <project>. Tags the project's version the first time it is released.
+        tag() {
+          tag="$1-v$(dotnet msbuild "$2" -getProperty:Version)"
+          existing=$(git ls-remote --tags origin "$tag")
+          if [ -z "$existing" ]; then
+            git tag "$tag"
+            git push origin "$tag"
+          fi
+        }
 
-        [ -n "$(git ls-remote --tags origin "$nativeimport_tag")" ] || { git tag "$nativeimport_tag"; git push origin "$nativeimport_tag"; }
-        [ -n "$(git ls-remote --tags origin "$libplctag_tag")" ] || { git tag "$libplctag_tag"; git push origin "$libplctag_tag"; }
+        tag libplctag.NativeImport src/libplctag.NativeImport/libplctag.NativeImport.csproj
+        tag libplctag              src/libplctag/libplctag.csproj
