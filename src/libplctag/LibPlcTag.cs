@@ -74,7 +74,8 @@ namespace libplctag
 
         static void invokeLogEvent(int tag_id, int debug_level, string message)
         {
-            // Exceptions must not unwind into native code
+            // Exceptions must not unwind into native code - rethrow them on the ThreadPool instead
+            // https://learn.microsoft.com/en-us/dotnet/standard/native-interop/exceptions-interoperability
             try
             {
                 logEvent?.Invoke(null, new LogEventArgs() { DebugLevel = (DebugLevel)debug_level, Message = message.TrimEnd('\n') });
