@@ -6,6 +6,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Runtime.ExceptionServices;
+using System.Threading;
 using static libplctag.NativeImport.plctag;
 
 namespace libplctag
@@ -72,7 +74,16 @@ namespace libplctag
 
         static void invokeLogEvent(int tag_id, int debug_level, string message)
         {
-            logEvent?.Invoke(null, new LogEventArgs() { DebugLevel = (DebugLevel)debug_level, Message = message.TrimEnd('\n') });
+            // Exceptions must not unwind into native code
+            try
+            {
+                logEvent?.Invoke(null, new LogEventArgs() { DebugLevel = (DebugLevel)debug_level, Message = message.TrimEnd('\n') });
+            }
+            catch (Exception ex)
+            {
+                var edi = ExceptionDispatchInfo.Capture(ex);
+                ThreadPool.QueueUserWorkItem(_ => edi.Throw());
+            }
         }
 
         /// <summary>
