@@ -17,10 +17,10 @@ jobs:
         lfs: true
 
     - name: Build all and run tests
-      run: dotnet test src/libplctag.sln --configuration Release
+      run: dotnet test src/libplctag.slnx --configuration Release
 
     - name: Pack
-      run: dotnet pack src/libplctag.sln --configuration Release --no-build --output artifacts
+      run: dotnet pack src/libplctag.slnx --configuration Release --no-build --output artifacts
 
     - name: NuGet login (OIDC to temporary API key)
       uses: NuGet/login@v1

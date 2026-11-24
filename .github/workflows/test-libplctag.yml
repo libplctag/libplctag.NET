@@ -13,4 +13,4 @@ jobs:
         lfs: true
 
     - name: Build all and run tests
-      run: dotnet test src/libplctag.sln --configuration Release
+      run: dotnet test src/libplctag.slnx --configuration Release
