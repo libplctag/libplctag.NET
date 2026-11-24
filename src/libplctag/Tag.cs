@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1361,32 +1362,51 @@ namespace libplctag
             var status = (Status)statusCode;
             var eventArgs = new TagEventArgs() { Status = status };
 
-            switch (@event)
+            // Exceptions must not unwind into native code - rethrow them on the ThreadPool instead
+            // https://learn.microsoft.com/en-us/dotnet/standard/native-interop/exceptions-interoperability
+            try
             {
-                case Event.ReadCompleted:
-                    ReadCompleted?.Invoke(this, eventArgs);
-                    break;
-                case Event.ReadStarted:
-                    ReadStarted?.Invoke(this, eventArgs);
-                    break;
-                case Event.WriteStarted:
-                    WriteStarted?.Invoke(this, eventArgs);
-                    break;
-                case Event.WriteCompleted:
-                    WriteCompleted?.Invoke(this, eventArgs);
-                    break;
-                case Event.Aborted:
-                    Aborted?.Invoke(this, eventArgs);
-                    break;
-                case Event.Destroyed:
-                    Destroyed?.Invoke(this, eventArgs);
-                    break;
-                case Event.Created:
-                    Created?.Invoke(this, eventArgs);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                switch (@event)
+                {
+                    case Event.ReadCompleted:
+                        ReadCompleted?.Invoke(this, eventArgs);
+                        break;
+                    case Event.ReadStarted:
+                        ReadStarted?.Invoke(this, eventArgs);
+                        break;
+                    case Event.WriteStarted:
+                        WriteStarted?.Invoke(this, eventArgs);
+                        break;
+                    case Event.WriteCompleted:
+                        WriteCompleted?.Invoke(this, eventArgs);
+                        break;
+                    case Event.Aborted:
+                        Aborted?.Invoke(this, eventArgs);
+                        break;
+                    case Event.Destroyed:
+                        Destroyed?.Invoke(this, eventArgs);
+                        break;
+                    case Event.Created:
+                        Created?.Invoke(this, eventArgs);
+                        break;
+                    default:
+                        // Unknown event (e.g. added in a newer core) - nothing to raise
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                onCallbackException(ex);
+            }
+        }
+
+        // Overridable so tests can observe exceptions instead of crashing the test host
+        internal Action<Exception> onCallbackException = RethrowOnThreadPool;
+
+        static void RethrowOnThreadPool(Exception ex)
+        {
+            var edi = ExceptionDispatchInfo.Capture(ex);
+            ThreadPool.QueueUserWorkItem(_ => edi.Throw());
         }
 
     }
