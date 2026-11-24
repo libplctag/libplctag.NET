@@ -1,0 +1,11 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CSharp DotNetCore/CSharp DotNetCore.csproj" />
+  <Project Path="CSharp DotNetFramework/CSharp DotNetFramework.csproj" />
+  <Project Path="CSharp NativeImport/CSharp NativeImport.csproj" />
+  <Project Path="LibplctagReadBenchmark/LibplctagReadBenchmark.csproj" />
+</Solution>
